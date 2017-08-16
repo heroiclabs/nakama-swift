@@ -1,4 +1,3 @@
-// swift-tools-version:3.1
 /*
  * Copyright 2017 Heroic Labs
  *
@@ -15,13 +14,23 @@
  * limitations under the License.
  */
 
-import PackageDescription
+import Foundation
 
-let package = Package(
-    name: "Nakama",
-    dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", Version(0,9,904)),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 2),
-        .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 4),
-    ]
-)
+public struct SelfFetchMessage : CollatedMessage {
+  private let payload: Server_TSelfFetch
+  public init() {
+    payload = Server_TSelfFetch()
+  }
+  
+  public func serialize(collationID: String) -> Data? {
+    var envelope = Server_Envelope()
+    envelope.selfFetch = payload
+    envelope.collationID = collationID
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "SelfFetchMessage()")
+  }
+
+}

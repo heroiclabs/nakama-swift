@@ -1,4 +1,3 @@
-// swift-tools-version:3.1
 /*
  * Copyright 2017 Heroic Labs
  *
@@ -15,13 +14,23 @@
  * limitations under the License.
  */
 
-import PackageDescription
+import Foundation
+import SwiftProtobuf
 
-let package = Package(
-    name: "Nakama",
-    dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", Version(0,9,904)),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 2),
-        .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 4),
-    ]
-)
+public struct LogoutMessage : Message {
+  private let payload: Server_Logout
+
+  internal init() {
+    payload = Server_Logout()
+  }
+  
+  public func serialize() -> Data? {
+    var envelope = Server_Envelope()
+    envelope.logout = Server_Logout()
+    return try! payload.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "DefaultLogoutMessage()")
+  }
+}
