@@ -929,12 +929,12 @@ struct Server_Envelope: SwiftProtobuf.Message {
     set {_uniqueStorage()._payload = .usersFetch(newValue)}
   }
 
-  var nkself: Server_TSelf {
+  var self_p: Server_TSelf {
     get {
-      if case .nkself(let v)? = _storage._payload {return v}
+      if case .self_p(let v)? = _storage._payload {return v}
       return Server_TSelf()
     }
-    set {_uniqueStorage()._payload = .nkself(newValue)}
+    set {_uniqueStorage()._payload = .self_p(newValue)}
   }
 
   var users: Server_TUsers {
@@ -1445,7 +1445,7 @@ struct Server_Envelope: SwiftProtobuf.Message {
     case selfFetch(Server_TSelfFetch)
     case selfUpdate(Server_TSelfUpdate)
     case usersFetch(Server_TUsersFetch)
-    case nkself(Server_TSelf)
+    case self_p(Server_TSelf)
     case users(Server_TUsers)
     case friendsAdd(Server_TFriendsAdd)
     case friendsRemove(Server_TFriendsRemove)
@@ -1519,7 +1519,7 @@ struct Server_Envelope: SwiftProtobuf.Message {
       case (.selfFetch(let l), .selfFetch(let r)): return l == r
       case (.selfUpdate(let l), .selfUpdate(let r)): return l == r
       case (.usersFetch(let l), .usersFetch(let r)): return l == r
-      case (.nkself(let l), .nkself(let r)): return l == r
+      case (.self_p(let l), .self_p(let r)): return l == r
       case (.users(let l), .users(let r)): return l == r
       case (.friendsAdd(let l), .friendsAdd(let r)): return l == r
       case (.friendsRemove(let l), .friendsRemove(let r)): return l == r
@@ -1667,10 +1667,10 @@ struct Server_Envelope: SwiftProtobuf.Message {
           var v: Server_TSelf?
           if let current = _storage._payload {
             try decoder.handleConflictingOneOf()
-            if case .nkself(let m) = current {v = m}
+            if case .self_p(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._payload = .nkself(v)}
+          if let v = v {_storage._payload = .self_p(v)}
         case 11:
           var v: Server_TUsers?
           if let current = _storage._payload {
@@ -2199,7 +2199,7 @@ struct Server_Envelope: SwiftProtobuf.Message {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
       case .usersFetch(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-      case .nkself(let v)?:
+      case .self_p(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
       case .users(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
@@ -2848,8 +2848,8 @@ struct Server_User: SwiftProtobuf.Message {
 ///*
 /// Self is the core domain type representing the currently connected user in Nakama.
 /// Alongside the normal user properties, it also contains various other fields only relevant for the current user.
-struct Server_NkSelf: SwiftProtobuf.Message {
-  static let protoMessageName: String = _protobuf_package + ".NkSelf"
+struct Server_Self: SwiftProtobuf.Message {
+  static let protoMessageName: String = _protobuf_package + ".Self"
 
   //// User's account.
   var user: Server_User {
@@ -3011,14 +3011,14 @@ struct Server_TSelfFetch: SwiftProtobuf.Message {
 struct Server_TSelf: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TSelf"
 
-  var nkself: Server_NkSelf {
-    get {return _storage._nkself ?? Server_NkSelf()}
-    set {_uniqueStorage()._nkself = newValue}
+  var self_p: Server_Self {
+    get {return _storage._self_p ?? Server_Self()}
+    set {_uniqueStorage()._self_p = newValue}
   }
-  /// Returns true if `nkself` has been explicitly set.
-  var hasNkself: Bool {return _storage._nkself != nil}
-  /// Clears the value of `nkself`. Subsequent reads from it will return its default value.
-  mutating func clearNkself() {_storage._nkself = nil}
+  /// Returns true if `self_p` has been explicitly set.
+  var hasSelf_p: Bool {return _storage._self_p != nil}
+  /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
+  mutating func clearSelf_p() {_storage._self_p = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3033,7 +3033,7 @@ struct Server_TSelf: SwiftProtobuf.Message {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularMessageField(value: &_storage._nkself)
+        case 1: try decoder.decodeSingularMessageField(value: &_storage._self_p)
         default: break
         }
       }
@@ -3046,7 +3046,7 @@ struct Server_TSelf: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
-      if let v = _storage._nkself {
+      if let v = _storage._self_p {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       }
     }
@@ -3607,7 +3607,7 @@ struct Server_Group: SwiftProtobuf.Message {
   var id: Data = SwiftProtobuf.Internal.emptyData
 
   //// Whether the group is private or public. If private, group admins will accept user join requests.
-  var nkprivate: Bool = false
+  var `private`: Bool = false
 
   //// User ID of the group creator.
   var creatorID: Data = SwiftProtobuf.Internal.emptyData
@@ -3646,7 +3646,7 @@ struct Server_Group: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularBytesField(value: &self.id)
-      case 2: try decoder.decodeSingularBoolField(value: &self.nkprivate)
+      case 2: try decoder.decodeSingularBoolField(value: &self.`private`)
       case 3: try decoder.decodeSingularBytesField(value: &self.creatorID)
       case 4: try decoder.decodeSingularStringField(value: &self.name)
       case 5: try decoder.decodeSingularStringField(value: &self.description_p)
@@ -3670,8 +3670,8 @@ struct Server_Group: SwiftProtobuf.Message {
     if !self.id.isEmpty {
       try visitor.visitSingularBytesField(value: self.id, fieldNumber: 1)
     }
-    if self.nkprivate != false {
-      try visitor.visitSingularBoolField(value: self.nkprivate, fieldNumber: 2)
+    if self.`private` != false {
+      try visitor.visitSingularBoolField(value: self.`private`, fieldNumber: 2)
     }
     if !self.creatorID.isEmpty {
       try visitor.visitSingularBytesField(value: self.creatorID, fieldNumber: 3)
@@ -3737,7 +3737,7 @@ struct Server_TGroupsCreate: SwiftProtobuf.Message {
     var metadata: Data = SwiftProtobuf.Internal.emptyData
 
     //// Whether the group is private or public. If private, group admins will accept user join requests.
-    var nkprivate: Bool = false
+    var `private`: Bool = false
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3755,7 +3755,7 @@ struct Server_TGroupsCreate: SwiftProtobuf.Message {
         case 3: try decoder.decodeSingularStringField(value: &self.avatarURL)
         case 4: try decoder.decodeSingularStringField(value: &self.lang)
         case 5: try decoder.decodeSingularBytesField(value: &self.metadata)
-        case 6: try decoder.decodeSingularBoolField(value: &self.nkprivate)
+        case 6: try decoder.decodeSingularBoolField(value: &self.`private`)
         default: break
         }
       }
@@ -3781,8 +3781,8 @@ struct Server_TGroupsCreate: SwiftProtobuf.Message {
       if !self.metadata.isEmpty {
         try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 5)
       }
-      if self.nkprivate != false {
-        try visitor.visitSingularBoolField(value: self.nkprivate, fieldNumber: 6)
+      if self.`private` != false {
+        try visitor.visitSingularBoolField(value: self.`private`, fieldNumber: 6)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -3833,7 +3833,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
     var groupID: Data = SwiftProtobuf.Internal.emptyData
 
     //// Whether the group is private or public. If private, group admins will accept user join requests.
-    var nkprivate: Bool = false
+    var `private`: Bool = false
 
     //// Group name must be unique.
     var name: String = String()
@@ -3860,7 +3860,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularBytesField(value: &self.groupID)
-        case 2: try decoder.decodeSingularBoolField(value: &self.nkprivate)
+        case 2: try decoder.decodeSingularBoolField(value: &self.`private`)
         case 3: try decoder.decodeSingularStringField(value: &self.name)
         case 4: try decoder.decodeSingularStringField(value: &self.description_p)
         case 5: try decoder.decodeSingularStringField(value: &self.avatarURL)
@@ -3879,8 +3879,8 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
       if !self.groupID.isEmpty {
         try visitor.visitSingularBytesField(value: self.groupID, fieldNumber: 1)
       }
-      if self.nkprivate != false {
-        try visitor.visitSingularBoolField(value: self.nkprivate, fieldNumber: 2)
+      if self.`private` != false {
+        try visitor.visitSingularBoolField(value: self.`private`, fieldNumber: 2)
       }
       if !self.name.isEmpty {
         try visitor.visitSingularStringField(value: self.name, fieldNumber: 3)
@@ -5141,14 +5141,14 @@ struct Server_TTopics: SwiftProtobuf.Message {
     }
 
     //// Current user's chat presence
-    var nkself: Server_UserPresence {
-      get {return _storage._nkself ?? Server_UserPresence()}
-      set {_uniqueStorage()._nkself = newValue}
+    var self_p: Server_UserPresence {
+      get {return _storage._self_p ?? Server_UserPresence()}
+      set {_uniqueStorage()._self_p = newValue}
     }
-    /// Returns true if `nkself` has been explicitly set.
-    var hasNkself: Bool {return _storage._nkself != nil}
-    /// Clears the value of `nkself`. Subsequent reads from it will return its default value.
-    mutating func clearNkself() {_storage._nkself = nil}
+    /// Returns true if `self_p` has been explicitly set.
+    var hasSelf_p: Bool {return _storage._self_p != nil}
+    /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
+    mutating func clearSelf_p() {_storage._self_p = nil}
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -5165,7 +5165,7 @@ struct Server_TTopics: SwiftProtobuf.Message {
           switch fieldNumber {
           case 1: try decoder.decodeSingularMessageField(value: &_storage._topic)
           case 2: try decoder.decodeRepeatedMessageField(value: &_storage._presences)
-          case 3: try decoder.decodeSingularMessageField(value: &_storage._nkself)
+          case 3: try decoder.decodeSingularMessageField(value: &_storage._self_p)
           default: break
           }
         }
@@ -5184,7 +5184,7 @@ struct Server_TTopics: SwiftProtobuf.Message {
         if !_storage._presences.isEmpty {
           try visitor.visitRepeatedMessageField(value: _storage._presences, fieldNumber: 2)
         }
-        if let v = _storage._nkself {
+        if let v = _storage._self_p {
           try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
         }
       }
@@ -5852,14 +5852,14 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
     set {_uniqueStorage()._presences = newValue}
   }
 
-  var nkself: Server_UserPresence {
-    get {return _storage._nkself ?? Server_UserPresence()}
-    set {_uniqueStorage()._nkself = newValue}
+  var self_p: Server_UserPresence {
+    get {return _storage._self_p ?? Server_UserPresence()}
+    set {_uniqueStorage()._self_p = newValue}
   }
-  /// Returns true if `nkself` has been explicitly set.
-  var hasNkself: Bool {return _storage._nkself != nil}
-  /// Clears the value of `nkself`. Subsequent reads from it will return its default value.
-  mutating func clearNkself() {_storage._nkself = nil}
+  /// Returns true if `self_p` has been explicitly set.
+  var hasSelf_p: Bool {return _storage._self_p != nil}
+  /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
+  mutating func clearSelf_p() {_storage._self_p = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -5877,7 +5877,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
         case 1: try decoder.decodeSingularBytesField(value: &_storage._ticket)
         case 2: try decoder.decodeSingularBytesField(value: &_storage._token)
         case 3: try decoder.decodeRepeatedMessageField(value: &_storage._presences)
-        case 4: try decoder.decodeSingularMessageField(value: &_storage._nkself)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._self_p)
         default: break
         }
       }
@@ -5899,7 +5899,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
       if !_storage._presences.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._presences, fieldNumber: 3)
       }
-      if let v = _storage._nkself {
+      if let v = _storage._self_p {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
     }
@@ -5924,14 +5924,14 @@ struct Server_Match: SwiftProtobuf.Message {
     set {_uniqueStorage()._presences = newValue}
   }
 
-  var nkself: Server_UserPresence {
-    get {return _storage._nkself ?? Server_UserPresence()}
-    set {_uniqueStorage()._nkself = newValue}
+  var self_p: Server_UserPresence {
+    get {return _storage._self_p ?? Server_UserPresence()}
+    set {_uniqueStorage()._self_p = newValue}
   }
-  /// Returns true if `nkself` has been explicitly set.
-  var hasNkself: Bool {return _storage._nkself != nil}
-  /// Clears the value of `nkself`. Subsequent reads from it will return its default value.
-  mutating func clearNkself() {_storage._nkself = nil}
+  /// Returns true if `self_p` has been explicitly set.
+  var hasSelf_p: Bool {return _storage._self_p != nil}
+  /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
+  mutating func clearSelf_p() {_storage._self_p = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -5948,7 +5948,7 @@ struct Server_Match: SwiftProtobuf.Message {
         switch fieldNumber {
         case 1: try decoder.decodeSingularBytesField(value: &_storage._matchID)
         case 2: try decoder.decodeRepeatedMessageField(value: &_storage._presences)
-        case 3: try decoder.decodeSingularMessageField(value: &_storage._nkself)
+        case 3: try decoder.decodeSingularMessageField(value: &_storage._self_p)
         default: break
         }
       }
@@ -5967,7 +5967,7 @@ struct Server_Match: SwiftProtobuf.Message {
       if !_storage._presences.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._presences, fieldNumber: 2)
       }
-      if let v = _storage._nkself {
+      if let v = _storage._self_p {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
     }
@@ -8896,7 +8896,7 @@ extension Server_Envelope: SwiftProtobuf._MessageImplementationBase, SwiftProtob
     7: .standard(proto: "self_fetch"),
     8: .standard(proto: "self_update"),
     9: .standard(proto: "users_fetch"),
-    10: .same(proto: "nkself"),
+    10: .same(proto: "self"),
     11: .same(proto: "users"),
     12: .standard(proto: "friends_add"),
     13: .standard(proto: "friends_remove"),
@@ -9102,7 +9102,7 @@ extension Server_User: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._
   }
 }
 
-extension Server_NkSelf: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Server_Self: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "user"),
     2: .same(proto: "verified"),
@@ -9150,7 +9150,7 @@ extension Server_NkSelf: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf
     return _storage
   }
 
-  func _protobuf_generated_isEqualTo(other: Server_NkSelf) -> Bool {
+  func _protobuf_generated_isEqualTo(other: Server_Self) -> Bool {
     if _storage !== other._storage {
       let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
@@ -9184,18 +9184,18 @@ extension Server_TSelfFetch: SwiftProtobuf._MessageImplementationBase, SwiftProt
 
 extension Server_TSelf: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "nkself"),
+    1: .same(proto: "self"),
   ]
 
   fileprivate class _StorageClass {
-    var _nkself: Server_NkSelf? = nil
+    var _self_p: Server_Self? = nil
 
     static let defaultInstance = _StorageClass()
 
     private init() {}
 
     init(copying source: _StorageClass) {
-      _nkself = source._nkself
+      _self_p = source._self_p
     }
   }
 
@@ -9211,7 +9211,7 @@ extension Server_TSelf: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf.
       let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
         let other_storage = _args.1
-        if _storage._nkself != other_storage._nkself {return false}
+        if _storage._self_p != other_storage._self_p {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -9398,7 +9398,7 @@ extension Server_TFriends: SwiftProtobuf._MessageImplementationBase, SwiftProtob
 extension Server_Group: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
-    2: .same(proto: "nkprivate"),
+    2: .same(proto: "private"),
     3: .standard(proto: "creator_id"),
     4: .same(proto: "name"),
     5: .same(proto: "description"),
@@ -9413,7 +9413,7 @@ extension Server_Group: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf.
 
   func _protobuf_generated_isEqualTo(other: Server_Group) -> Bool {
     if self.id != other.id {return false}
-    if self.nkprivate != other.nkprivate {return false}
+    if self.`private` != other.`private` {return false}
     if self.creatorID != other.creatorID {return false}
     if self.name != other.name {return false}
     if self.description_p != other.description_p {return false}
@@ -9448,7 +9448,7 @@ extension Server_TGroupsCreate.GroupCreate: SwiftProtobuf._MessageImplementation
     3: .standard(proto: "avatar_url"),
     4: .same(proto: "lang"),
     5: .same(proto: "metadata"),
-    6: .same(proto: "nkprivate"),
+    6: .same(proto: "private"),
   ]
 
   func _protobuf_generated_isEqualTo(other: Server_TGroupsCreate.GroupCreate) -> Bool {
@@ -9457,7 +9457,7 @@ extension Server_TGroupsCreate.GroupCreate: SwiftProtobuf._MessageImplementation
     if self.avatarURL != other.avatarURL {return false}
     if self.lang != other.lang {return false}
     if self.metadata != other.metadata {return false}
-    if self.nkprivate != other.nkprivate {return false}
+    if self.`private` != other.`private` {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }
@@ -9478,7 +9478,7 @@ extension Server_TGroupsUpdate: SwiftProtobuf._MessageImplementationBase, SwiftP
 extension Server_TGroupsUpdate.GroupUpdate: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "group_id"),
-    2: .same(proto: "nkprivate"),
+    2: .same(proto: "private"),
     3: .same(proto: "name"),
     4: .same(proto: "description"),
     5: .standard(proto: "avatar_url"),
@@ -9488,7 +9488,7 @@ extension Server_TGroupsUpdate.GroupUpdate: SwiftProtobuf._MessageImplementation
 
   func _protobuf_generated_isEqualTo(other: Server_TGroupsUpdate.GroupUpdate) -> Bool {
     if self.groupID != other.groupID {return false}
-    if self.nkprivate != other.nkprivate {return false}
+    if self.`private` != other.`private` {return false}
     if self.name != other.name {return false}
     if self.description_p != other.description_p {return false}
     if self.avatarURL != other.avatarURL {return false}
@@ -9875,13 +9875,13 @@ extension Server_TTopics.Topic: SwiftProtobuf._MessageImplementationBase, SwiftP
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "topic"),
     2: .same(proto: "presences"),
-    3: .same(proto: "nkself"),
+    3: .same(proto: "self"),
   ]
 
   fileprivate class _StorageClass {
     var _topic: Server_TopicId? = nil
     var _presences: [Server_UserPresence] = []
-    var _nkself: Server_UserPresence? = nil
+    var _self_p: Server_UserPresence? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -9890,7 +9890,7 @@ extension Server_TTopics.Topic: SwiftProtobuf._MessageImplementationBase, SwiftP
     init(copying source: _StorageClass) {
       _topic = source._topic
       _presences = source._presences
-      _nkself = source._nkself
+      _self_p = source._self_p
     }
   }
 
@@ -9908,7 +9908,7 @@ extension Server_TTopics.Topic: SwiftProtobuf._MessageImplementationBase, SwiftP
         let other_storage = _args.1
         if _storage._topic != other_storage._topic {return false}
         if _storage._presences != other_storage._presences {return false}
-        if _storage._nkself != other_storage._nkself {return false}
+        if _storage._self_p != other_storage._self_p {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -10180,14 +10180,14 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
     1: .same(proto: "ticket"),
     2: .same(proto: "token"),
     3: .same(proto: "presences"),
-    4: .same(proto: "nkself"),
+    4: .same(proto: "self"),
   ]
 
   fileprivate class _StorageClass {
     var _ticket: Data = SwiftProtobuf.Internal.emptyData
     var _token: Data = SwiftProtobuf.Internal.emptyData
     var _presences: [Server_UserPresence] = []
-    var _nkself: Server_UserPresence? = nil
+    var _self_p: Server_UserPresence? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -10197,7 +10197,7 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
       _ticket = source._ticket
       _token = source._token
       _presences = source._presences
-      _nkself = source._nkself
+      _self_p = source._self_p
     }
   }
 
@@ -10216,7 +10216,7 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
         if _storage._ticket != other_storage._ticket {return false}
         if _storage._token != other_storage._token {return false}
         if _storage._presences != other_storage._presences {return false}
-        if _storage._nkself != other_storage._nkself {return false}
+        if _storage._self_p != other_storage._self_p {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -10230,13 +10230,13 @@ extension Server_Match: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf.
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
     2: .same(proto: "presences"),
-    3: .same(proto: "nkself"),
+    3: .same(proto: "self"),
   ]
 
   fileprivate class _StorageClass {
     var _matchID: Data = SwiftProtobuf.Internal.emptyData
     var _presences: [Server_UserPresence] = []
-    var _nkself: Server_UserPresence? = nil
+    var _self_p: Server_UserPresence? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -10245,7 +10245,7 @@ extension Server_Match: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf.
     init(copying source: _StorageClass) {
       _matchID = source._matchID
       _presences = source._presences
-      _nkself = source._nkself
+      _self_p = source._self_p
     }
   }
 
@@ -10263,7 +10263,7 @@ extension Server_Match: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf.
         let other_storage = _args.1
         if _storage._matchID != other_storage._matchID {return false}
         if _storage._presences != other_storage._presences {return false}
-        if _storage._nkself != other_storage._nkself {return false}
+        if _storage._self_p != other_storage._self_p {return false}
         return true
       }
       if !storagesAreEqual {return false}
