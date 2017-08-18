@@ -1,5 +1,6 @@
 # Created by https://www.gitignore.io/api/xcode,macos,linux,swift,swiftpm,windows,carthage,cocoapods,sublimetext,intellij+all,intellij+iml,xcodeinjection,swiftpackagemanager
 
+Nakama.xcodeproj/
 Sources/Nakama/Server.Api.pb.*
 
 ### Carthage ###
