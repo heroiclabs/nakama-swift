@@ -29,7 +29,7 @@
       "package": "SwiftProtobuf",
       "reason": null,
       "repositoryURL": "https://github.com/apple/swift-protobuf.git",
-      "version": "0.9.26"
+      "version": "0.9.904"
     }
   ],
   "version": 1

@@ -6,9 +6,9 @@ Nakama Swift
 ## Setup
 
 ```shell
-$> git clone git@github.com:heroiclabs/nakama-java.git --recursive
-$> brew install protobuf-swift
-$> protoc --swift_out=Sources/. server/server/api.proto
+$> git clone git@github.com:heroiclabs/nakama-swift.git --recursive
+$> protoc --plugin=./.build/checkouts/swift-protobuf.git--7219529775138357838/.build/release/protoc-gen-swift --swift_out=Sources/Nakama/. server/server/api.proto
+$> mv Sources/Nakama/server/server/api.pb.swift Sources/Nakama/Server.Api.pb.swift
 $> swift package generate-xcodeproj
 ```
 

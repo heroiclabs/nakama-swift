@@ -20,7 +20,7 @@ import PackageDescription
 let package = Package(
     name: "Nakama",
     dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", Version(0,9,26)),
+        .Package(url: "https://github.com/apple/swift-protobuf.git", Version(0,9,904)),
         .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 2),
         .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 4)
     ]
