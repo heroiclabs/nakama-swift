@@ -377,7 +377,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
       case .error(let err):
         let (_, reject) : (fulfill: (Any) -> Void, reject: (Error) -> Void) = promiseTuple as! (fulfill: (Any) -> Void, reject: (Error) -> Void)
         reject(NakamaError.make(from: err.code, msg: err.message))
-      case .nkself(let proto):
+      case .self_p(let proto):
         let (fulfill, _) : (fulfill: (SelfUser) -> Void, reject: (Error) -> Void) = promiseTuple as! (fulfill: (SelfUser) -> Void, reject: (Error) -> Void)
         fulfill(DefaultSelf(from: proto))
       default: break

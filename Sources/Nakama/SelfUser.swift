@@ -81,7 +81,7 @@ internal struct DefaultSelf : SelfUser {
   let verified : Bool
   
   internal init(from proto: Server_TSelf) {
-    let nkself = proto.nkself
+    let nkself = proto.self_p
     customID = nkself.customID
     deviceIDs = nkself.deviceIds
     email = nkself.email
