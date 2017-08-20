@@ -58,4 +58,23 @@ class SelfUserTest: XCTestCase {
     
     waitForExpectations(timeout: 10, handler: nil)
   }
+  
+  func testSelfUpdate() {
+    let exp = expectation(description: "Self Update")
+    var message = SelfUpdateMessage()
+    let epoch = Date().timeIntervalSince1970.description
+    let _ = message.setHandle(handle: "h-" + epoch)
+    
+    client.send(message: message).then {
+      return self.client.send(message: SelfFetchMessage())
+    }.then { selfuser in
+      XCTAssert(selfuser.handle == ("h-" + epoch), "handle is not updated correctly")
+    }.catch{err in
+      XCTAssert(false, "Self fetch failed: " + (err as! NakamaError).message)
+    }.always {
+      exp.fulfill()
+    }
+    
+    waitForExpectations(timeout: 10, handler: nil)
+  }
 }

@@ -98,6 +98,7 @@ public protocol Client {
    - Returns: An instance of the expected return type.
    */
   func send(message: SelfFetchMessage) -> Promise<SelfUser>
+  func send(message: SelfUpdateMessage) -> Promise<Void>
   
   /**
    - Parameter message : message The message to send.
@@ -328,10 +329,6 @@ internal class DefaultClient : Client, WebSocketDelegate {
     self.send(message: LogoutMessage.init())
   }
   
-  func send(message: SelfFetchMessage) -> Promise<SelfUser> {
-    return self.send(proto: message)
-  }
-  
   fileprivate func send<T>(proto message: CollatedMessage) -> Promise<T> {
     let p  = Promise<T>.pending()
     let collationID = UUID.init().uuidString
@@ -348,16 +345,16 @@ internal class DefaultClient : Client, WebSocketDelegate {
     self.socket?.write(data: binaryData)
   }
   
+  func send(message: SelfFetchMessage) -> Promise<SelfUser> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: SelfUpdateMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
-    
-    if envelope.payload == nil {
-      self.collationIDs.removeValue(forKey: envelope.collationID)
-      if self.onError != nil {
-        self.onError!(NakamaError.missingPayload("No payload in incoming message from server"))
-      }
-      return
-    }
     
     if envelope.collationID.isEmpty {
       switch envelope.payload! {
@@ -366,26 +363,35 @@ internal class DefaultClient : Client, WebSocketDelegate {
         if (newServerTime > self._serverTime) {
           self._serverTime = newServerTime;
         }
-      default: break
+      default:
+        print("No payload for incoming uncollated message from the server: %@", (try? envelope.jsonString()) ?? "nil");
       }
       
-      return
-    }
-    
-    if let promiseTuple = self.collationIDs[envelope.collationID] {
+      if self.onError != nil {
+        self.onError!(NakamaError.missingPayload("No payload in incoming message from server"))
+      }
+      
+    } else if let promiseTuple = self.collationIDs[envelope.collationID] {
+      self.collationIDs.removeValue(forKey: envelope.collationID)
+      
+      if envelope.payload == nil {
+        let (fulfill, _) : (fulfill: (Void) -> Void, reject: Any) = promiseTuple as! (fulfill: (Void) -> Void, reject: Any)
+        fulfill()
+        return
+      }
+      
       switch envelope.payload! {
       case .error(let err):
-        let (_, reject) : (fulfill: (Any) -> Void, reject: (Error) -> Void) = promiseTuple as! (fulfill: (Any) -> Void, reject: (Error) -> Void)
+        let (_, reject) : (fulfill: Any, reject: (Error) -> Void) = promiseTuple as! (fulfill: Any, reject: (Error) -> Void)
         reject(NakamaError.make(from: err.code, msg: err.message))
       case .self_p(let proto):
-        let (fulfill, _) : (fulfill: (SelfUser) -> Void, reject: (Error) -> Void) = promiseTuple as! (fulfill: (SelfUser) -> Void, reject: (Error) -> Void)
+        let (fulfill, _) : (fulfill: (SelfUser) -> Void, reject: Any) = promiseTuple as! (fulfill: (SelfUser) -> Void, reject: Any)
         fulfill(DefaultSelf(from: proto))
-      default: break
+      default:
+        print("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
       }
-      
-      self.collationIDs.removeValue(forKey: envelope.collationID)
     } else {
-      print("No matching promise for incoming collation ID: %@", envelope.collationID);
+      print("No matching promise for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
     }
   }
 }
