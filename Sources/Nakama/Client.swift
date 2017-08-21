@@ -154,6 +154,7 @@ public protocol Client {
   func send(message: SelfUpdateMessage) -> Promise<Void>
   func send(message: SelfLinkMessage) -> Promise<Void>
   func send(message: SelfUnlinkMessage) -> Promise<Void>
+  func send(message: RPCMessage) -> Promise<RPCResult>
   
   /**
    - Parameter message : message The message to send.
@@ -368,6 +369,10 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
+  func send(message: RPCMessage) -> Promise<RPCResult> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
     
@@ -409,6 +414,9 @@ internal class DefaultClient : Client, WebSocketDelegate {
           users.append(DefaultUser(from: user))
         }
         fulfill(users)
+      case .rpc(let proto):
+        let (fulfill, _) : (fulfill: (RPCResult) -> Void, reject: Any) = promiseTuple as! (fulfill: (RPCResult) -> Void, reject: Any)
+        fulfill(DefaultRPCResult(from: proto))
       default:
         print("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
       }
