@@ -417,6 +417,22 @@ internal class DefaultClient : Client, WebSocketDelegate {
       case .rpc(let proto):
         let (fulfill, _) : (fulfill: (RPCResult) -> Void, reject: Any) = promiseTuple as! (fulfill: (RPCResult) -> Void, reject: Any)
         fulfill(DefaultRPCResult(from: proto))
+      case .storageKeys(let proto):
+        let (fulfill, _) : (fulfill: ([StorageRecordID]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([StorageRecordID]) -> Void, reject: Any)
+        var records : [StorageRecordID] = []
+        for key in proto.keys {
+          records.append(DefaultStorageRecordID(from: key))
+        }
+        fulfill(records)
+      case .storageData(let proto):
+        let (fulfill, _) : (fulfill: ([StorageRecord]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([StorageRecord]) -> Void, reject: Any)
+        var records : [StorageRecord] = []
+        records._cursor = proto.cursor
+        for data in proto.data {
+          records.append(DefaultStorageRecord(from: data))
+        }
+        fulfill(records)
+        
       default:
         print("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
       }

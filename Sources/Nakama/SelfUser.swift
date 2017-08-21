@@ -108,6 +108,6 @@ internal struct DefaultSelf : SelfUser {
   }
   
   public var description: String {
-    return String(format: "customID=%@,deviceIDs=%@,email=%@,facebookID=%@,gameCenterID=%@,googleID=%@,steamID=%@,verified=%@,avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d", customID, deviceIDs, email, facebookID, gameCenterID, googleID, steamID, verified.description, avatarURL, createdAt, fullname, handle, id.uuidString, lang, lastOnlineAt, location, metadata.base64EncodedString(), timezone, updatedAt)
+    return String(format: "DefaultSelf(customID=%@,deviceIDs=%@,email=%@,facebookID=%@,gameCenterID=%@,googleID=%@,steamID=%@,verified=%@,avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d)", customID, deviceIDs, email, facebookID, gameCenterID, googleID, steamID, verified.description, avatarURL, createdAt, fullname, handle, id.uuidString, lang, lastOnlineAt, location, metadata.base64EncodedString(), timezone, updatedAt)
   }
 }
