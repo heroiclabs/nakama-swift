@@ -19,22 +19,22 @@ import Nakama
 import PromiseKit
 
 class SelfUserTest: XCTestCase {
-  private let client : Client = Builder.defaults(serverKey: "defaultkey")
   private let deviceID : String = UUID.init().uuidString
+  private let client : Client = Builder.defaults(serverKey: "defaultkey")
   private var session : Session?
   
   override func setUp() {
     super.setUp()
     
     let exp = expectation(description: "Client connect")
-    let message = AuthenticateMessage.device(id: deviceID)
+    let message = AuthenticateMessage.device(id: self.deviceID)
     client.register(with: message).then { session in
+      self.client.connect(to: session)
+    }.then { session in
       self.session = session
-      let _ = self.client.connect(to: session)
-    }.catch{err in
-      XCTAssert(false, "Registration failed: " + (err as! NakamaError).message)
-    }.always {
       exp.fulfill()
+    }.catch{ err in
+      XCTAssert(false, "Registration failed: " + (err as! NakamaError).message)
     }
     
     waitForExpectations(timeout: 10, handler: nil)

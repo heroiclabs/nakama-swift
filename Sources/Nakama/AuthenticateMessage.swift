@@ -17,7 +17,7 @@
 import Foundation
 
 public struct AuthenticateMessage : Message {
-  let payload : Server_AuthenticateRequest
+  private let payload : Server_AuthenticateRequest
   
   internal init(msg: Server_AuthenticateRequest) {
     self.payload = msg

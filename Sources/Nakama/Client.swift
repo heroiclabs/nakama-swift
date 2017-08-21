@@ -122,7 +122,7 @@ public class Builder {
   }
   
   public func build() -> Client {
-    return DefaultClient(serverKey: serverKey, host: host, port: port, lang: lang, ssl: ssl, timeout: timeout, trace: trace);
+    return DefaultClient(serverKey: serverKey, host: host, port: port, lang: lang, ssl: ssl, timeout: timeout, trace: trace)
   }
   
   public func host(host: String) -> Builder {
@@ -331,13 +331,14 @@ internal class DefaultClient : Client, WebSocketDelegate {
   }
   
   fileprivate func send<T>(proto message: CollatedMessage) -> Promise<T> {
-    let p  = Promise<T>.pending()
     let collationID = UUID.init().uuidString
-  
     let payload = message.serialize(collationID: collationID)
-    self.socket?.write(data: payload!)
     
-    collationIDs[collationID] = (p.fulfill, p.reject)
+    let p  = Promise<T>.pending()
+    self.collationIDs[collationID] = (p.fulfill, p.reject)
+
+    self.socket!.write(data: payload!)
+
     return p.promise
   }
   
