@@ -15,22 +15,16 @@
  */
 
 import Foundation
-import SwiftProtobuf
 
-public struct LogoutMessage : Message {
-  private let payload: Server_Envelope = LogoutMessage.build()
-  
-  fileprivate static func build() -> Server_Envelope {
-    var envelope = Server_Envelope()
-    envelope.logout = Server_Logout()
-    return envelope
-  }
-  
-  public func serialize() -> Data? {
-    return try! payload.serializedData()
-  }
-  
-  public var description: String {
-    return String(format: "DefaultLogoutMessage()")
+fileprivate var nakama_associated_cursor = "nakama_cursor"
+
+extension Array where Element == User { // TODO change this to Storage
+  public private(set) var cursor: Data? {
+    get {
+      return objc_getAssociatedObject(self, &nakama_associated_cursor) as? Data
+    }
+    set(newValue) {
+      objc_setAssociatedObject(self, &nakama_associated_cursor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+    }
   }
 }

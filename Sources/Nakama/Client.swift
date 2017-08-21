@@ -99,6 +99,7 @@ public protocol Client {
    */
   func send(message: SelfFetchMessage) -> Promise<SelfUser>
   func send(message: SelfUpdateMessage) -> Promise<Void>
+  func send(message: UsersFetchMessage) -> Promise<[User]>
   
   /**
    - Parameter message : message The message to send.
@@ -353,6 +354,10 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
+  func send(message: UsersFetchMessage) -> Promise<[User]> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
     
@@ -387,6 +392,13 @@ internal class DefaultClient : Client, WebSocketDelegate {
       case .self_p(let proto):
         let (fulfill, _) : (fulfill: (SelfUser) -> Void, reject: Any) = promiseTuple as! (fulfill: (SelfUser) -> Void, reject: Any)
         fulfill(DefaultSelf(from: proto))
+      case .users(let proto):
+        let (fulfill, _) : (fulfill: ([User]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([User]) -> Void, reject: Any)
+        var users : [User] = []
+        for user in proto.users {
+          users.append(DefaultUser(from: user))
+        }
+        fulfill(users)
       default:
         print("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
       }

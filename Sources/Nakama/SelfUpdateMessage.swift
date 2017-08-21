@@ -17,50 +17,15 @@
 import Foundation
 
 public struct SelfUpdateMessage : CollatedMessage {
-  public private(set) var handle : String?
-  public private(set) var fullname: String?
-  public private(set) var timezone: String?
-  public private(set) var location: String?
-  public private(set) var lang: String?
-  public private(set) var metadata: Data?
-  public private(set) var avatarURL: String?
+  public var handle : String?
+  public var fullname: String?
+  public var timezone: String?
+  public var location: String?
+  public var lang: String?
+  public var metadata: Data?
+  public var avatarURL: String?
   
   public init(){}
-  
-  public mutating func setHandle(handle: String) -> SelfUpdateMessage {
-    self.handle = handle
-    return self;
-  }
-  
-  public mutating func setFullname(fullname: String) -> SelfUpdateMessage {
-    self.fullname = fullname
-    return self;
-  }
-  
-  public mutating func setTimezone(timezone: String) -> SelfUpdateMessage {
-    self.timezone = timezone
-    return self;
-  }
-  
-  public mutating func setLocation(location: String) -> SelfUpdateMessage {
-    self.location = location
-    return self;
-  }
-  
-  public mutating func setLang(lang: String) -> SelfUpdateMessage {
-    self.lang = lang
-    return self;
-  }
-  
-  public mutating func setMetadata(metadata: Data) -> SelfUpdateMessage {
-    self.metadata = metadata
-    return self;
-  }
-  
-  public mutating func setAvatarUrl(avatarUrl: String) -> SelfUpdateMessage {
-    self.avatarURL = avatarUrl
-    return self;
-  }
   
   public func serialize(collationID: String) -> Data? {
     var update = Server_TSelfUpdate()

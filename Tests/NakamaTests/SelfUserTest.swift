@@ -21,6 +21,7 @@ import PromiseKit
 class SelfUserTest: XCTestCase {
   private let client : Client = Builder.defaults(serverKey: "defaultkey")
   private let deviceID : String = UUID.init().uuidString
+  private var session : Session?
   
   override func setUp() {
     super.setUp()
@@ -28,7 +29,8 @@ class SelfUserTest: XCTestCase {
     let exp = expectation(description: "Client connect")
     let message = AuthenticateMessage.device(id: deviceID)
     client.register(with: message).then { session in
-      self.client.connect(to: session)
+      self.session = session
+      let _ = self.client.connect(to: session)
     }.catch{err in
       XCTAssert(false, "Registration failed: " + (err as! NakamaError).message)
     }.always {
@@ -61,20 +63,38 @@ class SelfUserTest: XCTestCase {
   
   func testSelfUpdate() {
     let exp = expectation(description: "Self Update")
-    var message = SelfUpdateMessage()
     let epoch = Date().timeIntervalSince1970.description
-    let _ = message.setHandle(handle: "h-" + epoch)
+    
+    var message = SelfUpdateMessage()
+    message.handle = "h-" + epoch
     
     client.send(message: message).then {
       return self.client.send(message: SelfFetchMessage())
     }.then { selfuser in
       XCTAssert(selfuser.handle == ("h-" + epoch), "handle is not updated correctly")
     }.catch{err in
-      XCTAssert(false, "Self fetch failed: " + (err as! NakamaError).message)
+      XCTAssert(false, "Self update failed: " + (err as! NakamaError).message)
     }.always {
       exp.fulfill()
     }
     
     waitForExpectations(timeout: 10, handler: nil)
   }
+
+  func testUsersFetch() {
+    let exp = expectation(description: "Users Fetch")
+    var message = UsersFetchMessage()
+    message.handles.append(self.session!.handle)
+    message.userIDs.append(self.session!.id)
+    client.send(message: message).then { users in
+      XCTAssert(users[0].id == self.session!.id, "user ID does not match")
+    }.catch{err in
+      XCTAssert(false, "Users fetch failed: " + (err as! NakamaError).message)
+    }.always {
+        exp.fulfill()
+    }
+    
+    waitForExpectations(timeout: 10, handler: nil)
+  }
+  
 }
