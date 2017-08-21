@@ -43,6 +43,58 @@ public protocol CollatedMessage : CustomStringConvertible {
   func serialize(collationID: String) -> Data?
 }
 
+public class Builder {
+  private let serverKey : String
+  private var host : String = "127.0.0.1"
+  private var port : Int = 7350
+  private var lang : String = "en"
+  private var ssl : Bool = false
+  private var timeout : Int = 5000
+  private var trace : Bool = false
+  
+  init(serverKey: String) {
+    self.serverKey = serverKey
+  }
+  
+  public func build() -> Client {
+    return DefaultClient(serverKey: serverKey, host: host, port: port, lang: lang, ssl: ssl, timeout: timeout, trace: trace)
+  }
+  
+  public func host(host: String) -> Builder {
+    self.host = host
+    return self
+  }
+  
+  public func port(port: Int) -> Builder {
+    self.port = port
+    return self
+  }
+  
+  public func lang(lang: String) -> Builder {
+    self.lang = lang
+    return self
+  }
+  
+  public func ssl(ssl: Bool) -> Builder {
+    self.ssl = ssl
+    return self
+  }
+  
+  public func timeout(timeout: Int) -> Builder {
+    self.timeout = timeout
+    return self
+  }
+  
+  public func trace(trace: Bool) -> Builder {
+    self.trace = trace
+    return self
+  }
+  
+  public class func defaults(serverKey : String) -> Client {
+    return Builder(serverKey: serverKey).build()
+  }
+}
+
 /**
    A client for the Nakama server.
  */
@@ -97,67 +149,16 @@ public protocol Client {
    - Parameter <T>: The expected return type.
    - Returns: An instance of the expected return type.
    */
+  func send(message: UsersFetchMessage) -> Promise<[User]>
   func send(message: SelfFetchMessage) -> Promise<SelfUser>
   func send(message: SelfUpdateMessage) -> Promise<Void>
-  func send(message: UsersFetchMessage) -> Promise<[User]>
+  func send(message: SelfLinkMessage) -> Promise<Void>
+  func send(message: SelfUnlinkMessage) -> Promise<Void>
   
   /**
    - Parameter message : message The message to send.
    */
   func send(message: Message)
-}
-
-public class Builder {
-  private let serverKey : String
-  private var host : String = "127.0.0.1"
-  private var port : Int = 7350
-  private var lang : String = "en"
-  private var ssl : Bool = false
-  private var connectTimeout : Int = 3000
-  private var timeout : Int = 5000
-  private var trace : Bool = false
-  
-  init(serverKey: String) {
-    self.serverKey = serverKey
-  }
-  
-  public func build() -> Client {
-    return DefaultClient(serverKey: serverKey, host: host, port: port, lang: lang, ssl: ssl, timeout: timeout, trace: trace)
-  }
-  
-  public func host(host: String) -> Builder {
-    self.host = host
-    return self
-  }
-  
-  public func port(port: Int) -> Builder {
-    self.port = port
-    return self
-  }
-  
-  public func lang(lang: String) -> Builder {
-    self.lang = lang
-    return self
-  }
-  
-  public func ssl(ssl: Bool) -> Builder {
-    self.ssl = ssl
-    return self
-  }
-  
-  public func timeout(timeout: Int) -> Builder {
-    self.timeout = timeout
-    return self
-  }
-  
-  public func trace(trace: Bool) -> Builder {
-    self.trace = trace
-    return self
-  }
-  
-  public class func defaults(serverKey : String) -> Client {
-    return Builder(serverKey: serverKey).build()
-  }
 }
 
 internal class DefaultClient : Client, WebSocketDelegate {
@@ -347,6 +348,10 @@ internal class DefaultClient : Client, WebSocketDelegate {
     self.socket?.write(data: binaryData)
   }
   
+  func send(message: UsersFetchMessage) -> Promise<[User]> {
+    return self.send(proto: message)
+  }
+  
   func send(message: SelfFetchMessage) -> Promise<SelfUser> {
     return self.send(proto: message)
   }
@@ -355,7 +360,11 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
-  func send(message: UsersFetchMessage) -> Promise<[User]> {
+  func send(message: SelfLinkMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: SelfUnlinkMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
   

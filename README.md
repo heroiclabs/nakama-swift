@@ -20,6 +20,7 @@ $> swift package generate-xcodeproj
 
 ```shell
 $> swift build
+$> swift test
 ```
 
 ## Package

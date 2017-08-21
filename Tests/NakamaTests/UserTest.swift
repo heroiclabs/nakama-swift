@@ -27,7 +27,7 @@ class SelfUserTest: XCTestCase {
     super.setUp()
     
     let exp = expectation(description: "Client connect")
-    let message = AuthenticateMessage.device(id: self.deviceID)
+    let message = AuthenticateMessage(device: self.deviceID)
     client.register(with: message).then { session in
       self.client.connect(to: session)
     }.then { session in
@@ -43,6 +43,22 @@ class SelfUserTest: XCTestCase {
   override func tearDown() {
     client.disconnect()
     super.tearDown()
+  }
+  
+  func testUsersFetch() {
+    let exp = expectation(description: "Users Fetch")
+    var message = UsersFetchMessage()
+    message.handles.append(self.session!.handle)
+    message.userIDs.append(self.session!.id)
+    client.send(message: message).then { users in
+      XCTAssert(users[0].id == self.session!.id, "user ID does not match")
+      }.catch{err in
+        XCTAssert(false, "Users fetch failed: " + (err as! NakamaError).message)
+      }.always {
+        exp.fulfill()
+    }
+    
+    waitForExpectations(timeout: 10, handler: nil)
   }
   
   func testSelfFetch() {
@@ -80,21 +96,28 @@ class SelfUserTest: XCTestCase {
     
     waitForExpectations(timeout: 10, handler: nil)
   }
-
-  func testUsersFetch() {
-    let exp = expectation(description: "Users Fetch")
-    var message = UsersFetchMessage()
-    message.handles.append(self.session!.handle)
-    message.userIDs.append(self.session!.id)
-    client.send(message: message).then { users in
-      XCTAssert(users[0].id == self.session!.id, "user ID does not match")
+  
+  func testSelfLinkUnlink() {
+    let exp = expectation(description: "Self Link")
+    
+    let uuid = UUID.init().uuidString
+    let message = SelfLinkMessage(custom: uuid)
+    client.send(message: message).then {
+      return self.client.send(message: SelfFetchMessage())
+    }.then { selfuser in
+      XCTAssert(selfuser.customID == uuid, "Custom ID does not match")
+      return self.client.send(message: SelfUnlinkMessage(device: self.deviceID))
+    }.then {
+      return self.client.send(message: SelfFetchMessage())
+    }.then { selfuser in
+      XCTAssert(selfuser.deviceIDs.isEmpty, "Device ID does not match")
     }.catch{err in
-      XCTAssert(false, "Users fetch failed: " + (err as! NakamaError).message)
+      XCTAssert(false, "Self link failed: " + (err as! NakamaError).message)
     }.always {
-        exp.fulfill()
+      exp.fulfill()
     }
     
     waitForExpectations(timeout: 10, handler: nil)
   }
-  
+
 }

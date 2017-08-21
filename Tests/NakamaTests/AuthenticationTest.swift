@@ -24,7 +24,7 @@ class AuthenticationTest: XCTestCase {
     
   func testDeviceIdRegistration() {
     let exp = expectation(description: "Device registration")
-    let message = AuthenticateMessage.device(id: deviceID)
+    let message = AuthenticateMessage(device: deviceID)
     client.register(with: message).then { session in
       XCTAssert(!session.id.uuidString.isEmpty, "User ID is not set")
     }.catch{err in
@@ -39,7 +39,7 @@ class AuthenticationTest: XCTestCase {
   func testEmailRegistrationAndLogin() {
     let exp = expectation(description: "Email registration and login")
     
-    let message = AuthenticateMessage.email(address: "test@example.com", password: "strongpassword")
+    let message = AuthenticateMessage(email: "test@example.com", password: "strongpassword")
     client.register(with: message).then { _ in
       return self.client.login(with: message)
     }.then { session in

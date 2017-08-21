@@ -19,8 +19,54 @@ import Foundation
 public struct AuthenticateMessage : Message {
   private let payload : Server_AuthenticateRequest
   
-  internal init(msg: Server_AuthenticateRequest) {
-    self.payload = msg
+  public init(device id:String) {
+    var s = Server_AuthenticateRequest()
+    s.device = id
+    payload = s
+  }
+  
+  public init(custom id:String) {
+    var s = Server_AuthenticateRequest()
+    s.custom = id
+    payload = s
+  }
+  
+  public init(facebook token:String) {
+    var s = Server_AuthenticateRequest()
+    s.facebook = token
+    payload = s
+  }
+  
+  public init(google token:String) {
+    var s = Server_AuthenticateRequest()
+    s.google = token
+    payload = s
+  }
+  
+  public init(steam token:String) {
+    var proto = Server_AuthenticateRequest()
+    proto.steam = token
+    payload = proto
+  }
+  
+  public init(email address:String, password:String) {
+    var s = Server_AuthenticateRequest()
+    s.email = Server_AuthenticateRequest.Email()
+    s.email.email = address
+    s.email.password = password
+    payload = s
+  }
+  
+  public init(gamecenter bundleID:String, playerID:String, publicKeyURL:String, salt:String, timestamp:Int, signature:String) {
+    var s = Server_AuthenticateRequest()
+    s.gameCenter = Server_AuthenticateRequest.GameCenter()
+    s.gameCenter.bundleID = bundleID
+    s.gameCenter.playerID = playerID
+    s.gameCenter.publicKeyURL = publicKeyURL
+    s.gameCenter.salt = salt
+    s.gameCenter.timestamp = Int64(timestamp)
+    s.gameCenter.signature = signature
+    payload = s
   }
   
   public func serialize() -> Data? {
@@ -30,64 +76,20 @@ public struct AuthenticateMessage : Message {
   public var description: String {
     switch payload.id! {
     case .device(let device):
-      return String(format: "DefaultAuthenticateMessage(device=%@)", device)
+      return String(format: "AuthenticateMessage(device=%@)", device)
     case .custom(let custom):
-      return String(format: "DefaultAuthenticateMessage(custom=%@)", custom)
+      return String(format: "AuthenticateMessage(custom=%@)", custom)
     case .facebook(let token):
-      return String(format: "DefaultAuthenticateMessage(facebook=%@)", token)
+      return String(format: "AuthenticateMessage(facebook=%@)", token)
     case .google(let token):
-      return String(format: "Default AuthenticateMessage(google=%@)", token)
+      return String(format: "AuthenticateMessage(google=%@)", token)
     case .steam(let token):
-      return String(format: "DefaultAuthenticateMessage(steam=%@)", token)
+      return String(format: "AuthenticateMessage(steam=%@)", token)
     case .email(let email):
-      return String(format: "DefaultAuthenticateMessage(email=%@,password=%@)", email.email, email.password)
+      return String(format: "AuthenticateMessage(email=%@,password=%@)", email.email, email.password)
     case .gameCenter(let gc):
-      return String(format: "DefaultAuthenticateMessage(game_center=(bundle_id=%@,player_id=%@,public_key_url=%@,salt=%@,timestamp=%@,signature=%@))", gc.bundleID, gc.playerID, gc.publicKeyURL, gc.salt, gc.timestamp, gc.signature)
+      return String(format: "AuthenticateMessage(gamecenter=(bundle_id=%@,player_id=%@,public_key_url=%@,salt=%@,timestamp=%@,signature=%@))", gc.bundleID, gc.playerID, gc.publicKeyURL, gc.salt, gc.timestamp, gc.signature)
     }
   }
   
-  public static func device(id:String) -> AuthenticateMessage {
-    var s = Server_AuthenticateRequest()
-    s.device = id
-    return AuthenticateMessage(msg: s)
-  }
-  
-  public static func custom(id:String) -> AuthenticateMessage {
-    var s = Server_AuthenticateRequest()
-    s.custom = id
-    return AuthenticateMessage(msg: s)
-  }
-  
-  public static func facebook(token:String) -> AuthenticateMessage {
-    var s = Server_AuthenticateRequest()
-    s.facebook = token
-    return AuthenticateMessage(msg: s)
-  }
-  
-  public static func google(token:String) -> AuthenticateMessage {
-    var s = Server_AuthenticateRequest()
-    s.google = token
-    return AuthenticateMessage(msg: s)
-  }
-  
-  public static func email(address:String, password:String) -> AuthenticateMessage {
-    var s = Server_AuthenticateRequest()
-    s.email = Server_AuthenticateRequest.Email()
-    s.email.email = address
-    s.email.password = password
-    return AuthenticateMessage(msg: s)
-  }
-  
-  public static func gameCenter(bundleID:String, playerID:String, publicKeyURL:String, salt:String, timestamp:Int, signature:String) -> AuthenticateMessage {
-    var s = Server_AuthenticateRequest()
-    s.gameCenter = Server_AuthenticateRequest.GameCenter()
-    s.gameCenter.bundleID = bundleID
-    s.gameCenter.playerID = playerID
-    s.gameCenter.publicKeyURL = publicKeyURL
-    s.gameCenter.salt = salt
-    s.gameCenter.timestamp = Int64(timestamp)
-    s.gameCenter.signature = signature
-    return AuthenticateMessage(msg: s)
-  }
-
 }

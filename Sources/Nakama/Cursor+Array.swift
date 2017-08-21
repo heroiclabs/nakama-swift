@@ -19,6 +19,9 @@ import Foundation
 fileprivate var nakama_associated_cursor = "nakama_cursor"
 
 extension Array where Element == User { // TODO change this to Storage
+  /**
+   - Returns: Optional cursor associated with this data
+  */
   public private(set) var cursor: Data? {
     get {
       return objc_getAssociatedObject(self, &nakama_associated_cursor) as? Data
