@@ -21,11 +21,11 @@ import Foundation
  The error could be result of bad input, or unexpected system error.
  Check Error Code for more info.
  */
-public enum PermissionRead : String {
-  case unknown = "unknown"
-  case noRead = "noRead"
-  case ownerRead = "ownerRead"
-  case publicRead = "publicRead"
+public enum PermissionRead : Int32 {
+  case unknown = -1
+  case noRead = 0
+  case ownerRead = 1
+  case publicRead = 2
   
   internal static func make(from code:Int32) -> PermissionRead {
     switch code {
@@ -42,10 +42,10 @@ public enum PermissionRead : String {
 
 }
 
-public enum PermissionWrite : String {
-  case unknown = "unknown"
-  case noWrite = "noWrite"
-  case ownerWrite = "ownerWrite"
+public enum PermissionWrite : Int32 {
+  case unknown = -1
+  case noWrite = 0
+  case ownerWrite = 1
   
   internal static func make(from code:Int32) -> PermissionWrite {
     switch code {

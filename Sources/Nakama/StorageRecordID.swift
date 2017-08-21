@@ -55,6 +55,6 @@ internal struct DefaultStorageRecordID : StorageRecordID {
   }
   
   public var description: String {
-    return String(format: "DefaultStorageRecordID(bucket=%@,collection=%d,key=%@,version=%@", bucket, collection, key, version.base64EncodedString())
+    return String(format: "DefaultStorageRecordID(bucket=%@,collection=%d,key=%@,version=%@)", bucket, collection, key, version.base64EncodedString())
   }
 }
