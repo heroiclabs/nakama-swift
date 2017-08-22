@@ -49,9 +49,9 @@ class SelfUserTest: XCTestCase {
     let exp = expectation(description: "Users Fetch")
     var message = UsersFetchMessage()
     message.handles.append(self.session!.handle)
-    message.userIDs.append(self.session!.id)
+    message.userIDs.append(self.session!.userID)
     client.send(message: message).then { users in
-      XCTAssert(users[0].id == self.session!.id, "user ID does not match")
+      XCTAssert(users[0].id == self.session!.userID, "user ID does not match")
       }.catch{err in
         XCTAssert(false, "Users fetch failed: " + (err as! NakamaError).message)
       }.always {

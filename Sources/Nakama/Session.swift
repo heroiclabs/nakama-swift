@@ -38,7 +38,7 @@ public protocol Session : CustomStringConvertible {
   /**
    The ID of the user.
    */
-  var id: UUID { get }
+  var userID: UUID { get }
 
   /**
    The session token returned by the server after register or login.
@@ -54,7 +54,7 @@ public protocol Session : CustomStringConvertible {
 
 struct DefaultSession : Session {
   let token: String
-  let id: UUID
+  let userID: UUID
   let handle: String
   let expiresAt: Int
   let createdAt: Int
@@ -74,7 +74,7 @@ struct DefaultSession : Session {
     handle = jsonMap?["han"] as! String
     
     let uid = jsonMap?["uid"] as! String
-    id = UUID.init(uuidString: uid)!
+    userID = UUID.init(uuidString: uid)!
     
     self.token = token;
   }
@@ -84,7 +84,7 @@ struct DefaultSession : Session {
   }
   
   public var description: String {
-    return String(format: "id=%@,handle=%@,expiresAt=%d,createdAt=%d,token=%@", id.uuidString, handle, expiresAt, createdAt, token)
+    return String(format: "userID=%@,handle=%@,expiresAt=%d,createdAt=%d,token=%@", userID.uuidString, handle, expiresAt, createdAt, token)
   }
   
   /**

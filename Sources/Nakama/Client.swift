@@ -155,6 +155,11 @@ public protocol Client {
   func send(message: SelfLinkMessage) -> Promise<Void>
   func send(message: SelfUnlinkMessage) -> Promise<Void>
   func send(message: RPCMessage) -> Promise<RPCResult>
+  func send(message: StorageFetchMessage) -> Promise<[StorageRecord]>
+  func send(message: StorageListMessage) -> Promise<[StorageRecord]>
+  func send(message: StorageRemoveMessage) -> Promise<Void>
+  func send(message: StorageWriteMessage) -> Promise<[StorageRecordID]>
+  func send(message: StorageUpdateMessage) -> Promise<[StorageRecordID]>
   
   /**
    - Parameter message : message The message to send.
@@ -370,6 +375,27 @@ internal class DefaultClient : Client, WebSocketDelegate {
   }
   
   func send(message: RPCMessage) -> Promise<RPCResult> {
+    return self.send(proto: message)
+  }
+  
+  
+  func send(message: StorageFetchMessage) -> Promise<[StorageRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: StorageListMessage) -> Promise<[StorageRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: StorageRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: StorageWriteMessage) -> Promise<[StorageRecordID]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: StorageUpdateMessage) -> Promise<[StorageRecordID]> {
     return self.send(proto: message)
   }
   

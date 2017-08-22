@@ -45,6 +45,12 @@ public struct StorageOp {
     payload.value = Data(bytes: &v, count: MemoryLayout.size(ofValue: v))
   }
   
+  public init(init_ path: String, value: Data) {
+    payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.init_.rawValue)
+    payload.path = path
+    payload.value = value
+  }
+  
   public init(merge path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.merge.rawValue)
     payload.path = path

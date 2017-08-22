@@ -26,7 +26,7 @@ class AuthenticationTest: XCTestCase {
     let exp = expectation(description: "Device registration")
     let message = AuthenticateMessage(device: deviceID)
     client.register(with: message).then { session in
-      XCTAssert(!session.id.uuidString.isEmpty, "User ID is not set")
+      XCTAssert(!session.userID.uuidString.isEmpty, "User ID is not set")
     }.catch{err in
       XCTAssert(false, "Registration failed: " + (err as! NakamaError).message)
     }.always {
@@ -43,19 +43,19 @@ class AuthenticationTest: XCTestCase {
     client.register(with: message).then { _ in
       return self.client.login(with: message)
     }.then { session in
-      XCTAssert(!session.id.uuidString.isEmpty, "User ID is not set")
+      XCTAssert(!session.userID.uuidString.isEmpty, "User ID is not set")
       exp.fulfill()
     }.catch { err in
       switch err as! NakamaError {
       case .userRegisterInuse(_):
         break;
       default:
-        XCTAssert(false, "Registration failed: " + (err as! NakamaError).message)
+        XCTAssert(false, "Registration failed: " + (err as! NakamaError).localizedDescription)
         return
       }
       
       self.client.login(with: message).then { session in
-          XCTAssert(!session.id.uuidString.isEmpty, "User ID is not set")
+          XCTAssert(!session.userID.uuidString.isEmpty, "User ID is not set")
       }.catch { err in
         XCTAssert(false, "Registration failed: " + (err as! NakamaError).message)
       }.always {

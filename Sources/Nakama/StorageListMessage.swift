@@ -23,11 +23,11 @@ public struct StorageListMessage : CollatedMessage {
   public var limit: Int?
   public var cursor: Data?
   
-  public init(matching bucket: String){
+  public init(bucket: String){
     self.bucket = bucket
   }
   
-  public init(by userID: UUID) {
+  public init(userID: UUID) {
     self.userID = userID
   }
   
