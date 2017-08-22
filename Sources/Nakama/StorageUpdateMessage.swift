@@ -90,21 +90,32 @@ public struct StorageUpdateMessage : CollatedMessage {
     payload.updates = []
   }
   
-  public func update(bucket: String, collection: String, key: String, ops: [StorageOp], version: Data, read: PermissionRead, write: PermissionWrite) {
+  public mutating func update(bucket: String, collection: String, key: String, ops: [StorageOp], version: Data?=nil, readPermission: PermissionRead?=nil, writePermission: PermissionWrite?=nil) {
     var update = Server_TStorageUpdate.StorageUpdate()
-    update.permissionRead = read.rawValue
-    update.permissionWrite = write.rawValue
+    
+    if readPermission != nil {
+      update.permissionRead = readPermission!.rawValue
+    }
+    
+    if writePermission != nil {
+      update.permissionWrite = writePermission!.rawValue
+    }
     
     update.key = Server_TStorageUpdate.StorageUpdate.StorageKey()
     update.key.bucket = bucket
     update.key.collection = collection
     update.key.record = key
-    update.key.version = version
+    
+    if version != nil {
+      update.key.version = version!
+    }
     
     update.ops = []
     for op in ops {
       update.ops.append(op.payload)
     }
+    
+    payload.updates.append(update)
   }
   
   public func serialize(collationID: String) -> Data? {

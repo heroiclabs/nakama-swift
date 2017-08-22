@@ -218,7 +218,9 @@ internal class DefaultClient : Client, WebSocketDelegate {
   }
   
   func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-    print("Unexpected string message from server: %@", text);
+    if trace {
+      NSLog("Unexpected string message from server: %@", text);
+    }
   }
   
   func websocketDidReceiveData(socket: WebSocket, data: Data) {
@@ -249,10 +251,8 @@ internal class DefaultClient : Client, WebSocketDelegate {
     configuration.allowsCellularAccess = true
     let session = URLSession(configuration: configuration)
     
-    print(request)
-    
     if trace {
-      print("Authenticate request: %@", message.description)
+      NSLog("Authenticate request: %@", message.description)
     }
     
     let (p, fulfill, reject) = Promise<Session>.pending()
@@ -261,7 +261,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
       // Connectivity issues
       guard error == nil else {
         if self.trace {
-          print("Authenticate error: %@", error!);
+          NSLog("Authentication error: %@", error!.localizedDescription)
         }
         reject(error!)
         return
@@ -274,7 +274,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
       
       let authResponse = try! Server_AuthenticateResponse(serializedData: data!)
       if self.trace {
-        print("Authenticate response: %@", authResponse.debugDescription);
+        NSLog("Authenticate response: %@", authResponse.debugDescription);
       }
       
       switch authResponse.id! {
@@ -317,7 +317,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
     }
     
     if trace {
-      print("Connect: %@" + wsComponent.url!.absoluteString);
+      NSLog("Connect: %@" + wsComponent.url!.absoluteString);
     }
     
     socket!.connect()
@@ -384,7 +384,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
           self._serverTime = newServerTime;
         }
       default:
-        print("No payload for incoming uncollated message from the server: %@", (try? envelope.jsonString()) ?? "nil");
+        NSLog("No payload for incoming uncollated message from the server: %@", (try? envelope.jsonString()) ?? "nil");
       }
       
       if self.onError != nil {
@@ -434,10 +434,14 @@ internal class DefaultClient : Client, WebSocketDelegate {
         fulfill(records)
         
       default:
-        print("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
+        if trace {
+          NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
+        }
       }
     } else {
-      print("No matching promise for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
+      if trace {
+        NSLog("No matching promise for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
+      }
     }
   }
 }
