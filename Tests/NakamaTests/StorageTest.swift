@@ -50,15 +50,19 @@ class StorageTest: XCTestCase {
     let json = "{\"coins\": 100, \"gems\": 10, \"artifacts\": 0}"
     let value = json.data(using: .utf8)!
     
+    let bucket = "bucket"
+    let collection = "collection"
+    let key = "key"
+
     var message = StorageWriteMessage()
-    message.write(bucket: "bucket", collection: "collection", key: "key", value: value)
+    message.write(bucket: bucket, collection: collection, key: key, value: value)
     client.send(message: message).then { results -> Promise<[StorageRecord]> in
       let result = results[0]
-      XCTAssert(result.bucket == "bucket", "Storage bucket does not match")
+      XCTAssert(result.bucket == bucket, "Storage bucket does not match")
       
       //list
-      var message = StorageListMessage.init(bucket: "bucket")
-      message.collection = "collection"
+      var message = StorageListMessage(bucket: bucket)
+      message.collection = collection
       message.userID = self.session!.userID
       return self.client.send(message: message)
     }.then{ results -> Promise<Void> in
@@ -67,7 +71,7 @@ class StorageTest: XCTestCase {
       
       //remove
       var message = StorageRemoveMessage()
-      message.remove(bucket: "bucket", collection: "collection", key: "key")
+      message.remove(bucket: bucket, collection: collection, key: key)
       return self.client.send(message: message)
     }.catch{ err in
       XCTAssert(false, "Storage test failed: " + (err as! NakamaError).message)
@@ -75,7 +79,7 @@ class StorageTest: XCTestCase {
       exp.fulfill()
     }
     
-    waitForExpectations(timeout: 10, handler: nil)
+    waitForExpectations(timeout: 30, handler: nil)
   }
   
   
@@ -90,18 +94,30 @@ class StorageTest: XCTestCase {
     ]
     
     var message = StorageUpdateMessage()
-    message.update(bucket: "bucket", collection: "collection", key: "key", ops: ops)
+    message.update(bucket: "bucket", collection: "collection", key: "key", ops: ops, readPermission: PermissionRead.ownerRead, writePermission: PermissionWrite.ownerWrite)
     client.send(message: message).then { results -> Promise<[StorageRecord]> in
       let result = results[0]
-      XCTAssert(result.bucket == "bucket ", "Storage bucket does not match")
+      XCTAssert(result.bucket == "bucket", "Storage bucket does not match")
       
       //fetch
       var message = StorageFetchMessage()
-      message.fetch(bucket: "bucket", collection: "collection", key: "key")
+      message.fetch(bucket: "bucket", collection: "collection", key: "key", userID: self.session!.userID)
       return self.client.send(message: message)
-    }.then { results in
+    }.then { results -> Promise<Void> in
       let result = results[0]
-      XCTAssert(String.init(data: result.value, encoding: .utf8) == json, "Storage value does not match")
+
+      let decoded = try JSONSerialization.jsonObject(with: result.value, options: [])
+      if let dictFromJSON = decoded as? [String:Any] {
+        let obj = dictFromJSON["foo"] as! [String:Any]
+        XCTAssert(obj["coins"] as! Int == 90, "Storage value does not match")
+      } else {
+        XCTAssert(false, "Storage value does not match")
+      }
+
+      //remove
+      var message = StorageRemoveMessage()
+      message.remove(bucket: "bucket", collection: "collection", key: "key")
+      return self.client.send(message: message)
     }.catch{err in
       XCTAssert(false, "Storage update failed: " + (err as! NakamaError).message)
     }.always {

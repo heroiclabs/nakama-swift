@@ -40,9 +40,7 @@ public struct StorageOp {
   public init(incr path: String, value: Int) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.incr.rawValue)
     payload.path = path
-    
-    var v = value
-    payload.value = Data(bytes: &v, count: MemoryLayout.size(ofValue: v))
+    payload.value = String(value).data(using: .utf8)!
   }
   
   public init(init_ path: String, value: Data) {
@@ -101,10 +99,14 @@ public struct StorageUpdateMessage : CollatedMessage {
     
     if readPermission != nil {
       update.permissionRead = readPermission!.rawValue
+    } else {
+      update.permissionRead = PermissionRead.ownerRead.rawValue
     }
     
     if writePermission != nil {
       update.permissionWrite = writePermission!.rawValue
+    } else {
+      update.permissionWrite = PermissionWrite.ownerWrite.rawValue
     }
     
     update.key = Server_TStorageUpdate.StorageUpdate.StorageKey()

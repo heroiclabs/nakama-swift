@@ -36,10 +36,14 @@ public struct StorageWriteMessage : CollatedMessage {
     
     if readPermission != nil {
       data.permissionRead = readPermission!.rawValue
+    } else {
+      data.permissionRead = PermissionRead.ownerRead.rawValue
     }
     
     if writePermission != nil {
       data.permissionWrite = writePermission!.rawValue
+    } else {
+      data.permissionWrite = PermissionWrite.ownerWrite.rawValue
     }
     
     payload.data.append(data)

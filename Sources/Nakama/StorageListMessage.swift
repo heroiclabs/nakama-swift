@@ -40,8 +40,8 @@ public struct StorageListMessage : CollatedMessage {
       }
     }
     
-    if let _bucket = bucket {
-      listing.bucket = _bucket
+    if bucket != nil {
+      listing.bucket = bucket!
     }
     
     if let _collection = collection {
