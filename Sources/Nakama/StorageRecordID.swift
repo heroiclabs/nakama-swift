@@ -19,7 +19,7 @@ import Foundation
 /**
   The composite identifier which represents a record from the storage engine.
  */
-public protocol StorageRecordID : CustomStringConvertible {
+public protocol StorageRecordID {
   /**
    - Returns: The bucket (namespace) for the collections of records.
    */

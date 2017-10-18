@@ -421,7 +421,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
       self.collationIDs.removeValue(forKey: envelope.collationID)
       
       if envelope.payload == nil {
-        let (fulfill, _) : (fulfill: (Void) -> Void, reject: Any) = promiseTuple as! (fulfill: (Void) -> Void, reject: Any)
+        let (fulfill, _) : (fulfill: (() -> Void), reject: Any) = promiseTuple as! (fulfill: (() -> Void), reject: Any)
         fulfill()
         return
       }

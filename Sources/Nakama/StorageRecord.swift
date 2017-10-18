@@ -62,7 +62,7 @@ public enum PermissionWrite : Int32 {
 /**
  The composite identifier which represents a record from the storage engine.
  */
-public protocol StorageRecord : StorageRecordID, CustomStringConvertible {
+public protocol StorageRecord : StorageRecordID {
   /**
    - UTC timestamp when the record was created.
    */

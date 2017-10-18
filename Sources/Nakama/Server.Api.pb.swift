@@ -5720,6 +5720,362 @@ struct Server_TopicPresence: SwiftProtobuf.Message {
 }
 
 ///*
+/// PropertyPair is a core domain type respresenting a single user property
+struct Server_PropertyPair: SwiftProtobuf.Message {
+  static let protoMessageName: String = _protobuf_package + ".PropertyPair"
+
+  var key: String {
+    get {return _storage._key}
+    set {_uniqueStorage()._key = newValue}
+  }
+
+  var value: OneOf_Value? {
+    get {return _storage._value}
+    set {_uniqueStorage()._value = newValue}
+  }
+
+  var stringSet: Server_PropertyPair.StringSet {
+    get {
+      if case .stringSet(let v)? = _storage._value {return v}
+      return Server_PropertyPair.StringSet()
+    }
+    set {_uniqueStorage()._value = .stringSet(newValue)}
+  }
+
+  var boolValue: Bool {
+    get {
+      if case .boolValue(let v)? = _storage._value {return v}
+      return false
+    }
+    set {_uniqueStorage()._value = .boolValue(newValue)}
+  }
+
+  var intValue: Int64 {
+    get {
+      if case .intValue(let v)? = _storage._value {return v}
+      return 0
+    }
+    set {_uniqueStorage()._value = .intValue(newValue)}
+  }
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum OneOf_Value: Equatable {
+    case stringSet(Server_PropertyPair.StringSet)
+    case boolValue(Bool)
+    case intValue(Int64)
+
+    static func ==(lhs: Server_PropertyPair.OneOf_Value, rhs: Server_PropertyPair.OneOf_Value) -> Bool {
+      switch (lhs, rhs) {
+      case (.stringSet(let l), .stringSet(let r)): return l == r
+      case (.boolValue(let l), .boolValue(let r)): return l == r
+      case (.intValue(let l), .intValue(let r)): return l == r
+      default: return false
+      }
+    }
+  }
+
+  //// Set of string user property
+  struct StringSet: SwiftProtobuf.Message {
+    static let protoMessageName: String = Server_PropertyPair.protoMessageName + ".StringSet"
+
+    var values: [String] = []
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    /// Used by the decoding initializers in the SwiftProtobuf library, not generally
+    /// used directly. `init(serializedData:)`, `init(jsonUTF8Data:)`, and other decoding
+    /// initializers are defined in the SwiftProtobuf library. See the Message and
+    /// Message+*Additions` files.
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeRepeatedStringField(value: &self.values)
+        default: break
+        }
+      }
+    }
+
+    /// Used by the encoding methods of the SwiftProtobuf library, not generally
+    /// used directly. `Message.serializedData()`, `Message.jsonUTF8Data()`, and
+    /// other serializer methods are defined in the SwiftProtobuf library. See the
+    /// `Message` and `Message+*Additions` files.
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+      if !self.values.isEmpty {
+        try visitor.visitRepeatedStringField(value: self.values, fieldNumber: 1)
+      }
+      try unknownFields.traverse(visitor: &visitor)
+    }
+  }
+
+  init() {}
+
+  /// Used by the decoding initializers in the SwiftProtobuf library, not generally
+  /// used directly. `init(serializedData:)`, `init(jsonUTF8Data:)`, and other decoding
+  /// initializers are defined in the SwiftProtobuf library. See the Message and
+  /// Message+*Additions` files.
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularStringField(value: &_storage._key)
+        case 2:
+          var v: Server_PropertyPair.StringSet?
+          if let current = _storage._value {
+            try decoder.handleConflictingOneOf()
+            if case .stringSet(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._value = .stringSet(v)}
+        case 3:
+          if _storage._value != nil {try decoder.handleConflictingOneOf()}
+          var v: Bool?
+          try decoder.decodeSingularBoolField(value: &v)
+          if let v = v {_storage._value = .boolValue(v)}
+        case 4:
+          if _storage._value != nil {try decoder.handleConflictingOneOf()}
+          var v: Int64?
+          try decoder.decodeSingularInt64Field(value: &v)
+          if let v = v {_storage._value = .intValue(v)}
+        default: break
+        }
+      }
+    }
+  }
+
+  /// Used by the encoding methods of the SwiftProtobuf library, not generally
+  /// used directly. `Message.serializedData()`, `Message.jsonUTF8Data()`, and
+  /// other serializer methods are defined in the SwiftProtobuf library. See the
+  /// `Message` and `Message+*Additions` files.
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if !_storage._key.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._key, fieldNumber: 1)
+      }
+      switch _storage._value {
+      case .stringSet(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      case .boolValue(let v)?:
+        try visitor.visitSingularBoolField(value: v, fieldNumber: 3)
+      case .intValue(let v)?:
+        try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
+      case nil: break
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+///*
+/// MatchmakeFilter is a core domain type respresenting a filter to use for matchmaking.
+struct Server_MatchmakeFilter: SwiftProtobuf.Message {
+  static let protoMessageName: String = _protobuf_package + ".MatchmakeFilter"
+
+  var name: String {
+    get {return _storage._name}
+    set {_uniqueStorage()._name = newValue}
+  }
+
+  var value: OneOf_Value? {
+    get {return _storage._value}
+    set {_uniqueStorage()._value = newValue}
+  }
+
+  var term: Server_MatchmakeFilter.TermFilter {
+    get {
+      if case .term(let v)? = _storage._value {return v}
+      return Server_MatchmakeFilter.TermFilter()
+    }
+    set {_uniqueStorage()._value = .term(newValue)}
+  }
+
+  var range: Server_MatchmakeFilter.RangeFilter {
+    get {
+      if case .range(let v)? = _storage._value {return v}
+      return Server_MatchmakeFilter.RangeFilter()
+    }
+    set {_uniqueStorage()._value = .range(newValue)}
+  }
+
+  var check: Bool {
+    get {
+      if case .check(let v)? = _storage._value {return v}
+      return false
+    }
+    set {_uniqueStorage()._value = .check(newValue)}
+  }
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum OneOf_Value: Equatable {
+    case term(Server_MatchmakeFilter.TermFilter)
+    case range(Server_MatchmakeFilter.RangeFilter)
+    case check(Bool)
+
+    static func ==(lhs: Server_MatchmakeFilter.OneOf_Value, rhs: Server_MatchmakeFilter.OneOf_Value) -> Bool {
+      switch (lhs, rhs) {
+      case (.term(let l), .term(let r)): return l == r
+      case (.range(let l), .range(let r)): return l == r
+      case (.check(let l), .check(let r)): return l == r
+      default: return false
+      }
+    }
+  }
+
+  //// String term filters
+  struct TermFilter: SwiftProtobuf.Message {
+    static let protoMessageName: String = Server_MatchmakeFilter.protoMessageName + ".TermFilter"
+
+    var terms: [String] = []
+
+    var matchAllTerms: Bool = false
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    /// Used by the decoding initializers in the SwiftProtobuf library, not generally
+    /// used directly. `init(serializedData:)`, `init(jsonUTF8Data:)`, and other decoding
+    /// initializers are defined in the SwiftProtobuf library. See the Message and
+    /// Message+*Additions` files.
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeRepeatedStringField(value: &self.terms)
+        case 2: try decoder.decodeSingularBoolField(value: &self.matchAllTerms)
+        default: break
+        }
+      }
+    }
+
+    /// Used by the encoding methods of the SwiftProtobuf library, not generally
+    /// used directly. `Message.serializedData()`, `Message.jsonUTF8Data()`, and
+    /// other serializer methods are defined in the SwiftProtobuf library. See the
+    /// `Message` and `Message+*Additions` files.
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+      if !self.terms.isEmpty {
+        try visitor.visitRepeatedStringField(value: self.terms, fieldNumber: 1)
+      }
+      if self.matchAllTerms != false {
+        try visitor.visitSingularBoolField(value: self.matchAllTerms, fieldNumber: 2)
+      }
+      try unknownFields.traverse(visitor: &visitor)
+    }
+  }
+
+  //// Numeric range filter
+  struct RangeFilter: SwiftProtobuf.Message {
+    static let protoMessageName: String = Server_MatchmakeFilter.protoMessageName + ".RangeFilter"
+
+    /// inclusive lower_bound
+    var lowerBound: Int64 = 0
+
+    /// inclusive upper_bound
+    var upperBound: Int64 = 0
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    /// Used by the decoding initializers in the SwiftProtobuf library, not generally
+    /// used directly. `init(serializedData:)`, `init(jsonUTF8Data:)`, and other decoding
+    /// initializers are defined in the SwiftProtobuf library. See the Message and
+    /// Message+*Additions` files.
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularInt64Field(value: &self.lowerBound)
+        case 2: try decoder.decodeSingularInt64Field(value: &self.upperBound)
+        default: break
+        }
+      }
+    }
+
+    /// Used by the encoding methods of the SwiftProtobuf library, not generally
+    /// used directly. `Message.serializedData()`, `Message.jsonUTF8Data()`, and
+    /// other serializer methods are defined in the SwiftProtobuf library. See the
+    /// `Message` and `Message+*Additions` files.
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+      if self.lowerBound != 0 {
+        try visitor.visitSingularInt64Field(value: self.lowerBound, fieldNumber: 1)
+      }
+      if self.upperBound != 0 {
+        try visitor.visitSingularInt64Field(value: self.upperBound, fieldNumber: 2)
+      }
+      try unknownFields.traverse(visitor: &visitor)
+    }
+  }
+
+  init() {}
+
+  /// Used by the decoding initializers in the SwiftProtobuf library, not generally
+  /// used directly. `init(serializedData:)`, `init(jsonUTF8Data:)`, and other decoding
+  /// initializers are defined in the SwiftProtobuf library. See the Message and
+  /// Message+*Additions` files.
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularStringField(value: &_storage._name)
+        case 2:
+          var v: Server_MatchmakeFilter.TermFilter?
+          if let current = _storage._value {
+            try decoder.handleConflictingOneOf()
+            if case .term(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._value = .term(v)}
+        case 3:
+          var v: Server_MatchmakeFilter.RangeFilter?
+          if let current = _storage._value {
+            try decoder.handleConflictingOneOf()
+            if case .range(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._value = .range(v)}
+        case 4:
+          if _storage._value != nil {try decoder.handleConflictingOneOf()}
+          var v: Bool?
+          try decoder.decodeSingularBoolField(value: &v)
+          if let v = v {_storage._value = .check(v)}
+        default: break
+        }
+      }
+    }
+  }
+
+  /// Used by the encoding methods of the SwiftProtobuf library, not generally
+  /// used directly. `Message.serializedData()`, `Message.jsonUTF8Data()`, and
+  /// other serializer methods are defined in the SwiftProtobuf library. See the
+  /// `Message` and `Message+*Additions` files.
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if !_storage._name.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._name, fieldNumber: 1)
+      }
+      switch _storage._value {
+      case .term(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      case .range(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+      case .check(let v)?:
+        try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
+      case nil: break
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+///*
 /// TMatchmakeAdd is used to add the current user to the matchmaking pool.
 ///
 /// @returns TMatchmakeTicket
@@ -5728,6 +6084,12 @@ struct Server_TMatchmakeAdd: SwiftProtobuf.Message {
 
   //// Match user with other users looking for a match with the the following number of users.
   var requiredCount: Int64 = 0
+
+  //// List of filters that need to match.
+  var filters: [Server_MatchmakeFilter] = []
+
+  //// List of properties for the current user.
+  var properties: [Server_PropertyPair] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -5741,6 +6103,8 @@ struct Server_TMatchmakeAdd: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularInt64Field(value: &self.requiredCount)
+      case 2: try decoder.decodeRepeatedMessageField(value: &self.filters)
+      case 3: try decoder.decodeRepeatedMessageField(value: &self.properties)
       default: break
       }
     }
@@ -5753,6 +6117,12 @@ struct Server_TMatchmakeAdd: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if self.requiredCount != 0 {
       try visitor.visitSingularInt64Field(value: self.requiredCount, fieldNumber: 1)
+    }
+    if !self.filters.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.filters, fieldNumber: 2)
+    }
+    if !self.properties.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.properties, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -5841,7 +6211,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
     set {_uniqueStorage()._ticket = newValue}
   }
 
-  //// Matchmaking token. Use this to accept the match. This is a onetime token which is only valid for 15seconds.
+  //// Matchmaking token. Use this to accept the match. This is a onetime token which is only valid for a limited time.
   var token: Data {
     get {return _storage._token}
     set {_uniqueStorage()._token = newValue}
@@ -5861,7 +6231,59 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
   /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
   mutating func clearSelf_p() {_storage._self_p = nil}
 
+  var properties: [Server_MatchmakeMatched.UserProperty] {
+    get {return _storage._properties}
+    set {_uniqueStorage()._properties = newValue}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  //// Matched user presence and properties
+  struct UserProperty: SwiftProtobuf.Message {
+    static let protoMessageName: String = Server_MatchmakeMatched.protoMessageName + ".UserProperty"
+
+    var userID: Data = SwiftProtobuf.Internal.emptyData
+
+    var properties: [Server_PropertyPair] = []
+
+    var filters: [Server_MatchmakeFilter] = []
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    /// Used by the decoding initializers in the SwiftProtobuf library, not generally
+    /// used directly. `init(serializedData:)`, `init(jsonUTF8Data:)`, and other decoding
+    /// initializers are defined in the SwiftProtobuf library. See the Message and
+    /// Message+*Additions` files.
+    mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularBytesField(value: &self.userID)
+        case 2: try decoder.decodeRepeatedMessageField(value: &self.properties)
+        case 3: try decoder.decodeRepeatedMessageField(value: &self.filters)
+        default: break
+        }
+      }
+    }
+
+    /// Used by the encoding methods of the SwiftProtobuf library, not generally
+    /// used directly. `Message.serializedData()`, `Message.jsonUTF8Data()`, and
+    /// other serializer methods are defined in the SwiftProtobuf library. See the
+    /// `Message` and `Message+*Additions` files.
+    func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+      if !self.userID.isEmpty {
+        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 1)
+      }
+      if !self.properties.isEmpty {
+        try visitor.visitRepeatedMessageField(value: self.properties, fieldNumber: 2)
+      }
+      if !self.filters.isEmpty {
+        try visitor.visitRepeatedMessageField(value: self.filters, fieldNumber: 3)
+      }
+      try unknownFields.traverse(visitor: &visitor)
+    }
+  }
 
   init() {}
 
@@ -5878,6 +6300,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
         case 2: try decoder.decodeSingularBytesField(value: &_storage._token)
         case 3: try decoder.decodeRepeatedMessageField(value: &_storage._presences)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._self_p)
+        case 5: try decoder.decodeRepeatedMessageField(value: &_storage._properties)
         default: break
         }
       }
@@ -5901,6 +6324,9 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
       }
       if let v = _storage._self_p {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      }
+      if !_storage._properties.isEmpty {
+        try visitor.visitRepeatedMessageField(value: _storage._properties, fieldNumber: 5)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -10139,13 +10565,147 @@ extension Server_TopicPresence: SwiftProtobuf._MessageImplementationBase, SwiftP
   }
 }
 
+extension Server_PropertyPair: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "key"),
+    2: .same(proto: "stringSet"),
+    3: .same(proto: "boolValue"),
+    4: .same(proto: "intValue"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _key: String = String()
+    var _value: Server_PropertyPair.OneOf_Value?
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _key = source._key
+      _value = source._value
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  func _protobuf_generated_isEqualTo(other: Server_PropertyPair) -> Bool {
+    if _storage !== other._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let other_storage = _args.1
+        if _storage._key != other_storage._key {return false}
+        if _storage._value != other_storage._value {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
+extension Server_PropertyPair.StringSet: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "values"),
+  ]
+
+  func _protobuf_generated_isEqualTo(other: Server_PropertyPair.StringSet) -> Bool {
+    if self.values != other.values {return false}
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
+extension Server_MatchmakeFilter: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+    2: .same(proto: "term"),
+    3: .same(proto: "range"),
+    4: .same(proto: "check"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _name: String = String()
+    var _value: Server_MatchmakeFilter.OneOf_Value?
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _name = source._name
+      _value = source._value
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  func _protobuf_generated_isEqualTo(other: Server_MatchmakeFilter) -> Bool {
+    if _storage !== other._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let other_storage = _args.1
+        if _storage._name != other_storage._name {return false}
+        if _storage._value != other_storage._value {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
+extension Server_MatchmakeFilter.TermFilter: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "terms"),
+    2: .same(proto: "matchAllTerms"),
+  ]
+
+  func _protobuf_generated_isEqualTo(other: Server_MatchmakeFilter.TermFilter) -> Bool {
+    if self.terms != other.terms {return false}
+    if self.matchAllTerms != other.matchAllTerms {return false}
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
+extension Server_MatchmakeFilter.RangeFilter: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "lower_bound"),
+    2: .standard(proto: "upper_bound"),
+  ]
+
+  func _protobuf_generated_isEqualTo(other: Server_MatchmakeFilter.RangeFilter) -> Bool {
+    if self.lowerBound != other.lowerBound {return false}
+    if self.upperBound != other.upperBound {return false}
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
 extension Server_TMatchmakeAdd: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "requiredCount"),
+    1: .standard(proto: "required_count"),
+    2: .same(proto: "filters"),
+    3: .same(proto: "properties"),
   ]
 
   func _protobuf_generated_isEqualTo(other: Server_TMatchmakeAdd) -> Bool {
     if self.requiredCount != other.requiredCount {return false}
+    if self.filters != other.filters {return false}
+    if self.properties != other.properties {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }
@@ -10181,6 +10741,7 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
     2: .same(proto: "token"),
     3: .same(proto: "presences"),
     4: .same(proto: "self"),
+    5: .same(proto: "properties"),
   ]
 
   fileprivate class _StorageClass {
@@ -10188,6 +10749,7 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
     var _token: Data = SwiftProtobuf.Internal.emptyData
     var _presences: [Server_UserPresence] = []
     var _self_p: Server_UserPresence? = nil
+    var _properties: [Server_MatchmakeMatched.UserProperty] = []
 
     static let defaultInstance = _StorageClass()
 
@@ -10198,6 +10760,7 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
       _token = source._token
       _presences = source._presences
       _self_p = source._self_p
+      _properties = source._properties
     }
   }
 
@@ -10217,10 +10780,27 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
         if _storage._token != other_storage._token {return false}
         if _storage._presences != other_storage._presences {return false}
         if _storage._self_p != other_storage._self_p {return false}
+        if _storage._properties != other_storage._properties {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
+extension Server_MatchmakeMatched.UserProperty: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "user_id"),
+    2: .same(proto: "properties"),
+    3: .same(proto: "filters"),
+  ]
+
+  func _protobuf_generated_isEqualTo(other: Server_MatchmakeMatched.UserProperty) -> Bool {
+    if self.userID != other.userID {return false}
+    if self.properties != other.properties {return false}
+    if self.filters != other.filters {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }

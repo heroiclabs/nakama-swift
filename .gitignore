@@ -1,6 +1,7 @@
 # Created by https://www.gitignore.io/api/xcode,macos,linux,swift,swiftpm,windows,carthage,cocoapods,sublimetext,intellij+all,intellij+iml,xcodeinjection,swiftpackagemanager
 
-Nakama.xcodeproj/
+*.xcodeproj
+
 Sources/Nakama/Server.Api.pb.*
 
 ### Carthage ###
@@ -10,6 +11,7 @@ Sources/Nakama/Server.Api.pb.*
 # Carthage/Checkouts
 
 Carthage/Build
+Carthage/Checkouts
 
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
@@ -285,13 +287,6 @@ $RECYCLE.BIN/
 ## Various settings
 
 ## Other
-
-### Xcode Patch ###
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcworkspace/contents.xcworkspacedata
-/*.gcno
 
 ### XcodeInjection ###
 # Code Injection
