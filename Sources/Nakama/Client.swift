@@ -52,7 +52,7 @@ public class Builder {
   private var timeout : Int = 5000
   private var trace : Bool = false
   
-  init(serverKey: String) {
+  public init(serverKey: String) {
     self.serverKey = serverKey
   }
   
