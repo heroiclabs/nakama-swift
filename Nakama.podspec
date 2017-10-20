@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "Nakama"
-  s.version      = "0.1.1"
+  s.version      = "0.1.2"
   s.summary      = "Swift client for Nakama server."
   s.description  = <<-DESC
   The official Swift client handles all communication in realtime with the server and is specifically optimized for iOS projects. It implements all features in the server and is compatible with Swift 3.1+.

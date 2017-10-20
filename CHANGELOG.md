@@ -5,8 +5,12 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+## [0.1.2] - 2017-10-20
+#### Fixed
+- Set Builder constructor as public 
 
 ## [0.1.1] - 2017-10-18
+#### Added
 - Compatible with Swift 4.0
 - Compatible with Nakama 1.1.0
 - Added Carthage and Cocoapods support.
