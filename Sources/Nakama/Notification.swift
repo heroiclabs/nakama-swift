@@ -17,13 +17,45 @@
 import Foundation
 
 public protocol Notification : CustomStringConvertible {
+  /**
+   Unique ID of this notification
+   */
   var id : UUID { get }
+  
+  /**
+   Notification subject
+   */
   var subject : String { get }
+  
+  /**
+   Notification content
+   */
   var content : Data { get }
+  
+  /**
+   Code associated with this notification. Code <= 100 indicate system notifications. For more info, please check the following link:
+   https://heroiclabs.com/docs/social-in-app-notifications/#notification-codes
+   */
   var code : Int { get }
+  
+  /**
+   Sender ID of this notifications. If this notification is a system generated notification, a sender ID would not be set.
+   */
   var senderID : UUID? { get }
+  
+  /**
+   When this notification was created
+   */
   var createdAt : Int { get }
+  
+  /**
+   When this notification will expire
+   */
   var expiresAt : Int { get }
+  
+  /**
+   If this notification is persisted to the database for later retrieval.
+   */
   var persistent : Bool { get }
 }
 

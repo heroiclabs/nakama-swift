@@ -160,6 +160,10 @@ public protocol Client {
   func send(message: StorageRemoveMessage) -> Promise<Void>
   func send(message: StorageWriteMessage) -> Promise<[StorageRecordID]>
   func send(message: StorageUpdateMessage) -> Promise<[StorageRecordID]>
+  func send(message: FriendAddMessage) -> Promise<Void>
+  func send(message: FriendBlockMessage) -> Promise<Void>
+  func send(message: FriendRemoveMessage) -> Promise<Void>
+  func send(message: FriendListMessage) -> Promise<[Friend]>
   
   /**
    - Parameter message : message The message to send.
@@ -378,7 +382,6 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
-  
   func send(message: StorageFetchMessage) -> Promise<[StorageRecord]> {
     return self.send(proto: message)
   }
@@ -396,6 +399,22 @@ internal class DefaultClient : Client, WebSocketDelegate {
   }
   
   func send(message: StorageUpdateMessage) -> Promise<[StorageRecordID]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendAddMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendBlockMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendListMessage) -> Promise<[Friend]> {
     return self.send(proto: message)
   }
   

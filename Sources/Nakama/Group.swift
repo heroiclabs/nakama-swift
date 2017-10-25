@@ -18,8 +18,20 @@ import Foundation
 
 public enum GroupState : Int32 {
   case unknown = -1
+  
+  /**
+   The user has admin rights
+   */
   case admin = 0
+  
+  /**
+   The user is a regular member of the group
+   */
   case member = 1
+  
+  /**
+   The user has requested to join the group
+   */
   case join = 2
   
   internal static func make(from code:Int64) -> GroupState {
@@ -37,16 +49,60 @@ public enum GroupState : Int32 {
 }
 
 public protocol Group : CustomStringConvertible {
+  
+  /**
+   The ID of the group
+   */
   var id : UUID { get }
+  
+  /**
+   Whether this is a private group or not
+   */
   var privateState : Bool { get }
+  
+  /**
+   The user ID of the creator of the group.
+   */
   var creatorID : UUID { get }
+  
+  /**
+   The name of the group
+   */
   var name : String { get }
+  
+  /**
+   The description of the group
+   */
   var desc : String { get }
+  
+  /**
+   The URL to the avatar of the group
+   */
   var avatarURL : String { get }
+  
+  /**
+   The language of the group
+   */
   var lang : String { get }
+  
+  /**
+   Any metadata associated with the group.
+   */
   var metadata : Data { get }
+  
+  /**
+   Number of admins/members in the group
+   */
   var count : Int { get }
+  
+  /**
+   Unix timestamp of when the group was created
+   */
   var createdAt : Int { get }
+  
+  /**
+   Unix timestamp of when the group was last updated
+   */
   var updatedAt : Int { get }
 }
 

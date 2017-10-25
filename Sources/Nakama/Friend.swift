@@ -18,9 +18,25 @@ import Foundation
 
 public enum FriendState : Int32 {
   case unknown = -1
+  
+  /**
+   The two users are friends
+   */
   case mutualFriends = 0
+  
+  /**
+   A friend invitation is received from someone to the current user
+   */
   case invite = 1
+  
+  /**
+   A friend invitation is sent from the current user to the reciepient for friendship
+  */
   case invited = 2
+  
+  /**
+   This user is blocked
+   */
   case blocked = 3
   
   internal static func make(from code:Int64) -> FriendState {

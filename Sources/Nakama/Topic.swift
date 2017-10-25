@@ -16,43 +16,57 @@
 
 import Foundation
 
-public enum TopicType : Int32 {
-  case directMessage = 0
-  case room = 1
-  case group = 2
-}
-
-public protocol TopicId : CustomStringConvertible {
-  var id : Data { get }
-  var topicType : TopicType { get }
-}
-
-internal struct DefaultTopicId : TopicId {
-  let id : Data
-  let topicType : TopicType
+public enum TopicId : CustomStringConvertible {
+  /**
+   Direct message between two users
+   */
+  case directMessage(Data)
   
-  internal init(from proto: Server_TopicId) {
+  /**
+   Message in a dynamic room
+   */
+  case room(Data)
+  
+  /**
+   Message in a group chat
+   */
+  case group(Data)
+  
+  internal static func make(from proto: Server_TopicId) -> TopicId {
     switch proto.id! {
     case .dm(let data):
-      topicType = TopicType.directMessage
-      id = data
+      return .directMessage(data)
     case .room(let data):
-      topicType = TopicType.room
-      id = data
+      return .room(data)
     case .groupID(let data):
-      topicType = TopicType.group
-      id = data
+      return .group(data)
     }
   }
   
   public var description: String {
-    return String(format: "DefaultTopicId(id=%@,topicType=%@", id.base64EncodedString(), topicType.rawValue)
+    switch self {
+    case .directMessage(let d):
+      return String(format: "TopicId(type=%@,id=%@)", "directMessage", d.base64EncodedString())
+    case .group(let d):
+      return String(format: "TopicId(type=%@,id=%@)", "group", d.base64EncodedString())
+    case .room(let d):
+      return String(format: "TopicId(type=%@,id=%@)", "room", d.base64EncodedString())
+    }
   }
 }
 
 public protocol Topic : CustomStringConvertible {
+  /**
+   Identifier for this topic
+   */
   var topicId : TopicId { get }
+  /**
+   List of user presences in this topic
+   */
   var presences : [UserPresence] { get }
+  /**
+   The current user's presence in the topic
+   */
   var presenceSelf : UserPresence { get }
 }
 
@@ -62,7 +76,7 @@ internal struct DefaultTopic : Topic {
   let presenceSelf : UserPresence
   
   internal init(from proto: Server_TTopics.Topic) {
-    topicId = DefaultTopicId(from: proto.topic)
+    topicId = TopicId.make(from: proto.topic)
     presenceSelf = DefaultUserPresence(from: proto.self_p)
     
     var ps : [UserPresence] = []

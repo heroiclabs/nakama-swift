@@ -46,13 +46,44 @@ public enum TopicMessageType : Int32 {
 }
 
 public protocol TopicMessage : CustomStringConvertible {
+  /**
+   Identifier for this topic message
+   */
   var topic : TopicId { get }
+  
+  /**
+   ID of the user that created this message
+   */
   var userID : UUID { get }
+  
+  /**
+   Unique identifier for this message
+   */
   var messageID : UUID { get }
+  
+  /**
+   Unix timestamp of when the message was created
+   */
   var createdAt : Int { get }
+  
+  /**
+   Unix timestamp of when the message will expire
+   */
   var expiresAt : Int { get }
+  
+  /**
+   Handle of the user that created this message
+   */
   var handle : String { get }
+  
+  /**
+   Message type
+   */
   var type : TopicMessageType { get }
+  
+  /**
+   The message payload
+   */
   var data : Data { get }
 }
 
@@ -67,7 +98,7 @@ internal struct DefaultTopicMessage : TopicMessage {
   let data : Data
   
   internal init(from proto: Server_TopicMessage) {
-    topic = DefaultTopicId(from: proto.topic)
+    topic = TopicId.make(from: proto.topic)
     handle = proto.handle
     data = proto.data
     createdAt = Int(proto.createdAt)

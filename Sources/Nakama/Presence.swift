@@ -17,8 +17,17 @@
 import Foundation
 
 public protocol UserPresence : CustomStringConvertible {
+  /**
+   User ID of this presence
+   */
   var userID : UUID { get }
+  /**
+   Session ID of the user in this presence
+   */
   var sessionID : UUID { get }
+  /**
+   Handle of the user in this presence
+   */
   var handle : String { get }
 }
 
@@ -45,8 +54,17 @@ internal struct DefaultUserPresence : UserPresence {
 }
 
 public protocol TopicPresence : CustomStringConvertible {
+  /**
+   Identifier for this topic presence update
+   */
   var topic : TopicId { get }
+  /**
+   List of presences joined the topic since the last presence update
+   */
   var join : [UserPresence] { get }
+  /**
+   List of presences left the topic since the last presence update
+   */
   var leave : [UserPresence] { get }
 }
 
@@ -56,7 +74,7 @@ internal struct DefaultTopicPresence : TopicPresence {
   let leave : [UserPresence]
   
   internal init(from proto: Server_TTopics.Topic) {
-    topic = DefaultTopicId(from: proto.topic)
+    topic = TopicId.make(from: proto.topic)
     
     var js : [UserPresence] = []
     for p in proto.presences {
