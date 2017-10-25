@@ -102,9 +102,7 @@ internal struct DefaultSelf : SelfUser {
     timezone = nkself.user.timezone
     updatedAt = Int(nkself.user.updatedAt)
     
-    id = nkself.user.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: nkself.user.id)
   }
   
   public var description: String {

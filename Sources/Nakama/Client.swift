@@ -117,6 +117,21 @@ public protocol Client {
   var onError: ((NakamaError) -> Void)? { get set }
   
   /**
+   This is invoked when a new topic message is received.
+   */
+  var onTopicMessage: ((TopicMessage) -> Void)? { get set }
+  
+  /**
+   This is invoked when a new topic presence update is received.
+   */
+  var onTopicPresence: ((TopicPresence) -> Void)? { get set }
+  
+  /**
+   This is invoked when a new notification is received.
+   */
+  var onNotification: ((Notification) -> Void)? { get set }
+  
+  /**
    - Parameter message : message The {@code AuthenticateMessage} to send to the server.
    - Returns: A {@code Session} for the user.
    */
@@ -160,6 +175,32 @@ public protocol Client {
   func send(message: StorageRemoveMessage) -> Promise<Void>
   func send(message: StorageWriteMessage) -> Promise<[StorageRecordID]>
   func send(message: StorageUpdateMessage) -> Promise<[StorageRecordID]>
+  func send(message: FriendAddMessage) -> Promise<Void>
+  func send(message: FriendBlockMessage) -> Promise<Void>
+  func send(message: FriendRemoveMessage) -> Promise<Void>
+  func send(message: FriendsListMessage) -> Promise<[Friend]>
+  func send(message: NotificationRemoveMessage) -> Promise<Void>
+  func send(message: NotificationListMessage) -> Promise<[Notification]>
+  func send(message: TopicJoinMessage) -> Promise<[Topic]>
+  func send(message: TopicLeaveMessage) -> Promise<Void>
+  func send(message: TopicMessageSendMessage) -> Promise<TopicMessageAck>
+  func send(message: TopicMessagesListMessage) -> Promise<[TopicMessage]>
+  func send(message: GroupAddUserMessage) -> Promise<Void>
+  func send(message: GroupCreateMessage) -> Promise<[Group]>
+  func send(message: GroupJoinMessage) -> Promise<Void>
+  func send(message: GroupKickUserMessage) -> Promise<Void>
+  func send(message: GroupLeaveMessage) -> Promise<Void>
+  func send(message: GroupPromoteUserMessage) -> Promise<Void>
+  func send(message: GroupRemoveMessage) -> Promise<Void>
+  func send(message: GroupsFetchMessage) -> Promise<[Group]>
+  func send(message: GroupsListMessage) -> Promise<[Group]>
+  func send(message: GroupsSelfListMessage) -> Promise<[GroupSelf]>
+  func send(message: GroupUpdateMessage) -> Promise<Void>
+  func send(message: GroupUsersListMessage) -> Promise<[GroupUser]>
+  func send(message: LeaderboardRecordsFetchMessage) -> Promise<[LeaderboardRecord]>
+  func send(message: LeaderboardRecordsListMessage) -> Promise<[LeaderboardRecord]>
+  func send(message: LeaderboardRecordWriteMessage) -> Promise<[LeaderboardRecord]>
+  func send(message: LeaderboardsListMessage) -> Promise<[Leaderboard]>
   
   /**
    - Parameter message : message The message to send.
@@ -183,6 +224,10 @@ internal class DefaultClient : Client, WebSocketDelegate {
   
   var onDisconnect: ((Error?) -> Void)?
   var onError: ((NakamaError) -> Void)?
+  var onTopicMessage: ((TopicMessage) -> Void)?
+  var onTopicPresence: ((TopicPresence) -> Void)?
+  var onNotification: ((Notification) -> Void)?
+  
   var serverTime: Int {
     return self._serverTime != 0 ? self._serverTime : Int(Date().timeIntervalSince1970 * 1000.0);
   }
@@ -378,7 +423,6 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
-  
   func send(message: StorageFetchMessage) -> Promise<[StorageRecord]> {
     return self.send(proto: message)
   }
@@ -399,6 +443,110 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
+  func send(message: FriendAddMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendBlockMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: FriendsListMessage) -> Promise<[Friend]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: NotificationRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: NotificationListMessage) -> Promise<[Notification]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicJoinMessage) -> Promise<[Topic]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicLeaveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicMessageSendMessage) -> Promise<TopicMessageAck> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicMessagesListMessage) -> Promise<[TopicMessage]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupAddUserMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupCreateMessage) -> Promise<[Group]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupJoinMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupKickUserMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupLeaveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupPromoteUserMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupsFetchMessage) -> Promise<[Group]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupsListMessage) -> Promise<[Group]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupsSelfListMessage) -> Promise<[GroupSelf]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupUpdateMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupUsersListMessage) -> Promise<[GroupUser]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardRecordsFetchMessage) -> Promise<[LeaderboardRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardRecordsListMessage) -> Promise<[LeaderboardRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardRecordWriteMessage) -> Promise<[LeaderboardRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardsListMessage) -> Promise<[Leaderboard]> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
     
@@ -408,6 +556,23 @@ internal class DefaultClient : Client, WebSocketDelegate {
         let newServerTime = Int(heartbeat.timestamp)
         if (newServerTime > self._serverTime) {
           self._serverTime = newServerTime;
+        }
+      case .topicMessage(let proto):
+        let message = DefaultTopicMessage(from: proto)
+        if self.onTopicMessage != nil {
+          self.onTopicMessage!(message)
+        }
+      case .topicPresence(let proto):
+        let presence = DefaultTopicPresence(from: proto)
+        if self.onTopicPresence != nil {
+          self.onTopicPresence!(presence)
+        }
+      case .liveNotifications(let proto):
+        for n in proto.notifications {
+          let notification = DefaultNotification(from: n)
+          if self.onNotification != nil {
+            self.onNotification!(notification)
+          }
         }
       default:
         NSLog("No payload for incoming uncollated message from the server: %@", (try? envelope.jsonString()) ?? "nil");
@@ -458,7 +623,77 @@ internal class DefaultClient : Client, WebSocketDelegate {
           records.append(DefaultStorageRecord(from: data))
         }
         fulfill(records)
-        
+      case .friends(let proto):
+        let (fulfill, _) : (fulfill: ([Friend]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Friend]) -> Void, reject: Any)
+        var friends : [Friend] = []
+        for friend in proto.friends {
+          friends.append(DefaultFriend(from: friend))
+        }
+        fulfill(friends)
+      case .notifications(let proto):
+        let (fulfill, _) : (fulfill: ([Notification]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Notification]) -> Void, reject: Any)
+        var notifications : [Notification] = []
+        notifications._cursor = proto.resumableCursor
+        for notification in proto.notifications {
+          notifications.append(DefaultNotification(from: notification))
+        }
+        fulfill(notifications)
+      case .topics(let proto):
+        let (fulfill, _) : (fulfill: ([Topic]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Topic]) -> Void, reject: Any)
+        var topics : [Topic] = []
+        for t in proto.topics {
+          topics.append(DefaultTopic(from: t))
+        }
+        fulfill(topics)
+      case .topicMessages(let proto):
+        let (fulfill, _) : (fulfill: ([TopicMessage]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([TopicMessage]) -> Void, reject: Any)
+        var messages : [TopicMessage] = []
+        messages._cursor = proto.cursor
+        for m in proto.messages {
+          messages.append(DefaultTopicMessage(from: m))
+        }
+        fulfill(messages)
+      case .topicMessageAck(let proto):
+        let (fulfill, _) : (fulfill: (TopicMessageAck) -> Void, reject: Any) = promiseTuple as! (fulfill: (TopicMessageAck) -> Void, reject: Any)
+        fulfill(DefaultTopicMessageAck(from: proto))
+      case .groups(let proto):
+        let (fulfill, _) : (fulfill: ([Group]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Group]) -> Void, reject: Any)
+        var groups : [Group] = []
+        groups._cursor = proto.cursor
+        for g in proto.groups {
+          groups.append(DefaultGroup(from: g))
+        }
+        fulfill(groups)
+      case .groupUsers(let proto):
+        let (fulfill, _) : (fulfill: ([GroupUser]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([GroupUser]) -> Void, reject: Any)
+        var groupUsers : [GroupUser] = []
+        for g in proto.users {
+          groupUsers.append(DefaultGroupUser(from: g))
+        }
+        fulfill(groupUsers)
+      case .groupsSelf(let proto):
+        let (fulfill, _) : (fulfill: ([GroupSelf]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([GroupSelf]) -> Void, reject: Any)
+        var groupsSelf : [GroupSelf] = []
+        for gs in proto.groupsSelf {
+          groupsSelf.append(DefaultGroupSelf(from: gs))
+        }
+        fulfill(groupsSelf)
+      case .leaderboards(let proto):
+        let (fulfill, _) : (fulfill: ([Leaderboard]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Leaderboard]) -> Void, reject: Any)
+        var leaderboards : [Leaderboard] = []
+        leaderboards._cursor = proto.cursor
+        for l in proto.leaderboards {
+          leaderboards.append(DefaultLeaderboard(from: l))
+        }
+        fulfill(leaderboards)
+      case .leaderboardRecords(let proto):
+        let (fulfill, _) : (fulfill: ([LeaderboardRecord]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([LeaderboardRecord]) -> Void, reject: Any)
+        var leaderboardRecords : [LeaderboardRecord] = []
+        leaderboardRecords._cursor = proto.cursor
+        for lr in proto.records {
+          leaderboardRecords.append(DefaultLeaderboardRecord(from: lr))
+        }
+        fulfill(leaderboardRecords)
       default:
         if trace {
           NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");

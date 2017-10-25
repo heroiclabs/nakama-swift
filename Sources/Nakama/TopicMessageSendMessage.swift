@@ -16,35 +16,39 @@
 
 import Foundation
 
-public struct StorageRemoveMessage : CollatedMessage {
-  private var payload = Server_TStorageRemove()
+public struct TopicMessageSendMessage : CollatedMessage {
+  public var topicId: TopicId
+  public var data: Data
   
-  public init() {
-    payload.keys = []
-  }
-  
-  public mutating func remove(bucket: String, collection: String, key: String, version: Data?=nil) {
-    var record = Server_TStorageRemove.StorageKey()
-    record.bucket = bucket
-    record.collection = collection
-    record.record = key
-    if version != nil {
-      record.version = version!
-    }
-    
-    payload.keys.append(record)
+  public init(topicId: TopicId, data: Data) {
+    self.topicId = topicId
+    self.data = data
   }
   
   public func serialize(collationID: String) -> Data? {
+    var proto = Server_TTopicMessageSend()
+    
+    var t = Server_TopicId()
+    switch topicId {
+    case .directMessage(let d):
+      t.dm = d
+    case .group(let d):
+      t.groupID = NakamaId.convert(uuid: d)
+    case .room(let d):
+      t.room = d.data(using: String.Encoding.utf8)!
+    }
+    
+    proto.topic = t
+    proto.data = data
+    
     var envelope = Server_Envelope()
-    envelope.storageRemove = payload
     envelope.collationID = collationID
+    envelope.topicMessageSend = proto
     
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "StorageRemoveMessage(keys=%@)", payload.keys)
+    return String(format: "TopicMessageSendMessage(topicId=%@, data=%@)", topicId.description, data.base64EncodedString())
   }
-  
 }

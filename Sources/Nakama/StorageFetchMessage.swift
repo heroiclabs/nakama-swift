@@ -29,10 +29,7 @@ public struct StorageFetchMessage : CollatedMessage {
     record.collection = collection
     record.record = key
     if userID != nil {
-      var id = userID!
-      record.userID = withUnsafePointer(to: &id) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
-      }
+      record.userID = NakamaId.convert(uuid: userID!)
     }
     
     payload.keys.append(record)

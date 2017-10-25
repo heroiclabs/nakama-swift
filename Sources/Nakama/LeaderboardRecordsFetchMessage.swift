@@ -16,35 +16,42 @@
 
 import Foundation
 
-public struct StorageRemoveMessage : CollatedMessage {
-  private var payload = Server_TStorageRemove()
+public struct LeaderboardRecordsFetchMessage : CollatedMessage {
+  public var leaderboardIds: [UUID] = []
+  public var limit : Int?
   
-  public init() {
-    payload.keys = []
-  }
+  /**
+   Hint: Use [LeaderboardRecord].cursor as the value
+  */
+  public var cursor : Data?
   
-  public mutating func remove(bucket: String, collection: String, key: String, version: Data?=nil) {
-    var record = Server_TStorageRemove.StorageKey()
-    record.bucket = bucket
-    record.collection = collection
-    record.record = key
-    if version != nil {
-      record.version = version!
-    }
-    
-    payload.keys.append(record)
-  }
+  public init() {}
   
   public func serialize(collationID: String) -> Data? {
+    var proto = Server_TLeaderboardRecordsFetch()
+    
+    for id in leaderboardIds {
+      proto.leaderboardIds.append(NakamaId.convert(uuid: id))
+    }
+    
+    if let _cursor = cursor {
+      proto.cursor = _cursor
+    }
+    
+    if let _limit = limit {
+      proto.limit = Int64(_limit)
+    }
+    
     var envelope = Server_Envelope()
-    envelope.storageRemove = payload
+    envelope.leaderboardRecordsFetch = proto
     envelope.collationID = collationID
     
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "StorageRemoveMessage(keys=%@)", payload.keys)
+    return String(format: "LeaderboardRecordsFetchMessage(leaderboardIds=%@,limit=%d,cursor=%@)", leaderboardIds, limit ?? 0, cursor?.base64EncodedString() ?? "")
   }
   
 }
+

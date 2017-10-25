@@ -16,35 +16,32 @@
 
 import Foundation
 
-public struct StorageRemoveMessage : CollatedMessage {
-  private var payload = Server_TStorageRemove()
+public struct GroupRemoveMessage : CollatedMessage {
   
-  public init() {
-    payload.keys = []
-  }
+  /**
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var groupIds: [UUID] = []
   
-  public mutating func remove(bucket: String, collection: String, key: String, version: Data?=nil) {
-    var record = Server_TStorageRemove.StorageKey()
-    record.bucket = bucket
-    record.collection = collection
-    record.record = key
-    if version != nil {
-      record.version = version!
-    }
-    
-    payload.keys.append(record)
-  }
+  public init(){}
   
   public func serialize(collationID: String) -> Data? {
+    var proto = Server_TGroupsRemove()
+    
+    for id in groupIds {
+      proto.groupIds.append(NakamaId.convert(uuid: id))
+    }
+    
     var envelope = Server_Envelope()
-    envelope.storageRemove = payload
+    envelope.groupsRemove = proto
     envelope.collationID = collationID
     
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "StorageRemoveMessage(keys=%@)", payload.keys)
+    return String(format: "GroupRemoveMessage(groupIds=%@)", groupIds)
   }
-  
 }
+
+

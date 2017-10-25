@@ -19,9 +19,6 @@ import Foundation
 fileprivate var nakama_associated_cursor = "nakama_cursor"
 
 extension Array {
-  /**
-   - Returns: Optional cursor associated with this data
-  */
   internal var _cursor: Data? {
     get {
       return objc_getAssociatedObject(self, &nakama_associated_cursor) as? Data
@@ -31,6 +28,9 @@ extension Array {
     }
   }
   
+  /**
+   - Returns: Optional cursor associated with this data
+   */
   public var cursor: Data? {
     return _cursor
   }

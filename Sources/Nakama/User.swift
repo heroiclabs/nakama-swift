@@ -18,7 +18,7 @@ import Foundation
 
 public protocol User : CustomStringConvertible {
   /**
-   - Returns: A URL string which points at a avatar image or similar.
+   - Returns: A URL string which points at an avatar image or similar.
    */
   var avatarURL : String { get }
   
@@ -74,7 +74,7 @@ public protocol User : CustomStringConvertible {
 }
 
 internal struct DefaultUser : User {
-  let avatarURL: String
+  let avatarURL : String
   let createdAt : Int
   let fullname : String
   let handle : String
@@ -98,9 +98,7 @@ internal struct DefaultUser : User {
     timezone = proto.timezone
     updatedAt = Int(proto.updatedAt)
     
-    id = proto.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: proto.id)
   }
   
   public var description: String {

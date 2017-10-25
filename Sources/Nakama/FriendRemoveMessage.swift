@@ -16,35 +16,30 @@
 
 import Foundation
 
-public struct StorageRemoveMessage : CollatedMessage {
-  private var payload = Server_TStorageRemove()
+public struct FriendRemoveMessage : CollatedMessage {
+  public var userIDs: [UUID] = []
   
-  public init() {
-    payload.keys = []
-  }
-  
-  public mutating func remove(bucket: String, collection: String, key: String, version: Data?=nil) {
-    var record = Server_TStorageRemove.StorageKey()
-    record.bucket = bucket
-    record.collection = collection
-    record.record = key
-    if version != nil {
-      record.version = version!
-    }
-    
-    payload.keys.append(record)
-  }
+  public init(){}
   
   public func serialize(collationID: String) -> Data? {
+    var proto = Server_TFriendsRemove()
+    
+    for id in userIDs {
+      proto.userIds.append(NakamaId.convert(uuid: id))
+    }
+    
     var envelope = Server_Envelope()
-    envelope.storageRemove = payload
+    envelope.friendsRemove = proto
     envelope.collationID = collationID
     
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "StorageRemoveMessage(keys=%@)", payload.keys)
+    return String(format: "FriendRemoveMessage(ids=%@)", userIDs)
   }
   
 }
+
+
+

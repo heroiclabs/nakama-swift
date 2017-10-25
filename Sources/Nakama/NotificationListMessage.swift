@@ -16,35 +16,31 @@
 
 import Foundation
 
-public struct StorageRemoveMessage : CollatedMessage {
-  private var payload = Server_TStorageRemove()
+public struct NotificationListMessage : CollatedMessage {
+  public var cursor: Data?
+  public var limit : Int
   
-  public init() {
-    payload.keys = []
-  }
-  
-  public mutating func remove(bucket: String, collection: String, key: String, version: Data?=nil) {
-    var record = Server_TStorageRemove.StorageKey()
-    record.bucket = bucket
-    record.collection = collection
-    record.record = key
-    if version != nil {
-      record.version = version!
-    }
-    
-    payload.keys.append(record)
+  public init(limit: Int){
+    self.limit = limit
   }
   
   public func serialize(collationID: String) -> Data? {
+    var listing = Server_TNotificationsList()
+    listing.limit = Int64(limit)
+    if let _cursor = cursor {
+      listing.resumableCursor = _cursor
+    }
+    
     var envelope = Server_Envelope()
-    envelope.storageRemove = payload
+    envelope.notificationsList = listing
     envelope.collationID = collationID
     
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "StorageRemoveMessage(keys=%@)", payload.keys)
+    return String(format: "NotificationListMessage(limit=%d,cursor=%@)", limit, cursor?.base64EncodedString() ?? "nil")
   }
   
 }
+
