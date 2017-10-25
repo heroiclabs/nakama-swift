@@ -16,20 +16,31 @@
 
 import Foundation
 
-public struct FriendListMessage : CollatedMessage {
-  private let payload: Server_TFriendsList
-  public init() {
-    payload = Server_TFriendsList()
+public struct NotificationListMessage : CollatedMessage {
+  public var cursor: Data?
+  public var limit : Int
+  
+  public init(limit: Int){
+    self.limit = limit
   }
   
   public func serialize(collationID: String) -> Data? {
+    var listing = Server_TNotificationsList()
+    listing.limit = Int64(limit)
+    if let _cursor = cursor {
+      listing.resumableCursor = _cursor
+    }
+    
     var envelope = Server_Envelope()
-    envelope.friendsList = payload
+    envelope.notificationsList = listing
     envelope.collationID = collationID
+    
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "FriendListMessage()")
+    return String(format: "NotificationListMessage(limit=%d,cursor=%@)", limit, cursor?.base64EncodedString() ?? "nil")
   }
+  
 }
+

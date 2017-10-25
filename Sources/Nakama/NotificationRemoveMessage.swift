@@ -16,20 +16,35 @@
 
 import Foundation
 
-public struct FriendListMessage : CollatedMessage {
-  private let payload: Server_TFriendsList
-  public init() {
-    payload = Server_TFriendsList()
-  }
+public struct NotificationRemoveMessage : CollatedMessage {
+  public var notificationIds: [UUID] = []
+  
+  public init(){}
   
   public func serialize(collationID: String) -> Data? {
+    var proto = Server_TNotificationsRemove()
+    
+    for var id in notificationIds {
+      let nid = withUnsafePointer(to: &id) {
+        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
+      }
+      
+      proto.notificationIds.append(nid)
+    }
+    
     var envelope = Server_Envelope()
-    envelope.friendsList = payload
+    envelope.notificationsRemove = proto
     envelope.collationID = collationID
+    
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "FriendListMessage()")
+    return String(format: "NotificationRemoveMessage(ids=%@)", notificationIds)
   }
+  
 }
+
+
+
+

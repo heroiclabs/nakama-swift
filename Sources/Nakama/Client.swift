@@ -164,6 +164,8 @@ public protocol Client {
   func send(message: FriendBlockMessage) -> Promise<Void>
   func send(message: FriendRemoveMessage) -> Promise<Void>
   func send(message: FriendListMessage) -> Promise<[Friend]>
+  func send(message: NotificationRemoveMessage) -> Promise<Void>
+  func send(message: NotificationListMessage) -> Promise<[Notification]>
   
   /**
    - Parameter message : message The message to send.
@@ -418,6 +420,14 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
+  func send(message: NotificationRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: NotificationListMessage) -> Promise<[Notification]> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
     
@@ -484,6 +494,14 @@ internal class DefaultClient : Client, WebSocketDelegate {
           friends.append(DefaultFriend(from: friend))
         }
         fulfill(friends)
+      case .notifications(let proto):
+        let (fulfill, _) : (fulfill: ([Notification]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Notification]) -> Void, reject: Any)
+        var notifications : [Notification] = []
+        notifications._cursor = proto.resumableCursor
+        for notification in proto.notifications {
+          notifications.append(DefaultNotification(from: notification))
+        }
+        fulfill(notifications)
       default:
         if trace {
           NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
