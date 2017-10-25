@@ -458,7 +458,13 @@ internal class DefaultClient : Client, WebSocketDelegate {
           records.append(DefaultStorageRecord(from: data))
         }
         fulfill(records)
-        
+      case .friends(let proto):
+        let (fulfill, _) : (fulfill: ([Friend]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Friend]) -> Void, reject: Any)
+        var friends : [Friend] = []
+        for friend in proto.friends {
+          friends.append(DefaultFriend(from: friend))
+        }
+        fulfill(friends)
       default:
         if trace {
           NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");

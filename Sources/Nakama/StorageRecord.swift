@@ -16,11 +16,6 @@
 
 import Foundation
 
-/**
- An error that has occured on the server.
- The error could be result of bad input, or unexpected system error.
- Check Error Code for more info.
- */
 public enum PermissionRead : Int32 {
   case unknown = -1
   case noRead = 0
@@ -34,12 +29,11 @@ public enum PermissionRead : Int32 {
     case 1:
       return .ownerRead
     case 2:
-      return publicRead
+      return .publicRead
     default:
       return .unknown
     }
   }
-
 }
 
 public enum PermissionWrite : Int32 {
