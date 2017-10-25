@@ -73,17 +73,17 @@ internal struct DefaultTopicPresence : TopicPresence {
   let join : [UserPresence]
   let leave : [UserPresence]
   
-  internal init(from proto: Server_TTopics.Topic) {
+  internal init(from proto: Server_TopicPresence) {
     topic = TopicId.make(from: proto.topic)
     
     var js : [UserPresence] = []
-    for p in proto.presences {
+    for p in proto.joins {
       js.append(DefaultUserPresence(from: p))
     }
     join = js
     
     var ls : [UserPresence] = []
-    for p in proto.presences {
+    for p in proto.leaves {
       ls.append(DefaultUserPresence(from: p))
     }
     leave = ls

@@ -70,7 +70,7 @@ class FriendTest: XCTestCase {
     var message = FriendAddMessage()
     message.handles.append(self.session2!.handle)
     client.send(message: message).then {
-      return self.client.send(message: FriendListMessage())
+      return self.client.send(message: FriendsListMessage())
     }.then { friends in
       XCTAssert(friends[0].handle == self.session2!.handle, "friends do not match")
       XCTAssert(friends[0].state == FriendState.invited, "Friend state is not invited")

@@ -16,20 +16,39 @@
 
 import Foundation
 
-public struct FriendListMessage : CollatedMessage {
-  private let payload: Server_TFriendsList
-  public init() {
-    payload = Server_TFriendsList()
+public struct TopicMessageSendMessage : CollatedMessage {
+  public var topicId: TopicId
+  public var data: Data
+  
+  public init(topicId: TopicId, data: Data) {
+    self.topicId = topicId
+    self.data = data
   }
   
   public func serialize(collationID: String) -> Data? {
+    var proto = Server_TTopicMessageSend()
+    
+    var t = Server_TopicId()
+    switch topicId {
+    case .directMessage(let d):
+      t.dm = d
+    case .group(let d):
+      t.groupID = d
+    case .room(let d):
+      t.room = d
+    }
+    
+    proto.topic = t
+    proto.data = data
+    
     var envelope = Server_Envelope()
-    envelope.friendsList = payload
     envelope.collationID = collationID
+    envelope.topicMessageSend = proto
+    
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "FriendListMessage()")
+    return String(format: "TopicMessageSendMessage(topicId=%@, data=%@)", topicId.description, data.base64EncodedString())
   }
 }

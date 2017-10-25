@@ -117,6 +117,21 @@ public protocol Client {
   var onError: ((NakamaError) -> Void)? { get set }
   
   /**
+   This is invoked when a new topic message is received.
+   */
+  var onTopicMessage: ((TopicMessage) -> Void)? { get set }
+  
+  /**
+   This is invoked when a new topic presence update is received.
+   */
+  var onTopicPresence: ((TopicPresence) -> Void)? { get set }
+  
+  /**
+   This is invoked when a new notification is received.
+   */
+  var onNotification: ((Notification) -> Void)? { get set }
+  
+  /**
    - Parameter message : message The {@code AuthenticateMessage} to send to the server.
    - Returns: A {@code Session} for the user.
    */
@@ -163,9 +178,13 @@ public protocol Client {
   func send(message: FriendAddMessage) -> Promise<Void>
   func send(message: FriendBlockMessage) -> Promise<Void>
   func send(message: FriendRemoveMessage) -> Promise<Void>
-  func send(message: FriendListMessage) -> Promise<[Friend]>
+  func send(message: FriendsListMessage) -> Promise<[Friend]>
   func send(message: NotificationRemoveMessage) -> Promise<Void>
   func send(message: NotificationListMessage) -> Promise<[Notification]>
+  func send(message: TopicJoinMessage) -> Promise<[Topic]>
+  func send(message: TopicLeaveMessage) -> Promise<Void>
+  func send(message: TopicMessageSendMessage) -> Promise<TopicMessageAck>
+  func send(message: TopicMessagesListMessage) -> Promise<[TopicMessage]>
   
   /**
    - Parameter message : message The message to send.
@@ -189,6 +208,10 @@ internal class DefaultClient : Client, WebSocketDelegate {
   
   var onDisconnect: ((Error?) -> Void)?
   var onError: ((NakamaError) -> Void)?
+  var onTopicMessage: ((TopicMessage) -> Void)?
+  var onTopicPresence: ((TopicPresence) -> Void)?
+  var onNotification: ((Notification) -> Void)?
+  
   var serverTime: Int {
     return self._serverTime != 0 ? self._serverTime : Int(Date().timeIntervalSince1970 * 1000.0);
   }
@@ -416,7 +439,7 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
-  func send(message: FriendListMessage) -> Promise<[Friend]> {
+  func send(message: FriendsListMessage) -> Promise<[Friend]> {
     return self.send(proto: message)
   }
   
@@ -425,6 +448,22 @@ internal class DefaultClient : Client, WebSocketDelegate {
   }
   
   func send(message: NotificationListMessage) -> Promise<[Notification]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicJoinMessage) -> Promise<[Topic]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicLeaveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicMessageSendMessage) -> Promise<TopicMessageAck> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: TopicMessagesListMessage) -> Promise<[TopicMessage]> {
     return self.send(proto: message)
   }
   
@@ -437,6 +476,23 @@ internal class DefaultClient : Client, WebSocketDelegate {
         let newServerTime = Int(heartbeat.timestamp)
         if (newServerTime > self._serverTime) {
           self._serverTime = newServerTime;
+        }
+      case .topicMessage(let proto):
+        let message = DefaultTopicMessage(from: proto)
+        if self.onTopicMessage != nil {
+          self.onTopicMessage!(message)
+        }
+      case .topicPresence(let proto):
+        let presence = DefaultTopicPresence(from: proto)
+        if self.onTopicPresence != nil {
+          self.onTopicPresence!(presence)
+        }
+      case .liveNotifications(let proto):
+        for n in proto.notifications {
+          let notification = DefaultNotification(from: n)
+          if self.onNotification != nil {
+            self.onNotification!(notification)
+          }
         }
       default:
         NSLog("No payload for incoming uncollated message from the server: %@", (try? envelope.jsonString()) ?? "nil");
@@ -502,6 +558,24 @@ internal class DefaultClient : Client, WebSocketDelegate {
           notifications.append(DefaultNotification(from: notification))
         }
         fulfill(notifications)
+      case .topics(let proto):
+        let (fulfill, _) : (fulfill: ([Topic]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Topic]) -> Void, reject: Any)
+        var topics : [Topic] = []
+        for t in proto.topics {
+          topics.append(DefaultTopic(from: t))
+        }
+        fulfill(topics)
+      case .topicMessages(let proto):
+        let (fulfill, _) : (fulfill: ([TopicMessage]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([TopicMessage]) -> Void, reject: Any)
+        var messages : [TopicMessage] = []
+        messages._cursor = proto.cursor
+        for m in proto.messages {
+          messages.append(DefaultTopicMessage(from: m))
+        }
+        fulfill(messages)
+      case .topicMessageAck(let proto):
+        let (fulfill, _) : (fulfill: (TopicMessageAck) -> Void, reject: Any) = promiseTuple as! (fulfill: (TopicMessageAck) -> Void, reject: Any)
+        fulfill(DefaultTopicMessageAck(from: proto))
       default:
         if trace {
           NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");

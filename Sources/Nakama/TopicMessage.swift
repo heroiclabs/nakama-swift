@@ -118,3 +118,47 @@ internal struct DefaultTopicMessage : TopicMessage {
     return String(format: "DefaultTopicMessage(topic=%@,userID=%@,messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,type=%@,data=%@)", topic.description, userID.uuidString, messageID.uuidString, createdAt, expiresAt, handle, type.rawValue, data.base64EncodedString())
   }
 }
+
+public protocol TopicMessageAck : CustomStringConvertible {
+  
+  /**
+   ID of the message that we've acked
+   */
+  var messageID : UUID { get }
+  
+  /**
+   When the ack was created
+   */
+  var createdAt : Int { get }
+  
+  /**
+   When the ack will expire
+   */
+  var expiresAt : Int { get }
+  
+  /**
+   Handle of the user that sent the ack
+   */
+  var handle : String { get }
+}
+
+internal struct DefaultTopicMessageAck : TopicMessageAck {
+  let messageID : UUID
+  let createdAt : Int
+  let expiresAt : Int
+  let handle : String
+  
+  internal init(from proto: Server_TTopicMessageAck) {
+    handle = proto.handle
+    createdAt = Int(proto.createdAt)
+    expiresAt = Int(proto.expiresAt)
+    
+    messageID = proto.messageID.withUnsafeBytes { bytes in
+      return NSUUID.init(uuidBytes: bytes) as UUID
+    }
+  }
+  
+  public var description: String {
+    return String(format: "DefaultTopicMessageAck(messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,@)", messageID.uuidString, createdAt, expiresAt, handle)
+  }
+}
