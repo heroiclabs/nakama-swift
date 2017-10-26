@@ -34,8 +34,8 @@ public enum TopicId : CustomStringConvertible {
   
   internal static func make(from proto: Server_TopicId) -> TopicId {
     switch proto.id! {
-    case .dm(let data):
-      return .directMessage(data)
+    case .dm(let d):
+      return .directMessage(d)
     case .room(let data):
       return .room(data)
     case .groupID(let data):

@@ -20,7 +20,6 @@ import PromiseKit
 
 class NotificationTest: XCTestCase {
   private let deviceID : String = UUID.init().uuidString
-  private let deviceID2 : String = UUID.init().uuidString
   private let client : Client = Builder.defaults(serverKey: "defaultkey")
   private var session : Session?
   

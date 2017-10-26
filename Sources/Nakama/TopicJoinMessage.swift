@@ -19,7 +19,7 @@ import Foundation
 public struct TopicJoinMessage : CollatedMessage {
   public var rooms: [Data] = []
   public var groups: [Data] = []
-  public var directMessages: [Data] = []
+  public var userIds: [UUID] = []
   
   public init(){}
   
@@ -38,9 +38,14 @@ public struct TopicJoinMessage : CollatedMessage {
       proto.joins.append(join)
     }
     
-    for id in directMessages {
+    for var id in userIds {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.userID = id
+      
+      let uid = withUnsafePointer(to: &id) {
+        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
+      }
+      
+      join.userID = uid
       proto.joins.append(join)
     }
     
@@ -52,6 +57,6 @@ public struct TopicJoinMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "TopicJoinMessage(rooms=%@, groups=%@, directMessages=%@)", rooms, groups, directMessages)
+    return String(format: "TopicJoinMessage(rooms=%@, groups=%@, userIds=%@)", rooms, groups, userIds)
   }
 }
