@@ -197,6 +197,10 @@ public protocol Client {
   func send(message: GroupsSelfListMessage) -> Promise<[GroupSelf]>
   func send(message: GroupUpdateMessage) -> Promise<Void>
   func send(message: GroupUsersListMessage) -> Promise<[GroupUser]>
+  func send(message: LeaderboardRecordsFetchMessage) -> Promise<[LeaderboardRecord]>
+  func send(message: LeaderboardRecordsListMessage) -> Promise<[LeaderboardRecord]>
+  func send(message: LeaderboardRecordWriteMessage) -> Promise<[LeaderboardRecord]>
+  func send(message: LeaderboardsListMessage) -> Promise<[Leaderboard]>
   
   /**
    - Parameter message : message The message to send.
@@ -527,6 +531,22 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
+  func send(message: LeaderboardRecordsFetchMessage) -> Promise<[LeaderboardRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardRecordsListMessage) -> Promise<[LeaderboardRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardRecordWriteMessage) -> Promise<[LeaderboardRecord]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: LeaderboardsListMessage) -> Promise<[Leaderboard]> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
     
@@ -658,6 +678,22 @@ internal class DefaultClient : Client, WebSocketDelegate {
           groupsSelf.append(DefaultGroupSelf(from: gs))
         }
         fulfill(groupsSelf)
+      case .leaderboards(let proto):
+        let (fulfill, _) : (fulfill: ([Leaderboard]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Leaderboard]) -> Void, reject: Any)
+        var leaderboards : [Leaderboard] = []
+        leaderboards._cursor = proto.cursor
+        for l in proto.leaderboards {
+          leaderboards.append(DefaultLeaderboard(from: l))
+        }
+        fulfill(leaderboards)
+      case .leaderboardRecords(let proto):
+        let (fulfill, _) : (fulfill: ([LeaderboardRecord]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([LeaderboardRecord]) -> Void, reject: Any)
+        var leaderboardRecords : [LeaderboardRecord] = []
+        leaderboardRecords._cursor = proto.cursor
+        for lr in proto.records {
+          leaderboardRecords.append(DefaultLeaderboardRecord(from: lr))
+        }
+        fulfill(leaderboardRecords)
       default:
         if trace {
           NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");
