@@ -172,9 +172,7 @@ internal struct DefaultGroupUser : GroupUser {
     timezone = proto.user.timezone
     updatedAt = Int(proto.user.updatedAt)
     
-    id = proto.user.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: proto.user.id)
     
     state = GroupState.make(from: proto.state)
   }
@@ -216,13 +214,9 @@ internal struct DefaultGroupSelf : GroupSelf {
     updatedAt = Int(proto.group.updatedAt)
     privateState = proto.group.private
     
-    id = proto.group.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: proto.group.id)
     
-    creatorID = proto.group.creatorID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    creatorID = NakamaId.convert(data: proto.group.creatorID)
     
     state = GroupState.make(from: proto.state)
   }

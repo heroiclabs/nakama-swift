@@ -185,6 +185,18 @@ public protocol Client {
   func send(message: TopicLeaveMessage) -> Promise<Void>
   func send(message: TopicMessageSendMessage) -> Promise<TopicMessageAck>
   func send(message: TopicMessagesListMessage) -> Promise<[TopicMessage]>
+  func send(message: GroupAddUserMessage) -> Promise<Void>
+  func send(message: GroupCreateMessage) -> Promise<[Group]>
+  func send(message: GroupJoinMessage) -> Promise<Void>
+  func send(message: GroupKickUserMessage) -> Promise<Void>
+  func send(message: GroupLeaveMessage) -> Promise<Void>
+  func send(message: GroupPromoteUserMessage) -> Promise<Void>
+  func send(message: GroupRemoveMessage) -> Promise<Void>
+  func send(message: GroupsFetchMessage) -> Promise<[Group]>
+  func send(message: GroupsListMessage) -> Promise<[Group]>
+  func send(message: GroupsSelfListMessage) -> Promise<[GroupSelf]>
+  func send(message: GroupUpdateMessage) -> Promise<Void>
+  func send(message: GroupUsersListMessage) -> Promise<[GroupUser]>
   
   /**
    - Parameter message : message The message to send.
@@ -467,6 +479,54 @@ internal class DefaultClient : Client, WebSocketDelegate {
     return self.send(proto: message)
   }
   
+  func send(message: GroupAddUserMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupCreateMessage) -> Promise<[Group]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupJoinMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupKickUserMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupLeaveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupPromoteUserMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupRemoveMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupsFetchMessage) -> Promise<[Group]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupsListMessage) -> Promise<[Group]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupsSelfListMessage) -> Promise<[GroupSelf]> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupUpdateMessage) -> Promise<Void> {
+    return self.send(proto: message)
+  }
+  
+  func send(message: GroupUsersListMessage) -> Promise<[GroupUser]> {
+    return self.send(proto: message)
+  }
+  
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
     
@@ -576,6 +636,28 @@ internal class DefaultClient : Client, WebSocketDelegate {
       case .topicMessageAck(let proto):
         let (fulfill, _) : (fulfill: (TopicMessageAck) -> Void, reject: Any) = promiseTuple as! (fulfill: (TopicMessageAck) -> Void, reject: Any)
         fulfill(DefaultTopicMessageAck(from: proto))
+      case .groups(let proto):
+        let (fulfill, _) : (fulfill: ([Group]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([Group]) -> Void, reject: Any)
+        var groups : [Group] = []
+        groups._cursor = proto.cursor
+        for g in proto.groups {
+          groups.append(DefaultGroup(from: g))
+        }
+        fulfill(groups)
+      case .groupUsers(let proto):
+        let (fulfill, _) : (fulfill: ([GroupUser]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([GroupUser]) -> Void, reject: Any)
+        var groupUsers : [GroupUser] = []
+        for g in proto.users {
+          groupUsers.append(DefaultGroupUser(from: g))
+        }
+        fulfill(groupUsers)
+      case .groupsSelf(let proto):
+        let (fulfill, _) : (fulfill: ([GroupSelf]) -> Void, reject: Any) = promiseTuple as! (fulfill: ([GroupSelf]) -> Void, reject: Any)
+        var groupsSelf : [GroupSelf] = []
+        for gs in proto.groupsSelf {
+          groupsSelf.append(DefaultGroupSelf(from: gs))
+        }
+        fulfill(groupsSelf)
       default:
         if trace {
           NSLog("No client behaviour for incoming message: %@", (try? envelope.jsonString()) ?? "nil");

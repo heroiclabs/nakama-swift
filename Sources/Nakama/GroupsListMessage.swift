@@ -18,6 +18,10 @@ import Foundation
 
 public struct GroupsListMessage : CollatedMessage {
   
+  private var lang : String?
+  private var createdAt : Int?
+  private var count : Int?
+  
   public var pageLimit: Int?
   public var orderAscending: Bool?
   public var cursor: Data?
@@ -27,12 +31,12 @@ public struct GroupsListMessage : CollatedMessage {
    */
   public var filterByLang : String? {
     set {
-      filterByLang = newValue
-      filterByCreatedAt = nil
-      filterByCount = nil
+      lang = newValue
+      createdAt = nil
+      count = nil
     }
     get {
-      return self.filterByLang
+      return lang
     }
   }
   
@@ -41,12 +45,12 @@ public struct GroupsListMessage : CollatedMessage {
    */
   public var filterByCreatedAt: Int? {
     set {
-      filterByLang = nil
-      filterByCreatedAt = newValue
-      filterByCount = nil
+      lang = nil
+      createdAt = newValue
+      count = nil
     }
     get {
-      return self.filterByCreatedAt
+      return createdAt
     }
   }
   
@@ -55,12 +59,12 @@ public struct GroupsListMessage : CollatedMessage {
    */
   public var filterByCount: Int? {
     set {
-      filterByLang = nil
-      filterByCreatedAt = nil
-      filterByCount = newValue
+      lang = nil
+      createdAt = nil
+      count = newValue
     }
     get {
-      return self.filterByCount
+      return count
     }
   }
   
@@ -81,15 +85,15 @@ public struct GroupsListMessage : CollatedMessage {
       listing.cursor = _cursor
     }
     
-    if let _lang = filterByLang {
+    if let _lang = lang {
       listing.lang = _lang
     }
     
-    if let _createdAt = filterByCreatedAt {
+    if let _createdAt = createdAt {
       listing.createdAt = Int64(_createdAt)
     }
     
-    if let _count = filterByCount {
+    if let _count = count {
       listing.count = Int64(_count)
     }
     
