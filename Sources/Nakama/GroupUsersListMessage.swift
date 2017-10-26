@@ -15,3 +15,29 @@
  */
 
 import Foundation
+
+public struct GroupUsersListMessage : CollatedMessage {
+  
+  public var groupID: UUID
+  
+  public init(groupID: UUID){
+    self.groupID = groupID
+  }
+  
+  public func serialize(collationID: String) -> Data? {
+    var proto = Server_TGroupUsersList()
+    proto.groupID = NakamaId.convert(uuid: groupID)
+    
+    var envelope = Server_Envelope()
+    envelope.groupUsersList = proto
+    envelope.collationID = collationID
+    
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "GroupUsersListMessage(groupID=%@)", groupID.uuidString)
+  }
+}
+
+

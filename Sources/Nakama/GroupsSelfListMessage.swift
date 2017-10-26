@@ -15,3 +15,22 @@
  */
 
 import Foundation
+
+public struct GroupsSelfListMessage : CollatedMessage {
+  private let payload: Server_TGroupsSelfList
+  public init() {
+    payload = Server_TGroupsSelfList()
+  }
+  
+  public func serialize(collationID: String) -> Data? {
+    var envelope = Server_Envelope()
+    envelope.groupsSelfList = payload
+    envelope.collationID = collationID
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "GroupsSelfListMessage()")
+  }
+}
+

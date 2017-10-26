@@ -32,5 +32,4 @@ public struct SelfFetchMessage : CollatedMessage {
   public var description: String {
     return String(format: "SelfFetchMessage()")
   }
-
 }

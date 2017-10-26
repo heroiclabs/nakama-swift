@@ -15,3 +15,37 @@
  */
 
 import Foundation
+
+public struct GroupKickUserMessage : CollatedMessage {
+  
+  /**
+   List of a map of Group ID to User ID
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var groupUsers : [(groupID: UUID, userID: UUID)] = []
+  
+  public init(){}
+  
+  public func serialize(collationID: String) -> Data? {
+    var proto = Server_TGroupUsersKick()
+    
+    for gu in groupUsers {
+      var userKick = Server_TGroupUsersKick.GroupUserKick()
+      userKick.groupID = NakamaId.convert(uuid: gu.groupID)
+      userKick.userID = NakamaId.convert(uuid: gu.userID)
+      proto.groupUsers.append(userKick)
+    }
+    
+    var envelope = Server_Envelope()
+    envelope.groupUsersKick = proto
+    envelope.collationID = collationID
+    
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "GroupKickUserMessage(groupUsers=%@)", groupUsers)
+  }
+}
+
+

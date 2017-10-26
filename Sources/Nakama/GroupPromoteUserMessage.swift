@@ -15,3 +15,38 @@
  */
 
 import Foundation
+
+public struct GroupPromoteUserMessage : CollatedMessage {
+  
+  /**
+   List of a map of Group ID to User ID
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var groupUsers : [(groupID: UUID, userID: UUID)] = []
+  
+  public init(){}
+  
+  public func serialize(collationID: String) -> Data? {
+    var proto = Server_TGroupUsersPromote()
+    
+    for gu in groupUsers {
+      var userPromote = Server_TGroupUsersPromote.GroupUserPromote()
+      userPromote.groupID = NakamaId.convert(uuid: gu.groupID)
+      userPromote.userID = NakamaId.convert(uuid: gu.userID)
+      proto.groupUsers.append(userPromote)
+    }
+    
+    var envelope = Server_Envelope()
+    envelope.groupUsersPromote = proto
+    envelope.collationID = collationID
+    
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "GroupPromoteUserMessage(groupUsers=%@)", groupUsers)
+  }
+}
+
+
+

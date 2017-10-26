@@ -15,3 +15,32 @@
  */
 
 import Foundation
+
+public struct GroupJoinMessage : CollatedMessage {
+  
+  /**
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var groupIds: [UUID] = []
+  
+  public init(){}
+  
+  public func serialize(collationID: String) -> Data? {
+    var proto = Server_TGroupsJoin()
+    
+    for id in groupIds {
+      proto.groupIds.append(NakamaId.convert(uuid: id))
+    }
+    
+    var envelope = Server_Envelope()
+    envelope.groupsJoin = proto
+    envelope.collationID = collationID
+    
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "GroupJoinMessage(groupIds=%@)", groupIds)
+  }
+}
+

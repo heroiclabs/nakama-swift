@@ -29,17 +29,10 @@ public struct GroupAddUserMessage : CollatedMessage {
   public func serialize(collationID: String) -> Data? {
     var proto = Server_TGroupUsersAdd()
     
-    for var gu in groupUsers {
+    for gu in groupUsers {
       var userAdd = Server_TGroupUsersAdd.GroupUserAdd()
-      let gid = withUnsafePointer(to: &gu.groupID) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: gu.groupID))
-      }
-      let uid = withUnsafePointer(to: &gu.userID) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: gu.userID))
-      }
-      
-      userAdd.groupID = gid
-      userAdd.userID = uid
+      userAdd.groupID = NakamaId.convert(uuid: gu.groupID)
+      userAdd.userID = NakamaId.convert(uuid: gu.userID)
       proto.groupUsers.append(userAdd)
     }
     

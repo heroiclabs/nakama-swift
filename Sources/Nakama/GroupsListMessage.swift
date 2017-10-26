@@ -15,3 +15,94 @@
  */
 
 import Foundation
+
+public struct GroupsListMessage : CollatedMessage {
+  
+  public var pageLimit: Int?
+  public var orderAscending: Bool?
+  public var cursor: Data?
+  
+  /**
+   This will unset other filters supplied
+   */
+  public var filterByLang : String? {
+    set {
+      filterByLang = newValue
+      filterByCreatedAt = nil
+      filterByCount = nil
+    }
+    get {
+      return self.filterByLang
+    }
+  }
+  
+  /**
+   This will unset other filters supplied
+   */
+  public var filterByCreatedAt: Int? {
+    set {
+      filterByLang = nil
+      filterByCreatedAt = newValue
+      filterByCount = nil
+    }
+    get {
+      return self.filterByCreatedAt
+    }
+  }
+  
+  /**
+   This will unset other filters supplied
+   */
+  public var filterByCount: Int? {
+    set {
+      filterByLang = nil
+      filterByCreatedAt = nil
+      filterByCount = newValue
+    }
+    get {
+      return self.filterByCount
+    }
+  }
+  
+  public init(){}
+  
+  public func serialize(collationID: String) -> Data? {
+    var listing = Server_TGroupsList()
+    
+    if let _pageLimit = pageLimit {
+      listing.pageLimit = Int64(_pageLimit)
+    }
+    
+    if let _orderAsc = orderAscending {
+      listing.orderByAsc = _orderAsc
+    }
+    
+    if let _cursor = cursor {
+      listing.cursor = _cursor
+    }
+    
+    if let _lang = filterByLang {
+      listing.lang = _lang
+    }
+    
+    if let _createdAt = filterByCreatedAt {
+      listing.createdAt = Int64(_createdAt)
+    }
+    
+    if let _count = filterByCount {
+      listing.count = Int64(_count)
+    }
+    
+    var envelope = Server_Envelope()
+    envelope.groupsList = listing
+    envelope.collationID = collationID
+    
+    return try! envelope.serializedData()
+  }
+  
+  public var description: String {
+    return String(format: "GroupsListMessage(pageLimit=%d,orderAscending=%@,filterByLang=%@,filterByCreatedAt=%d,filterByCount=%d,cursor=%@)", pageLimit ?? 0, orderAscending?.description ?? "", filterByLang ?? "", filterByCreatedAt ?? 0, filterByCount ?? 0, cursor?.base64EncodedString() ?? "nil")
+  }
+  
+}
+
