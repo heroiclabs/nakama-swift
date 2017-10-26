@@ -11,13 +11,20 @@ If you encounter any issues with the server you can generate diagnostics for us 
 
 ## Usage
 
+If your project uses Cocoapods, add the client as a dependency to your "Podfile":
+
+```ruby
+use_frameworks!
+pod 'Nakama', '~> 0.2'
+```
+
 You can use the Swift package manager to add the code as a dependency for your project. Add the client as a dependency to your "Package.swift" file.
 
 ```swift
 let package = Package(
   // ...
   dependencies: [
-    .Package(url: "https://github.com/heroiclabs/nakama-swift.git", Version(0,1,0)),
+    .Package(url: "https://github.com/heroiclabs/nakama-swift.git", Version(0,2,0)),
   ]
 )
 ```
