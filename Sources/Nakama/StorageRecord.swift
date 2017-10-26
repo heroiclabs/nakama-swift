@@ -118,9 +118,7 @@ internal struct DefaultStorageRecord : StorageRecord {
     value = proto.value
     updatedAt = Int(proto.updatedAt)
     
-    userID = proto.userID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    userID = NakamaId.convert(data: proto.userID)
   }
   
   public var description: String {

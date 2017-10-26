@@ -33,9 +33,9 @@ public struct TopicMessageSendMessage : CollatedMessage {
     case .directMessage(let d):
       t.dm = d
     case .group(let d):
-      t.groupID = d
+      t.groupID = NakamaId.convert(uuid: d)
     case .room(let d):
-      t.room = d
+      t.room = d.data(using: String.Encoding.utf8)!
     }
     
     proto.topic = t

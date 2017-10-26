@@ -38,14 +38,8 @@ internal struct DefaultUserPresence : UserPresence {
   
   internal init(from proto: Server_UserPresence) {
     handle = proto.handle
-    
-    userID = proto.userID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
-    
-    sessionID = proto.sessionID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    userID = NakamaId.convert(data: proto.userID)
+    sessionID = NakamaId.convert(data: proto.sessionID)
   }
   
   public var description: String {

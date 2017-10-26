@@ -17,6 +17,10 @@
 import Foundation
 
 public struct TopicLeaveMessage : CollatedMessage {
+  
+  /**
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
   public var topics: [TopicId] = []
   
   public init(){}
@@ -31,9 +35,9 @@ public struct TopicLeaveMessage : CollatedMessage {
       case .directMessage(let d):
         t.dm = d
       case .group(let d):
-        t.groupID = d
+        t.groupID = NakamaId.convert(uuid: d)
       case .room(let d):
-        t.room = d
+        t.room = d.data(using: String.Encoding.utf8)!
       }
 
       proto.topics.append(t)

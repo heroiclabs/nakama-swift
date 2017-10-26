@@ -106,12 +106,8 @@ internal struct DefaultTopicMessage : TopicMessage {
     
     type = TopicMessageType.make(from: proto.type)
     
-    userID = proto.userID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
-    messageID = proto.messageID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    userID = NakamaId.convert(data: proto.userID)
+    messageID = NakamaId.convert(data: proto.messageID)
   }
   
   public var description: String {

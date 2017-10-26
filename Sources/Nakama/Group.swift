@@ -130,13 +130,8 @@ internal struct DefaultGroup : Group {
     updatedAt = Int(proto.updatedAt)
     privateState = proto.private
     
-    id = proto.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
-    
-    creatorID = proto.creatorID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: proto.id)
+    creatorID = NakamaId.convert(data: proto.creatorID)
   }
   
   public var description: String {

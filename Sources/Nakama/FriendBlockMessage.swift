@@ -24,12 +24,8 @@ public struct FriendBlockMessage : CollatedMessage {
   public func serialize(collationID: String) -> Data? {
     var proto = Server_TFriendsBlock()
     
-    for var id in userIDs {
-      let uid = withUnsafePointer(to: &id) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
-      }
-      
-      proto.userIds.append(uid)
+    for id in userIDs {
+      proto.userIds.append(NakamaId.convert(uuid: id))
     }
     
     var envelope = Server_Envelope()

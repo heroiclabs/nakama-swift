@@ -17,8 +17,20 @@
 import Foundation
 
 public struct TopicJoinMessage : CollatedMessage {
-  public var rooms: [Data] = []
-  public var groups: [Data] = []
+  
+  /**
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var rooms: [String] = []
+  
+  /**
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var groups: [UUID] = []
+  
+  /**
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
   public var userIds: [UUID] = []
   
   public init(){}
@@ -28,24 +40,19 @@ public struct TopicJoinMessage : CollatedMessage {
     
     for id in rooms {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.room = id
+      join.room = id.data(using: String.Encoding.utf8)!
       proto.joins.append(join)
     }
     
     for id in groups {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.groupID = id
+      join.groupID = NakamaId.convert(uuid: id)
       proto.joins.append(join)
     }
     
-    for var id in userIds {
+    for id in userIds {
       var join = Server_TTopicsJoin.TopicJoin()
-      
-      let uid = withUnsafePointer(to: &id) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
-      }
-      
-      join.userID = uid
+      join.userID = NakamaId.convert(uuid: id)
       proto.joins.append(join)
     }
     

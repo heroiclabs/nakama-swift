@@ -88,10 +88,7 @@ internal struct DefaultFriend : Friend {
     timezone = proto.user.timezone
     updatedAt = Int(proto.user.updatedAt)
     
-    id = proto.user.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
-    
+    id = NakamaId.convert(data: proto.user.id)
     state = FriendState.make(from: proto.state)
   }
   

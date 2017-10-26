@@ -98,9 +98,7 @@ internal struct DefaultUser : User {
     timezone = proto.timezone
     updatedAt = Int(proto.updatedAt)
     
-    id = proto.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: proto.id)
   }
   
   public var description: String {

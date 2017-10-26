@@ -25,21 +25,21 @@ public enum TopicId : CustomStringConvertible {
   /**
    Message in a dynamic room
    */
-  case room(Data)
+  case room(String)
   
   /**
    Message in a group chat
    */
-  case group(Data)
+  case group(UUID)
   
   internal static func make(from proto: Server_TopicId) -> TopicId {
     switch proto.id! {
-    case .dm(let d):
-      return .directMessage(d)
+    case .dm(let data):
+      return .directMessage(data)
     case .room(let data):
-      return .room(data)
+      return .room(String.init(data: data, encoding: String.Encoding.utf8)!)
     case .groupID(let data):
-      return .group(data)
+      return .group(NakamaId.convert(data: data))
     }
   }
   
@@ -48,9 +48,9 @@ public enum TopicId : CustomStringConvertible {
     case .directMessage(let d):
       return String(format: "TopicId(type=%@,id=%@)", "directMessage", d.base64EncodedString())
     case .group(let d):
-      return String(format: "TopicId(type=%@,id=%@)", "group", d.base64EncodedString())
+      return String(format: "TopicId(type=%@,id=%@)", "group", d.uuidString)
     case .room(let d):
-      return String(format: "TopicId(type=%@,id=%@)", "room", d.base64EncodedString())
+      return String(format: "TopicId(type=%@,id=%@)", "room", d)
     }
   }
 }

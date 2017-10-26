@@ -34,10 +34,8 @@ public struct StorageListMessage : CollatedMessage {
   public func serialize(collationID: String) -> Data? {
     var listing = Server_TStorageList()
     
-    if var id = userID {
-      listing.userID = withUnsafePointer(to: &id) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
-      }
+    if let id = userID {
+      listing.userID = NakamaId.convert(uuid: id)
     }
     
     if bucket != nil {

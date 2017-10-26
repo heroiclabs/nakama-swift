@@ -16,31 +16,17 @@
 
 import Foundation
 
-public struct NotificationRemoveMessage : CollatedMessage {
-  public var notificationIds: [UUID] = []
-  
-  public init(){}
-  
-  public func serialize(collationID: String) -> Data? {
-    var proto = Server_TNotificationsRemove()
-    
-    for id in notificationIds {
-      proto.notificationIds.append(NakamaId.convert(uuid: id))
+public class NakamaId {
+  public static func convert(data:Data) -> UUID {
+    return data.withUnsafeBytes { bytes in
+      return NSUUID.init(uuidBytes: bytes) as UUID
     }
-    
-    var envelope = Server_Envelope()
-    envelope.notificationsRemove = proto
-    envelope.collationID = collationID
-    
-    return try! envelope.serializedData()
   }
-  
-  public var description: String {
-    return String(format: "NotificationRemoveMessage(ids=%@)", notificationIds)
+
+  public static func convert(uuid:UUID) -> Data {
+    var id = uuid
+    return withUnsafePointer(to: &id) {
+      Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
+    }
   }
-  
 }
-
-
-
-

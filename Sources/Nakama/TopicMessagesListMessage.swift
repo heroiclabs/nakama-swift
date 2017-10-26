@@ -18,8 +18,8 @@ import Foundation
 
 public struct TopicMessagesListMessage : CollatedMessage {
   private var userID: UUID?
-  private var room: Data?
-  private var groupID: Data?
+  private var room: String?
+  private var groupID: UUID?
   
   public var cursor: Data?
   public var forward: Bool?
@@ -29,11 +29,11 @@ public struct TopicMessagesListMessage : CollatedMessage {
     self.userID = userID
   }
   
-  public init(room: Data){
+  public init(room: String){
     self.room = room
   }
   
-  public init(groupID: Data){
+  public init(groupID: UUID){
     self.groupID = groupID
   }
   
@@ -50,17 +50,14 @@ public struct TopicMessagesListMessage : CollatedMessage {
       listing.limit = Int64(_limit)
     }
     
-    if var _userID = userID {
-      let uid = withUnsafePointer(to: &_userID) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: _userID))
-      }
-      listing.userID = uid
+    if let _userID = userID {
+      listing.userID = NakamaId.convert(uuid: _userID)
     }
     if let _room = room {
-      listing.room = _room
+      listing.room = _room.data(using: String.Encoding.utf8)!
     }
     if let _groupID = groupID {
-      listing.groupID = _groupID
+      listing.groupID = NakamaId.convert(uuid: _groupID)
     }
     
     var envelope = Server_Envelope()
@@ -71,6 +68,6 @@ public struct TopicMessagesListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "NotificationListMessage(userID=%@,room=%@,groupID=%@,forward=%@,limit=%d,cursor=%@)", userID?.uuidString ?? "", room?.base64EncodedString() ?? "", groupID?.base64EncodedString() ?? "", forward?.description ?? "unset", limit ?? 0, cursor?.base64EncodedString() ?? "nil")
+    return String(format: "NotificationListMessage(userID=%@,room=%@,groupID=%@,forward=%@,limit=%d,cursor=%@)", userID?.uuidString ?? "", room ?? "", groupID?.uuidString ?? "", forward?.description ?? "unset", limit ?? 0, cursor?.base64EncodedString() ?? "nil")
   }
 }

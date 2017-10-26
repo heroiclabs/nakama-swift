@@ -16,38 +16,42 @@
 
 import Foundation
 
-public struct FriendAddMessage : CollatedMessage {
-  public var handles : [String] = []
-  public var userIDs: [UUID] = []
+public struct GroupAddUserMessage : CollatedMessage {
+  
+  /**
+   List of a map of Group ID to User ID
+   NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
+   */
+  public var groupUsers : [(groupID: UUID, userID: UUID)] = []
   
   public init(){}
   
   public func serialize(collationID: String) -> Data? {
-    var proto = Server_TFriendsAdd()
+    var proto = Server_TGroupUsersAdd()
     
-    for handle in handles {
-      var friendAdd = Server_TFriendsAdd.FriendsAdd()
-      friendAdd.handle = handle
-      proto.friends.append(friendAdd)
-    }
-    
-    for id in userIDs {
-      var friendAdd = Server_TFriendsAdd.FriendsAdd()
-      friendAdd.userID = NakamaId.convert(uuid: id)
+    for var gu in groupUsers {
+      var userAdd = Server_TGroupUsersAdd.GroupUserAdd()
+      let gid = withUnsafePointer(to: &gu.groupID) {
+        Data(bytes: $0, count: MemoryLayout.size(ofValue: gu.groupID))
+      }
+      let uid = withUnsafePointer(to: &gu.userID) {
+        Data(bytes: $0, count: MemoryLayout.size(ofValue: gu.userID))
+      }
       
-      proto.friends.append(friendAdd)
+      userAdd.groupID = gid
+      userAdd.userID = uid
+      proto.groupUsers.append(userAdd)
     }
     
     var envelope = Server_Envelope()
-    envelope.friendsAdd = proto
+    envelope.groupUsersAdd = proto
     envelope.collationID = collationID
     
     return try! envelope.serializedData()
   }
   
   public var description: String {
-    return String(format: "FriendAddMessage(handles=%@,ids=%@)", handles, userIDs)
+    return String(format: "GroupAddUserMessage(groupUsers=%@)", groupUsers)
   }
-  
 }
 

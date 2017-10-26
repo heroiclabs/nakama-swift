@@ -31,12 +31,9 @@ public struct UsersFetchMessage : CollatedMessage {
       proto.users.append(userfetch)
     }
     
-    for var id in userIDs {
+    for id in userIDs {
       var userfetch = Server_TUsersFetch.UsersFetch()
-      userfetch.userID = withUnsafePointer(to: &id) {
-        Data(bytes: $0, count: MemoryLayout.size(ofValue: id))
-      }
-      
+      userfetch.userID = NakamaId.convert(uuid: id)
       proto.users.append(userfetch)
     }
     

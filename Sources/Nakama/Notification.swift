@@ -77,14 +77,10 @@ internal struct DefaultNotification : Notification {
     expiresAt = Int(proto.expiresAt)
     persistent = proto.persistent
     
-    id = proto.id.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    id = NakamaId.convert(data: proto.id)
     
     if !proto.senderID.isEmpty {
-      senderID = proto.senderID.withUnsafeBytes { bytes in
-        return NSUUID.init(uuidBytes: bytes) as UUID
-      }
+      senderID = NakamaId.convert(data: proto.senderID)
     } else {
       senderID = nil
     }
