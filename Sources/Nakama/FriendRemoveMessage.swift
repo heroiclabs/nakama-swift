@@ -17,28 +17,28 @@
 import Foundation
 
 public struct FriendRemoveMessage : CollatedMessage {
-  public var userIDs: [UUID] = []
-  
+  public var userIds: [UUID] = []
+
   public init(){}
-  
+
   public func serialize(collationID: String) -> Data? {
     var proto = Server_TFriendsRemove()
-    
-    for id in userIDs {
+
+    for id in userIds {
       proto.userIds.append(NakamaId.convert(uuid: id))
     }
-    
+
     var envelope = Server_Envelope()
     envelope.friendsRemove = proto
     envelope.collationID = collationID
-    
+
     return try! envelope.serializedData()
   }
-  
+
   public var description: String {
-    return String(format: "FriendRemoveMessage(ids=%@)", userIDs)
+    return String(format: "FriendRemoveMessage(ids=%@)", userIds)
   }
-  
+
 }
 
 
