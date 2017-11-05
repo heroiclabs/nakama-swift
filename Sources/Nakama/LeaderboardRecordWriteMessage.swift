@@ -42,7 +42,7 @@ public struct LeaderboardRecordWriteMessage : CollatedMessage {
       }
       
       if let _metadata = record.metadata {
-        w.metadata = _metadata
+        w.metadata = String(data: _metadata, encoding: .utf8)!
       }
       
       if let _increment = record.increment {
@@ -152,6 +152,11 @@ public struct LeaderboardRecordWrite : CustomStringConvertible {
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordWrite(leaderboardID=%@,location=%@,timezone=%@,metadata=%@,increment=%d,decrement=%d,set=%d,best=%d)", leaderboardID.uuidString, location ?? "", timezone ?? "", metadata?.base64EncodedString() ?? "", increment ?? 0, decrement ?? 0, set ?? 0, best ?? 0)
+    var _metadata = ""
+    if let m = metadata {
+      _metadata = String(data: m, encoding: .utf8)!
+    }
+    
+    return String(format: "LeaderboardRecordWrite(leaderboardID=%@,location=%@,timezone=%@,metadata=%@,increment=%d,decrement=%d,set=%d,best=%d)", leaderboardID.uuidString, location ?? "", timezone ?? "", _metadata, increment ?? 0, decrement ?? 0, set ?? 0, best ?? 0)
   }
 }

@@ -44,7 +44,7 @@ public struct GroupUpdateMessage : CollatedMessage {
         gu.lang = lang
       }
       if let metadata = groupUpdate.metadata {
-        gu.metadata = metadata
+        gu.metadata = String.init(data: metadata, encoding: .utf8)!
       }
       if let privateGroup = groupUpdate.privateGroup {
         gu.private = privateGroup
@@ -79,6 +79,11 @@ public struct GroupUpdate : CustomStringConvertible {
   }
   
   public var description: String {
-    return String(format: "GroupUpdate(groupID=%@,name=%@, description=%@, avatarURL=%@, lang=%@, metadata=%@, private=%@)", groupID.uuidString, name ?? "", desc ?? "", avatarURL ?? "", lang ?? "", metadata?.base64EncodedString() ?? "", privateGroup?.description ?? "false")
+    var _metadata = ""
+    if let m = metadata {
+      _metadata = String(data: m, encoding: .utf8)!
+    }
+    
+    return String(format: "GroupUpdate(groupID=%@,name=%@, description=%@, avatarURL=%@, lang=%@, metadata=%@, private=%@)", groupID.uuidString, name ?? "", desc ?? "", avatarURL ?? "", lang ?? "", _metadata, privateGroup?.description ?? "false")
   }
 }

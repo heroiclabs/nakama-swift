@@ -21,7 +21,7 @@ public struct TopicMessagesListMessage : CollatedMessage {
   private var room: String?
   private var groupID: UUID?
   
-  public var cursor: Data?
+  public var cursor: String?
   public var forward: Bool?
   public var limit : Int?
   
@@ -54,7 +54,7 @@ public struct TopicMessagesListMessage : CollatedMessage {
       listing.userID = NakamaId.convert(uuid: _userID)
     }
     if let _room = room {
-      listing.room = _room.data(using: String.Encoding.utf8)!
+      listing.room = _room
     }
     if let _groupID = groupID {
       listing.groupID = NakamaId.convert(uuid: _groupID)
@@ -68,6 +68,6 @@ public struct TopicMessagesListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "NotificationListMessage(userID=%@,room=%@,groupID=%@,forward=%@,limit=%d,cursor=%@)", userID?.uuidString ?? "", room ?? "", groupID?.uuidString ?? "", forward?.description ?? "unset", limit ?? 0, cursor?.base64EncodedString() ?? "nil")
+    return String(format: "NotificationListMessage(userID=%@,room=%@,groupID=%@,forward=%@,limit=%d,cursor=%@)", userID?.uuidString ?? "", room ?? "", groupID?.uuidString ?? "", forward?.description ?? "unset", limit ?? 0, cursor ?? "")
   }
 }

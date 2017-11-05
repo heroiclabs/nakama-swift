@@ -30,7 +30,7 @@ public protocol Notification : CustomStringConvertible {
   /**
    Notification content
    */
-  var content : Data { get }
+  var content : String { get }
   
   /**
    Code associated with this notification. Code <= 100 indicate system notifications. For more info, please check the following link:
@@ -62,7 +62,7 @@ public protocol Notification : CustomStringConvertible {
 internal struct DefaultNotification : Notification {
   let id : UUID
   let subject : String
-  let content : Data
+  let content : String
   let code : Int
   let senderID : UUID?
   let createdAt : Int
@@ -77,16 +77,16 @@ internal struct DefaultNotification : Notification {
     expiresAt = Int(proto.expiresAt)
     persistent = proto.persistent
     
-    id = NakamaId.convert(data: proto.id)
+    id = NakamaId.convert(uuidBase64: proto.id)
     
     if !proto.senderID.isEmpty {
-      senderID = NakamaId.convert(data: proto.senderID)
+      senderID = NakamaId.convert(uuidBase64: proto.senderID)
     } else {
       senderID = nil
     }
   }
   
   public var description: String {
-    return String(format: "DefaultNotification(id=%@,subject=%@,content=%@,code=%d,senderID=%@,createdAt=%d,expiresAt=%d,persistent=%@)", id.uuidString, subject, content.base64EncodedString(), code, senderID?.uuidString ?? "", createdAt, expiresAt, persistent.description)
+    return String(format: "DefaultNotification(id=%@,subject=%@,content=%@,code=%d,senderID=%@,createdAt=%d,expiresAt=%d,persistent=%@)", id.uuidString, subject, content, code, senderID?.uuidString ?? "", createdAt, expiresAt, persistent.description)
   }
 }

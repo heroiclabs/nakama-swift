@@ -80,7 +80,7 @@ public protocol StorageRecord : StorageRecordID {
   /**
    - The value (content) of the record.
    */
-  var value : Data { get }
+  var value : String { get }
   
   /**
    - UTC timestamp when the record was updated.
@@ -97,12 +97,12 @@ internal struct DefaultStorageRecord : StorageRecord {
   let bucket: String
   let collection : String
   let key : String
-  let version : Data
+  let version : String
   let createdAt : Int
   let expiresAt : Int
   let permissionRead : PermissionRead
   let permissionWrite : PermissionWrite
-  let value : Data
+  let value : String
   let updatedAt : Int
   let userID : UUID
   
@@ -118,10 +118,10 @@ internal struct DefaultStorageRecord : StorageRecord {
     value = proto.value
     updatedAt = Int(proto.updatedAt)
     
-    userID = NakamaId.convert(data: proto.userID)
+    userID = NakamaId.convert(uuidBase64: proto.userID)
   }
   
   public var description: String {
-    return String(format: "DefaultStorageRecord(bucket=%@,collection=%d,key=%@,version=%@,createdAt=%d,expiresAt=%d,permissionRead=%@,permissionWrite=%@,value=%@,updatedAt=%d,userId=%@)", bucket, collection, key, version.base64EncodedString(), createdAt, expiresAt, permissionRead.rawValue, permissionWrite.rawValue, value.base64EncodedString(), updatedAt, userID.uuidString)
+    return String(format: "DefaultStorageRecord(bucket=%@,collection=%d,key=%@,version=%@,createdAt=%d,expiresAt=%d,permissionRead=%@,permissionWrite=%@,value=%@,updatedAt=%d,userId=%@)", bucket, collection, key, version, createdAt, expiresAt, permissionRead.rawValue, permissionWrite.rawValue, value, updatedAt, userID.uuidString)
   }
 }

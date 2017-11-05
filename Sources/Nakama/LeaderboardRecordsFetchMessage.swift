@@ -23,7 +23,7 @@ public struct LeaderboardRecordsFetchMessage : CollatedMessage {
   /**
    Hint: Use [LeaderboardRecord].cursor as the value
   */
-  public var cursor : Data?
+  public var cursor : String?
   
   public init() {}
   
@@ -50,7 +50,7 @@ public struct LeaderboardRecordsFetchMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordsFetchMessage(leaderboardIds=%@,limit=%d,cursor=%@)", leaderboardIds, limit ?? 0, cursor?.base64EncodedString() ?? "")
+    return String(format: "LeaderboardRecordsFetchMessage(leaderboardIds=%@,limit=%d,cursor=%@)", leaderboardIds, limit ?? 0, cursor ?? "")
   }
   
 }

@@ -64,7 +64,7 @@ public struct DefaultSession : Session {
     precondition(encoded.count == 3, "Invalid token provided")
     
     var encodedToken = encoded[1]
-    encodedToken = encodedToken.padding(toLength: ((encodedToken.characters.count+3)/4)*4, withPad: "=", startingAt: 0)
+    encodedToken = encodedToken.padding(toLength: ((encodedToken.count+3)/4)*4, withPad: "=", startingAt: 0)
     
     let decodedData = Data(base64Encoded: encodedToken)
     let jsonMap = try? JSONSerialization.jsonObject(with: decodedData!, options: []) as! [String: Any]
@@ -74,7 +74,7 @@ public struct DefaultSession : Session {
     handle = jsonMap?["han"] as! String
     
     let uid = jsonMap?["uid"] as! String
-    userID = UUID.init(uuidString: uid)!
+    userID = NakamaId.convert(uuidBase64: uid)
     
     self.token = token;
   }

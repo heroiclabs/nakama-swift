@@ -21,7 +21,7 @@ public struct StorageListMessage : CollatedMessage {
   public var bucket: String?
   public var collection: String?
   public var limit: Int?
-  public var cursor: Data?
+  public var cursor: String?
   
   public init(bucket: String){
     self.bucket = bucket
@@ -62,7 +62,7 @@ public struct StorageListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "StorageListMessage(bucket=%@,collection=%@,userID=%@,limit=%d,cursor=%@)", bucket ?? "", collection ?? "", userID?.uuidString ?? "", limit ?? "", cursor?.base64EncodedString() ?? "nil")
+    return String(format: "StorageListMessage(bucket=%@,collection=%@,userID=%@,limit=%d,cursor=%@)", bucket ?? "", collection ?? "", userID?.uuidString ?? "", limit ?? "", cursor ?? "")
   }
   
 }

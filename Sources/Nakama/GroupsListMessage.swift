@@ -24,7 +24,7 @@ public struct GroupsListMessage : CollatedMessage {
   
   public var pageLimit: Int?
   public var orderAscending: Bool?
-  public var cursor: Data?
+  public var cursor: String?
   
   /**
    This will unset other filters supplied
@@ -105,7 +105,7 @@ public struct GroupsListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "GroupsListMessage(pageLimit=%d,orderAscending=%@,filterByLang=%@,filterByCreatedAt=%d,filterByCount=%d,cursor=%@)", pageLimit ?? 0, orderAscending?.description ?? "", filterByLang ?? "", filterByCreatedAt ?? 0, filterByCount ?? 0, cursor?.base64EncodedString() ?? "nil")
+    return String(format: "GroupsListMessage(pageLimit=%d,orderAscending=%@,filterByLang=%@,filterByCreatedAt=%d,filterByCount=%d,cursor=%@)", pageLimit ?? 0, orderAscending?.description ?? "", filterByLang ?? "", filterByCreatedAt ?? 0, filterByCount ?? 0, cursor ?? "")
   }
   
 }

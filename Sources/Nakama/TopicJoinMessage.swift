@@ -40,7 +40,7 @@ public struct TopicJoinMessage : CollatedMessage {
     
     for id in rooms {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.room = id.data(using: String.Encoding.utf8)!
+      join.room = id
       proto.joins.append(join)
     }
     

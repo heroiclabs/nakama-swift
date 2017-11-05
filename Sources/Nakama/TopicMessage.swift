@@ -84,7 +84,7 @@ public protocol TopicMessage : CustomStringConvertible {
   /**
    The message payload
    */
-  var data : Data { get }
+  var data : String { get }
 }
 
 internal struct DefaultTopicMessage : TopicMessage {
@@ -95,7 +95,7 @@ internal struct DefaultTopicMessage : TopicMessage {
   let expiresAt : Int
   let handle : String
   let type : TopicMessageType
-  let data : Data
+  let data : String
   
   internal init(from proto: Server_TopicMessage) {
     topic = TopicId.make(from: proto.topic)
@@ -106,12 +106,12 @@ internal struct DefaultTopicMessage : TopicMessage {
     
     type = TopicMessageType.make(from: proto.type)
     
-    userID = NakamaId.convert(data: proto.userID)
-    messageID = NakamaId.convert(data: proto.messageID)
+    userID = NakamaId.convert(uuidBase64: proto.userID)
+    messageID = NakamaId.convert(uuidBase64: proto.messageID)
   }
   
   public var description: String {
-    return String(format: "DefaultTopicMessage(topic=%@,userID=%@,messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,type=%@,data=%@)", topic.description, userID.uuidString, messageID.uuidString, createdAt, expiresAt, handle, type.rawValue, data.base64EncodedString())
+    return String(format: "DefaultTopicMessage(topic=%@,userID=%@,messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,type=%@,data=%@)", topic.description, userID.uuidString, messageID.uuidString, createdAt, expiresAt, handle, type.rawValue, data)
   }
 }
 
@@ -149,9 +149,7 @@ internal struct DefaultTopicMessageAck : TopicMessageAck {
     createdAt = Int(proto.createdAt)
     expiresAt = Int(proto.expiresAt)
     
-    messageID = proto.messageID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    messageID = NakamaId.convert(uuidBase64: proto.messageID)
   }
   
   public var description: String {

@@ -22,13 +22,13 @@ public struct StorageOp {
   public init(add path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.add.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
   }
   
   public init(append path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.append.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
   }
   
   public init(copy path: String, from: String) {
@@ -40,19 +40,19 @@ public struct StorageOp {
   public init(incr path: String, value: Int) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.incr.rawValue)
     payload.path = path
-    payload.value = String(value).data(using: .utf8)!
+    payload.value = String(value)
   }
   
   public init(init_ path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.init_.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
   }
   
   public init(merge path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.merge.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
   }
   
   public init(move path: String, from: String) {
@@ -69,19 +69,19 @@ public struct StorageOp {
   public init(replace path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.replace.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
   }
   
   public init(test path: String, value: Data) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.test.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
   }
   
   public init(compare path: String, value: Data, assertValue: Int) {
     payload.op = Int32(Server_TStorageUpdate.StorageUpdate.UpdateOp.UpdateOpCode.compare.rawValue)
     payload.path = path
-    payload.value = value
+    payload.value = String(data: value, encoding: .utf8)!
     payload.assert = Int64(assertValue)
   }
   
@@ -94,7 +94,7 @@ public struct StorageUpdateMessage : CollatedMessage {
     payload.updates = []
   }
   
-  public mutating func update(bucket: String, collection: String, key: String, ops: [StorageOp], version: Data?=nil, readPermission: PermissionRead?=nil, writePermission: PermissionWrite?=nil) {
+  public mutating func update(bucket: String, collection: String, key: String, ops: [StorageOp], version: String?=nil, readPermission: PermissionRead?=nil, writePermission: PermissionWrite?=nil) {
     var update = Server_TStorageUpdate.StorageUpdate()
     
     if readPermission != nil {

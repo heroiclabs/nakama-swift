@@ -25,7 +25,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
 
   public var leaderboardID : UUID
   public var limit: Int?
-  public var cursor: Data?
+  public var cursor: String?
   
   /**
    This will unset other filters supplied
@@ -155,7 +155,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordsListMessage(leaderboardID=%@,limit=%d,filterByLang=%@,filterByLocation=%@,filterByTimezone=%@,filterByPagingToOwnerID=%@,filterByOwnerIds=%@,cursor=%@)", leaderboardID.uuidString, limit ?? 0, filterByLang ?? "", filterByLocation ?? "", filterByTimezone ?? "", filterByPagingToOwnerID?.uuidString ?? "", filterByOwnerIds ?? "", cursor?.base64EncodedString() ?? "nil")
+    return String(format: "LeaderboardRecordsListMessage(leaderboardID=%@,limit=%d,filterByLang=%@,filterByLocation=%@,filterByTimezone=%@,filterByPagingToOwnerID=%@,filterByOwnerIds=%@,cursor=%@)", leaderboardID.uuidString, limit ?? 0, filterByLang ?? "", filterByLocation ?? "", filterByTimezone ?? "", filterByPagingToOwnerID?.uuidString ?? "", filterByOwnerIds ?? "", cursor ?? "")
   }
   
 }

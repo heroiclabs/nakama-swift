@@ -35,11 +35,11 @@ public struct TopicMessageSendMessage : CollatedMessage {
     case .group(let d):
       t.groupID = NakamaId.convert(uuid: d)
     case .room(let d):
-      t.room = d.data(using: String.Encoding.utf8)!
+      t.room = d
     }
     
     proto.topic = t
-    proto.data = data
+    proto.data = String(data: data, encoding: .utf8)!
     
     var envelope = Server_Envelope()
     envelope.collationID = collationID
@@ -49,6 +49,6 @@ public struct TopicMessageSendMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "TopicMessageSendMessage(topicId=%@, data=%@)", topicId.description, data.base64EncodedString())
+    return String(format: "TopicMessageSendMessage(topicId=%@, data=%@)", topicId.description, String(data: data, encoding: .utf8)!)
   }
 }
