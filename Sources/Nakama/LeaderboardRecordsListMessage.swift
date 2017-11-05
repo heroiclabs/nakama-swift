@@ -23,7 +23,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   private var location : String?
   private var timezone : String?
 
-  public var leaderboardID : UUID
+  public var leaderboardID : String
   public var limit: Int?
   public var cursor: String?
   
@@ -108,7 +108,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   }
   
   
-  public init(leaderboardID : UUID) {
+  public init(leaderboardID : String) {
     self.leaderboardID = leaderboardID
   }
   
@@ -155,7 +155,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordsListMessage(leaderboardID=%@,limit=%d,filterByLang=%@,filterByLocation=%@,filterByTimezone=%@,filterByPagingToOwnerID=%@,filterByOwnerIds=%@,cursor=%@)", leaderboardID.uuidString, limit ?? 0, filterByLang ?? "", filterByLocation ?? "", filterByTimezone ?? "", filterByPagingToOwnerID?.uuidString ?? "", filterByOwnerIds ?? "", cursor ?? "")
+    return String(format: "LeaderboardRecordsListMessage(leaderboardID=%@,limit=%d,filterByLang=%@,filterByLocation=%@,filterByTimezone=%@,filterByPagingToOwnerID=%@,filterByOwnerIds=%@,cursor=%@)", leaderboardID, limit ?? 0, filterByLang ?? "", filterByLocation ?? "", filterByTimezone ?? "", filterByPagingToOwnerID?.uuidString ?? "", filterByOwnerIds ?? "", cursor ?? "")
   }
   
 }

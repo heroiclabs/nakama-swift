@@ -20,7 +20,7 @@ public protocol LeaderboardRecord : CustomStringConvertible {
   /**
    - Returns: Leaderboard ID
    */
-  var leaderboardID : UUID { get }
+  var leaderboardID : String { get }
   
   /**
    - Returns: owner ID of the leaderboard record
@@ -81,7 +81,7 @@ public protocol LeaderboardRecord : CustomStringConvertible {
 }
 
 internal struct DefaultLeaderboardRecord : LeaderboardRecord {
-  let leaderboardID : UUID
+  let leaderboardID : String
   let ownerID : UUID
   let handle : String
   let lang : String
@@ -96,7 +96,7 @@ internal struct DefaultLeaderboardRecord : LeaderboardRecord {
   let expiresAt : Int
   
   internal init(from proto: Server_LeaderboardRecord) {
-    leaderboardID = NakamaId.convert(uuidBase64: proto.leaderboardID)
+    leaderboardID = proto.leaderboardID
     ownerID = NakamaId.convert(uuidBase64: proto.ownerID)
     handle = proto.handle
     lang = proto.lang
@@ -112,7 +112,7 @@ internal struct DefaultLeaderboardRecord : LeaderboardRecord {
   }
   
   public var description: String {
-    return String(format: "(leaderboardID=%@,ownerID=%@,handle=%@,lang=%@,location=%@,timezone=%@,rank=%d,score=%d,numScore=%d,metadata=%@,rankedAt=%d,expiresAt=%d,updatedAt=%d)", leaderboardID.uuidString, ownerID.uuidString, handle, lang, location, timezone, rank, score, numScore, metadata, rankedAt, expiresAt, updatedAt)
+    return String(format: "(leaderboardID=%@,ownerID=%@,handle=%@,lang=%@,location=%@,timezone=%@,rank=%d,score=%d,numScore=%d,metadata=%@,rankedAt=%d,expiresAt=%d,updatedAt=%d)", leaderboardID, ownerID.uuidString, handle, lang, location, timezone, rank, score, numScore, metadata, rankedAt, expiresAt, updatedAt)
   }
 }
 

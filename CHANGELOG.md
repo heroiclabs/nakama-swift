@@ -5,6 +5,11 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+#### Changed
+- Consistently use strings for all `Data` types.
+
+#### Fixed
+- Leaderboard IDs are no longer UUID specific and can be any string.
 
 ## [0.2.0] - 2017-10-26
 #### Added

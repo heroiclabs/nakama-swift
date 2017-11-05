@@ -17,7 +17,7 @@
 import Foundation
 
 public struct LeaderboardRecordsFetchMessage : CollatedMessage {
-  public var leaderboardIds: [UUID] = []
+  public var leaderboardIds: [String] = []
   public var limit : Int?
   
   /**
@@ -31,7 +31,7 @@ public struct LeaderboardRecordsFetchMessage : CollatedMessage {
     var proto = Server_TLeaderboardRecordsFetch()
     
     for id in leaderboardIds {
-      proto.leaderboardIds.append(NakamaId.convert(uuid: id))
+      proto.leaderboardIds.append(id)
     }
     
     if let _cursor = cursor {
