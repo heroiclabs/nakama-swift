@@ -67,7 +67,7 @@ class SelfUserTest: XCTestCase {
     client.send(message: message).then { selfuser in
       XCTAssert(selfuser.deviceIDs[0] == self.deviceID, "device IDs do not match")
       XCTAssert(!selfuser.handle.isEmpty, "handle is not set")
-      XCTAssert(!selfuser.id.uuidString.isEmpty, "user id is not set")
+      XCTAssert(!selfuser.id.isEmpty, "user id is not set")
     }.catch{err in
       XCTAssert(false, "Self fetch failed: " + (err as! NakamaError).message)
     }.always {

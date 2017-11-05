@@ -41,7 +41,7 @@ public struct GroupCreateMessage : CollatedMessage {
         gc.lang = lang
       }
       if let metadata = groupCreate.metadata {
-        gc.metadata = metadata
+        gc.metadata = String(data: metadata, encoding: .utf8)!
       }
       if let privateGroup = groupCreate.privateGroup {
         gc.private = privateGroup
@@ -75,7 +75,12 @@ public struct GroupCreate : CustomStringConvertible {
   }
   
   public var description: String {
-    return String(format: "GroupCreate(name=%@, description=%@, avatarURL=%@, lang=%@, metadata=%@, private=%@)", name, desc ?? "", avatarURL ?? "", lang ?? "", metadata?.base64EncodedString() ?? "", privateGroup?.description ?? "false")
+    var _metadata = ""
+    if let m = metadata {
+        _metadata = String(data: m, encoding: .utf8)!
+    }
+    
+    return String(format: "GroupCreate(name=%@, description=%@, avatarURL=%@, lang=%@, metadata=%@, private=%@)", name, desc ?? "", avatarURL ?? "", lang ?? "", _metadata, privateGroup?.description ?? "false")
   }
 }
 

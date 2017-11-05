@@ -18,36 +18,36 @@ import Foundation
 
 public struct FriendAddMessage : CollatedMessage {
   public var handles : [String] = []
-  public var userIDs: [UUID] = []
-  
+  public var userIds: [String] = []
+
   public init(){}
-  
+
   public func serialize(collationID: String) -> Data? {
     var proto = Server_TFriendsAdd()
-    
+
     for handle in handles {
       var friendAdd = Server_TFriendsAdd.FriendsAdd()
       friendAdd.handle = handle
       proto.friends.append(friendAdd)
     }
-    
-    for id in userIDs {
+
+    for id in userIds {
       var friendAdd = Server_TFriendsAdd.FriendsAdd()
-      friendAdd.userID = NakamaId.convert(uuid: id)
-      
+      friendAdd.userID = id
+
       proto.friends.append(friendAdd)
     }
-    
+
     var envelope = Server_Envelope()
     envelope.friendsAdd = proto
     envelope.collationID = collationID
-    
+
     return try! envelope.serializedData()
   }
-  
+
   public var description: String {
-    return String(format: "FriendAddMessage(handles=%@,ids=%@)", handles, userIDs)
+    return String(format: "FriendAddMessage(handles=%@,ids=%@)", handles, userIds)
   }
-  
+
 }
 

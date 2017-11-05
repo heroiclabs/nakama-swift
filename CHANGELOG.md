@@ -5,6 +5,8 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+#### Changed
+- Consistently use strings for all `Data` and `UUID` types.
 
 ## [0.2.0] - 2017-10-26
 #### Added

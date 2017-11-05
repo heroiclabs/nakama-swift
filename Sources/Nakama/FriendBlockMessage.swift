@@ -17,28 +17,28 @@
 import Foundation
 
 public struct FriendBlockMessage : CollatedMessage {
-  public var userIDs: [UUID] = []
-  
+  public var userIds: [String] = []
+
   public init(){}
-  
+
   public func serialize(collationID: String) -> Data? {
     var proto = Server_TFriendsBlock()
-    
-    for id in userIDs {
-      proto.userIds.append(NakamaId.convert(uuid: id))
+
+    for id in userIds {
+      proto.userIds.append(id)
     }
-    
+
     var envelope = Server_Envelope()
     envelope.friendsBlock = proto
     envelope.collationID = collationID
-    
+
     return try! envelope.serializedData()
   }
-  
+
   public var description: String {
-    return String(format: "FriendBlockMessage(ids=%@)", userIDs)
+    return String(format: "FriendBlockMessage(ids=%@)", userIds)
   }
-  
+
 }
 
 

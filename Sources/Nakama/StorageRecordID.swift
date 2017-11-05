@@ -38,14 +38,14 @@ public protocol StorageRecordID {
   /**
    - Returns: The version of the record which has been fetched.
    */
-  var version : Data { get }
+  var version : String { get }
 }
 
 internal struct DefaultStorageRecordID : StorageRecordID {
   let bucket: String
   let collection : String
   let key : String
-  let version : Data
+  let version : String
   
   internal init(from proto: Server_TStorageKeys.StorageKey) {
     bucket = proto.bucket
@@ -55,6 +55,6 @@ internal struct DefaultStorageRecordID : StorageRecordID {
   }
   
   public var description: String {
-    return String(format: "DefaultStorageRecordID(bucket=%@,collection=%d,key=%@,version=%@)", bucket, collection, key, version.base64EncodedString())
+    return String(format: "DefaultStorageRecordID(bucket=%@,collection=%d,key=%@,version=%@)", bucket, collection, key, version)
   }
 }

@@ -20,12 +20,12 @@ public protocol LeaderboardRecord : CustomStringConvertible {
   /**
    - Returns: Leaderboard ID
    */
-  var leaderboardID : UUID { get }
+  var leaderboardID : String { get }
   
   /**
    - Returns: owner ID of the leaderboard record
    */
-  var ownerID : UUID { get }
+  var ownerID : String { get }
   
   /**
    - Returns: The handle of the owner, if owner is a user
@@ -62,7 +62,7 @@ public protocol LeaderboardRecord : CustomStringConvertible {
   /**
    - Returns: Metadata associated with the leaderboard record
    */
-  var metadata : Data { get }
+  var metadata : String { get }
   
   /**
    - Returns: UTC timestamp when the rank was calculated.
@@ -81,8 +81,8 @@ public protocol LeaderboardRecord : CustomStringConvertible {
 }
 
 internal struct DefaultLeaderboardRecord : LeaderboardRecord {
-  let leaderboardID : UUID
-  let ownerID : UUID
+  let leaderboardID : String
+  let ownerID : String
   let handle : String
   let lang : String
   let location : String
@@ -90,14 +90,14 @@ internal struct DefaultLeaderboardRecord : LeaderboardRecord {
   let rank : Int
   let score : Int
   let numScore : Int
-  let metadata : Data
+  let metadata : String
   let rankedAt : Int
   let updatedAt : Int
   let expiresAt : Int
   
   internal init(from proto: Server_LeaderboardRecord) {
-    leaderboardID = NakamaId.convert(data: proto.leaderboardID)
-    ownerID = NakamaId.convert(data: proto.ownerID)
+    leaderboardID = proto.leaderboardID
+    ownerID = proto.ownerID
     handle = proto.handle
     lang = proto.lang
     location = proto.location
@@ -112,7 +112,7 @@ internal struct DefaultLeaderboardRecord : LeaderboardRecord {
   }
   
   public var description: String {
-    return String(format: "(leaderboardID=%@,ownerID=%@,handle=%@,lang=%@,location=%@,timezone=%@,rank=%d,score=%d,numScore=%d,metadata=%@,rankedAt=%d,expiresAt=%d,updatedAt=%d)", leaderboardID.uuidString, ownerID.uuidString, handle, lang, location, timezone, rank, score, numScore, metadata.base64EncodedString(), rankedAt, expiresAt, updatedAt)
+    return String(format: "(leaderboardID=%@,ownerID=%@,handle=%@,lang=%@,location=%@,timezone=%@,rank=%d,score=%d,numScore=%d,metadata=%@,rankedAt=%d,expiresAt=%d,updatedAt=%d)", leaderboardID, ownerID, handle, lang, location, timezone, rank, score, numScore, metadata, rankedAt, expiresAt, updatedAt)
   }
 }
 

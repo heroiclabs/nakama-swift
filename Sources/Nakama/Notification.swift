@@ -20,7 +20,7 @@ public protocol Notification : CustomStringConvertible {
   /**
    Unique ID of this notification
    */
-  var id : UUID { get }
+  var id : String { get }
   
   /**
    Notification subject
@@ -30,7 +30,7 @@ public protocol Notification : CustomStringConvertible {
   /**
    Notification content
    */
-  var content : Data { get }
+  var content : String { get }
   
   /**
    Code associated with this notification. Code <= 100 indicate system notifications. For more info, please check the following link:
@@ -41,7 +41,7 @@ public protocol Notification : CustomStringConvertible {
   /**
    Sender ID of this notifications. If this notification is a system generated notification, a sender ID would not be set.
    */
-  var senderID : UUID? { get }
+  var senderID : String? { get }
   
   /**
    When this notification was created
@@ -60,11 +60,11 @@ public protocol Notification : CustomStringConvertible {
 }
 
 internal struct DefaultNotification : Notification {
-  let id : UUID
+  let id : String
   let subject : String
-  let content : Data
+  let content : String
   let code : Int
-  let senderID : UUID?
+  let senderID : String?
   let createdAt : Int
   let expiresAt : Int
   let persistent : Bool
@@ -77,16 +77,16 @@ internal struct DefaultNotification : Notification {
     expiresAt = Int(proto.expiresAt)
     persistent = proto.persistent
     
-    id = NakamaId.convert(data: proto.id)
+    id = proto.id
     
     if !proto.senderID.isEmpty {
-      senderID = NakamaId.convert(data: proto.senderID)
+      senderID = proto.senderID
     } else {
       senderID = nil
     }
   }
   
   public var description: String {
-    return String(format: "DefaultNotification(id=%@,subject=%@,content=%@,code=%d,senderID=%@,createdAt=%d,expiresAt=%d,persistent=%@)", id.uuidString, subject, content.base64EncodedString(), code, senderID?.uuidString ?? "", createdAt, expiresAt, persistent.description)
+    return String(format: "DefaultNotification(id=%@,subject=%@,content=%@,code=%d,senderID=%@,createdAt=%d,expiresAt=%d,persistent=%@)", id, subject, content, code, senderID ?? "", createdAt, expiresAt, persistent.description)
   }
 }

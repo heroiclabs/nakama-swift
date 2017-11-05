@@ -17,15 +17,15 @@
 import Foundation
 
 public struct TopicMessagesListMessage : CollatedMessage {
-  private var userID: UUID?
+  private var userID: String?
   private var room: String?
-  private var groupID: UUID?
+  private var groupID: String?
   
-  public var cursor: Data?
+  public var cursor: String?
   public var forward: Bool?
   public var limit : Int?
   
-  public init(userID: UUID){
+  public init(userID: String){
     self.userID = userID
   }
   
@@ -33,7 +33,7 @@ public struct TopicMessagesListMessage : CollatedMessage {
     self.room = room
   }
   
-  public init(groupID: UUID){
+  public init(groupID: String){
     self.groupID = groupID
   }
   
@@ -51,13 +51,13 @@ public struct TopicMessagesListMessage : CollatedMessage {
     }
     
     if let _userID = userID {
-      listing.userID = NakamaId.convert(uuid: _userID)
+      listing.userID = _userID
     }
     if let _room = room {
-      listing.room = _room.data(using: String.Encoding.utf8)!
+      listing.room = _room
     }
     if let _groupID = groupID {
-      listing.groupID = NakamaId.convert(uuid: _groupID)
+      listing.groupID = _groupID
     }
     
     var envelope = Server_Envelope()
@@ -68,6 +68,6 @@ public struct TopicMessagesListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "NotificationListMessage(userID=%@,room=%@,groupID=%@,forward=%@,limit=%d,cursor=%@)", userID?.uuidString ?? "", room ?? "", groupID?.uuidString ?? "", forward?.description ?? "unset", limit ?? 0, cursor?.base64EncodedString() ?? "nil")
+    return String(format: "NotificationListMessage(userID=%@,room=%@,groupID=%@,forward=%@,limit=%d,cursor=%@)", userID ?? "", room ?? "", groupID ?? "", forward?.description ?? "unset", limit ?? 0, cursor ?? "")
   }
 }

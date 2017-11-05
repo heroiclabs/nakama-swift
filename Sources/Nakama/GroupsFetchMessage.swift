@@ -18,7 +18,7 @@ import Foundation
 
 public struct GroupsFetchMessage : CollatedMessage {
   
-  public var groupIds: [UUID] = []
+  public var groupIds: [String] = []
   public var groupNames: [String] = []
   
   public init(){}
@@ -28,7 +28,7 @@ public struct GroupsFetchMessage : CollatedMessage {
     
     for id in groupIds {
       var gid = Server_TGroupsFetch.GroupFetch()
-      gid.groupID = NakamaId.convert(uuid: id)
+      gid.groupID = id
       proto.groups.append(gid)
     }
     

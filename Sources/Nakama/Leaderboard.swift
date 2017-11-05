@@ -20,7 +20,7 @@ public protocol Leaderboard : CustomStringConvertible {
   /**
    - Returns: Leaderboard ID
    */
-  var id : UUID { get }
+  var id : String { get }
   
   /**
    - Returns: Whether the client can submit scores or not
@@ -45,36 +45,36 @@ public protocol Leaderboard : CustomStringConvertible {
   /**
    - Returns: Metadata associated with the leaderboard
    */
-  var metadata : Data { get }
+  var metadata : String { get }
   
-  var nextID : UUID { get }
+  var nextID : String { get }
   
-  var prevID : UUID { get }
+  var prevID : String { get }
 }
 
 internal struct DefaultLeaderboard : Leaderboard {
-  let id : UUID
+  let id : String
   let authoritative : Bool
   let sort : Int
   let count : Int
   let resetSchedule : String
-  let metadata : Data
-  let nextID : UUID
-  let prevID : UUID
+  let metadata : String
+  let nextID : String
+  let prevID : String
   
   internal init(from proto: Server_Leaderboard) {
-    id = NakamaId.convert(data: proto.id)
+    id = proto.id
     authoritative = proto.authoritative
     sort = Int(proto.sort)
     count = Int(proto.count)
     resetSchedule = proto.resetSchedule
     metadata = proto.metadata
-    nextID = NakamaId.convert(data: proto.nextID)
-    prevID = NakamaId.convert(data: proto.prevID)
+    nextID = proto.nextID
+    prevID = proto.prevID
   }
   
   public var description: String {
-    return String(format: "DefaultLeaderboard(id=%@,authoritative=%@,sort=%d,count=%d,resetSchedule=%@,metadata=%@,nextID=%@,prevID=%@)", id.uuidString, authoritative.description, sort, count, resetSchedule, metadata.base64EncodedString(), nextID.uuidString, prevID.uuidString)
+    return String(format: "DefaultLeaderboard(id=%@,authoritative=%@,sort=%d,count=%d,resetSchedule=%@,metadata=%@,nextID=%@,prevID=%@)", id, authoritative.description, sort, count, resetSchedule, metadata, nextID, prevID)
   }
 }
 

@@ -54,12 +54,12 @@ public protocol TopicMessage : CustomStringConvertible {
   /**
    ID of the user that created this message
    */
-  var userID : UUID { get }
+  var userID : String { get }
   
   /**
    Unique identifier for this message
    */
-  var messageID : UUID { get }
+  var messageID : String { get }
   
   /**
    Unix timestamp of when the message was created
@@ -84,18 +84,18 @@ public protocol TopicMessage : CustomStringConvertible {
   /**
    The message payload
    */
-  var data : Data { get }
+  var data : String { get }
 }
 
 internal struct DefaultTopicMessage : TopicMessage {
   let topic : TopicId
-  let userID : UUID
-  let messageID : UUID
+  let userID : String
+  let messageID : String
   let createdAt : Int
   let expiresAt : Int
   let handle : String
   let type : TopicMessageType
-  let data : Data
+  let data : String
   
   internal init(from proto: Server_TopicMessage) {
     topic = TopicId.make(from: proto.topic)
@@ -106,12 +106,12 @@ internal struct DefaultTopicMessage : TopicMessage {
     
     type = TopicMessageType.make(from: proto.type)
     
-    userID = NakamaId.convert(data: proto.userID)
-    messageID = NakamaId.convert(data: proto.messageID)
+    userID = proto.userID
+    messageID = proto.messageID
   }
   
   public var description: String {
-    return String(format: "DefaultTopicMessage(topic=%@,userID=%@,messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,type=%@,data=%@)", topic.description, userID.uuidString, messageID.uuidString, createdAt, expiresAt, handle, type.rawValue, data.base64EncodedString())
+    return String(format: "DefaultTopicMessage(topic=%@,userID=%@,messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,type=%@,data=%@)", topic.description, userID, messageID, createdAt, expiresAt, handle, type.rawValue, data)
   }
 }
 
@@ -120,7 +120,7 @@ public protocol TopicMessageAck : CustomStringConvertible {
   /**
    ID of the message that we've acked
    */
-  var messageID : UUID { get }
+  var messageID : String { get }
   
   /**
    When the ack was created
@@ -139,7 +139,7 @@ public protocol TopicMessageAck : CustomStringConvertible {
 }
 
 internal struct DefaultTopicMessageAck : TopicMessageAck {
-  let messageID : UUID
+  let messageID : String
   let createdAt : Int
   let expiresAt : Int
   let handle : String
@@ -149,12 +149,10 @@ internal struct DefaultTopicMessageAck : TopicMessageAck {
     createdAt = Int(proto.createdAt)
     expiresAt = Int(proto.expiresAt)
     
-    messageID = proto.messageID.withUnsafeBytes { bytes in
-      return NSUUID.init(uuidBytes: bytes) as UUID
-    }
+    messageID = proto.messageID
   }
   
   public var description: String {
-    return String(format: "DefaultTopicMessageAck(messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,@)", messageID.uuidString, createdAt, expiresAt, handle)
+    return String(format: "DefaultTopicMessageAck(messageID=%@,createdAt=%d,expiresAt=%d,handle=%@,@)", messageID, createdAt, expiresAt, handle)
   }
 }

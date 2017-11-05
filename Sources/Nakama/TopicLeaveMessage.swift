@@ -35,9 +35,9 @@ public struct TopicLeaveMessage : CollatedMessage {
       case .directMessage(let d):
         t.dm = d
       case .group(let d):
-        t.groupID = NakamaId.convert(uuid: d)
+        t.groupID = d
       case .room(let d):
-        t.room = d.data(using: String.Encoding.utf8)!
+        t.room = d
       }
 
       proto.topics.append(t)

@@ -17,13 +17,13 @@
 import Foundation
 
 public struct LeaderboardRecordsFetchMessage : CollatedMessage {
-  public var leaderboardIds: [UUID] = []
+  public var leaderboardIds: [String] = []
   public var limit : Int?
   
   /**
    Hint: Use [LeaderboardRecord].cursor as the value
   */
-  public var cursor : Data?
+  public var cursor : String?
   
   public init() {}
   
@@ -31,7 +31,7 @@ public struct LeaderboardRecordsFetchMessage : CollatedMessage {
     var proto = Server_TLeaderboardRecordsFetch()
     
     for id in leaderboardIds {
-      proto.leaderboardIds.append(NakamaId.convert(uuid: id))
+      proto.leaderboardIds.append(id)
     }
     
     if let _cursor = cursor {
@@ -50,7 +50,7 @@ public struct LeaderboardRecordsFetchMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordsFetchMessage(leaderboardIds=%@,limit=%d,cursor=%@)", leaderboardIds, limit ?? 0, cursor?.base64EncodedString() ?? "")
+    return String(format: "LeaderboardRecordsFetchMessage(leaderboardIds=%@,limit=%d,cursor=%@)", leaderboardIds, limit ?? 0, cursor ?? "")
   }
   
 }

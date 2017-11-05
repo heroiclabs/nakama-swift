@@ -18,7 +18,7 @@ import Foundation
 
 public struct UsersFetchMessage : CollatedMessage {
   public var handles : [String] = []
-  public var userIDs: [UUID] = []
+  public var userIDs: [String] = []
   
   public init(){}
   
@@ -33,7 +33,7 @@ public struct UsersFetchMessage : CollatedMessage {
     
     for id in userIDs {
       var userfetch = Server_TUsersFetch.UsersFetch()
-      userfetch.userID = NakamaId.convert(uuid: id)
+      userfetch.userID = id
       proto.users.append(userfetch)
     }
     

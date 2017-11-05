@@ -17,15 +17,15 @@
 import Foundation
 
 public struct LeaderboardRecordsListMessage : CollatedMessage {
-  private var ownerIds : [UUID]?
-  private var ownerID : UUID?
+  private var ownerIds : [String]?
+  private var ownerID : String?
   private var lang : String?
   private var location : String?
   private var timezone : String?
 
-  public var leaderboardID : UUID
+  public var leaderboardID : String
   public var limit: Int?
-  public var cursor: Data?
+  public var cursor: String?
   
   /**
    This will unset other filters supplied
@@ -78,7 +78,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   /**
    This will unset other filters supplied
    */
-  public var filterByPagingToOwnerID: UUID? {
+  public var filterByPagingToOwnerID: String? {
     set {
       lang = nil
       location = nil
@@ -94,7 +94,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   /**
    This will unset other filters supplied
    */
-  public var filterByOwnerIds: [UUID]? {
+  public var filterByOwnerIds: [String]? {
     set {
       lang = nil
       location = nil
@@ -108,7 +108,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   }
   
   
-  public init(leaderboardID : UUID) {
+  public init(leaderboardID : String) {
     self.leaderboardID = leaderboardID
   }
   
@@ -136,14 +136,14 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
     }
     
     if let _ownerID = ownerID {
-      listing.ownerID = NakamaId.convert(uuid: _ownerID)
+      listing.ownerID = _ownerID
     }
     
     if let _ownerIds = ownerIds {
       listing.ownerIds = Server_TLeaderboardRecordsList.Owners()
       
       for id in _ownerIds {
-        listing.ownerIds.ownerIds.append(NakamaId.convert(uuid: id))
+        listing.ownerIds.ownerIds.append(id)
       }
     }
     
@@ -155,7 +155,7 @@ public struct LeaderboardRecordsListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordsListMessage(leaderboardID=%@,limit=%d,filterByLang=%@,filterByLocation=%@,filterByTimezone=%@,filterByPagingToOwnerID=%@,filterByOwnerIds=%@,cursor=%@)", leaderboardID.uuidString, limit ?? 0, filterByLang ?? "", filterByLocation ?? "", filterByTimezone ?? "", filterByPagingToOwnerID?.uuidString ?? "", filterByOwnerIds ?? "", cursor?.base64EncodedString() ?? "nil")
+    return String(format: "LeaderboardRecordsListMessage(leaderboardID=%@,limit=%d,filterByLang=%@,filterByLocation=%@,filterByTimezone=%@,filterByPagingToOwnerID=%@,filterByOwnerIds=%@,cursor=%@)", leaderboardID, limit ?? 0, filterByLang ?? "", filterByLocation ?? "", filterByTimezone ?? "", filterByPagingToOwnerID ?? "", filterByOwnerIds ?? "", cursor ?? "")
   }
   
 }

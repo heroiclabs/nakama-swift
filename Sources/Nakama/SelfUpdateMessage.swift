@@ -55,7 +55,7 @@ public struct SelfUpdateMessage : CollatedMessage {
     }
     
     if let _metadata = metadata {
-      update.metadata = _metadata
+      update.metadata = String(data: _metadata, encoding: .utf8)!
     }
     
     var envelope = Server_Envelope()
@@ -66,7 +66,12 @@ public struct SelfUpdateMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "SelfUpdateMessage(handle=%@,avatarURL=%@,fullname=%@,timezone=%@,location=%@,lang=%@,metadata=%@)", handle ?? "", avatarURL ?? "", fullname ?? "", timezone ?? "", location ?? "", lang ?? "", metadata?.base64EncodedString() ?? "nil")
+    var _metadata = ""
+    if let m = metadata {
+      _metadata = String(data: m, encoding: .utf8)!
+    }
+    
+    return String(format: "SelfUpdateMessage(handle=%@,avatarURL=%@,fullname=%@,timezone=%@,location=%@,lang=%@,metadata=%@)", handle ?? "", avatarURL ?? "", fullname ?? "", timezone ?? "", location ?? "", lang ?? "", _metadata)
   }
   
 }

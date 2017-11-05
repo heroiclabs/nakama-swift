@@ -691,6 +691,9 @@ struct Server_AuthenticateResponse: SwiftProtobuf.Message {
     //// Authentication Token.
     var token: String = String()
 
+    //// UDP token.
+    var udpToken: String = String()
+
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     init() {}
@@ -703,6 +706,7 @@ struct Server_AuthenticateResponse: SwiftProtobuf.Message {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularStringField(value: &self.token)
+        case 2: try decoder.decodeSingularStringField(value: &self.udpToken)
         default: break
         }
       }
@@ -715,6 +719,9 @@ struct Server_AuthenticateResponse: SwiftProtobuf.Message {
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.token.isEmpty {
         try visitor.visitSingularStringField(value: self.token, fieldNumber: 1)
+      }
+      if !self.udpToken.isEmpty {
+        try visitor.visitSingularStringField(value: self.udpToken, fieldNumber: 2)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -2744,7 +2751,7 @@ struct Server_User: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".User"
 
   //// User ID.
-  var id: Data = SwiftProtobuf.Internal.emptyData
+  var id: String = String()
 
   //// User Handle (username).
   var handle: String = String()
@@ -2765,7 +2772,7 @@ struct Server_User: SwiftProtobuf.Message {
   var timezone: String = String()
 
   //// Custom user metadata.
-  var metadata: Data = SwiftProtobuf.Internal.emptyData
+  var metadata: String = String()
 
   //// Unix timestamp when this user registered.
   var createdAt: Int64 = 0
@@ -2787,14 +2794,14 @@ struct Server_User: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.id)
+      case 1: try decoder.decodeSingularStringField(value: &self.id)
       case 2: try decoder.decodeSingularStringField(value: &self.handle)
       case 3: try decoder.decodeSingularStringField(value: &self.fullname)
       case 4: try decoder.decodeSingularStringField(value: &self.avatarURL)
       case 5: try decoder.decodeSingularStringField(value: &self.lang)
       case 6: try decoder.decodeSingularStringField(value: &self.location)
       case 7: try decoder.decodeSingularStringField(value: &self.timezone)
-      case 8: try decoder.decodeSingularBytesField(value: &self.metadata)
+      case 8: try decoder.decodeSingularStringField(value: &self.metadata)
       case 9: try decoder.decodeSingularInt64Field(value: &self.createdAt)
       case 10: try decoder.decodeSingularInt64Field(value: &self.updatedAt)
       case 11: try decoder.decodeSingularInt64Field(value: &self.lastOnlineAt)
@@ -2809,7 +2816,7 @@ struct Server_User: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.id.isEmpty {
-      try visitor.visitSingularBytesField(value: self.id, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
     if !self.handle.isEmpty {
       try visitor.visitSingularStringField(value: self.handle, fieldNumber: 2)
@@ -2830,7 +2837,7 @@ struct Server_User: SwiftProtobuf.Message {
       try visitor.visitSingularStringField(value: self.timezone, fieldNumber: 7)
     }
     if !self.metadata.isEmpty {
-      try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 8)
+      try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 8)
     }
     if self.createdAt != 0 {
       try visitor.visitSingularInt64Field(value: self.createdAt, fieldNumber: 9)
@@ -3073,7 +3080,7 @@ struct Server_TSelfUpdate: SwiftProtobuf.Message {
   var lang: String = String()
 
   //// Set or remove User's metadata
-  var metadata: Data = SwiftProtobuf.Internal.emptyData
+  var metadata: String = String()
 
   var avatarURL: String = String()
 
@@ -3093,7 +3100,7 @@ struct Server_TSelfUpdate: SwiftProtobuf.Message {
       case 3: try decoder.decodeSingularStringField(value: &self.timezone)
       case 4: try decoder.decodeSingularStringField(value: &self.location)
       case 5: try decoder.decodeSingularStringField(value: &self.lang)
-      case 6: try decoder.decodeSingularBytesField(value: &self.metadata)
+      case 6: try decoder.decodeSingularStringField(value: &self.metadata)
       case 7: try decoder.decodeSingularStringField(value: &self.avatarURL)
       default: break
       }
@@ -3121,7 +3128,7 @@ struct Server_TSelfUpdate: SwiftProtobuf.Message {
       try visitor.visitSingularStringField(value: self.lang, fieldNumber: 5)
     }
     if !self.metadata.isEmpty {
-      try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 6)
+      try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 6)
     }
     if !self.avatarURL.isEmpty {
       try visitor.visitSingularStringField(value: self.avatarURL, fieldNumber: 7)
@@ -3147,10 +3154,10 @@ struct Server_TUsersFetch: SwiftProtobuf.Message {
 
     var id: Server_TUsersFetch.UsersFetch.OneOf_ID? = nil
 
-    var userID: Data {
+    var userID: String {
       get {
         if case .userID(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .userID(newValue)}
     }
@@ -3166,7 +3173,7 @@ struct Server_TUsersFetch: SwiftProtobuf.Message {
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     enum OneOf_ID: Equatable {
-      case userID(Data)
+      case userID(String)
       case handle(String)
 
       static func ==(lhs: Server_TUsersFetch.UsersFetch.OneOf_ID, rhs: Server_TUsersFetch.UsersFetch.OneOf_ID) -> Bool {
@@ -3189,8 +3196,8 @@ struct Server_TUsersFetch: SwiftProtobuf.Message {
         switch fieldNumber {
         case 1:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .userID(v)}
         case 2:
           if self.id != nil {try decoder.handleConflictingOneOf()}
@@ -3209,7 +3216,7 @@ struct Server_TUsersFetch: SwiftProtobuf.Message {
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       switch self.id {
       case .userID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 1)
       case .handle(let v)?:
         try visitor.visitSingularStringField(value: v, fieldNumber: 2)
       case nil: break
@@ -3361,10 +3368,10 @@ struct Server_TFriendsAdd: SwiftProtobuf.Message {
 
     var id: Server_TFriendsAdd.FriendsAdd.OneOf_ID? = nil
 
-    var userID: Data {
+    var userID: String {
       get {
         if case .userID(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .userID(newValue)}
     }
@@ -3380,7 +3387,7 @@ struct Server_TFriendsAdd: SwiftProtobuf.Message {
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     enum OneOf_ID: Equatable {
-      case userID(Data)
+      case userID(String)
       case handle(String)
 
       static func ==(lhs: Server_TFriendsAdd.FriendsAdd.OneOf_ID, rhs: Server_TFriendsAdd.FriendsAdd.OneOf_ID) -> Bool {
@@ -3403,8 +3410,8 @@ struct Server_TFriendsAdd: SwiftProtobuf.Message {
         switch fieldNumber {
         case 1:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .userID(v)}
         case 2:
           if self.id != nil {try decoder.handleConflictingOneOf()}
@@ -3423,7 +3430,7 @@ struct Server_TFriendsAdd: SwiftProtobuf.Message {
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       switch self.id {
       case .userID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 1)
       case .handle(let v)?:
         try visitor.visitSingularStringField(value: v, fieldNumber: 2)
       case nil: break
@@ -3465,7 +3472,7 @@ struct Server_TFriendsAdd: SwiftProtobuf.Message {
 struct Server_TFriendsRemove: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TFriendsRemove"
 
-  var userIds: [Data] = []
+  var userIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3478,7 +3485,7 @@ struct Server_TFriendsRemove: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.userIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.userIds)
       default: break
       }
     }
@@ -3490,7 +3497,7 @@ struct Server_TFriendsRemove: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.userIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.userIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -3502,7 +3509,7 @@ struct Server_TFriendsRemove: SwiftProtobuf.Message {
 struct Server_TFriendsBlock: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TFriendsBlock"
 
-  var userIds: [Data] = []
+  var userIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3515,7 +3522,7 @@ struct Server_TFriendsBlock: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.userIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.userIds)
       default: break
       }
     }
@@ -3527,7 +3534,7 @@ struct Server_TFriendsBlock: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.userIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.userIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -3604,13 +3611,13 @@ struct Server_Group: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".Group"
 
   //// Group ID
-  var id: Data = SwiftProtobuf.Internal.emptyData
+  var id: String = String()
 
   //// Whether the group is private or public. If private, group admins will accept user join requests.
   var `private`: Bool = false
 
   //// User ID of the group creator.
-  var creatorID: Data = SwiftProtobuf.Internal.emptyData
+  var creatorID: String = String()
 
   var name: String = String()
 
@@ -3625,7 +3632,7 @@ struct Server_Group: SwiftProtobuf.Message {
   var utcOffsetMs: Int64 = 0
 
   //// Group metadata information.
-  var metadata: Data = SwiftProtobuf.Internal.emptyData
+  var metadata: String = String()
 
   //// Current number of users in this group.
   var count: Int64 = 0
@@ -3645,15 +3652,15 @@ struct Server_Group: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.id)
+      case 1: try decoder.decodeSingularStringField(value: &self.id)
       case 2: try decoder.decodeSingularBoolField(value: &self.`private`)
-      case 3: try decoder.decodeSingularBytesField(value: &self.creatorID)
+      case 3: try decoder.decodeSingularStringField(value: &self.creatorID)
       case 4: try decoder.decodeSingularStringField(value: &self.name)
       case 5: try decoder.decodeSingularStringField(value: &self.description_p)
       case 6: try decoder.decodeSingularStringField(value: &self.avatarURL)
       case 7: try decoder.decodeSingularStringField(value: &self.lang)
       case 8: try decoder.decodeSingularInt64Field(value: &self.utcOffsetMs)
-      case 9: try decoder.decodeSingularBytesField(value: &self.metadata)
+      case 9: try decoder.decodeSingularStringField(value: &self.metadata)
       case 10: try decoder.decodeSingularInt64Field(value: &self.count)
       case 11: try decoder.decodeSingularInt64Field(value: &self.createdAt)
       case 12: try decoder.decodeSingularInt64Field(value: &self.updatedAt)
@@ -3668,13 +3675,13 @@ struct Server_Group: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.id.isEmpty {
-      try visitor.visitSingularBytesField(value: self.id, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
     if self.`private` != false {
       try visitor.visitSingularBoolField(value: self.`private`, fieldNumber: 2)
     }
     if !self.creatorID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.creatorID, fieldNumber: 3)
+      try visitor.visitSingularStringField(value: self.creatorID, fieldNumber: 3)
     }
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 4)
@@ -3692,7 +3699,7 @@ struct Server_Group: SwiftProtobuf.Message {
       try visitor.visitSingularInt64Field(value: self.utcOffsetMs, fieldNumber: 8)
     }
     if !self.metadata.isEmpty {
-      try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 9)
+      try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 9)
     }
     if self.count != 0 {
       try visitor.visitSingularInt64Field(value: self.count, fieldNumber: 10)
@@ -3734,7 +3741,7 @@ struct Server_TGroupsCreate: SwiftProtobuf.Message {
     var lang: String = String()
 
     //// Group metadata information.
-    var metadata: Data = SwiftProtobuf.Internal.emptyData
+    var metadata: String = String()
 
     //// Whether the group is private or public. If private, group admins will accept user join requests.
     var `private`: Bool = false
@@ -3754,7 +3761,7 @@ struct Server_TGroupsCreate: SwiftProtobuf.Message {
         case 2: try decoder.decodeSingularStringField(value: &self.description_p)
         case 3: try decoder.decodeSingularStringField(value: &self.avatarURL)
         case 4: try decoder.decodeSingularStringField(value: &self.lang)
-        case 5: try decoder.decodeSingularBytesField(value: &self.metadata)
+        case 5: try decoder.decodeSingularStringField(value: &self.metadata)
         case 6: try decoder.decodeSingularBoolField(value: &self.`private`)
         default: break
         }
@@ -3779,7 +3786,7 @@ struct Server_TGroupsCreate: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.lang, fieldNumber: 4)
       }
       if !self.metadata.isEmpty {
-        try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 5)
+        try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 5)
       }
       if self.`private` != false {
         try visitor.visitSingularBoolField(value: self.`private`, fieldNumber: 6)
@@ -3830,7 +3837,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
   struct GroupUpdate: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_TGroupsUpdate.protoMessageName + ".GroupUpdate"
 
-    var groupID: Data = SwiftProtobuf.Internal.emptyData
+    var groupID: String = String()
 
     //// Whether the group is private or public. If private, group admins will accept user join requests.
     var `private`: Bool = false
@@ -3846,7 +3853,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
     var lang: String = String()
 
     //// Set or remove metadata information.
-    var metadata: Data = SwiftProtobuf.Internal.emptyData
+    var metadata: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3859,13 +3866,13 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &self.groupID)
+        case 1: try decoder.decodeSingularStringField(value: &self.groupID)
         case 2: try decoder.decodeSingularBoolField(value: &self.`private`)
         case 3: try decoder.decodeSingularStringField(value: &self.name)
         case 4: try decoder.decodeSingularStringField(value: &self.description_p)
         case 5: try decoder.decodeSingularStringField(value: &self.avatarURL)
         case 6: try decoder.decodeSingularStringField(value: &self.lang)
-        case 7: try decoder.decodeSingularBytesField(value: &self.metadata)
+        case 7: try decoder.decodeSingularStringField(value: &self.metadata)
         default: break
         }
       }
@@ -3877,7 +3884,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.groupID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.groupID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
       }
       if self.`private` != false {
         try visitor.visitSingularBoolField(value: self.`private`, fieldNumber: 2)
@@ -3895,7 +3902,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.lang, fieldNumber: 6)
       }
       if !self.metadata.isEmpty {
-        try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 7)
+        try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 7)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -3936,7 +3943,7 @@ struct Server_TGroupsUpdate: SwiftProtobuf.Message {
 struct Server_TGroupsRemove: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TGroupsRemove"
 
-  var groupIds: [Data] = []
+  var groupIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3949,7 +3956,7 @@ struct Server_TGroupsRemove: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.groupIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.groupIds)
       default: break
       }
     }
@@ -3961,7 +3968,7 @@ struct Server_TGroupsRemove: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.groupIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.groupIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.groupIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4012,10 +4019,10 @@ struct Server_TGroupsFetch: SwiftProtobuf.Message {
 
     var id: Server_TGroupsFetch.GroupFetch.OneOf_ID? = nil
 
-    var groupID: Data {
+    var groupID: String {
       get {
         if case .groupID(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .groupID(newValue)}
     }
@@ -4031,7 +4038,7 @@ struct Server_TGroupsFetch: SwiftProtobuf.Message {
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     enum OneOf_ID: Equatable {
-      case groupID(Data)
+      case groupID(String)
       case name(String)
 
       static func ==(lhs: Server_TGroupsFetch.GroupFetch.OneOf_ID, rhs: Server_TGroupsFetch.GroupFetch.OneOf_ID) -> Bool {
@@ -4054,8 +4061,8 @@ struct Server_TGroupsFetch: SwiftProtobuf.Message {
         switch fieldNumber {
         case 1:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .groupID(v)}
         case 2:
           if self.id != nil {try decoder.handleConflictingOneOf()}
@@ -4074,7 +4081,7 @@ struct Server_TGroupsFetch: SwiftProtobuf.Message {
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       switch self.id {
       case .groupID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 1)
       case .name(let v)?:
         try visitor.visitSingularStringField(value: v, fieldNumber: 2)
       case nil: break
@@ -4155,7 +4162,7 @@ struct Server_TGroupsList: SwiftProtobuf.Message {
 
   //// Binary cursor value used to paginate results.
   //// The value of this comes from TGroups.cursor.
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4204,7 +4211,7 @@ struct Server_TGroupsList: SwiftProtobuf.Message {
         var v: Int64?
         try decoder.decodeSingularInt64Field(value: &v)
         if let v = v {self.filter = .count(v)}
-      case 7: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 7: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -4231,7 +4238,7 @@ struct Server_TGroupsList: SwiftProtobuf.Message {
     case nil: break
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 7)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 7)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4245,7 +4252,7 @@ struct Server_TGroups: SwiftProtobuf.Message {
   var groups: [Server_Group] = []
 
   //// Use cursor to paginate results.
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4259,7 +4266,7 @@ struct Server_TGroups: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.groups)
-      case 2: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -4274,7 +4281,7 @@ struct Server_TGroups: SwiftProtobuf.Message {
       try visitor.visitRepeatedMessageField(value: self.groups, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4448,7 +4455,7 @@ struct Server_GroupUser: SwiftProtobuf.Message {
 struct Server_TGroupUsersList: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TGroupUsersList"
 
-  var groupID: Data = SwiftProtobuf.Internal.emptyData
+  var groupID: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4461,7 +4468,7 @@ struct Server_TGroupUsersList: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.groupID)
+      case 1: try decoder.decodeSingularStringField(value: &self.groupID)
       default: break
       }
     }
@@ -4473,7 +4480,7 @@ struct Server_TGroupUsersList: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.groupID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.groupID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4523,7 +4530,7 @@ struct Server_TGroupUsers: SwiftProtobuf.Message {
 struct Server_TGroupsJoin: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TGroupsJoin"
 
-  var groupIds: [Data] = []
+  var groupIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4536,7 +4543,7 @@ struct Server_TGroupsJoin: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.groupIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.groupIds)
       default: break
       }
     }
@@ -4548,7 +4555,7 @@ struct Server_TGroupsJoin: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.groupIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.groupIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.groupIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4562,7 +4569,7 @@ struct Server_TGroupsJoin: SwiftProtobuf.Message {
 struct Server_TGroupsLeave: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TGroupsLeave"
 
-  var groupIds: [Data] = []
+  var groupIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4575,7 +4582,7 @@ struct Server_TGroupsLeave: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.groupIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.groupIds)
       default: break
       }
     }
@@ -4587,7 +4594,7 @@ struct Server_TGroupsLeave: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.groupIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.groupIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.groupIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4609,9 +4616,9 @@ struct Server_TGroupUsersAdd: SwiftProtobuf.Message {
   struct GroupUserAdd: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_TGroupUsersAdd.protoMessageName + ".GroupUserAdd"
 
-    var groupID: Data = SwiftProtobuf.Internal.emptyData
+    var groupID: String = String()
 
-    var userID: Data = SwiftProtobuf.Internal.emptyData
+    var userID: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4624,8 +4631,8 @@ struct Server_TGroupUsersAdd: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &self.groupID)
-        case 2: try decoder.decodeSingularBytesField(value: &self.userID)
+        case 1: try decoder.decodeSingularStringField(value: &self.groupID)
+        case 2: try decoder.decodeSingularStringField(value: &self.userID)
         default: break
         }
       }
@@ -4637,10 +4644,10 @@ struct Server_TGroupUsersAdd: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.groupID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.groupID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
       }
       if !self.userID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: self.userID, fieldNumber: 2)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -4689,9 +4696,9 @@ struct Server_TGroupUsersKick: SwiftProtobuf.Message {
   struct GroupUserKick: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_TGroupUsersKick.protoMessageName + ".GroupUserKick"
 
-    var groupID: Data = SwiftProtobuf.Internal.emptyData
+    var groupID: String = String()
 
-    var userID: Data = SwiftProtobuf.Internal.emptyData
+    var userID: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4704,8 +4711,8 @@ struct Server_TGroupUsersKick: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &self.groupID)
-        case 2: try decoder.decodeSingularBytesField(value: &self.userID)
+        case 1: try decoder.decodeSingularStringField(value: &self.groupID)
+        case 2: try decoder.decodeSingularStringField(value: &self.userID)
         default: break
         }
       }
@@ -4717,10 +4724,10 @@ struct Server_TGroupUsersKick: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.groupID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.groupID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
       }
       if !self.userID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: self.userID, fieldNumber: 2)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -4768,9 +4775,9 @@ struct Server_TGroupUsersPromote: SwiftProtobuf.Message {
   struct GroupUserPromote: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_TGroupUsersPromote.protoMessageName + ".GroupUserPromote"
 
-    var groupID: Data = SwiftProtobuf.Internal.emptyData
+    var groupID: String = String()
 
-    var userID: Data = SwiftProtobuf.Internal.emptyData
+    var userID: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -4783,8 +4790,8 @@ struct Server_TGroupUsersPromote: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &self.groupID)
-        case 2: try decoder.decodeSingularBytesField(value: &self.userID)
+        case 1: try decoder.decodeSingularStringField(value: &self.groupID)
+        case 2: try decoder.decodeSingularStringField(value: &self.userID)
         default: break
         }
       }
@@ -4796,10 +4803,10 @@ struct Server_TGroupUsersPromote: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.groupID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.groupID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
       }
       if !self.userID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: self.userID, fieldNumber: 2)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -4839,26 +4846,26 @@ struct Server_TopicId: SwiftProtobuf.Message {
 
   var id: Server_TopicId.OneOf_ID? = nil
 
-  var dm: Data {
+  var dm: String {
     get {
       if case .dm(let v)? = id {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {id = .dm(newValue)}
   }
 
-  var room: Data {
+  var room: String {
     get {
       if case .room(let v)? = id {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {id = .room(newValue)}
   }
 
-  var groupID: Data {
+  var groupID: String {
     get {
       if case .groupID(let v)? = id {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {id = .groupID(newValue)}
   }
@@ -4866,9 +4873,9 @@ struct Server_TopicId: SwiftProtobuf.Message {
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_ID: Equatable {
-    case dm(Data)
-    case room(Data)
-    case groupID(Data)
+    case dm(String)
+    case room(String)
+    case groupID(String)
 
     static func ==(lhs: Server_TopicId.OneOf_ID, rhs: Server_TopicId.OneOf_ID) -> Bool {
       switch (lhs, rhs) {
@@ -4891,18 +4898,18 @@ struct Server_TopicId: SwiftProtobuf.Message {
       switch fieldNumber {
       case 1:
         if self.id != nil {try decoder.handleConflictingOneOf()}
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.id = .dm(v)}
       case 2:
         if self.id != nil {try decoder.handleConflictingOneOf()}
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.id = .room(v)}
       case 3:
         if self.id != nil {try decoder.handleConflictingOneOf()}
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.id = .groupID(v)}
       default: break
       }
@@ -4916,11 +4923,11 @@ struct Server_TopicId: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     switch self.id {
     case .dm(let v)?:
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
     case .room(let v)?:
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
     case .groupID(let v)?:
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 3)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -4934,10 +4941,10 @@ struct Server_UserPresence: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".UserPresence"
 
   //// User ID
-  var userID: Data = SwiftProtobuf.Internal.emptyData
+  var userID: String = String()
 
   //// Session ID
-  var sessionID: Data = SwiftProtobuf.Internal.emptyData
+  var sessionID: String = String()
 
   //// User handle
   var handle: String = String()
@@ -4953,8 +4960,8 @@ struct Server_UserPresence: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.userID)
-      case 2: try decoder.decodeSingularBytesField(value: &self.sessionID)
+      case 1: try decoder.decodeSingularStringField(value: &self.userID)
+      case 2: try decoder.decodeSingularStringField(value: &self.sessionID)
       case 3: try decoder.decodeSingularStringField(value: &self.handle)
       default: break
       }
@@ -4967,10 +4974,10 @@ struct Server_UserPresence: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
     if !self.sessionID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.sessionID, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.sessionID, fieldNumber: 2)
     }
     if !self.handle.isEmpty {
       try visitor.visitSingularStringField(value: self.handle, fieldNumber: 3)
@@ -4997,26 +5004,26 @@ struct Server_TTopicsJoin: SwiftProtobuf.Message {
 
     var id: Server_TTopicsJoin.TopicJoin.OneOf_ID? = nil
 
-    var userID: Data {
+    var userID: String {
       get {
         if case .userID(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .userID(newValue)}
     }
 
-    var room: Data {
+    var room: String {
       get {
         if case .room(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .room(newValue)}
     }
 
-    var groupID: Data {
+    var groupID: String {
       get {
         if case .groupID(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .groupID(newValue)}
     }
@@ -5024,9 +5031,9 @@ struct Server_TTopicsJoin: SwiftProtobuf.Message {
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     enum OneOf_ID: Equatable {
-      case userID(Data)
-      case room(Data)
-      case groupID(Data)
+      case userID(String)
+      case room(String)
+      case groupID(String)
 
       static func ==(lhs: Server_TTopicsJoin.TopicJoin.OneOf_ID, rhs: Server_TTopicsJoin.TopicJoin.OneOf_ID) -> Bool {
         switch (lhs, rhs) {
@@ -5049,18 +5056,18 @@ struct Server_TTopicsJoin: SwiftProtobuf.Message {
         switch fieldNumber {
         case 1:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .userID(v)}
         case 2:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .room(v)}
         case 3:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .groupID(v)}
         default: break
         }
@@ -5074,11 +5081,11 @@ struct Server_TTopicsJoin: SwiftProtobuf.Message {
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       switch self.id {
       case .userID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 1)
       case .room(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 2)
       case .groupID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 3)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 3)
       case nil: break
       }
       try unknownFields.traverse(visitor: &visitor)
@@ -5273,7 +5280,7 @@ struct Server_TTopicMessageSend: SwiftProtobuf.Message {
   /// Clears the value of `topic`. Subsequent reads from it will return its default value.
   mutating func clearTopic() {_storage._topic = nil}
 
-  var data: Data {
+  var data: String {
     get {return _storage._data}
     set {_uniqueStorage()._data = newValue}
   }
@@ -5292,7 +5299,7 @@ struct Server_TTopicMessageSend: SwiftProtobuf.Message {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularMessageField(value: &_storage._topic)
-        case 2: try decoder.decodeSingularBytesField(value: &_storage._data)
+        case 2: try decoder.decodeSingularStringField(value: &_storage._data)
         default: break
         }
       }
@@ -5309,7 +5316,7 @@ struct Server_TTopicMessageSend: SwiftProtobuf.Message {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       }
       if !_storage._data.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._data, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: _storage._data, fieldNumber: 2)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -5323,7 +5330,7 @@ struct Server_TTopicMessageSend: SwiftProtobuf.Message {
 struct Server_TTopicMessageAck: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TTopicMessageAck"
 
-  var messageID: Data = SwiftProtobuf.Internal.emptyData
+  var messageID: String = String()
 
   var createdAt: Int64 = 0
 
@@ -5342,7 +5349,7 @@ struct Server_TTopicMessageAck: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.messageID)
+      case 1: try decoder.decodeSingularStringField(value: &self.messageID)
       case 2: try decoder.decodeSingularInt64Field(value: &self.createdAt)
       case 3: try decoder.decodeSingularInt64Field(value: &self.expiresAt)
       case 4: try decoder.decodeSingularStringField(value: &self.handle)
@@ -5357,7 +5364,7 @@ struct Server_TTopicMessageAck: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.messageID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.messageID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.messageID, fieldNumber: 1)
     }
     if self.createdAt != 0 {
       try visitor.visitSingularInt64Field(value: self.createdAt, fieldNumber: 2)
@@ -5386,12 +5393,12 @@ struct Server_TopicMessage: SwiftProtobuf.Message {
   /// Clears the value of `topic`. Subsequent reads from it will return its default value.
   mutating func clearTopic() {_storage._topic = nil}
 
-  var userID: Data {
+  var userID: String {
     get {return _storage._userID}
     set {_uniqueStorage()._userID = newValue}
   }
 
-  var messageID: Data {
+  var messageID: String {
     get {return _storage._messageID}
     set {_uniqueStorage()._messageID = newValue}
   }
@@ -5423,7 +5430,7 @@ struct Server_TopicMessage: SwiftProtobuf.Message {
     set {_uniqueStorage()._type = newValue}
   }
 
-  var data: Data {
+  var data: String {
     get {return _storage._data}
     set {_uniqueStorage()._data = newValue}
   }
@@ -5442,13 +5449,13 @@ struct Server_TopicMessage: SwiftProtobuf.Message {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularMessageField(value: &_storage._topic)
-        case 2: try decoder.decodeSingularBytesField(value: &_storage._userID)
-        case 3: try decoder.decodeSingularBytesField(value: &_storage._messageID)
+        case 2: try decoder.decodeSingularStringField(value: &_storage._userID)
+        case 3: try decoder.decodeSingularStringField(value: &_storage._messageID)
         case 4: try decoder.decodeSingularInt64Field(value: &_storage._createdAt)
         case 5: try decoder.decodeSingularInt64Field(value: &_storage._expiresAt)
         case 6: try decoder.decodeSingularStringField(value: &_storage._handle)
         case 7: try decoder.decodeSingularInt64Field(value: &_storage._type)
-        case 8: try decoder.decodeSingularBytesField(value: &_storage._data)
+        case 8: try decoder.decodeSingularStringField(value: &_storage._data)
         default: break
         }
       }
@@ -5465,10 +5472,10 @@ struct Server_TopicMessage: SwiftProtobuf.Message {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       }
       if !_storage._userID.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._userID, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: _storage._userID, fieldNumber: 2)
       }
       if !_storage._messageID.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._messageID, fieldNumber: 3)
+        try visitor.visitSingularStringField(value: _storage._messageID, fieldNumber: 3)
       }
       if _storage._createdAt != 0 {
         try visitor.visitSingularInt64Field(value: _storage._createdAt, fieldNumber: 4)
@@ -5483,7 +5490,7 @@ struct Server_TopicMessage: SwiftProtobuf.Message {
         try visitor.visitSingularInt64Field(value: _storage._type, fieldNumber: 7)
       }
       if !_storage._data.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._data, fieldNumber: 8)
+        try visitor.visitSingularStringField(value: _storage._data, fieldNumber: 8)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -5501,33 +5508,33 @@ struct Server_TTopicMessagesList: SwiftProtobuf.Message {
 
   var id: Server_TTopicMessagesList.OneOf_ID? = nil
 
-  var userID: Data {
+  var userID: String {
     get {
       if case .userID(let v)? = id {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {id = .userID(newValue)}
   }
 
-  var room: Data {
+  var room: String {
     get {
       if case .room(let v)? = id {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {id = .room(newValue)}
   }
 
-  var groupID: Data {
+  var groupID: String {
     get {
       if case .groupID(let v)? = id {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {id = .groupID(newValue)}
   }
 
   //// Use the cursor to paginate through more message.
   //// The value of this comes from TTopicMessages.cursor.
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var forward: Bool = false
 
@@ -5536,9 +5543,9 @@ struct Server_TTopicMessagesList: SwiftProtobuf.Message {
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_ID: Equatable {
-    case userID(Data)
-    case room(Data)
-    case groupID(Data)
+    case userID(String)
+    case room(String)
+    case groupID(String)
 
     static func ==(lhs: Server_TTopicMessagesList.OneOf_ID, rhs: Server_TTopicMessagesList.OneOf_ID) -> Bool {
       switch (lhs, rhs) {
@@ -5561,20 +5568,20 @@ struct Server_TTopicMessagesList: SwiftProtobuf.Message {
       switch fieldNumber {
       case 1:
         if self.id != nil {try decoder.handleConflictingOneOf()}
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.id = .userID(v)}
       case 2:
         if self.id != nil {try decoder.handleConflictingOneOf()}
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.id = .room(v)}
       case 3:
         if self.id != nil {try decoder.handleConflictingOneOf()}
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
         if let v = v {self.id = .groupID(v)}
-      case 4: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 4: try decoder.decodeSingularStringField(value: &self.cursor)
       case 5: try decoder.decodeSingularBoolField(value: &self.forward)
       case 6: try decoder.decodeSingularInt64Field(value: &self.limit)
       default: break
@@ -5589,15 +5596,15 @@ struct Server_TTopicMessagesList: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     switch self.id {
     case .userID(let v)?:
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
     case .room(let v)?:
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
     case .groupID(let v)?:
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 3)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
     case nil: break
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 4)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
     if self.forward != false {
       try visitor.visitSingularBoolField(value: self.forward, fieldNumber: 5)
@@ -5616,7 +5623,7 @@ struct Server_TTopicMessages: SwiftProtobuf.Message {
 
   var messages: [Server_TopicMessage] = []
 
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -5630,7 +5637,7 @@ struct Server_TTopicMessages: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.messages)
-      case 2: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -5645,7 +5652,7 @@ struct Server_TTopicMessages: SwiftProtobuf.Message {
       try visitor.visitRepeatedMessageField(value: self.messages, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -6133,7 +6140,7 @@ struct Server_TMatchmakeAdd: SwiftProtobuf.Message {
 struct Server_TMatchmakeTicket: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TMatchmakeTicket"
 
-  var ticket: Data = SwiftProtobuf.Internal.emptyData
+  var ticket: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -6146,7 +6153,7 @@ struct Server_TMatchmakeTicket: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.ticket)
+      case 1: try decoder.decodeSingularStringField(value: &self.ticket)
       default: break
       }
     }
@@ -6158,7 +6165,7 @@ struct Server_TMatchmakeTicket: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.ticket.isEmpty {
-      try visitor.visitSingularBytesField(value: self.ticket, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -6169,7 +6176,7 @@ struct Server_TMatchmakeTicket: SwiftProtobuf.Message {
 struct Server_TMatchmakeRemove: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TMatchmakeRemove"
 
-  var ticket: Data = SwiftProtobuf.Internal.emptyData
+  var ticket: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -6182,7 +6189,7 @@ struct Server_TMatchmakeRemove: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.ticket)
+      case 1: try decoder.decodeSingularStringField(value: &self.ticket)
       default: break
       }
     }
@@ -6194,7 +6201,7 @@ struct Server_TMatchmakeRemove: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.ticket.isEmpty {
-      try visitor.visitSingularBytesField(value: self.ticket, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -6206,13 +6213,13 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".MatchmakeMatched"
 
   //// Matchmaking ticket. Use this to invalidate ticket cache on the client.
-  var ticket: Data {
+  var ticket: String {
     get {return _storage._ticket}
     set {_uniqueStorage()._ticket = newValue}
   }
 
   //// Matchmaking token. Use this to accept the match. This is a onetime token which is only valid for a limited time.
-  var token: Data {
+  var token: String {
     get {return _storage._token}
     set {_uniqueStorage()._token = newValue}
   }
@@ -6242,7 +6249,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
   struct UserProperty: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_MatchmakeMatched.protoMessageName + ".UserProperty"
 
-    var userID: Data = SwiftProtobuf.Internal.emptyData
+    var userID: String = String()
 
     var properties: [Server_PropertyPair] = []
 
@@ -6259,7 +6266,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &self.userID)
+        case 1: try decoder.decodeSingularStringField(value: &self.userID)
         case 2: try decoder.decodeRepeatedMessageField(value: &self.properties)
         case 3: try decoder.decodeRepeatedMessageField(value: &self.filters)
         default: break
@@ -6273,7 +6280,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.userID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
       }
       if !self.properties.isEmpty {
         try visitor.visitRepeatedMessageField(value: self.properties, fieldNumber: 2)
@@ -6296,8 +6303,8 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &_storage._ticket)
-        case 2: try decoder.decodeSingularBytesField(value: &_storage._token)
+        case 1: try decoder.decodeSingularStringField(value: &_storage._ticket)
+        case 2: try decoder.decodeSingularStringField(value: &_storage._token)
         case 3: try decoder.decodeRepeatedMessageField(value: &_storage._presences)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._self_p)
         case 5: try decoder.decodeRepeatedMessageField(value: &_storage._properties)
@@ -6314,10 +6321,10 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       if !_storage._ticket.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._ticket, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: _storage._ticket, fieldNumber: 1)
       }
       if !_storage._token.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._token, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: _storage._token, fieldNumber: 2)
       }
       if !_storage._presences.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._presences, fieldNumber: 3)
@@ -6340,7 +6347,7 @@ struct Server_MatchmakeMatched: SwiftProtobuf.Message {
 struct Server_Match: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".Match"
 
-  var matchID: Data {
+  var matchID: String {
     get {return _storage._matchID}
     set {_uniqueStorage()._matchID = newValue}
   }
@@ -6372,7 +6379,7 @@ struct Server_Match: SwiftProtobuf.Message {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &_storage._matchID)
+        case 1: try decoder.decodeSingularStringField(value: &_storage._matchID)
         case 2: try decoder.decodeRepeatedMessageField(value: &_storage._presences)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._self_p)
         default: break
@@ -6388,7 +6395,7 @@ struct Server_Match: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       if !_storage._matchID.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._matchID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: _storage._matchID, fieldNumber: 1)
       }
       if !_storage._presences.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._presences, fieldNumber: 2)
@@ -6408,7 +6415,7 @@ struct Server_Match: SwiftProtobuf.Message {
 struct Server_MatchPresence: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".MatchPresence"
 
-  var matchID: Data = SwiftProtobuf.Internal.emptyData
+  var matchID: String = String()
 
   var joins: [Server_UserPresence] = []
 
@@ -6425,7 +6432,7 @@ struct Server_MatchPresence: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.matchID)
+      case 1: try decoder.decodeSingularStringField(value: &self.matchID)
       case 2: try decoder.decodeRepeatedMessageField(value: &self.joins)
       case 3: try decoder.decodeRepeatedMessageField(value: &self.leaves)
       default: break
@@ -6439,7 +6446,7 @@ struct Server_MatchPresence: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.matchID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
     if !self.joins.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.joins, fieldNumber: 2)
@@ -6548,18 +6555,18 @@ struct Server_TMatchesJoin: SwiftProtobuf.Message {
 
     var id: Server_TMatchesJoin.MatchJoin.OneOf_ID? = nil
 
-    var matchID: Data {
+    var matchID: String {
       get {
         if case .matchID(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .matchID(newValue)}
     }
 
-    var token: Data {
+    var token: String {
       get {
         if case .token(let v)? = id {return v}
-        return SwiftProtobuf.Internal.emptyData
+        return String()
       }
       set {id = .token(newValue)}
     }
@@ -6567,8 +6574,8 @@ struct Server_TMatchesJoin: SwiftProtobuf.Message {
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     enum OneOf_ID: Equatable {
-      case matchID(Data)
-      case token(Data)
+      case matchID(String)
+      case token(String)
 
       static func ==(lhs: Server_TMatchesJoin.MatchJoin.OneOf_ID, rhs: Server_TMatchesJoin.MatchJoin.OneOf_ID) -> Bool {
         switch (lhs, rhs) {
@@ -6590,13 +6597,13 @@ struct Server_TMatchesJoin: SwiftProtobuf.Message {
         switch fieldNumber {
         case 1:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .matchID(v)}
         case 2:
           if self.id != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {self.id = .token(v)}
         default: break
         }
@@ -6610,9 +6617,9 @@ struct Server_TMatchesJoin: SwiftProtobuf.Message {
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       switch self.id {
       case .matchID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 1)
       case .token(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 2)
       case nil: break
       }
       try unknownFields.traverse(visitor: &visitor)
@@ -6687,7 +6694,7 @@ struct Server_TMatches: SwiftProtobuf.Message {
 struct Server_MatchDataSend: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".MatchDataSend"
 
-  var matchID: Data = SwiftProtobuf.Internal.emptyData
+  var matchID: String = String()
 
   //// Custom Op code to make disguishing different message types easier.
   var opCode: Int64 = 0
@@ -6707,7 +6714,7 @@ struct Server_MatchDataSend: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.matchID)
+      case 1: try decoder.decodeSingularStringField(value: &self.matchID)
       case 2: try decoder.decodeSingularInt64Field(value: &self.opCode)
       case 3: try decoder.decodeSingularBytesField(value: &self.data)
       case 4: try decoder.decodeRepeatedMessageField(value: &self.presences)
@@ -6722,7 +6729,7 @@ struct Server_MatchDataSend: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.matchID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
     if self.opCode != 0 {
       try visitor.visitSingularInt64Field(value: self.opCode, fieldNumber: 2)
@@ -6742,7 +6749,7 @@ struct Server_MatchDataSend: SwiftProtobuf.Message {
 struct Server_MatchData: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".MatchData"
 
-  var matchID: Data {
+  var matchID: String {
     get {return _storage._matchID}
     set {_uniqueStorage()._matchID = newValue}
   }
@@ -6779,7 +6786,7 @@ struct Server_MatchData: SwiftProtobuf.Message {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &_storage._matchID)
+        case 1: try decoder.decodeSingularStringField(value: &_storage._matchID)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._presence)
         case 3: try decoder.decodeSingularInt64Field(value: &_storage._opCode)
         case 4: try decoder.decodeSingularBytesField(value: &_storage._data)
@@ -6796,7 +6803,7 @@ struct Server_MatchData: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       if !_storage._matchID.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._matchID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: _storage._matchID, fieldNumber: 1)
       }
       if let v = _storage._presence {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
@@ -6821,7 +6828,7 @@ struct Server_MatchData: SwiftProtobuf.Message {
 struct Server_TMatchesLeave: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TMatchesLeave"
 
-  var matchIds: [Data] = []
+  var matchIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -6834,7 +6841,7 @@ struct Server_TMatchesLeave: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.matchIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.matchIds)
       default: break
       }
     }
@@ -6846,7 +6853,7 @@ struct Server_TMatchesLeave: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.matchIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.matchIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -6859,7 +6866,7 @@ struct Server_TMatchesLeave: SwiftProtobuf.Message {
 struct Server_TStorageList: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TStorageList"
 
-  var userID: Data = SwiftProtobuf.Internal.emptyData
+  var userID: String = String()
 
   var bucket: String = String()
 
@@ -6867,7 +6874,7 @@ struct Server_TStorageList: SwiftProtobuf.Message {
 
   var limit: Int64 = 0
 
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -6880,11 +6887,11 @@ struct Server_TStorageList: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.userID)
+      case 1: try decoder.decodeSingularStringField(value: &self.userID)
       case 2: try decoder.decodeSingularStringField(value: &self.bucket)
       case 3: try decoder.decodeSingularStringField(value: &self.collection)
       case 4: try decoder.decodeSingularInt64Field(value: &self.limit)
-      case 5: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 5: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -6896,7 +6903,7 @@ struct Server_TStorageList: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
     if !self.bucket.isEmpty {
       try visitor.visitSingularStringField(value: self.bucket, fieldNumber: 2)
@@ -6908,7 +6915,7 @@ struct Server_TStorageList: SwiftProtobuf.Message {
       try visitor.visitSingularInt64Field(value: self.limit, fieldNumber: 4)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 5)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 5)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -6934,7 +6941,7 @@ struct Server_TStorageFetch: SwiftProtobuf.Message {
 
     var record: String = String()
 
-    var userID: Data = SwiftProtobuf.Internal.emptyData
+    var userID: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -6950,7 +6957,7 @@ struct Server_TStorageFetch: SwiftProtobuf.Message {
         case 1: try decoder.decodeSingularStringField(value: &self.bucket)
         case 2: try decoder.decodeSingularStringField(value: &self.collection)
         case 3: try decoder.decodeSingularStringField(value: &self.record)
-        case 4: try decoder.decodeSingularBytesField(value: &self.userID)
+        case 4: try decoder.decodeSingularStringField(value: &self.userID)
         default: break
         }
       }
@@ -6971,7 +6978,7 @@ struct Server_TStorageFetch: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.record, fieldNumber: 3)
       }
       if !self.userID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 4)
+        try visitor.visitSingularStringField(value: self.userID, fieldNumber: 4)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -7011,7 +7018,7 @@ struct Server_TStorageData: SwiftProtobuf.Message {
 
   var data: [Server_TStorageData.StorageData] = []
 
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -7024,11 +7031,11 @@ struct Server_TStorageData: SwiftProtobuf.Message {
 
     var record: String = String()
 
-    var userID: Data = SwiftProtobuf.Internal.emptyData
+    var userID: String = String()
 
-    var value: Data = SwiftProtobuf.Internal.emptyData
+    var value: String = String()
 
-    var version: Data = SwiftProtobuf.Internal.emptyData
+    var version: String = String()
 
     var permissionRead: Int32 = 0
 
@@ -7054,9 +7061,9 @@ struct Server_TStorageData: SwiftProtobuf.Message {
         case 1: try decoder.decodeSingularStringField(value: &self.bucket)
         case 2: try decoder.decodeSingularStringField(value: &self.collection)
         case 3: try decoder.decodeSingularStringField(value: &self.record)
-        case 4: try decoder.decodeSingularBytesField(value: &self.userID)
-        case 5: try decoder.decodeSingularBytesField(value: &self.value)
-        case 6: try decoder.decodeSingularBytesField(value: &self.version)
+        case 4: try decoder.decodeSingularStringField(value: &self.userID)
+        case 5: try decoder.decodeSingularStringField(value: &self.value)
+        case 6: try decoder.decodeSingularStringField(value: &self.version)
         case 7: try decoder.decodeSingularInt32Field(value: &self.permissionRead)
         case 8: try decoder.decodeSingularInt32Field(value: &self.permissionWrite)
         case 9: try decoder.decodeSingularInt64Field(value: &self.createdAt)
@@ -7082,13 +7089,13 @@ struct Server_TStorageData: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.record, fieldNumber: 3)
       }
       if !self.userID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.userID, fieldNumber: 4)
+        try visitor.visitSingularStringField(value: self.userID, fieldNumber: 4)
       }
       if !self.value.isEmpty {
-        try visitor.visitSingularBytesField(value: self.value, fieldNumber: 5)
+        try visitor.visitSingularStringField(value: self.value, fieldNumber: 5)
       }
       if !self.version.isEmpty {
-        try visitor.visitSingularBytesField(value: self.version, fieldNumber: 6)
+        try visitor.visitSingularStringField(value: self.version, fieldNumber: 6)
       }
       if self.permissionRead != 0 {
         try visitor.visitSingularInt32Field(value: self.permissionRead, fieldNumber: 7)
@@ -7119,7 +7126,7 @@ struct Server_TStorageData: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.data)
-      case 2: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -7134,7 +7141,7 @@ struct Server_TStorageData: SwiftProtobuf.Message {
       try visitor.visitRepeatedMessageField(value: self.data, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -7163,10 +7170,10 @@ struct Server_TStorageWrite: SwiftProtobuf.Message {
 
     var record: String = String()
 
-    var value: Data = SwiftProtobuf.Internal.emptyData
+    var value: String = String()
 
     /// if-match and if-none-match
-    var version: Data = SwiftProtobuf.Internal.emptyData
+    var version: String = String()
 
     var permissionRead: Int32 = 0
 
@@ -7186,8 +7193,8 @@ struct Server_TStorageWrite: SwiftProtobuf.Message {
         case 1: try decoder.decodeSingularStringField(value: &self.bucket)
         case 2: try decoder.decodeSingularStringField(value: &self.collection)
         case 3: try decoder.decodeSingularStringField(value: &self.record)
-        case 4: try decoder.decodeSingularBytesField(value: &self.value)
-        case 5: try decoder.decodeSingularBytesField(value: &self.version)
+        case 4: try decoder.decodeSingularStringField(value: &self.value)
+        case 5: try decoder.decodeSingularStringField(value: &self.version)
         case 6: try decoder.decodeSingularInt32Field(value: &self.permissionRead)
         case 7: try decoder.decodeSingularInt32Field(value: &self.permissionWrite)
         default: break
@@ -7210,10 +7217,10 @@ struct Server_TStorageWrite: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.record, fieldNumber: 3)
       }
       if !self.value.isEmpty {
-        try visitor.visitSingularBytesField(value: self.value, fieldNumber: 4)
+        try visitor.visitSingularStringField(value: self.value, fieldNumber: 4)
       }
       if !self.version.isEmpty {
-        try visitor.visitSingularBytesField(value: self.version, fieldNumber: 5)
+        try visitor.visitSingularStringField(value: self.version, fieldNumber: 5)
       }
       if self.permissionRead != 0 {
         try visitor.visitSingularInt32Field(value: self.permissionRead, fieldNumber: 6)
@@ -7303,7 +7310,7 @@ struct Server_TStorageUpdate: SwiftProtobuf.Message {
 
       var path: String = String()
 
-      var value: Data = SwiftProtobuf.Internal.emptyData
+      var value: String = String()
 
       var from: String = String()
 
@@ -7408,7 +7415,7 @@ struct Server_TStorageUpdate: SwiftProtobuf.Message {
           switch fieldNumber {
           case 1: try decoder.decodeSingularInt32Field(value: &self.op)
           case 2: try decoder.decodeSingularStringField(value: &self.path)
-          case 3: try decoder.decodeSingularBytesField(value: &self.value)
+          case 3: try decoder.decodeSingularStringField(value: &self.value)
           case 4: try decoder.decodeSingularStringField(value: &self.from)
           case 5: try decoder.decodeSingularBoolField(value: &self.conditional)
           case 6: try decoder.decodeSingularInt64Field(value: &self.assert)
@@ -7430,7 +7437,7 @@ struct Server_TStorageUpdate: SwiftProtobuf.Message {
           try visitor.visitSingularStringField(value: self.path, fieldNumber: 2)
         }
         if !self.value.isEmpty {
-          try visitor.visitSingularBytesField(value: self.value, fieldNumber: 3)
+          try visitor.visitSingularStringField(value: self.value, fieldNumber: 3)
         }
         if !self.from.isEmpty {
           try visitor.visitSingularStringField(value: self.from, fieldNumber: 4)
@@ -7458,7 +7465,7 @@ struct Server_TStorageUpdate: SwiftProtobuf.Message {
       var record: String = String()
 
       /// if-match and if-none-match
-      var version: Data = SwiftProtobuf.Internal.emptyData
+      var version: String = String()
 
       var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -7474,7 +7481,7 @@ struct Server_TStorageUpdate: SwiftProtobuf.Message {
           case 1: try decoder.decodeSingularStringField(value: &self.bucket)
           case 2: try decoder.decodeSingularStringField(value: &self.collection)
           case 3: try decoder.decodeSingularStringField(value: &self.record)
-          case 4: try decoder.decodeSingularBytesField(value: &self.version)
+          case 4: try decoder.decodeSingularStringField(value: &self.version)
           default: break
           }
         }
@@ -7495,7 +7502,7 @@ struct Server_TStorageUpdate: SwiftProtobuf.Message {
           try visitor.visitSingularStringField(value: self.record, fieldNumber: 3)
         }
         if !self.version.isEmpty {
-          try visitor.visitSingularBytesField(value: self.version, fieldNumber: 4)
+          try visitor.visitSingularStringField(value: self.version, fieldNumber: 4)
         }
         try unknownFields.traverse(visitor: &visitor)
       }
@@ -7592,7 +7599,7 @@ struct Server_TStorageKeys: SwiftProtobuf.Message {
 
     var record: String = String()
 
-    var version: Data = SwiftProtobuf.Internal.emptyData
+    var version: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -7608,7 +7615,7 @@ struct Server_TStorageKeys: SwiftProtobuf.Message {
         case 1: try decoder.decodeSingularStringField(value: &self.bucket)
         case 2: try decoder.decodeSingularStringField(value: &self.collection)
         case 3: try decoder.decodeSingularStringField(value: &self.record)
-        case 4: try decoder.decodeSingularBytesField(value: &self.version)
+        case 4: try decoder.decodeSingularStringField(value: &self.version)
         default: break
         }
       }
@@ -7629,7 +7636,7 @@ struct Server_TStorageKeys: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.record, fieldNumber: 3)
       }
       if !self.version.isEmpty {
-        try visitor.visitSingularBytesField(value: self.version, fieldNumber: 4)
+        try visitor.visitSingularStringField(value: self.version, fieldNumber: 4)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -7683,7 +7690,7 @@ struct Server_TStorageRemove: SwiftProtobuf.Message {
 
     var record: String = String()
 
-    var version: Data = SwiftProtobuf.Internal.emptyData
+    var version: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -7699,7 +7706,7 @@ struct Server_TStorageRemove: SwiftProtobuf.Message {
         case 1: try decoder.decodeSingularStringField(value: &self.bucket)
         case 2: try decoder.decodeSingularStringField(value: &self.collection)
         case 3: try decoder.decodeSingularStringField(value: &self.record)
-        case 4: try decoder.decodeSingularBytesField(value: &self.version)
+        case 4: try decoder.decodeSingularStringField(value: &self.version)
         default: break
         }
       }
@@ -7720,7 +7727,7 @@ struct Server_TStorageRemove: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.record, fieldNumber: 3)
       }
       if !self.version.isEmpty {
-        try visitor.visitSingularBytesField(value: self.version, fieldNumber: 4)
+        try visitor.visitSingularStringField(value: self.version, fieldNumber: 4)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -7758,7 +7765,7 @@ struct Server_TStorageRemove: SwiftProtobuf.Message {
 struct Server_Leaderboard: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".Leaderboard"
 
-  var id: Data = SwiftProtobuf.Internal.emptyData
+  var id: String = String()
 
   //// Whether the user can submit records directly via the client or not
   var authoritative: Bool = false
@@ -7769,11 +7776,11 @@ struct Server_Leaderboard: SwiftProtobuf.Message {
 
   var resetSchedule: String = String()
 
-  var metadata: Data = SwiftProtobuf.Internal.emptyData
+  var metadata: String = String()
 
-  var nextID: Data = SwiftProtobuf.Internal.emptyData
+  var nextID: String = String()
 
-  var prevID: Data = SwiftProtobuf.Internal.emptyData
+  var prevID: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -7786,14 +7793,14 @@ struct Server_Leaderboard: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.id)
+      case 1: try decoder.decodeSingularStringField(value: &self.id)
       case 2: try decoder.decodeSingularBoolField(value: &self.authoritative)
       case 3: try decoder.decodeSingularInt64Field(value: &self.sort)
       case 4: try decoder.decodeSingularInt64Field(value: &self.count)
       case 5: try decoder.decodeSingularStringField(value: &self.resetSchedule)
-      case 6: try decoder.decodeSingularBytesField(value: &self.metadata)
-      case 7: try decoder.decodeSingularBytesField(value: &self.nextID)
-      case 8: try decoder.decodeSingularBytesField(value: &self.prevID)
+      case 6: try decoder.decodeSingularStringField(value: &self.metadata)
+      case 7: try decoder.decodeSingularStringField(value: &self.nextID)
+      case 8: try decoder.decodeSingularStringField(value: &self.prevID)
       default: break
       }
     }
@@ -7805,7 +7812,7 @@ struct Server_Leaderboard: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.id.isEmpty {
-      try visitor.visitSingularBytesField(value: self.id, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
     if self.authoritative != false {
       try visitor.visitSingularBoolField(value: self.authoritative, fieldNumber: 2)
@@ -7820,13 +7827,13 @@ struct Server_Leaderboard: SwiftProtobuf.Message {
       try visitor.visitSingularStringField(value: self.resetSchedule, fieldNumber: 5)
     }
     if !self.metadata.isEmpty {
-      try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 6)
+      try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 6)
     }
     if !self.nextID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.nextID, fieldNumber: 7)
+      try visitor.visitSingularStringField(value: self.nextID, fieldNumber: 7)
     }
     if !self.prevID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.prevID, fieldNumber: 8)
+      try visitor.visitSingularStringField(value: self.prevID, fieldNumber: 8)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -7837,9 +7844,9 @@ struct Server_Leaderboard: SwiftProtobuf.Message {
 struct Server_LeaderboardRecord: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".LeaderboardRecord"
 
-  var leaderboardID: Data = SwiftProtobuf.Internal.emptyData
+  var leaderboardID: String = String()
 
-  var ownerID: Data = SwiftProtobuf.Internal.emptyData
+  var ownerID: String = String()
 
   var handle: String = String()
 
@@ -7856,7 +7863,7 @@ struct Server_LeaderboardRecord: SwiftProtobuf.Message {
 
   var numScore: Int64 = 0
 
-  var metadata: Data = SwiftProtobuf.Internal.emptyData
+  var metadata: String = String()
 
   var rankedAt: Int64 = 0
 
@@ -7875,8 +7882,8 @@ struct Server_LeaderboardRecord: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.leaderboardID)
-      case 2: try decoder.decodeSingularBytesField(value: &self.ownerID)
+      case 1: try decoder.decodeSingularStringField(value: &self.leaderboardID)
+      case 2: try decoder.decodeSingularStringField(value: &self.ownerID)
       case 3: try decoder.decodeSingularStringField(value: &self.handle)
       case 4: try decoder.decodeSingularStringField(value: &self.lang)
       case 5: try decoder.decodeSingularStringField(value: &self.location)
@@ -7884,7 +7891,7 @@ struct Server_LeaderboardRecord: SwiftProtobuf.Message {
       case 7: try decoder.decodeSingularInt64Field(value: &self.rank)
       case 8: try decoder.decodeSingularInt64Field(value: &self.score)
       case 9: try decoder.decodeSingularInt64Field(value: &self.numScore)
-      case 10: try decoder.decodeSingularBytesField(value: &self.metadata)
+      case 10: try decoder.decodeSingularStringField(value: &self.metadata)
       case 11: try decoder.decodeSingularInt64Field(value: &self.rankedAt)
       case 12: try decoder.decodeSingularInt64Field(value: &self.updatedAt)
       case 13: try decoder.decodeSingularInt64Field(value: &self.expiresAt)
@@ -7899,10 +7906,10 @@ struct Server_LeaderboardRecord: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.leaderboardID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.leaderboardID, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.leaderboardID, fieldNumber: 1)
     }
     if !self.ownerID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.ownerID, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.ownerID, fieldNumber: 2)
     }
     if !self.handle.isEmpty {
       try visitor.visitSingularStringField(value: self.handle, fieldNumber: 3)
@@ -7926,7 +7933,7 @@ struct Server_LeaderboardRecord: SwiftProtobuf.Message {
       try visitor.visitSingularInt64Field(value: self.numScore, fieldNumber: 9)
     }
     if !self.metadata.isEmpty {
-      try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 10)
+      try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 10)
     }
     if self.rankedAt != 0 {
       try visitor.visitSingularInt64Field(value: self.rankedAt, fieldNumber: 11)
@@ -7953,9 +7960,9 @@ struct Server_TLeaderboardsList: SwiftProtobuf.Message {
   var limit: Int64 = 0
 
   //// Use TLeaderboards.cursor to paginate through results.
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
-  var filterLeaderboardID: [Data] = []
+  var filterLeaderboardID: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -7969,8 +7976,8 @@ struct Server_TLeaderboardsList: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularInt64Field(value: &self.limit)
-      case 2: try decoder.decodeSingularBytesField(value: &self.cursor)
-      case 3: try decoder.decodeRepeatedBytesField(value: &self.filterLeaderboardID)
+      case 2: try decoder.decodeSingularStringField(value: &self.cursor)
+      case 3: try decoder.decodeRepeatedStringField(value: &self.filterLeaderboardID)
       default: break
       }
     }
@@ -7985,10 +7992,10 @@ struct Server_TLeaderboardsList: SwiftProtobuf.Message {
       try visitor.visitSingularInt64Field(value: self.limit, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
     if !self.filterLeaderboardID.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.filterLeaderboardID, fieldNumber: 3)
+      try visitor.visitRepeatedStringField(value: self.filterLeaderboardID, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -8001,7 +8008,7 @@ struct Server_TLeaderboards: SwiftProtobuf.Message {
 
   var leaderboards: [Server_Leaderboard] = []
 
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8015,7 +8022,7 @@ struct Server_TLeaderboards: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.leaderboards)
-      case 2: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -8030,7 +8037,7 @@ struct Server_TLeaderboards: SwiftProtobuf.Message {
       try visitor.visitRepeatedMessageField(value: self.leaderboards, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -8052,7 +8059,7 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
   struct LeaderboardRecordWrite: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_TLeaderboardRecordsWrite.protoMessageName + ".LeaderboardRecordWrite"
 
-    var leaderboardID: Data = SwiftProtobuf.Internal.emptyData
+    var leaderboardID: String = String()
 
     var op: Server_TLeaderboardRecordsWrite.LeaderboardRecordWrite.OneOf_Op? = nil
 
@@ -8092,7 +8099,7 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
 
     var timezone: String = String()
 
-    var metadata: Data = SwiftProtobuf.Internal.emptyData
+    var metadata: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8122,7 +8129,7 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &self.leaderboardID)
+        case 1: try decoder.decodeSingularStringField(value: &self.leaderboardID)
         case 2:
           if self.op != nil {try decoder.handleConflictingOneOf()}
           var v: Int64?
@@ -8145,7 +8152,7 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
           if let v = v {self.op = .best(v)}
         case 6: try decoder.decodeSingularStringField(value: &self.location)
         case 7: try decoder.decodeSingularStringField(value: &self.timezone)
-        case 8: try decoder.decodeSingularBytesField(value: &self.metadata)
+        case 8: try decoder.decodeSingularStringField(value: &self.metadata)
         default: break
         }
       }
@@ -8157,7 +8164,7 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.leaderboardID.isEmpty {
-        try visitor.visitSingularBytesField(value: self.leaderboardID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: self.leaderboardID, fieldNumber: 1)
       }
       switch self.op {
       case .incr(let v)?:
@@ -8177,7 +8184,7 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
         try visitor.visitSingularStringField(value: self.timezone, fieldNumber: 7)
       }
       if !self.metadata.isEmpty {
-        try visitor.visitSingularBytesField(value: self.metadata, fieldNumber: 8)
+        try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 8)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -8219,12 +8226,12 @@ struct Server_TLeaderboardRecordsWrite: SwiftProtobuf.Message {
 struct Server_TLeaderboardRecordsFetch: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TLeaderboardRecordsFetch"
 
-  var leaderboardIds: [Data] = []
+  var leaderboardIds: [String] = []
 
   var limit: Int64 = 0
 
   //// Use TLeaderboardRecords.cursor to paginate through results.
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8237,9 +8244,9 @@ struct Server_TLeaderboardRecordsFetch: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.leaderboardIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.leaderboardIds)
       case 2: try decoder.decodeSingularInt64Field(value: &self.limit)
-      case 3: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 3: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -8251,13 +8258,13 @@ struct Server_TLeaderboardRecordsFetch: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.leaderboardIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.leaderboardIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.leaderboardIds, fieldNumber: 1)
     }
     if self.limit != 0 {
       try visitor.visitSingularInt64Field(value: self.limit, fieldNumber: 2)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 3)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -8270,7 +8277,7 @@ struct Server_TLeaderboardRecordsFetch: SwiftProtobuf.Message {
 struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TLeaderboardRecordsList"
 
-  var leaderboardID: Data {
+  var leaderboardID: String {
     get {return _storage._leaderboardID}
     set {_uniqueStorage()._leaderboardID = newValue}
   }
@@ -8281,10 +8288,10 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
   }
 
   //// Filter records by one user ID. This is the same as a "heystack" lookup
-  var ownerID: Data {
+  var ownerID: String {
     get {
       if case .ownerID(let v)? = _storage._filter {return v}
-      return SwiftProtobuf.Internal.emptyData
+      return String()
     }
     set {_uniqueStorage()._filter = .ownerID(newValue)}
   }
@@ -8327,7 +8334,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
     set {_uniqueStorage()._limit = newValue}
   }
 
-  var cursor: Data {
+  var cursor: String {
     get {return _storage._cursor}
     set {_uniqueStorage()._cursor = newValue}
   }
@@ -8336,7 +8343,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
 
   enum OneOf_Filter: Equatable {
     //// Filter records by one user ID. This is the same as a "heystack" lookup
-    case ownerID(Data)
+    case ownerID(String)
     //// Filter records by user IDs
     case ownerIds(Server_TLeaderboardRecordsList.Owners)
     case lang(String)
@@ -8358,7 +8365,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
   struct Owners: SwiftProtobuf.Message {
     static let protoMessageName: String = Server_TLeaderboardRecordsList.protoMessageName + ".Owners"
 
-    var ownerIds: [Data] = []
+    var ownerIds: [String] = []
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8371,7 +8378,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
     mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeRepeatedBytesField(value: &self.ownerIds)
+        case 1: try decoder.decodeRepeatedStringField(value: &self.ownerIds)
         default: break
         }
       }
@@ -8383,7 +8390,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
     /// `Message` and `Message+*Additions` files.
     func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
       if !self.ownerIds.isEmpty {
-        try visitor.visitRepeatedBytesField(value: self.ownerIds, fieldNumber: 1)
+        try visitor.visitRepeatedStringField(value: self.ownerIds, fieldNumber: 1)
       }
       try unknownFields.traverse(visitor: &visitor)
     }
@@ -8400,11 +8407,11 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularBytesField(value: &_storage._leaderboardID)
+        case 1: try decoder.decodeSingularStringField(value: &_storage._leaderboardID)
         case 2:
           if _storage._filter != nil {try decoder.handleConflictingOneOf()}
-          var v: Data?
-          try decoder.decodeSingularBytesField(value: &v)
+          var v: String?
+          try decoder.decodeSingularStringField(value: &v)
           if let v = v {_storage._filter = .ownerID(v)}
         case 3:
           var v: Server_TLeaderboardRecordsList.Owners?
@@ -8430,7 +8437,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
           try decoder.decodeSingularStringField(value: &v)
           if let v = v {_storage._filter = .timezone(v)}
         case 7: try decoder.decodeSingularInt64Field(value: &_storage._limit)
-        case 8: try decoder.decodeSingularBytesField(value: &_storage._cursor)
+        case 8: try decoder.decodeSingularStringField(value: &_storage._cursor)
         default: break
         }
       }
@@ -8444,11 +8451,11 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       if !_storage._leaderboardID.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._leaderboardID, fieldNumber: 1)
+        try visitor.visitSingularStringField(value: _storage._leaderboardID, fieldNumber: 1)
       }
       switch _storage._filter {
       case .ownerID(let v)?:
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 2)
       case .ownerIds(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       case .lang(let v)?:
@@ -8463,7 +8470,7 @@ struct Server_TLeaderboardRecordsList: SwiftProtobuf.Message {
         try visitor.visitSingularInt64Field(value: _storage._limit, fieldNumber: 7)
       }
       if !_storage._cursor.isEmpty {
-        try visitor.visitSingularBytesField(value: _storage._cursor, fieldNumber: 8)
+        try visitor.visitSingularStringField(value: _storage._cursor, fieldNumber: 8)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -8479,7 +8486,7 @@ struct Server_TLeaderboardRecords: SwiftProtobuf.Message {
 
   var records: [Server_LeaderboardRecord] = []
 
-  var cursor: Data = SwiftProtobuf.Internal.emptyData
+  var cursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8493,7 +8500,7 @@ struct Server_TLeaderboardRecords: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.records)
-      case 2: try decoder.decodeSingularBytesField(value: &self.cursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.cursor)
       default: break
       }
     }
@@ -8508,7 +8515,7 @@ struct Server_TLeaderboardRecords: SwiftProtobuf.Message {
       try visitor.visitRepeatedMessageField(value: self.records, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.cursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -8524,7 +8531,7 @@ struct Server_TRpc: SwiftProtobuf.Message {
 
   var id: String = String()
 
-  var payload: Data = SwiftProtobuf.Internal.emptyData
+  var payload: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8538,7 +8545,7 @@ struct Server_TRpc: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularStringField(value: &self.id)
-      case 2: try decoder.decodeSingularBytesField(value: &self.payload)
+      case 2: try decoder.decodeSingularStringField(value: &self.payload)
       default: break
       }
     }
@@ -8553,7 +8560,7 @@ struct Server_TRpc: SwiftProtobuf.Message {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
     if !self.payload.isEmpty {
-      try visitor.visitSingularBytesField(value: self.payload, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.payload, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -8821,15 +8828,15 @@ struct Server_TPurchaseRecord: SwiftProtobuf.Message {
 struct Server_Notification: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".Notification"
 
-  var id: Data = SwiftProtobuf.Internal.emptyData
+  var id: String = String()
 
   var subject: String = String()
 
-  var content: Data = SwiftProtobuf.Internal.emptyData
+  var content: String = String()
 
   var code: Int64 = 0
 
-  var senderID: Data = SwiftProtobuf.Internal.emptyData
+  var senderID: String = String()
 
   var createdAt: Int64 = 0
 
@@ -8848,11 +8855,11 @@ struct Server_Notification: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularBytesField(value: &self.id)
+      case 1: try decoder.decodeSingularStringField(value: &self.id)
       case 2: try decoder.decodeSingularStringField(value: &self.subject)
-      case 3: try decoder.decodeSingularBytesField(value: &self.content)
+      case 3: try decoder.decodeSingularStringField(value: &self.content)
       case 4: try decoder.decodeSingularInt64Field(value: &self.code)
-      case 5: try decoder.decodeSingularBytesField(value: &self.senderID)
+      case 5: try decoder.decodeSingularStringField(value: &self.senderID)
       case 6: try decoder.decodeSingularInt64Field(value: &self.createdAt)
       case 7: try decoder.decodeSingularInt64Field(value: &self.expiresAt)
       case 8: try decoder.decodeSingularBoolField(value: &self.persistent)
@@ -8867,19 +8874,19 @@ struct Server_Notification: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.id.isEmpty {
-      try visitor.visitSingularBytesField(value: self.id, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
     if !self.subject.isEmpty {
       try visitor.visitSingularStringField(value: self.subject, fieldNumber: 2)
     }
     if !self.content.isEmpty {
-      try visitor.visitSingularBytesField(value: self.content, fieldNumber: 3)
+      try visitor.visitSingularStringField(value: self.content, fieldNumber: 3)
     }
     if self.code != 0 {
       try visitor.visitSingularInt64Field(value: self.code, fieldNumber: 4)
     }
     if !self.senderID.isEmpty {
-      try visitor.visitSingularBytesField(value: self.senderID, fieldNumber: 5)
+      try visitor.visitSingularStringField(value: self.senderID, fieldNumber: 5)
     }
     if self.createdAt != 0 {
       try visitor.visitSingularInt64Field(value: self.createdAt, fieldNumber: 6)
@@ -8941,7 +8948,7 @@ struct Server_TNotificationsList: SwiftProtobuf.Message {
   //// Use this cursor to paginate notifications.
   //// Cache this to catch up to new notifications.
   //// The value of this comes from TNotifications.resumable_cursor.
-  var resumableCursor: Data = SwiftProtobuf.Internal.emptyData
+  var resumableCursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8955,7 +8962,7 @@ struct Server_TNotificationsList: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularInt64Field(value: &self.limit)
-      case 2: try decoder.decodeSingularBytesField(value: &self.resumableCursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.resumableCursor)
       default: break
       }
     }
@@ -8970,7 +8977,7 @@ struct Server_TNotificationsList: SwiftProtobuf.Message {
       try visitor.visitSingularInt64Field(value: self.limit, fieldNumber: 1)
     }
     if !self.resumableCursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.resumableCursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.resumableCursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -8985,7 +8992,7 @@ struct Server_TNotifications: SwiftProtobuf.Message {
 
   //// Use this cursor to paginate notifications.
   //// Cache this to catch up to new notifications.
-  var resumableCursor: Data = SwiftProtobuf.Internal.emptyData
+  var resumableCursor: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -8999,7 +9006,7 @@ struct Server_TNotifications: SwiftProtobuf.Message {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.notifications)
-      case 2: try decoder.decodeSingularBytesField(value: &self.resumableCursor)
+      case 2: try decoder.decodeSingularStringField(value: &self.resumableCursor)
       default: break
       }
     }
@@ -9014,7 +9021,7 @@ struct Server_TNotifications: SwiftProtobuf.Message {
       try visitor.visitRepeatedMessageField(value: self.notifications, fieldNumber: 1)
     }
     if !self.resumableCursor.isEmpty {
-      try visitor.visitSingularBytesField(value: self.resumableCursor, fieldNumber: 2)
+      try visitor.visitSingularStringField(value: self.resumableCursor, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -9025,7 +9032,7 @@ struct Server_TNotifications: SwiftProtobuf.Message {
 struct Server_TNotificationsRemove: SwiftProtobuf.Message {
   static let protoMessageName: String = _protobuf_package + ".TNotificationsRemove"
 
-  var notificationIds: [Data] = []
+  var notificationIds: [String] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -9038,7 +9045,7 @@ struct Server_TNotificationsRemove: SwiftProtobuf.Message {
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedBytesField(value: &self.notificationIds)
+      case 1: try decoder.decodeRepeatedStringField(value: &self.notificationIds)
       default: break
       }
     }
@@ -9050,7 +9057,7 @@ struct Server_TNotificationsRemove: SwiftProtobuf.Message {
   /// `Message` and `Message+*Additions` files.
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.notificationIds.isEmpty {
-      try visitor.visitRepeatedBytesField(value: self.notificationIds, fieldNumber: 1)
+      try visitor.visitRepeatedStringField(value: self.notificationIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -9255,10 +9262,12 @@ extension Server_AuthenticateResponse: SwiftProtobuf._MessageImplementationBase,
 extension Server_AuthenticateResponse.Session: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "token"),
+    2: .standard(proto: "udp_token"),
   ]
 
   func _protobuf_generated_isEqualTo(other: Server_AuthenticateResponse.Session) -> Bool {
     if self.token != other.token {return false}
+    if self.udpToken != other.udpToken {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }
@@ -10364,7 +10373,7 @@ extension Server_TTopicMessageSend: SwiftProtobuf._MessageImplementationBase, Sw
 
   fileprivate class _StorageClass {
     var _topic: Server_TopicId? = nil
-    var _data: Data = SwiftProtobuf.Internal.emptyData
+    var _data: String = String()
 
     static let defaultInstance = _StorageClass()
 
@@ -10431,13 +10440,13 @@ extension Server_TopicMessage: SwiftProtobuf._MessageImplementationBase, SwiftPr
 
   fileprivate class _StorageClass {
     var _topic: Server_TopicId? = nil
-    var _userID: Data = SwiftProtobuf.Internal.emptyData
-    var _messageID: Data = SwiftProtobuf.Internal.emptyData
+    var _userID: String = String()
+    var _messageID: String = String()
     var _createdAt: Int64 = 0
     var _expiresAt: Int64 = 0
     var _handle: String = String()
     var _type: Int64 = 0
-    var _data: Data = SwiftProtobuf.Internal.emptyData
+    var _data: String = String()
 
     static let defaultInstance = _StorageClass()
 
@@ -10745,8 +10754,8 @@ extension Server_MatchmakeMatched: SwiftProtobuf._MessageImplementationBase, Swi
   ]
 
   fileprivate class _StorageClass {
-    var _ticket: Data = SwiftProtobuf.Internal.emptyData
-    var _token: Data = SwiftProtobuf.Internal.emptyData
+    var _ticket: String = String()
+    var _token: String = String()
     var _presences: [Server_UserPresence] = []
     var _self_p: Server_UserPresence? = nil
     var _properties: [Server_MatchmakeMatched.UserProperty] = []
@@ -10814,7 +10823,7 @@ extension Server_Match: SwiftProtobuf._MessageImplementationBase, SwiftProtobuf.
   ]
 
   fileprivate class _StorageClass {
-    var _matchID: Data = SwiftProtobuf.Internal.emptyData
+    var _matchID: String = String()
     var _presences: [Server_UserPresence] = []
     var _self_p: Server_UserPresence? = nil
 
@@ -10981,7 +10990,7 @@ extension Server_MatchData: SwiftProtobuf._MessageImplementationBase, SwiftProto
   ]
 
   fileprivate class _StorageClass {
-    var _matchID: Data = SwiftProtobuf.Internal.emptyData
+    var _matchID: String = String()
     var _presence: Server_UserPresence? = nil
     var _opCode: Int64 = 0
     var _data: Data = SwiftProtobuf.Internal.emptyData
@@ -11505,10 +11514,10 @@ extension Server_TLeaderboardRecordsList: SwiftProtobuf._MessageImplementationBa
   ]
 
   fileprivate class _StorageClass {
-    var _leaderboardID: Data = SwiftProtobuf.Internal.emptyData
+    var _leaderboardID: String = String()
     var _filter: Server_TLeaderboardRecordsList.OneOf_Filter?
     var _limit: Int64 = 0
-    var _cursor: Data = SwiftProtobuf.Internal.emptyData
+    var _cursor: String = String()
 
     static let defaultInstance = _StorageClass()
 

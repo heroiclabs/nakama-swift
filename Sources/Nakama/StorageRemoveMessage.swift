@@ -23,7 +23,7 @@ public struct StorageRemoveMessage : CollatedMessage {
     payload.keys = []
   }
   
-  public mutating func remove(bucket: String, collection: String, key: String, version: Data?=nil) {
+  public mutating func remove(bucket: String, collection: String, key: String, version: String?=nil) {
     var record = Server_TStorageRemove.StorageKey()
     record.bucket = bucket
     record.collection = collection

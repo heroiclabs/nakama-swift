@@ -23,12 +23,12 @@ public struct StorageWriteMessage : CollatedMessage {
     payload.data = []
   }
   
-  public mutating func write(bucket: String, collection: String, key: String, value: Data, version: Data?=nil, readPermission: PermissionRead?=nil, writePermission: PermissionWrite?=nil) {
+  public mutating func write(bucket: String, collection: String, key: String, value: Data, version: String?=nil, readPermission: PermissionRead?=nil, writePermission: PermissionWrite?=nil) {
     var data = Server_TStorageWrite.StorageData()
     data.bucket = bucket
     data.collection = collection
     data.record = key
-    data.value = value
+    data.value = String(data: value, encoding: .utf8)!
     
     if version != nil {
       data.version = version!

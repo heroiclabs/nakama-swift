@@ -67,7 +67,7 @@ class StorageTest: XCTestCase {
       return self.client.send(message: message)
     }.then{ results -> Promise<Void> in
       let result = results[0]
-      XCTAssert(String.init(data: result.value, encoding: .utf8) == json, "Storage value does not match")
+      XCTAssert(result.value == json, "Storage value does not match")
       
       //remove
       var message = StorageRemoveMessage()
@@ -106,7 +106,7 @@ class StorageTest: XCTestCase {
     }.then { results -> Promise<Void> in
       let result = results[0]
 
-      let decoded = try JSONSerialization.jsonObject(with: result.value, options: [])
+      let decoded = try JSONSerialization.jsonObject(with: result.value.data(using: .utf8)!, options: [])
       if let dictFromJSON = decoded as? [String:Any] {
         let obj = dictFromJSON["foo"] as! [String:Any]
         XCTAssert(obj["coins"] as! Int == 90, "Storage value does not match")

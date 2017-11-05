@@ -28,7 +28,7 @@ public struct RPCMessage : CollatedMessage {
     var proto = Server_TRpc()
     proto.id = self.id
     if payload != nil {
-      proto.payload = payload!
+      proto.payload = String(data: payload!, encoding: .utf8)!
     }
     
     var envelope = Server_Envelope()
@@ -39,6 +39,11 @@ public struct RPCMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "RPCMessage(id=%@,payload=%@)", id, payload?.base64EncodedString() ?? "nil")
+    var _payload = ""
+    if let p = payload {
+      _payload = String(data: p, encoding: .utf8)!
+    }
+    
+    return String(format: "RPCMessage(id=%@,payload=%@)", id, _payload)
   }
 }

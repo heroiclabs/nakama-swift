@@ -22,7 +22,7 @@ public struct GroupKickUserMessage : CollatedMessage {
    List of a map of Group ID to User ID
    NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
    */
-  public var groupUsers : [(groupID: UUID, userID: UUID)] = []
+  public var groupUsers : [(groupID: String, userID: String)] = []
   
   public init(){}
   
@@ -31,8 +31,8 @@ public struct GroupKickUserMessage : CollatedMessage {
     
     for gu in groupUsers {
       var userKick = Server_TGroupUsersKick.GroupUserKick()
-      userKick.groupID = NakamaId.convert(uuid: gu.groupID)
-      userKick.userID = NakamaId.convert(uuid: gu.userID)
+      userKick.groupID = gu.groupID
+      userKick.userID = gu.userID
       proto.groupUsers.append(userKick)
     }
     

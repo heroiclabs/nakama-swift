@@ -31,7 +31,7 @@ public struct LeaderboardRecordWriteMessage : CollatedMessage {
     
     for record in leaderboardRecords {
       var w = Server_TLeaderboardRecordsWrite.LeaderboardRecordWrite()
-      w.leaderboardID = NakamaId.convert(uuid: record.leaderboardID)
+      w.leaderboardID = record.leaderboardID
       
       if let _location = record.location {
         w.location = _location
@@ -42,7 +42,7 @@ public struct LeaderboardRecordWriteMessage : CollatedMessage {
       }
       
       if let _metadata = record.metadata {
-        w.metadata = _metadata
+        w.metadata = String(data: _metadata, encoding: .utf8)!
       }
       
       if let _increment = record.increment {
@@ -77,7 +77,7 @@ public struct LeaderboardRecordWriteMessage : CollatedMessage {
 }
 
 public struct LeaderboardRecordWrite : CustomStringConvertible {
-  public var leaderboardID : UUID
+  public var leaderboardID : String
   public var location: String?
   public var timezone: String?
   public var metadata: Data?
@@ -147,11 +147,16 @@ public struct LeaderboardRecordWrite : CustomStringConvertible {
     }
   }
   
-  public init(leaderboardID : UUID) {
+  public init(leaderboardID : String) {
     self.leaderboardID = leaderboardID
   }
   
   public var description: String {
-    return String(format: "LeaderboardRecordWrite(leaderboardID=%@,location=%@,timezone=%@,metadata=%@,increment=%d,decrement=%d,set=%d,best=%d)", leaderboardID.uuidString, location ?? "", timezone ?? "", metadata?.base64EncodedString() ?? "", increment ?? 0, decrement ?? 0, set ?? 0, best ?? 0)
+    var _metadata = ""
+    if let m = metadata {
+      _metadata = String(data: m, encoding: .utf8)!
+    }
+    
+    return String(format: "LeaderboardRecordWrite(leaderboardID=%@,location=%@,timezone=%@,metadata=%@,increment=%d,decrement=%d,set=%d,best=%d)", leaderboardID, location ?? "", timezone ?? "", _metadata, increment ?? 0, decrement ?? 0, set ?? 0, best ?? 0)
   }
 }

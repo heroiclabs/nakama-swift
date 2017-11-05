@@ -29,7 +29,7 @@ public struct GroupUpdateMessage : CollatedMessage {
     
     for groupUpdate in groupsUpdate {
       var gu = Server_TGroupsUpdate.GroupUpdate()
-      gu.groupID = NakamaId.convert(uuid: groupUpdate.groupID)
+      gu.groupID = groupUpdate.groupID
       
       if let name = groupUpdate.name {
         gu.name = name
@@ -44,7 +44,7 @@ public struct GroupUpdateMessage : CollatedMessage {
         gu.lang = lang
       }
       if let metadata = groupUpdate.metadata {
-        gu.metadata = metadata
+        gu.metadata = String.init(data: metadata, encoding: .utf8)!
       }
       if let privateGroup = groupUpdate.privateGroup {
         gu.private = privateGroup
@@ -66,7 +66,7 @@ public struct GroupUpdateMessage : CollatedMessage {
 }
 
 public struct GroupUpdate : CustomStringConvertible {
-  public var groupID: UUID
+  public var groupID: String
   public var name: String?
   public var desc: String?
   public var avatarURL: String?
@@ -74,11 +74,16 @@ public struct GroupUpdate : CustomStringConvertible {
   public var metadata: Data?
   public var privateGroup: Bool?
   
-  public init(groupID: UUID){
+  public init(groupID: String){
     self.groupID = groupID
   }
   
   public var description: String {
-    return String(format: "GroupUpdate(groupID=%@,name=%@, description=%@, avatarURL=%@, lang=%@, metadata=%@, private=%@)", groupID.uuidString, name ?? "", desc ?? "", avatarURL ?? "", lang ?? "", metadata?.base64EncodedString() ?? "", privateGroup?.description ?? "false")
+    var _metadata = ""
+    if let m = metadata {
+      _metadata = String(data: m, encoding: .utf8)!
+    }
+    
+    return String(format: "GroupUpdate(groupID=%@,name=%@, description=%@, avatarURL=%@, lang=%@, metadata=%@, private=%@)", groupID, name ?? "", desc ?? "", avatarURL ?? "", lang ?? "", _metadata, privateGroup?.description ?? "false")
   }
 }

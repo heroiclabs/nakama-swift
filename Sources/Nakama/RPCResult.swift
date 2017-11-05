@@ -25,13 +25,13 @@ public protocol RPCResult : CustomStringConvertible {
   /**
    - Returns: The payload result sent back from the function call. May be {@code null}.
    */
-  var payload : Data? { get }
+  var payload : String? { get }
   
 }
 
 internal struct DefaultRPCResult : RPCResult {
   let id: String
-  let payload : Data?
+  let payload : String?
   
   internal init(from proto: Server_TRpc) {
     self.id = proto.id
@@ -39,6 +39,6 @@ internal struct DefaultRPCResult : RPCResult {
   }
   
   public var description: String {
-    return String(format: "DefaultRPCResult(id=%@,payload=%@)", id, payload?.base64EncodedString() ?? "nil")
+    return String(format: "DefaultRPCResult(id=%@,payload=%@)", id, payload ?? "")
   }
 }

@@ -17,7 +17,7 @@
 import Foundation
 
 public struct NotificationListMessage : CollatedMessage {
-  public var cursor: Data?
+  public var cursor: String?
   public var limit : Int
   
   public init(limit: Int){
@@ -39,7 +39,7 @@ public struct NotificationListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "NotificationListMessage(limit=%d,cursor=%@)", limit, cursor?.base64EncodedString() ?? "nil")
+    return String(format: "NotificationListMessage(limit=%d,cursor=%@)", limit, cursor ?? "")
   }
   
 }

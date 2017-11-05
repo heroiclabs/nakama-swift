@@ -26,12 +26,12 @@ public struct TopicJoinMessage : CollatedMessage {
   /**
    NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
    */
-  public var groups: [UUID] = []
+  public var groups: [String] = []
   
   /**
    NOTE: The server only processes the first item of the list, and will ignore and logs a warning message for other items.
    */
-  public var userIds: [UUID] = []
+  public var userIds: [String] = []
   
   public init(){}
   
@@ -40,19 +40,19 @@ public struct TopicJoinMessage : CollatedMessage {
     
     for id in rooms {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.room = id.data(using: String.Encoding.utf8)!
+      join.room = id
       proto.joins.append(join)
     }
     
     for id in groups {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.groupID = NakamaId.convert(uuid: id)
+      join.groupID = id
       proto.joins.append(join)
     }
     
     for id in userIds {
       var join = Server_TTopicsJoin.TopicJoin()
-      join.userID = NakamaId.convert(uuid: id)
+      join.userID = id
       proto.joins.append(join)
     }
     

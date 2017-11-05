@@ -17,7 +17,7 @@
 import Foundation
 
 public struct NotificationRemoveMessage : CollatedMessage {
-  public var notificationIds: [UUID] = []
+  public var notificationIds: [String] = []
   
   public init(){}
   
@@ -25,7 +25,7 @@ public struct NotificationRemoveMessage : CollatedMessage {
     var proto = Server_TNotificationsRemove()
     
     for id in notificationIds {
-      proto.notificationIds.append(NakamaId.convert(uuid: id))
+      proto.notificationIds.append(id)
     }
     
     var envelope = Server_Envelope()
