@@ -90,7 +90,7 @@ public protocol StorageRecord : StorageRecordID {
   /**
    - The ID of the user who owns the record.
    */
-  var userID : UUID { get }
+  var userID : String { get }
 }
 
 internal struct DefaultStorageRecord : StorageRecord {
@@ -104,7 +104,7 @@ internal struct DefaultStorageRecord : StorageRecord {
   let permissionWrite : PermissionWrite
   let value : String
   let updatedAt : Int
-  let userID : UUID
+  let userID : String
   
   internal init(from proto: Server_TStorageData.StorageData) {
     bucket = proto.bucket
@@ -118,10 +118,10 @@ internal struct DefaultStorageRecord : StorageRecord {
     value = proto.value
     updatedAt = Int(proto.updatedAt)
     
-    userID = NakamaId.convert(uuidBase64: proto.userID)
+    userID = proto.userID
   }
   
   public var description: String {
-    return String(format: "DefaultStorageRecord(bucket=%@,collection=%d,key=%@,version=%@,createdAt=%d,expiresAt=%d,permissionRead=%@,permissionWrite=%@,value=%@,updatedAt=%d,userId=%@)", bucket, collection, key, version, createdAt, expiresAt, permissionRead.rawValue, permissionWrite.rawValue, value, updatedAt, userID.uuidString)
+    return String(format: "DefaultStorageRecord(bucket=%@,collection=%d,key=%@,version=%@,createdAt=%d,expiresAt=%d,permissionRead=%@,permissionWrite=%@,value=%@,updatedAt=%d,userId=%@)", bucket, collection, key, version, createdAt, expiresAt, permissionRead.rawValue, permissionWrite.rawValue, value, updatedAt, userID)
   }
 }

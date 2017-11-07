@@ -17,7 +17,7 @@
 import Foundation
 
 public struct StorageListMessage : CollatedMessage {
-  public var userID : UUID?
+  public var userID : String?
   public var bucket: String?
   public var collection: String?
   public var limit: Int?
@@ -27,7 +27,7 @@ public struct StorageListMessage : CollatedMessage {
     self.bucket = bucket
   }
   
-  public init(userID: UUID) {
+  public init(userID: String) {
     self.userID = userID
   }
   
@@ -35,7 +35,7 @@ public struct StorageListMessage : CollatedMessage {
     var listing = Server_TStorageList()
     
     if let id = userID {
-      listing.userID = NakamaId.convert(uuid: id)
+      listing.userID = id
     }
     
     if bucket != nil {
@@ -62,7 +62,7 @@ public struct StorageListMessage : CollatedMessage {
   }
   
   public var description: String {
-    return String(format: "StorageListMessage(bucket=%@,collection=%@,userID=%@,limit=%d,cursor=%@)", bucket ?? "", collection ?? "", userID?.uuidString ?? "", limit ?? "", cursor ?? "")
+    return String(format: "StorageListMessage(bucket=%@,collection=%@,userID=%@,limit=%d,cursor=%@)", bucket ?? "", collection ?? "", userID ?? "", limit ?? "", cursor ?? "")
   }
   
 }

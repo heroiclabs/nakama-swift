@@ -23,13 +23,13 @@ public struct StorageFetchMessage : CollatedMessage {
     payload.keys = []
   }
   
-  public mutating func fetch(bucket: String, collection: String, key: String, userID: UUID?=nil) {
+  public mutating func fetch(bucket: String, collection: String, key: String, userID: String?) {
     var record = Server_TStorageFetch.StorageKey()
     record.bucket = bucket
     record.collection = collection
     record.record = key
     if userID != nil {
-      record.userID = NakamaId.convert(uuid: userID!)
+      record.userID = userID!
     }
     
     payload.keys.append(record)

@@ -62,7 +62,7 @@ class GroupTest: XCTestCase {
     }.then { groups -> Promise<Void> in
       XCTAssert(groups.count > 0, "Failed to list groups")
       XCTAssert(groups[0].name == "test-group", "Group name did not match expected value")
-      XCTAssert(groups[0].creatorID.uuidString == self.session!.userID.uuidString, "Group creator ID did not match the current user's ID")
+      XCTAssert(groups[0].creatorID == self.session!.userID, "Group creator ID did not match the current user's ID")
 
       var gu = GroupUpdate(groupID: groups[0].id)
       gu.name = "test-group-update"

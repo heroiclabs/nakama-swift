@@ -1,4 +1,4 @@
-/*
+  /*
  * Copyright 2017 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,11 @@ public protocol UserPresence : CustomStringConvertible {
   /**
    User ID of this presence
    */
-  var userID : UUID { get }
+  var userID : String { get }
   /**
    Session ID of the user in this presence
    */
-  var sessionID : UUID { get }
+  var sessionID : String { get }
   /**
    Handle of the user in this presence
    */
@@ -32,18 +32,18 @@ public protocol UserPresence : CustomStringConvertible {
 }
 
 internal struct DefaultUserPresence : UserPresence {
-  let userID : UUID
-  let sessionID : UUID
+  let userID : String
+  let sessionID : String
   let handle : String
-  
+
   internal init(from proto: Server_UserPresence) {
     handle = proto.handle
-    userID = NakamaId.convert(uuidBase64: proto.userID)
-    sessionID = NakamaId.convert(uuidBase64: proto.sessionID)
+    userID = proto.userID
+    sessionID = proto.sessionID
   }
-  
+
   public var description: String {
-    return String(format: "DefaultUserPresence(userID=%@,sessionID=%@,handle=%@)", userID.uuidString, sessionID.uuidString, handle)
+    return String(format: "DefaultUserPresence(userID=%@,sessionID=%@,handle=%@)", userID, sessionID, handle)
   }
 }
 
@@ -66,23 +66,23 @@ internal struct DefaultTopicPresence : TopicPresence {
   let topic : TopicId
   let join : [UserPresence]
   let leave : [UserPresence]
-  
+
   internal init(from proto: Server_TopicPresence) {
     topic = TopicId.make(from: proto.topic)
-    
+
     var js : [UserPresence] = []
     for p in proto.joins {
       js.append(DefaultUserPresence(from: p))
     }
     join = js
-    
+
     var ls : [UserPresence] = []
     for p in proto.leaves {
       ls.append(DefaultUserPresence(from: p))
     }
     leave = ls
   }
-  
+
   public var description: String {
     return String(format: "DefaultTopicPresence(topic=%@,join=%@,leave=%@)", topic.description, join.description, leave.description)
   }

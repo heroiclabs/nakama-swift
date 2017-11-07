@@ -18,7 +18,7 @@ import Foundation
 
 public struct FriendAddMessage : CollatedMessage {
   public var handles : [String] = []
-  public var userIds: [UUID] = []
+  public var userIds: [String] = []
 
   public init(){}
 
@@ -33,7 +33,7 @@ public struct FriendAddMessage : CollatedMessage {
 
     for id in userIds {
       var friendAdd = Server_TFriendsAdd.FriendsAdd()
-      friendAdd.userID = NakamaId.convert(uuid: id)
+      friendAdd.userID = id
 
       proto.friends.append(friendAdd)
     }

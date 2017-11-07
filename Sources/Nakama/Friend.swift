@@ -67,7 +67,7 @@ internal struct DefaultFriend : Friend {
   let createdAt : Int
   let fullname : String
   let handle : String
-  let id : UUID
+  let id : String
   let lang : String
   let lastOnlineAt : Int
   let location : String
@@ -88,11 +88,11 @@ internal struct DefaultFriend : Friend {
     timezone = proto.user.timezone
     updatedAt = Int(proto.user.updatedAt)
     
-    id = NakamaId.convert(uuidBase64: proto.user.id)
+    id = proto.user.id
     state = FriendState.make(from: proto.state)
   }
   
   public var description: String {
-    return String(format: "DefaultFriend(avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d,state=%@)", avatarURL, createdAt, fullname, handle, id.uuidString, lang, lastOnlineAt, location, metadata, timezone, updatedAt, state.rawValue)
+    return String(format: "DefaultFriend(avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d,state=%@)", avatarURL, createdAt, fullname, handle, id, lang, lastOnlineAt, location, metadata, timezone, updatedAt, state.rawValue)
   }
 }

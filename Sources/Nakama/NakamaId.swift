@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class NakamaId {
+public class NakamaId2 {
   public static func convert(uuidBase64: String) -> UUID {
     let uuidData = Data(base64Encoded: base64urlToBase64(base64url: uuidBase64))
     return convert(data: uuidData!)

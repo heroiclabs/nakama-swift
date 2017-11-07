@@ -63,7 +63,7 @@ internal struct DefaultSelf : SelfUser {
   let createdAt : Int
   let fullname : String
   let handle : String
-  let id : UUID
+  let id : String
   let lang : String
   let lastOnlineAt : Int
   let location : String
@@ -103,10 +103,10 @@ internal struct DefaultSelf : SelfUser {
     updatedAt = Int(nkself.user.updatedAt)
     
     
-    id = NakamaId.convert(uuidBase64: nkself.user.id)
+    id = nkself.user.id
   }
   
   public var description: String {
-    return String(format: "DefaultSelf(customID=%@,deviceIDs=%@,email=%@,facebookID=%@,gameCenterID=%@,googleID=%@,steamID=%@,verified=%@,avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d)", customID, deviceIDs, email, facebookID, gameCenterID, googleID, steamID, verified.description, avatarURL, createdAt, fullname, handle, id.uuidString, lang, lastOnlineAt, location, metadata, timezone, updatedAt)
+    return String(format: "DefaultSelf(customID=%@,deviceIDs=%@,email=%@,facebookID=%@,gameCenterID=%@,googleID=%@,steamID=%@,verified=%@,avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d)", customID, deviceIDs, email, facebookID, gameCenterID, googleID, steamID, verified.description, avatarURL, createdAt, fullname, handle, id, lang, lastOnlineAt, location, metadata, timezone, updatedAt)
   }
 }

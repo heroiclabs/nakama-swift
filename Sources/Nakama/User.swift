@@ -40,7 +40,7 @@ public protocol User : CustomStringConvertible {
   /**
    - Returns: The ID of the user.
    */
-  var id : UUID { get }
+  var id : String { get }
   
   /**
    - Returns: The (BCP-47) lang tag set by the user.
@@ -78,7 +78,7 @@ internal struct DefaultUser : User {
   let createdAt : Int
   let fullname : String
   let handle : String
-  let id : UUID
+  let id : String
   let lang : String
   let lastOnlineAt : Int
   let location : String
@@ -87,6 +87,7 @@ internal struct DefaultUser : User {
   let updatedAt : Int
   
   internal init(from proto: Server_User) {
+    id = proto.id
     avatarURL = proto.avatarURL
     createdAt = Int(proto.createdAt)
     fullname = proto.fullname
@@ -97,11 +98,9 @@ internal struct DefaultUser : User {
     metadata = proto.metadata
     timezone = proto.timezone
     updatedAt = Int(proto.updatedAt)
-    
-    id = NakamaId.convert(uuidBase64: proto.id)
   }
   
   public var description: String {
-    return String(format: "DefaultUser(avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d)", avatarURL, createdAt, fullname, handle, id.uuidString, lang, lastOnlineAt, location, metadata, timezone, updatedAt)
+    return String(format: "DefaultUser(avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d)", avatarURL, createdAt, fullname, handle, id, lang, lastOnlineAt, location, metadata, timezone, updatedAt)
   }
 }

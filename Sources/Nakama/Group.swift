@@ -53,7 +53,7 @@ public protocol Group : CustomStringConvertible {
   /**
    The ID of the group
    */
-  var id : UUID { get }
+  var id : String { get }
   
   /**
    Whether this is a private group or not
@@ -63,7 +63,7 @@ public protocol Group : CustomStringConvertible {
   /**
    The user ID of the creator of the group.
    */
-  var creatorID : UUID { get }
+  var creatorID : String { get }
   
   /**
    The name of the group
@@ -107,9 +107,9 @@ public protocol Group : CustomStringConvertible {
 }
 
 internal struct DefaultGroup : Group {
-  let id : UUID
+  let id : String
   let privateState : Bool
-  let creatorID : UUID
+  let creatorID : String
   let name : String
   let desc : String
   let avatarURL : String
@@ -130,12 +130,12 @@ internal struct DefaultGroup : Group {
     updatedAt = Int(proto.updatedAt)
     privateState = proto.private
     
-    id = NakamaId.convert(uuidBase64: proto.id)
-    creatorID = NakamaId.convert(uuidBase64: proto.creatorID)
+    id = proto.id
+    creatorID = proto.creatorID
   }
   
   public var description: String {
-    return String(format: "DefaultGroup(id=%@,privateState=%@,creatorID=%@,name=%@,desc=%@,avatarURL=%@,lang=%@,createdAt=%d,metadata=%@,count=%d,updatedAt=%d)", id.uuidString, privateState.description, creatorID.uuidString, name, desc, avatarURL, lang, createdAt, metadata, count, updatedAt)
+    return String(format: "DefaultGroup(id=%@,privateState=%@,creatorID=%@,name=%@,desc=%@,avatarURL=%@,lang=%@,createdAt=%d,metadata=%@,count=%d,updatedAt=%d)", id, privateState.description, creatorID, name, desc, avatarURL, lang, createdAt, metadata, count, updatedAt)
   }
 }
 
@@ -151,7 +151,7 @@ internal struct DefaultGroupUser : GroupUser {
   let createdAt : Int
   let fullname : String
   let handle : String
-  let id : UUID
+  let id : String
   let lang : String
   let lastOnlineAt : Int
   let location : String
@@ -172,13 +172,13 @@ internal struct DefaultGroupUser : GroupUser {
     timezone = proto.user.timezone
     updatedAt = Int(proto.user.updatedAt)
     
-    id = NakamaId.convert(uuidBase64: proto.user.id)
+    id = proto.user.id
     
     state = GroupState.make(from: proto.state)
   }
   
   public var description: String {
-    return String(format: "DefaultGroupUser(avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d,state=%@)", avatarURL, createdAt, fullname, handle, id.uuidString, lang, lastOnlineAt, location, metadata, timezone, updatedAt, state.rawValue)
+    return String(format: "DefaultGroupUser(avatarURL=%@,createdAt=%d,fullname=%@,handle=%@,id=%@,lang=%@,lastOnlineAt=%d,location=%@,metadata=%@,timezone=%@,updatedAt=%d,state=%@)", avatarURL, createdAt, fullname, handle, id, lang, lastOnlineAt, location, metadata, timezone, updatedAt, state.rawValue)
   }
 }
 
@@ -190,9 +190,9 @@ public protocol GroupSelf : Group {
 }
 
 internal struct DefaultGroupSelf : GroupSelf {
-  let id : UUID
+  let id : String
   let privateState : Bool
-  let creatorID : UUID
+  let creatorID : String
   let name : String
   let desc : String
   let avatarURL : String
@@ -214,14 +214,13 @@ internal struct DefaultGroupSelf : GroupSelf {
     updatedAt = Int(proto.group.updatedAt)
     privateState = proto.group.private
     
-    id = NakamaId.convert(uuidBase64: proto.group.id)
-    
-    creatorID = NakamaId.convert(uuidBase64: proto.group.creatorID)
+    id = proto.group.id
+    creatorID = proto.group.creatorID
     
     state = GroupState.make(from: proto.state)
   }
   
   public var description: String {
-    return String(format: "DefaultGroupSelf(id=%@,privateState=%@,creatorID=%@,name=%@,desc=%@,avatarURL=%@,lang=%@,createdAt=%d,metadata=%@,count=%d,updatedAt=%d,state=%@)", id.uuidString, privateState.description, creatorID.uuidString, name, desc, avatarURL, lang, createdAt, metadata, count, updatedAt, state.rawValue)
+    return String(format: "DefaultGroupSelf(id=%@,privateState=%@,creatorID=%@,name=%@,desc=%@,avatarURL=%@,lang=%@,createdAt=%d,metadata=%@,count=%d,updatedAt=%d,state=%@)", id, privateState.description, creatorID, name, desc, avatarURL, lang, createdAt, metadata, count, updatedAt, state.rawValue)
   }
 }

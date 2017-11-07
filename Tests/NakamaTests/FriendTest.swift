@@ -90,7 +90,7 @@ class FriendTest: XCTestCase {
     message.handles.append(self.session2!.handle)
     client.send(message: message).then { _ -> Promise<Void> in
       var message2 = FriendBlockMessage()
-      message2.userIDs.append(self.session2!.userID)
+      message2.userIds.append(self.session2!.userID)
       return self.client.send(message: message2)
     }.catch{err in
       XCTAssert(false, "Friend block failed: " + (err as! NakamaError).message)
@@ -108,7 +108,7 @@ class FriendTest: XCTestCase {
     message.handles.append(self.session2!.handle)
     client.send(message: message).then { _ -> Promise<Void> in
       var message2 = FriendRemoveMessage()
-      message2.userIDs.append(self.session2!.userID)
+      message2.userIds.append(self.session2!.userID)
       return self.client.send(message: message2)
       }.catch{err in
         XCTAssert(false, "Friend remove failed: " + (err as! NakamaError).message)

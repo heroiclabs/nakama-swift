@@ -17,7 +17,7 @@
 import Foundation
 
 public struct FriendBlockMessage : CollatedMessage {
-  public var userIds: [UUID] = []
+  public var userIds: [String] = []
 
   public init(){}
 
@@ -25,7 +25,7 @@ public struct FriendBlockMessage : CollatedMessage {
     var proto = Server_TFriendsBlock()
 
     for id in userIds {
-      proto.userIds.append(NakamaId.convert(uuid: id))
+      proto.userIds.append(id)
     }
 
     var envelope = Server_Envelope()
