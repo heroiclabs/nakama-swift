@@ -79,3 +79,27 @@ With the codebase setup you can build and test.
 $> swift build
 $> swift test
 ```
+
+To generate documentation, you'll need to install `jazzy`:
+
+```
+[sudo] gem install jazzy
+```
+
+Then invoke Jazzy like the following:
+
+```
+jazzy \
+  --clean \
+  --author "Heroic Labs" \
+  --author_url "https://heroiclabs.com" \
+  --github_url "https://github.com/heroiclabs/nakama-swift" \
+  --github-file-prefix "https://github.com/heroiclabs/nakama-swift/tree/master" \
+  --root-url "https://heroiclabs.github.io/nakama-swift/" \
+  --xcodebuild-arguments -project,"$(pwd)/Nakama.xcodeproj",-scheme,Nakama-Package \
+  --readme "$(pwd)/README.md" \
+  --module "Nakama" \
+  --source-directory "Sources/Nakama" \
+  --output docs/ \
+  --theme fullwidth
+```
