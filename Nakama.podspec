@@ -20,6 +20,6 @@ Pod::Spec.new do |s|
 
   s.dependency "SwiftProtobuf", "~> 1"
   s.dependency "Starscream", "~> 2"
-  s.dependency "PromiseKit", "~> 4"
+  s.dependency "PromiseKit", "~> 6"
 
 end
