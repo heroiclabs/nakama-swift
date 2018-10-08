@@ -2,30 +2,21 @@
   "object": {
     "pins": [
       {
-        "package": "PromiseKit",
-        "repositoryURL": "https://github.com/mxcl/PromiseKit.git",
-        "state": {
-          "branch": null,
-          "revision": "6d67ccf7336acc9885bcda75d3c1928a12b71b2e",
-          "version": "4.4.3"
-        }
-      },
-      {
-        "package": "SSCZLib",
-        "repositoryURL": "https://github.com/daltoniam/zlib-spm.git",
-        "state": {
-          "branch": null,
-          "revision": "83ac8d719a2f3aa775dbdf116a57f56fb2c49abb",
-          "version": "1.1.0"
-        }
-      },
-      {
         "package": "SSCommonCrypto",
         "repositoryURL": "https://github.com/daltoniam/common-crypto-spm",
         "state": {
           "branch": null,
           "revision": "2eb3aff0fb57f92f5722fac5d6d20bf64669ca66",
           "version": "1.1.0"
+        }
+      },
+      {
+        "package": "PromiseKit",
+        "repositoryURL": "https://github.com/mxcl/PromiseKit.git",
+        "state": {
+          "branch": null,
+          "revision": "6d67ccf7336acc9885bcda75d3c1928a12b71b2e",
+          "version": "4.4.3"
         }
       },
       {
@@ -44,6 +35,15 @@
           "branch": null,
           "revision": "1dacc00fadc8b793e442cdc20b85fc182d1ed624",
           "version": "1.0.0"
+        }
+      },
+      {
+        "package": "SSCZLib",
+        "repositoryURL": "https://github.com/daltoniam/zlib-spm.git",
+        "state": {
+          "branch": null,
+          "revision": "83ac8d719a2f3aa775dbdf116a57f56fb2c49abb",
+          "version": "1.1.0"
         }
       }
     ]
