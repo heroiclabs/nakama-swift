@@ -31,11 +31,11 @@ public protocol Message : CustomStringConvertible {
 
 /**
    A message which returns a response from the server.
- 
+
    - Parameter <T>: The type of the message response.
  */
 public protocol CollatedMessage : CustomStringConvertible {
-  
+
   /**
      - Parameter collationId: The collation ID to assign to the serialized message instance.
      - Returns: The serialized format of the message.
@@ -51,45 +51,45 @@ public class Builder {
   private var ssl : Bool = false
   private var timeout : Int = 5000
   private var trace : Bool = false
-  
+
   public init(serverKey: String) {
     self.serverKey = serverKey
   }
-  
+
   public func build() -> Client {
     return DefaultClient(serverKey: serverKey, host: host, port: port, lang: lang, ssl: ssl, timeout: timeout, trace: trace)
   }
-  
+
   public func host(host: String) -> Builder {
     self.host = host
     return self
   }
-  
+
   public func port(port: Int) -> Builder {
     self.port = port
     return self
   }
-  
+
   public func lang(lang: String) -> Builder {
     self.lang = lang
     return self
   }
-  
+
   public func ssl(ssl: Bool) -> Builder {
     self.ssl = ssl
     return self
   }
-  
+
   public func timeout(timeout: Int) -> Builder {
     self.timeout = timeout
     return self
   }
-  
+
   public func trace(trace: Bool) -> Builder {
     self.trace = trace
     return self
   }
-  
+
   public class func defaults(serverKey : String) -> Client {
     return Builder(serverKey: serverKey).build()
   }
@@ -105,60 +105,60 @@ public protocol Client {
                 connected the function returns local device current UTC milliseconds.
   */
   var serverTime: Int { get }
-  
+
   /**
     This is invoked when the socket connection has been disconnected
    */
   var onDisconnect: ((Error?) -> Void)? { get set }
-  
+
   /**
     This is invoked when there is a server error.
    */
   var onError: ((NakamaError) -> Void)? { get set }
-  
+
   /**
    This is invoked when a new topic message is received.
    */
   var onTopicMessage: ((TopicMessage) -> Void)? { get set }
-  
+
   /**
    This is invoked when a new topic presence update is received.
    */
   var onTopicPresence: ((TopicPresence) -> Void)? { get set }
-  
+
   /**
    This is invoked when a new notification is received.
    */
   var onNotification: ((Notification) -> Void)? { get set }
-  
+
   /**
    - Parameter message : message The {@code AuthenticateMessage} to send to the server.
    - Returns: A {@code Session} for the user.
    */
   func login(with message: AuthenticateMessage) -> Promise<Session>
-  
+
   /**
    - Parameter message : message The {@code AuthenticateMessage} to send to the server.
    - Returns: A {@code Session} for the user.
    */
   func register(with message: AuthenticateMessage) -> Promise<Session>
-  
+
   /**
    - Parameter session : session The {@code Session} to connect the socket with.
    - Returns: Placeholder return type to allow chaining operations.
    */
   func connect(to session: Session) -> Promise<Session>
-  
+
   /**
    - Sends a disconnect request to the server. When disconnected, `onDisconnect` is invoked.
    */
   func disconnect()
-  
+
   /**
    - Send a logout request to the server
    */
   func logout()
-  
+
   /**
    - Parameter message : message The message to send.
    - Parameter <T>: The expected return type.
@@ -201,7 +201,7 @@ public protocol Client {
   func send(message: LeaderboardRecordsListMessage) -> Promise<[LeaderboardRecord]>
   func send(message: LeaderboardRecordWriteMessage) -> Promise<[LeaderboardRecord]>
   func send(message: LeaderboardsListMessage) -> Promise<[Leaderboard]>
-  
+
   /**
    - Parameter message : message The message to send.
    */
@@ -213,165 +213,165 @@ internal class DefaultClient : Client, WebSocketDelegate {
   private let lang: String
   private let timeout: Int
   private let trace: Bool
-  
+
   private let loginUrl: URL
   private let registerUrl: URL
-  
+
   private var wsComponent: URLComponents
   private var socket : WebSocket?
   private var collationIDs = [String: Any]()
   private var _serverTime : Int = 0
-  
+
   var onDisconnect: ((Error?) -> Void)?
   var onError: ((NakamaError) -> Void)?
   var onTopicMessage: ((TopicMessage) -> Void)?
   var onTopicPresence: ((TopicPresence) -> Void)?
   var onNotification: ((Notification) -> Void)?
-  
+
   var serverTime: Int {
     return self._serverTime != 0 ? self._serverTime : Int(Date().timeIntervalSince1970 * 1000.0);
   }
-  
+
   internal init(serverKey: String, host: String, port: Int, lang: String,
                 ssl: Bool, timeout: Int, trace: Bool) {
-    
+
     self.serverKey = serverKey
     self.lang = lang
     self.timeout = timeout
     self.trace = trace
-    
+
     var urlComponent = URLComponents()
     urlComponent.host = host
     urlComponent.port = port
     urlComponent.scheme = ssl ? "https" : "http"
-    
+
     urlComponent.path = "/user/login"
     self.loginUrl = urlComponent.url!
-    
+
     urlComponent.path = "/user/register"
     self.registerUrl = urlComponent.url!
-    
+
     self.wsComponent = URLComponents()
     self.wsComponent.host = host
     self.wsComponent.port = port
     self.wsComponent.scheme = ssl ? "wss" : "ws"
     self.wsComponent.path = "/api"
   }
-  
+
   func websocketDidConnect(socket: WebSocket) {}
-  
+
   func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
     self.collationIDs.removeAll()
     if self.onDisconnect != nil {
       self.onDisconnect!(error)
     }
   }
-  
+
   func websocketDidReceiveMessage(socket: WebSocket, text: String) {
     if trace {
       NSLog("Unexpected string message from server: %@", text);
     }
   }
-  
+
   func websocketDidReceiveData(socket: WebSocket, data: Data) {
     process(data: data)
   }
-  
+
   func register(with message: AuthenticateMessage) -> Promise<Session> {
     return self.authenticate(path: registerUrl, message: message)
   }
-  
+
   func login(with message: AuthenticateMessage) -> Promise<Session> {
     return self.authenticate(path: loginUrl, message: message)
   }
-  
+
   fileprivate func authenticate(path: URL, message: AuthenticateMessage) -> Promise<Session> {
     var request = URLRequest(url: path)
     request.httpMethod = "POST"
     request.httpBody = message.serialize()
-    
+
     let basicAuth = serverKey + ":"
     let authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
     request.addValue(authValue, forHTTPHeaderField: "Authorization")
     request.addValue(lang, forHTTPHeaderField: "Accept-Language")
-    
+
     let configuration = URLSessionConfiguration.default
     configuration.timeoutIntervalForRequest = TimeInterval(timeout)
     configuration.timeoutIntervalForResource = TimeInterval(timeout)
     configuration.allowsCellularAccess = true
     let session = URLSession(configuration: configuration)
-    
+
     if trace {
       NSLog("Authenticate request: %@", message.description)
     }
-    
-    let (p, fulfill, reject) = Promise<Session>.pending()
+
+    let (p, seal) = Promise<Session>.pending()
     session.dataTask(with: request, completionHandler: { (data: Data?, rsp: URLResponse?, error: Error?) in
-      
+
       // Connectivity issues
       guard error == nil else {
         if self.trace {
           NSLog("Authentication error: %@", error!.localizedDescription)
         }
-        reject(error!)
+        seal.reject(error!)
         return
       }
-      
+
       if let rsp = rsp as? HTTPURLResponse, rsp.statusCode >= 500 {
-        reject(NakamaError.runtimeException(String(format:"Internal Server Error - HTTP %@", rsp.statusCode)))
+        seal.reject(NakamaError.runtimeException(String(format:"Internal Server Error - HTTP %@", rsp.statusCode)))
         return
       }
-      
+
       let authResponse = try! Server_AuthenticateResponse(serializedData: data!)
       if self.trace {
         NSLog("Authenticate response: %@", authResponse.debugDescription);
       }
-      
+
       switch authResponse.id! {
       case .error(let err):
-        reject(NakamaError.make(from: err.code, msg: err.message))
+        seal.reject(NakamaError.make(from: err.code, msg: err.message))
       case .session(let s):
-        fulfill(DefaultSession(token: s.token))
+        seal.fulfill(DefaultSession(token: s.token))
       }
     }).resume()
     return p
   }
-  
+
   func connect(to session: Session) -> Promise<Session> {
     if (socket != nil) {
       precondition(socket!.isConnected, "socket is already connected")
     }
-    
-    let (p, fulfill, reject) = Promise<Session>.pending()
-    
+
+    let (promise, seal) = Promise<Session>.pending()
+
     wsComponent.queryItems = [
       URLQueryItem.init(name: "token", value: session.token),
       URLQueryItem.init(name: "lang", value: lang)
     ]
-    
+
     socket = WebSocket(url: wsComponent.url!)
     socket!.httpMethod = WebSocket.HTTPMethod.get
     socket!.delegate = self
     socket!.enableCompression = true
     socket!.timeout = timeout
     socket!.onConnect = {
-      if p.isPending {
-        fulfill(session)
+      if promise.isPending {
+        seal.fulfill(session)
       }
     }
     socket!.onDisconnect = { error in
-      if p.isPending {
-        reject(error ?? NSError(domain:NakamaError.Domain, code:0, userInfo:nil))
+      if promise.isPending {
+        seal.reject(error ?? NSError(domain:NakamaError.Domain, code:0, userInfo:nil))
       }
       // do not call onDisconnect as it is handled in the delegate
     }
-    
+
     if trace {
       NSLog("Connect: %@" + wsComponent.url!.absoluteString);
     }
-    
+
     socket!.connect()
-    return p
+    return promise
   }
 
   func disconnect() {
@@ -381,175 +381,175 @@ internal class DefaultClient : Client, WebSocketDelegate {
   func logout() {
     self.send(message: LogoutMessage.init())
   }
-  
+
   fileprivate func send<T>(proto message: CollatedMessage) -> Promise<T> {
     let collationID = UUID.init().uuidString
     let payload = message.serialize(collationID: collationID)
-    
-    let p  = Promise<T>.pending()
-    self.collationIDs[collationID] = (p.fulfill, p.reject)
+
+    let (p, seal)  = Promise<T>.pending()
+    self.collationIDs[collationID] = (seal.fulfill, seal.reject)
 
     self.socket!.write(data: payload!)
 
-    return p.promise
+    return p
   }
-  
+
   func send(message: Message) {
     let binaryData = message.serialize()!
     self.socket?.write(data: binaryData)
   }
-  
+
   func send(message: UsersFetchMessage) -> Promise<[User]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: SelfFetchMessage) -> Promise<SelfUser> {
     return self.send(proto: message)
   }
-  
+
   func send(message: SelfUpdateMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: SelfLinkMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: SelfUnlinkMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: RPCMessage) -> Promise<RPCResult> {
     return self.send(proto: message)
   }
-  
+
   func send(message: StorageFetchMessage) -> Promise<[StorageRecord]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: StorageListMessage) -> Promise<[StorageRecord]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: StorageRemoveMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: StorageWriteMessage) -> Promise<[StorageRecordID]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: StorageUpdateMessage) -> Promise<[StorageRecordID]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: FriendAddMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: FriendBlockMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: FriendRemoveMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: FriendsListMessage) -> Promise<[Friend]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: NotificationRemoveMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: NotificationListMessage) -> Promise<[Notification]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: TopicJoinMessage) -> Promise<[Topic]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: TopicLeaveMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: TopicMessageSendMessage) -> Promise<TopicMessageAck> {
     return self.send(proto: message)
   }
-  
+
   func send(message: TopicMessagesListMessage) -> Promise<[TopicMessage]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupAddUserMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupCreateMessage) -> Promise<[Group]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupJoinMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupKickUserMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupLeaveMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupPromoteUserMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupRemoveMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupsFetchMessage) -> Promise<[Group]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupsListMessage) -> Promise<[Group]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupsSelfListMessage) -> Promise<[GroupSelf]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupUpdateMessage) -> Promise<Void> {
     return self.send(proto: message)
   }
-  
+
   func send(message: GroupUsersListMessage) -> Promise<[GroupUser]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: LeaderboardRecordsFetchMessage) -> Promise<[LeaderboardRecord]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: LeaderboardRecordsListMessage) -> Promise<[LeaderboardRecord]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: LeaderboardRecordWriteMessage) -> Promise<[LeaderboardRecord]> {
     return self.send(proto: message)
   }
-  
+
   func send(message: LeaderboardsListMessage) -> Promise<[Leaderboard]> {
     return self.send(proto: message)
   }
-  
+
   fileprivate func process(data: Data) {
     let envelope = try! Server_Envelope(serializedData: data)
-    
+
     if envelope.collationID.isEmpty {
       switch envelope.payload! {
       case .heartbeat(let heartbeat):
@@ -577,20 +577,20 @@ internal class DefaultClient : Client, WebSocketDelegate {
       default:
         NSLog("No payload for incoming uncollated message from the server: %@", (try? envelope.jsonString()) ?? "nil");
       }
-      
+
       if self.onError != nil {
         self.onError!(NakamaError.missingPayload("No payload in incoming message from server"))
       }
-      
+
     } else if let promiseTuple = self.collationIDs[envelope.collationID] {
       self.collationIDs.removeValue(forKey: envelope.collationID)
-      
+
       if envelope.payload == nil {
         let (fulfill, _) : (fulfill: (() -> Void), reject: Any) = promiseTuple as! (fulfill: (() -> Void), reject: Any)
         fulfill()
         return
       }
-      
+
       switch envelope.payload! {
       case .error(let err):
         let (_, reject) : (fulfill: Any, reject: (Error) -> Void) = promiseTuple as! (fulfill: Any, reject: (Error) -> Void)
