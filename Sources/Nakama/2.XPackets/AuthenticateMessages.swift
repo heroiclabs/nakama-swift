@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Heroic Labs
+ * Copyright 2018 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import Foundation
 
-public struct FriendBlockMessage : CollatedMessage {
-  public var userIds: [String] = []
 
-  public init(){}
-
-  public func serialize(collationID: String) -> Data? {
-    var proto = Server_TFriendsBlock()
-
-    for id in userIds {
-      proto.userIds.append(id)
-    }
-
-    var envelope = Server_Envelope()
-    envelope.friendsBlock = proto
-    envelope.collationID = collationID
-
-    return try! envelope.serializedData()
-  }
-
-  public var description: String {
-    return String(format: "FriendBlockMessage(ids=%@)", userIds)
-  }
-
+struct AuthenticateDeviceRequest {
+    let accountDevice: AccountDevice
+    let create: Bool
+    let userName: String
 }
 
-
+struct AccountDevice{
+    let id: String
+    
+}

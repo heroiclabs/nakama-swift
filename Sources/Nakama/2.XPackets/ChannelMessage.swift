@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Heroic Labs
+ * Copyright 2018 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,32 @@
 
 import Foundation
 
-public struct FriendRemoveMessage : CollatedMessage {
-  public var userIds: [String] = []
-
-  public init(){}
-
-  public func serialize(collationID: String) -> Data? {
-    var proto = Server_TFriendsRemove()
-
-    for id in userIds {
-      proto.userIds.append(id)
+public enum ChannelMessageType : Int32, Codable {
+  case unknown = -1
+  case chat = 0
+  case groupJoin = 1
+  case groupAdd = 2
+  case groupLeave = 3
+  case groupKick = 4
+  case groupPromoted = 5
+  
+  static func make(from code:Int32) -> ChannelMessageType {
+    switch code {
+    case 0:
+      return .chat
+    case 1:
+      return .groupJoin
+    case 2:
+      return .groupAdd
+    case 3:
+      return .groupLeave
+    case 4:
+      return .groupKick
+    case 5:
+      return .groupPromoted
+    default:
+      return .unknown
     }
-
-    var envelope = Server_Envelope()
-    envelope.friendsRemove = proto
-    envelope.collationID = collationID
-
-    return try! envelope.serializedData()
   }
-
-  public var description: String {
-    return String(format: "FriendRemoveMessage(ids=%@)", userIds)
-  }
-
 }
-
-
 

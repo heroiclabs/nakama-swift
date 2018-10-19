@@ -21,5 +21,6 @@ Pod::Spec.new do |s|
   s.dependency "SwiftProtobuf", "~> 1"
   s.dependency "Starscream", "~> 2"
   s.dependency "PromiseKit", "~> 6"
+  s.dependency "SwiftGRPC", "~> 0.6.0"
 
 end

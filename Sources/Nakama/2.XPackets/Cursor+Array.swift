@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Heroic Labs
+ * Copyright 2018 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import Foundation
 
-public struct SelfFetchMessage : CollatedMessage {
-  private let payload: Server_TSelfFetch
-  public init() {
-    payload = Server_TSelfFetch()
+fileprivate var nakama_associated_cursor = "nakama_cursor"
+
+extension Array {
+  internal var _cursor: String? {
+    get {
+      return objc_getAssociatedObject(self, &nakama_associated_cursor) as? String
+    }
+    set(newValue) {
+      objc_setAssociatedObject(self, &nakama_associated_cursor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+    }
   }
   
-  public func serialize(collationID: String) -> Data? {
-    var envelope = Server_Envelope()
-    envelope.selfFetch = payload
-    envelope.collationID = collationID
-    return try! envelope.serializedData()
-  }
-  
-  public var description: String {
-    return String(format: "SelfFetchMessage()")
+  /**
+   - Returns: Optional cursor associated with this data
+   */
+  public var cursor: String? {
+    return _cursor
   }
 }

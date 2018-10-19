@@ -6,7 +6,7 @@ services:
     command: start --insecure --store=attrs=ssd,path=/var/lib/cockroach/
     restart: always
     volumes:
-      - /tmp:/var/lib/cockroach
+      - data:/var/lib/cockroach
     expose:
       - "8080"
       - "26257"
@@ -28,11 +28,13 @@ services:
     depends_on:
       - cockroachdb
     volumes:
-      - /tmp:/nakama/data
+      - data:/nakama/data
     expose:
+      - "7349"
       - "7350"
       - "7351"
     ports:
+      - "7349:7349"
       - "7350:7350"
       - "7351:7351"
     healthcheck:
@@ -40,3 +42,5 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+volumes:
+  data:

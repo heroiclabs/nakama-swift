@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "SwiftGRPC",
+        "repositoryURL": "https://github.com/grpc/grpc-swift",
+        "state": {
+          "branch": null,
+          "revision": "11086e936b22a20f2c4e903b277b1abbba252da8",
+          "version": "0.3.3"
+        }
+      },
+      {
         "package": "PromiseKit",
         "repositoryURL": "https://github.com/mxcl/PromiseKit.git",
         "state": {
@@ -35,6 +44,15 @@
           "branch": null,
           "revision": "1dacc00fadc8b793e442cdc20b85fc182d1ed624",
           "version": "1.0.0"
+        }
+      },
+      {
+        "package": "zlib",
+        "repositoryURL": "https://github.com/Zewo/zlib.git",
+        "state": {
+          "branch": null,
+          "revision": "4967a680a4e8cfbf167332dee7f0ec1043fd3b04",
+          "version": "0.4.0"
         }
       },
       {

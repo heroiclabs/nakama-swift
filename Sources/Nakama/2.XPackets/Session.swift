@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Heroic Labs
+ * Copyright 2018 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,36 @@ import Foundation
  A session connects a user to the server.
  */
 public protocol Session : CustomStringConvertible {
+    /**
+     The session token returned by the server after register or login.
+     */
+var authToken: String { get }
   /**
    UTC timestamp when the session was restored.
    */
-  var createdAt: Int { get }
+  var createTime: Int { get }
 
   /**
    UTC timestamp when the session expires.
    */
-  var expiresAt: Int { get }
+  var expireTime: Int { get }
 
-  /**
-   The handle (nickname) of the user.
-   */
-  var handle: String { get }
+    
+    /**
+     The username of the user.
+     */
+    var userName: String? { get }
 
   /**
    The ID of the user.
    */
   var userID: String { get }
 
-  /**
-   The session token returned by the server after register or login.
-   */
-  var token: String { get }
-
+    /**
+     True if the user of the session was just created
+    */
+    var created: Bool { get}
+    
   /**
    - Parameter currentTimeSince1970: The current time in milliseconds to compare with token.
    - Returns: True if the session has expired.
@@ -53,13 +58,21 @@ public protocol Session : CustomStringConvertible {
 }
 
 public struct DefaultSession : Session {
-  public let token: String
-  public let userID: String
-  public let handle: String
-  public let expiresAt: Int
-  public let createdAt: Int
+    public var created: Bool
+    
+    public var userID: String
+    
+    public var authToken: String
+    
+    public var createTime: Int
+    
+    public var expireTime: Int
 
-  internal init(token: String) {
+    public var userName: String?
+    
+
+
+    internal init(token: String, created: Bool) {
     let encoded: [String] = token.components(separatedBy: ".");
     precondition(encoded.count == 3, "Invalid token provided")
     
@@ -69,22 +82,23 @@ public struct DefaultSession : Session {
     let decodedData = Data(base64Encoded: encodedToken)
     let jsonMap = try? JSONSerialization.jsonObject(with: decodedData!, options: []) as! [String: Any]
     
-    createdAt = Int(Date().timeIntervalSince1970 * 1000.0)
-    expiresAt = Int(round(jsonMap?["exp"] as! Double * 1000.0))
-    handle = jsonMap?["han"] as! String
+    createTime = Int(Date().timeIntervalSince1970 * 1000.0)
+    expireTime = Int(round(jsonMap?["exp"] as! Double * 1000.0))
+        if let n = jsonMap?["usn"]{
+            userName = n as! String
+        }
     
-    let uid = jsonMap?["uid"] as! String
-    userID = uid
-    
-    self.token = token;
+    userID = jsonMap?["uid"] as! String
+    self.created = created
+    self.authToken = token;
   }
   
   public func isExpired(currentTimeSince1970: TimeInterval) -> Bool {
-    return !currentTimeSince1970.isLess(than: Double(expiresAt))
+    return !currentTimeSince1970.isLess(than: Double(expireTime))
   }
   
   public var description: String {
-    return String(format: "userID=%@,handle=%@,expiresAt=%d,createdAt=%d,token=%@", userID, handle, expiresAt, createdAt, token)
+    return String(format: "userID=%@,userName=%@,expiresAt=%d,createdAt=%d,token=%@", userID, userName ?? "", expireTime, createTime, authToken)
   }
   
   /**
@@ -92,6 +106,6 @@ public struct DefaultSession : Session {
    - Returns: A new Session object that is restored.
    */
   public static func restore(token: String) -> Session {
-    return DefaultSession.init(token: token)
+    return DefaultSession.init(token: token, created: false)
   }
 }
