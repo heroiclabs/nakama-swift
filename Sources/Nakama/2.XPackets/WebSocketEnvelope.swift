@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Foundation
 
 
@@ -28,10 +29,10 @@ class WebSocketEnvelope: Codable, Envelope {
         print(String(data: d, encoding: .utf8))
         return d
     }
-    
+
     static func deserialize(data: Data) -> WebSocketEnvelope {
         return try! JSONDecoder().decode(WebSocketEnvelope.self, from: data)
-        
+
     }
     var cid: String?
     var error: WebSocketError?
@@ -140,7 +141,7 @@ class WebSocketEnvelope: Codable, Envelope {
 
     }
     init(){
-        
+
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -214,7 +215,7 @@ public struct ChannelJoinMessage: CollatedMessage {
 public struct ChannelLeaveMessage: Message {
 
     let channelId: String
-    
+
     enum CodingKeys: String, CodingKey {
         case channelId = "channel_id"
     }
@@ -334,7 +335,7 @@ public struct ChannelRemoveMessage: CollatedMessage {
         try container.encode(messageId, forKey: .messageId)
         try container.encode(channelId, forKey: .channelId)
     }
-    
+
     public init(channelId: String, messageId: String){
         self.channelId = channelId
         self.messageId = messageId
@@ -475,7 +476,7 @@ public struct MatchData: CollatedMessage {
      * The operation code for the state change.
      * This value can be used to mark the type of the contents of the state.
      */
-    let opCode: Int64?
+    var opCode: Int64?
 
     /**
      * the base-64 contents of the state change.
@@ -491,13 +492,15 @@ public struct MatchData: CollatedMessage {
         case matchId = "match_id"
         case opCode = "op_code"
         case data = "data"
-        case userPresence = "user_presence"
+        case userPresence = "presence"
     }
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         matchId = try values.decode(String.self, forKey: .matchId)
-        opCode = try values.decodeIfPresent(Int64.self, forKey: .opCode)
+        if let op = try values.decodeIfPresent(String.self, forKey: .opCode){
+            opCode = Int64(op)
+        }
         userPresence = try values.decodeIfPresent(UserPresence.self, forKey: .userPresence)!
         data = try values.decodeIfPresent(String.self, forKey: .data)
     }
@@ -527,14 +530,14 @@ public struct MatchSendMessage: CollatedMessage {
     let opCode: Int64
     let data: String
     let presences: [UserPresence]?
-    
+
     enum CodingKeys: String, CodingKey {
         case matchId = "match_id"
         case opCode = "op_code"
         case data = "data"
         case presences = "presences"
     }
-    
+
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         matchId = try values.decode(String.self, forKey: .matchId)
@@ -542,14 +545,14 @@ public struct MatchSendMessage: CollatedMessage {
         presences = try values.decodeIfPresent([UserPresence].self, forKey: .presences)!
         data = try values.decode(String.self, forKey: .data)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(matchId, forKey: .matchId)
         try container.encode(opCode, forKey: .opCode)
         try container.encodeIfPresent(presences, forKey: .presences)
         try container.encode(data, forKey: .data)
-        
+
     }
     public init(matchId: String, opCode: Int64, data: String, presences: [UserPresence]?){
         self.matchId = matchId
@@ -738,7 +741,7 @@ public struct MatchmakerTicket: CollatedMessage {
 
 // This message type is only used for GSON, and not exposed to the Client interface.
 public struct NotificationList: CollatedMessage {
-    var notifications: [Notification]
+    var notifications: [GRPCNotification]
     var cacheableCursor: String?
 
     enum CodingKeys: String, CodingKey {
@@ -749,7 +752,7 @@ public struct NotificationList: CollatedMessage {
 
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        notifications = try values.decode([Notification].self, forKey: .notifications)
+        notifications = try values.decode([GRPCNotification].self, forKey: .notifications)
         cacheableCursor = try values.decodeIfPresent(String.self, forKey: .cacheableCursor)
     }
 
@@ -1012,7 +1015,7 @@ public struct MatchmakerUser: CollatedMessage {
 /**
  * A notification object.
  */
-public struct Notification: CollatedMessage {
+public struct GRPCNotification: CollatedMessage {
     var id: String?
     var subject: String?
     var content: String?
@@ -1146,13 +1149,13 @@ public struct ChannelMessageAck: CollatedMessage {
         username = try values.decodeIfPresent(String.self, forKey: .username)
         persistent = try values.decodeIfPresent(Bool.self, forKey: .persistent)
         if let createTimeString = try values.decodeIfPresent(String.self, forKey: .createTime) {
-                createTime = createTimeString.dateFromISO8601
+            createTime = createTimeString.dateFromISO8601
         }
         if let updateTimeString = try values.decodeIfPresent(String.self, forKey: .updateTime){
-                updateTime = updateTimeString.dateFromISO8601
+            updateTime = updateTimeString.dateFromISO8601
         }
-        
-        
+
+
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -1163,10 +1166,10 @@ public struct ChannelMessageAck: CollatedMessage {
         try container.encodeIfPresent(username, forKey: .username)
         try container.encodeIfPresent(persistent, forKey: .persistent)
         if let createTimePresent = createTime {
-                try container.encodeIfPresent(createTimePresent.iso8601, forKey: .createTime)
+            try container.encodeIfPresent(createTimePresent.iso8601, forKey: .createTime)
         }
         if let updateTimePresent = updateTime {
-                try container.encodeIfPresent(updateTimePresent.iso8601, forKey: .updateTime)
+            try container.encodeIfPresent(updateTimePresent.iso8601, forKey: .updateTime)
         }
     }
 }

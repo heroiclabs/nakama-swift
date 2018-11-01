@@ -21,7 +21,7 @@ let package = Package(
     name: "Nakama",
     dependencies: [
         .Package(url: "https://github.com/apple/swift-protobuf.git", majorVersion: 1),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 2),
+        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 3),
         .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 6),
         .Package(url: "https://github.com/grpc/grpc-swift.git", majorVersion: 0)
     ]

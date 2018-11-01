@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import Foundation
 import os
 
+import Dispatch
 import PromiseKit
 import Starscream
+import SwiftProtobuf
+import SwiftGRPC
 
 
 /**
@@ -29,7 +33,7 @@ public protocol Message: Codable {
 
 /**
  A message which returns a response from the server.
- 
+
  - Parameter <T>: The type of the message response.
  */
 public protocol CollatedMessage: Codable {
@@ -37,7 +41,7 @@ public protocol CollatedMessage: Codable {
 
 /**
  A message which returns a response from the server.
- 
+
  - Parameter <T>: The type of the message response.
  */
 public protocol Envelope: CollatedMessage {
@@ -150,7 +154,7 @@ public protocol Client {
     /**
      This is invoked when a new notification is received.
      */
-    var onNotification: ((Notification) -> Void)? { get set }
+    var onNotification: ((GRPCNotification) -> Void)? { get set }
 
     /**
      This is invoked when a new status presence update is received
@@ -180,7 +184,7 @@ public protocol Client {
 
     /**
      Join a chat channel on the server.
-    
+
      - Parameter target The target channel to join.
      - Parameter type The type of channel to join.
      - Returns: A future which resolves to a Channel response.
@@ -189,7 +193,7 @@ public protocol Client {
 
     /**
      Join a chat channel on the server.
-    
+
      - Parameter target The target channel to join.
      - Parameter type The type of channel to join.
      - Parameter persistence True if chat messages should be stored.
@@ -198,7 +202,7 @@ public protocol Client {
     func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool) -> Promise<Channel>
     /**
      Join a chat channel on the server.
-    
+
      - Parameter target The target channel to join.
      - Parameter type The type of channel to join.
      - Parameter persistence True if chat messages should be stored.
@@ -209,7 +213,7 @@ public protocol Client {
 
     /**
      Leave a chat channel on the server.
-    
+
      - Parameter channelId The channel to leave.
      - Returns: A future.
      */
@@ -217,7 +221,7 @@ public protocol Client {
 
     /**
      Remove a chat message from a channel on the server.
-    
+
      - Parameter channelId The chat channel with the message.
      - Parameter messageId The ID of a chat message to update.
      - Returns: A future.
@@ -226,7 +230,7 @@ public protocol Client {
 
     /**
      Send a chat message to a channel on the server.
-    
+
      - Parameter channelId The channel to send on.
      - Parameter content The content of the chat message.
      - Returns: A future which resolves to a Channel Ack response.
@@ -236,7 +240,7 @@ public protocol Client {
 
     /**
      Update a chat message to a channel on the server.
-    
+
      - Parameter channelId The ID of the chat channel with the message.
      - Parameter messageId The ID of the message to update.
      - Parameter content The content update for the message.
@@ -251,14 +255,14 @@ public protocol Client {
 
     /**
      Create a multiplayer match on the server.
-    
+
      - Returns: A future.
      */
     func createMatch() -> Promise<Match>
 
     /**
      Join a multiplayer match by ID.
-    
+
      - Parameter matchId A match ID.
      - Returns: A future which resolves to the match joined.
      */
@@ -266,7 +270,7 @@ public protocol Client {
 
     /**
     Join a multiplayer match with a matchmaker.
-   
+
     - Parameter token A matchmaker ticket result object.
     - Returns: A future which resolves to the match joined.
     */
@@ -274,7 +278,7 @@ public protocol Client {
 
     /**
      Leave a match on the server.
-    
+
      - Parameter matchId The match to leave.
      - Returns: A future.
      */
@@ -282,7 +286,7 @@ public protocol Client {
 
     /**
      Join the matchmaker pool and search for opponents on the server.
-    
+
      - Parameter query A matchmaker query to search for opponents.
      - Parameter minCount The minimum number of players to compete against.
      - Parameter maxCount The maximum number of players to compete against.
@@ -294,7 +298,7 @@ public protocol Client {
 
     /**
      Leave the matchmaker pool by ticket.
-    
+
      - Parameter ticket The ticket returned by the matchmaker on join. See <c>IMatchmakerTicket.Ticket</c>.
      - Returns: A future.
      */
@@ -302,9 +306,9 @@ public protocol Client {
 
     /**
      Send a state change to a match on the server.
-    
+
      When no presences are supplied the new match state will be sent to all presences.
-    
+
      - Parameter matchId The Id of the match.
      - Parameter opCode An operation code for the match state.
      - Parameter data The new state to send to the match.
@@ -314,7 +318,7 @@ public protocol Client {
 
     /**
      Send an RPC message to the server.
-    
+
      - Parameter id The ID of the function to execute.
      - Parameter payload The string content to send to the server.
      - Returns: A future which resolves to an RPC response.
@@ -323,7 +327,7 @@ public protocol Client {
 
     /**
      Follow one or more users for status updates.
-    
+
      - Parameter userIds The user Ids to follow.
      - Returns: A future.
      */
@@ -331,7 +335,7 @@ public protocol Client {
 
     /**
      Unfollow status updates for one or more users.
-    
+
      - Parameter userIds The ids of users to unfollow.
      - Returns: A future.
      */
@@ -339,7 +343,7 @@ public protocol Client {
 
     /**
      Update the user's status online.
-    
+
      - Parameter status The new status of the user.
      - Returns: A future.
      */
@@ -356,9 +360,21 @@ public protocol Client {
 
 
     func loginOrRegister(with deviceID: String) -> Promise<Session>
+
+    /**
+    list the already activated game on the server
+    - Parameter limit
+    - Parameter isAuthoritative true if the game is authoritative otherwise relayed games
+    - Parameter label field filter query
+    - Parameter minSize minimum size filter
+    - Parameter maxSize maximum size filter
+    */
+    func matchList(limit: Int32, isAuthoritative: Bool?, label: String?,
+                   minSize: Int32?, maxSize: Int32?) -> Promise<MatchListing>
 }
 
 internal class DefaultClient: Client, WebSocketDelegate {
+
 
     private let serverKey: String
     private let lang: String
@@ -370,10 +386,10 @@ internal class DefaultClient: Client, WebSocketDelegate {
     private var socket: WebSocket?
     private var collationIDs = [String: Any]()
     private var _serverTime: Int = 0
-
+    private let authValue: String
     var onDisconnect: ((Error?) -> Void)?
     var onError: ((NakamaError) -> Void)?
-    var onNotification: ((Notification) -> Void)?
+    var onNotification: ((GRPCNotification) -> Void)?
     var onChannelMessage: ((ChannelMessage) -> Void)?
     var onChannelPresence: ((ChannelPresenceEvent) -> Void)?
     var onMatchMakerMatched: ((MatchmakerMatched) -> Void)?
@@ -382,7 +398,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
     var onStatusPresence: ((StatusPresenceEvent) -> Void)?
     var onStreamPresence: ((StreamPresenceEvent) -> Void)?
     var onStreamData: ((StreamData) -> Void)?
-
+    var activeSession: Session?
+    var bearerIsSetup: Bool = false
+//    private var grpcClient2: Nakama_Api_NakamaServiceClient
 
     var serverTime: Int {
         return self._serverTime != 0 ? self._serverTime : Int(Date().timeIntervalSince1970 * 1000.0);
@@ -405,8 +423,10 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //set up the gRPC client
         self.grpcClient = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
         let basicAuth = "\(serverKey)"
-        let authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
+        authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
         try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
+
+//        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
     }
 
     func joinChat(targetChannelId: String, channelType: ChannelType) -> Promise<Channel> {
@@ -490,7 +510,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
     func addMatchMaker(minCount: Int?, maxCount: Int?, query: String?, stringProperties: [String: String]?, numericProperties: [String: Double]?) -> Promise<MatchmakerTicket> {
         let msg = MatchmakerAddMessage(minCount: minCount, maxCount: maxCount, query: query,
-                                       numericProperties: numericProperties, stringProperties: stringProperties)
+                numericProperties: numericProperties, stringProperties: stringProperties)
 
         let env = WebSocketEnvelope()
         env.matchmakerAdd = msg
@@ -543,14 +563,12 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
 
     func logout() {
-//        self.send(message: LogoutMessage.init())
     }
 
     func websocketDidConnect(socket: WebSocketClient) {
     }
 
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        print("DISONNECTED ************************")
         self.collationIDs.removeAll()
         if self.onDisconnect != nil {
             self.onDisconnect!(error)
@@ -558,19 +576,16 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
 
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("TEXT RECEVIVED@@@@@@@@@@@@@@@@@@")
+        print("TTTTTTTTtTTTTTTTTTTTTTTtTTTTTTTTTTTTTTtTTTTTTTTTTTTTTtTTTTTT")
         print(text)
         processText(text: text)
-//        process(data: text.data(using: .utf8)!)
         if trace {
             NSLog("Unexpected string message from server: %@", text);
         }
     }
 
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        print("DATA RECEVIVED@@@@@@@@@@@@@@@@@@")
-        print(data)
-        process(data: data)
+        NSLog("Received Data instead of text")
     }
 
 
@@ -585,11 +600,55 @@ internal class DefaultClient: Client, WebSocketDelegate {
         let (p, seal) = Promise<Session>.pending()
         _ = try? self.grpcClient.authenticateDevice(message, completion: { (session, rsp) in
             if rsp.success {
-                seal.fulfill(DefaultSession(token: session!.token, created: session!.created))
+                self.activeSession = DefaultSession(token: session!.token, created: session!.created)
+                seal.fulfill(self.activeSession!)
+
             } else {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error - HTTP %@", rsp.statusCode.rawValue)))
             }
 
+        })
+        return p
+    }
+
+    func updateMetaDataIfNeeded(){
+        if !bearerIsSetup{
+            do {
+                self.grpcClient.metadata = Metadata()
+                try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)
+            }catch {
+                NSLog("\(error)")
+            }
+            bearerIsSetup = true
+
+        }
+
+    }
+
+    func matchList(limit: Int32, isAuthoritative: Bool?=false, label: String?,
+                   minSize:Int32?, maxSize: Int32?) -> Promise<MatchListing> {
+        updateMetaDataIfNeeded()
+        var message = Nakama_Api_ListMatchesRequest.init()
+        message.limit = Google_Protobuf_Int32Value(limit)
+        if label != nil {
+            message.label = Google_Protobuf_StringValue(label!)
+        }
+        if isAuthoritative != nil {
+            message.authoritative = Google_Protobuf_BoolValue(isAuthoritative!)
+        }
+        if minSize != nil {
+            message.minSize = Google_Protobuf_Int32Value(minSize!)
+        }
+        if maxSize != nil {
+            message.maxSize = Google_Protobuf_Int32Value(maxSize!)
+        }
+        let (p, seal) = Promise<MatchListing>.pending()
+        _ = try? self.grpcClient.listMatches(message, completion: { (matchList, rsp) in
+            if rsp.success && matchList != nil {
+                seal.fulfill(DefaultMatchListing(response: matchList!))
+            } else {
+                seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP \(rsp.statusCode.rawValue) \n \(rsp.statusMessage ?? "None")")))
+            }
         })
         return p
     }
@@ -612,15 +671,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
         socket!.delegate = self
         socket!.enableCompression = true
         socket!.onConnect = {
-            print("ONCONNECT************")
-            print(session)
             if promise.isPending {
                 seal.fulfill(session)
             }
         }
         socket!.onDisconnect = { error in
-            print("DISCONNECT(((((((()))))))")
-            print(error)
             if promise.isPending {
                 seal.reject(error ?? NSError(domain: NakamaError.Domain, code: 0, userInfo: nil))
             }
@@ -685,7 +740,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 } else if let msg = envelope.streamPresenceEvent {
                     self.onStreamPresence!(msg)
                 } else {
-                    os_log("Unrecognised incoming uncollated message from server")
+                    NSLog("Unrecognised incoming uncollated message from server")
                 }
             }else if let promiseTuple = self.collationIDs[envelope.cid!]{
                 if let err = envelope.error {
@@ -732,64 +787,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
         }
 
-    }
-
-
-    fileprivate func process(data: Data) {
-        let envelope = WebSocketEnvelope.deserialize(data: data)
-
-        if envelope.cid == nil || envelope.cid!.isEmpty {
-            if envelope.error != nil {
-                self.onError!(NakamaError.missingPayload("No payload in incoming message from server"))
-            } else if let msg = envelope.channelMessage {
-                self.onChannelMessage!(msg)
-
-            } else if let msg = envelope.channelPresenceEvent {
-                self.onChannelPresence!(msg)
-            } else if let msg = envelope.matchData {
-                self.onMatchData!(msg)
-            } else if let msg = envelope.matchPresenceEvent {
-                self.onMatchPresence!(msg)
-            } else if let msg = envelope.matchmakerMatched {
-                self.onMatchMakerMatched!(msg)
-            } else if let msgs = envelope.notifications {
-                for msg in msgs.notifications {
-                    self.onNotification!(msg)
-                }
-
-            } else if let msg = envelope.statusPresenceEvent {
-                self.onStatusPresence!(msg)
-
-            } else if let msg = envelope.streamData {
-                self.onStreamData!(msg)
-
-            } else if let msg = envelope.streamPresenceEvent {
-                self.onStreamPresence!(msg)
-            } else {
-                os_log("Unrecognised incoming uncollated message from server")
-            }
-
-        } else if let promiseTuple = self.collationIDs[envelope.cid!] {
-            if let future = self.collationIDs.removeValue(forKey: envelope.cid!) {
-                let (fulfill, _): (fulfill: (() -> Void), reject: Any) = promiseTuple as! (fulfill: (() -> Void), reject: Any)
-                fulfill()
-                return
-            }
-
-            if let err = envelope.error {
-                let (_, reject): (fulfill: Any, reject: (Error) -> Void) = promiseTuple as! (fulfill: Any, reject: (Error) -> Void)
-                reject(NakamaError.make(from: Int32(err.code), msg: err.message))
-            }
-            if let msg = envelope.rpc {
-                let (fulfill, _): (fulfill: (RpcMessage) -> Void, reject: Any) = promiseTuple as! (fulfill: (RpcMessage) -> Void, reject: Any)
-                fulfill(msg)
-            }
-
-        } else {
-            if trace {
-                NSLog("No matching promise for incoming message: \(envelope)")
-            }
-        }
     }
 
 }
