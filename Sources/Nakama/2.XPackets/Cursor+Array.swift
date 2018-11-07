@@ -1,6 +1,5 @@
-// swift-tools-version:3.1
 /*
- * Copyright 2017 Heroic Labs
+ * Copyright 2018 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
 
-import PackageDescription
+fileprivate var nakama_associated_cursor = "nakama_cursor"
 
-let package = Package(
-    name: "Nakama",
-    dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", majorVersion: 1),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 3),
-        .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 6),
-        .Package(url: "https://github.com/grpc/grpc-swift.git", majorVersion: 0)
-    ]
-)
+extension Array {
+  internal var _cursor: String? {
+    get {
+      return objc_getAssociatedObject(self, &nakama_associated_cursor) as? String
+    }
+    set(newValue) {
+      objc_setAssociatedObject(self, &nakama_associated_cursor, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+    }
+  }
+  
+  /**
+   - Returns: Optional cursor associated with this data
+   */
+  public var cursor: String? {
+    return _cursor
+  }
+}

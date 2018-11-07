@@ -1,6 +1,5 @@
-// swift-tools-version:3.1
 /*
- * Copyright 2017 Heroic Labs
+ * Copyright 2018 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import Foundation
 
-import PackageDescription
 
-let package = Package(
-    name: "Nakama",
-    dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", majorVersion: 1),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 3),
-        .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 6),
-        .Package(url: "https://github.com/grpc/grpc-swift.git", majorVersion: 0)
-    ]
-)
+struct AuthenticateDeviceRequest {
+    let accountDevice: AccountDevice
+    let create: Bool
+    let userName: String
+}
+
+struct AccountDevice{
+    let id: String
+    
+}
