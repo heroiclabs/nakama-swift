@@ -5,6 +5,10 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [Unreleased]
+#### Changed
+- Complete client update to support Nakama 2.0 (thanks to @amradawi for his heroic efforts!).
+- Support for swift 4.2.
+- PromiseKit 6.5 and various dependency upgrades.
 
 ## [0.3.0] - 2017-11-08
 #### Changed

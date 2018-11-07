@@ -5,7 +5,7 @@ Nakama Swift
 
 Nakama is an [open-source](https://github.com/heroiclabs/nakama) distributed server for social and realtime games and apps. For more information have a look at the [documentation](https://heroiclabs.com/docs/).
 
-This client implements the protocol and all features available in the server. It is compatible with Swift 3.1+.
+This client implements the protocol and all features available in the server. It is compatible with Swift 4.2+.
 
 If you encounter any issues with the server you can generate diagnostics for us with the [doctor](https://heroiclabs.com/docs/install-server-cli/#doctor) subcommand. Send these to support@heroiclabs.com or [open an issue](https://github.com/heroiclabs/nakama/issues). If you experience any issues with the client, it can be useful to [enable trace](https://heroiclabs.com/docs/swift-ios-client-guide/#logs-and-errors) to produce detailed logs and [open an issue](https://github.com/heroiclabs/nakama-swift/issues).
 
@@ -15,7 +15,7 @@ If your project uses Cocoapods, add the client as a dependency to your "Podfile"
 
 ```ruby
 use_frameworks!
-pod 'Nakama', '~> 0.3'
+pod 'Nakama', '~> 2.0'
 ```
 
 You can use the Swift package manager to add the code as a dependency for your project. Add the client as a dependency to your "Package.swift" file.
@@ -24,7 +24,7 @@ You can use the Swift package manager to add the code as a dependency for your p
 let package = Package(
   // ...
   dependencies: [
-    .Package(url: "https://github.com/heroiclabs/nakama-swift.git", Version(0,3,0)),
+    .Package(url: "https://github.com/heroiclabs/nakama-swift.git", Version(2,0,0)),
   ]
 )
 ```
@@ -55,19 +55,16 @@ public class NakamaSessionManager {
 
 To build the codebase you will need to install these dependencies:
 
-* Swift 3.1+
-* XCode 8.3+
+* Swift 4.2+
+* XCode 10+
 
 You must clone the repository and can (optionally) generate updated protocol buffers definitions if needed.
 
 ```shell
 $> git clone git@github.com:heroiclabs/nakama-swift.git --recursive
 $> swift package fetch
-$> cd .build/checkouts/swift-protobuf.git--7219529775138357838/
-$> swift build -c release -Xswiftc -static-stdlib
-$> cd ../../..
-$> protoc --plugin=./.build/checkouts/swift-protobuf.git--7219529775138357838/.build/release/protoc-gen-swift --swift_out=Sources/Nakama/. server/server/api.proto
-$> mv Sources/Nakama/server/server/api.pb.swift Sources/Nakama/Server.Api.pb.swift
+$> protoc -I./ -I/usr/local/include -I$GOPATH/src -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway --swift_out=./Sources/Nakama/2.XClient/ --swiftgrpc_out=./Sources/Nakama/2.XClient/ --plugin=grpc ./proto/api.proto
+$> protoc -I./ -I/usr/local/include -I$GOPATH/src -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway --swift_out=./Sources/Nakama/2.XClient/ --swiftgrpc_out=./Sources/Nakama/2.XClient/ --plugin=grpc ./proto/apigrpc.proto
 $> swift package generate-xcodeproj
 ```
 
