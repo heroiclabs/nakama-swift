@@ -62,7 +62,7 @@ You must clone the repository and can (optionally) generate updated protocol buf
 
 ```shell
 $> git clone git@github.com:heroiclabs/nakama-swift.git --recursive
-$> swift package fetch
+$> swift package resolve
 $> protoc -I./ -I/usr/local/include -I$GOPATH/src -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway --swift_out=./Sources/Nakama/2.XClient/ --swiftgrpc_out=./Sources/Nakama/2.XClient/ --plugin=grpc ./proto/api.proto
 $> protoc -I./ -I/usr/local/include -I$GOPATH/src -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway --swift_out=./Sources/Nakama/2.XClient/ --swiftgrpc_out=./Sources/Nakama/2.XClient/ --plugin=grpc ./proto/apigrpc.proto
 $> swift package generate-xcodeproj

@@ -1,4 +1,4 @@
-// swift-tools-version:3.1
+// swift-tools-version:4.2
 /*
  * Copyright 2017 Heroic Labs
  *
@@ -20,9 +20,9 @@ import PackageDescription
 let package = Package(
     name: "Nakama",
     dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", majorVersion: 1),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 3),
-        .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 6),
-        .Package(url: "https://github.com/grpc/grpc-swift.git", majorVersion: 0)
+        .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.0.0"),
+        .package(url: "https://github.com/daltoniam/Starscream.git", from: "3.0.0"),
+        .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.0.0"),
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "0.5.0")
     ]
 )
