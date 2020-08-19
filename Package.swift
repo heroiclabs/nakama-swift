@@ -24,5 +24,8 @@ let package = Package(
         .package(url: "https://github.com/daltoniam/Starscream.git", from: "3.0.0"),
         .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.0.0"),
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "0.5.0")
+    ],
+    targets: [
+        .target(name: "Nakama", dependencies: ["SwiftProtobuf", "Starscream", "PromiseKit", "SwiftGRPC"])
     ]
 )
