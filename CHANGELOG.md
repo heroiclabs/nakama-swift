@@ -6,9 +6,8 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 #### Changed
-- Complete client update to support Nakama 2.0 (thanks to @amradawi for his heroic efforts!).
-- Support for swift 4.2.
-- PromiseKit 6.5 and various dependency upgrades.
+- Complete client update to support Nakama 2.0 and Nakama 3.0
+- Update for Swift 5.
 
 ## [0.3.0] - 2017-11-08
 #### Changed
