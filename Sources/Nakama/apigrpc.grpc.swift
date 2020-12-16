@@ -28,120 +28,120 @@ import SwiftProtobuf
 ///*
 /// The Nakama RPC protocol service built with GRPC.
 ///
-/// Usage: instantiate `NakamaClient`, then call methods of this protocol to make API calls.
-internal protocol NakamaClientProtocol: GRPCClient {
+/// Usage: instantiate `Nakama_Api_NakamaClient`, then call methods of this protocol to make API calls.
+internal protocol Nakama_Api_NakamaClientProtocol: GRPCClient {
   var serviceName: String { get }
-  var interceptors: NakamaClientInterceptorFactoryProtocol? { get }
+  var interceptors: Nakama_Api_NakamaClientInterceptorFactoryProtocol? { get }
 
   func addFriends(
-    _ request: AddFriendsRequest,
+    _ request: Nakama_Api_AddFriendsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func addGroupUsers(
-    _ request: AddGroupUsersRequest,
+    _ request: Nakama_Api_AddGroupUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func authenticateApple(
-    _ request: AuthenticateAppleRequest,
+    _ request: Nakama_Api_AuthenticateAppleRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateAppleRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateAppleRequest, Nakama_Api_Session>
 
   func authenticateCustom(
-    _ request: AuthenticateCustomRequest,
+    _ request: Nakama_Api_AuthenticateCustomRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateCustomRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateCustomRequest, Nakama_Api_Session>
 
   func authenticateDevice(
-    _ request: AuthenticateDeviceRequest,
+    _ request: Nakama_Api_AuthenticateDeviceRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateDeviceRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateDeviceRequest, Nakama_Api_Session>
 
   func authenticateEmail(
-    _ request: AuthenticateEmailRequest,
+    _ request: Nakama_Api_AuthenticateEmailRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateEmailRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateEmailRequest, Nakama_Api_Session>
 
   func authenticateFacebook(
-    _ request: AuthenticateFacebookRequest,
+    _ request: Nakama_Api_AuthenticateFacebookRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateFacebookRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateFacebookRequest, Nakama_Api_Session>
 
   func authenticateFacebookInstantGame(
-    _ request: AuthenticateFacebookInstantGameRequest,
+    _ request: Nakama_Api_AuthenticateFacebookInstantGameRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateFacebookInstantGameRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateFacebookInstantGameRequest, Nakama_Api_Session>
 
   func authenticateGameCenter(
-    _ request: AuthenticateGameCenterRequest,
+    _ request: Nakama_Api_AuthenticateGameCenterRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateGameCenterRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateGameCenterRequest, Nakama_Api_Session>
 
   func authenticateGoogle(
-    _ request: AuthenticateGoogleRequest,
+    _ request: Nakama_Api_AuthenticateGoogleRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateGoogleRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateGoogleRequest, Nakama_Api_Session>
 
   func authenticateSteam(
-    _ request: AuthenticateSteamRequest,
+    _ request: Nakama_Api_AuthenticateSteamRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<AuthenticateSteamRequest, Session>
+  ) -> UnaryCall<Nakama_Api_AuthenticateSteamRequest, Nakama_Api_Session>
 
   func banGroupUsers(
-    _ request: BanGroupUsersRequest,
+    _ request: Nakama_Api_BanGroupUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func blockFriends(
-    _ request: BlockFriendsRequest,
+    _ request: Nakama_Api_BlockFriendsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func createGroup(
-    _ request: CreateGroupRequest,
+    _ request: Nakama_Api_CreateGroupRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<CreateGroupRequest, Group>
+  ) -> UnaryCall<Nakama_Api_CreateGroupRequest, Nakama_Api_Group>
 
   func deleteFriends(
-    _ request: DeleteFriendsRequest,
+    _ request: Nakama_Api_DeleteFriendsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func deleteGroup(
-    _ request: DeleteGroupRequest,
+    _ request: Nakama_Api_DeleteGroupRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func deleteLeaderboardRecord(
-    _ request: DeleteLeaderboardRecordRequest,
+    _ request: Nakama_Api_DeleteLeaderboardRecordRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func deleteNotifications(
-    _ request: DeleteNotificationsRequest,
+    _ request: Nakama_Api_DeleteNotificationsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func deleteStorageObjects(
-    _ request: DeleteStorageObjectsRequest,
+    _ request: Nakama_Api_DeleteStorageObjectsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func event(
-    _ request: Event,
+    _ request: Nakama_Api_Event,
     callOptions: CallOptions?
-  ) -> UnaryCall<Event, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_Event, SwiftProtobuf.Google_Protobuf_Empty>
 
   func getAccount(
     _ request: SwiftProtobuf.Google_Protobuf_Empty,
     callOptions: CallOptions?
-  ) -> UnaryCall<SwiftProtobuf.Google_Protobuf_Empty, Account>
+  ) -> UnaryCall<SwiftProtobuf.Google_Protobuf_Empty, Nakama_Api_Account>
 
   func getUsers(
-    _ request: GetUsersRequest,
+    _ request: Nakama_Api_GetUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<GetUsersRequest, Users>
+  ) -> UnaryCall<Nakama_Api_GetUsersRequest, Nakama_Api_Users>
 
   func healthcheck(
     _ request: SwiftProtobuf.Google_Protobuf_Empty,
@@ -149,232 +149,232 @@ internal protocol NakamaClientProtocol: GRPCClient {
   ) -> UnaryCall<SwiftProtobuf.Google_Protobuf_Empty, SwiftProtobuf.Google_Protobuf_Empty>
 
   func importFacebookFriends(
-    _ request: ImportFacebookFriendsRequest,
+    _ request: Nakama_Api_ImportFacebookFriendsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func joinGroup(
-    _ request: JoinGroupRequest,
+    _ request: Nakama_Api_JoinGroupRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func joinTournament(
-    _ request: JoinTournamentRequest,
+    _ request: Nakama_Api_JoinTournamentRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func kickGroupUsers(
-    _ request: KickGroupUsersRequest,
+    _ request: Nakama_Api_KickGroupUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func leaveGroup(
-    _ request: LeaveGroupRequest,
+    _ request: Nakama_Api_LeaveGroupRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkApple(
-    _ request: AccountApple,
+    _ request: Nakama_Api_AccountApple,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountApple, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkCustom(
-    _ request: AccountCustom,
+    _ request: Nakama_Api_AccountCustom,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkDevice(
-    _ request: AccountDevice,
+    _ request: Nakama_Api_AccountDevice,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkEmail(
-    _ request: AccountEmail,
+    _ request: Nakama_Api_AccountEmail,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkFacebook(
-    _ request: LinkFacebookRequest,
+    _ request: Nakama_Api_LinkFacebookRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkFacebookInstantGame(
-    _ request: AccountFacebookInstantGame,
+    _ request: Nakama_Api_AccountFacebookInstantGame,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkGameCenter(
-    _ request: AccountGameCenter,
+    _ request: Nakama_Api_AccountGameCenter,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkGoogle(
-    _ request: AccountGoogle,
+    _ request: Nakama_Api_AccountGoogle,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>
 
   func linkSteam(
-    _ request: AccountSteam,
+    _ request: Nakama_Api_AccountSteam,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>
 
   func listChannelMessages(
-    _ request: ListChannelMessagesRequest,
+    _ request: Nakama_Api_ListChannelMessagesRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListChannelMessagesRequest, ChannelMessageList>
+  ) -> UnaryCall<Nakama_Api_ListChannelMessagesRequest, Nakama_Api_ChannelMessageList>
 
   func listFriends(
-    _ request: ListFriendsRequest,
+    _ request: Nakama_Api_ListFriendsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListFriendsRequest, FriendList>
+  ) -> UnaryCall<Nakama_Api_ListFriendsRequest, Nakama_Api_FriendList>
 
   func listGroups(
-    _ request: ListGroupsRequest,
+    _ request: Nakama_Api_ListGroupsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListGroupsRequest, GroupList>
+  ) -> UnaryCall<Nakama_Api_ListGroupsRequest, Nakama_Api_GroupList>
 
   func listGroupUsers(
-    _ request: ListGroupUsersRequest,
+    _ request: Nakama_Api_ListGroupUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListGroupUsersRequest, GroupUserList>
+  ) -> UnaryCall<Nakama_Api_ListGroupUsersRequest, Nakama_Api_GroupUserList>
 
   func listLeaderboardRecords(
-    _ request: ListLeaderboardRecordsRequest,
+    _ request: Nakama_Api_ListLeaderboardRecordsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListLeaderboardRecordsRequest, LeaderboardRecordList>
+  ) -> UnaryCall<Nakama_Api_ListLeaderboardRecordsRequest, Nakama_Api_LeaderboardRecordList>
 
   func listLeaderboardRecordsAroundOwner(
-    _ request: ListLeaderboardRecordsAroundOwnerRequest,
+    _ request: Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListLeaderboardRecordsAroundOwnerRequest, LeaderboardRecordList>
+  ) -> UnaryCall<Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest, Nakama_Api_LeaderboardRecordList>
 
   func listMatches(
-    _ request: ListMatchesRequest,
+    _ request: Nakama_Api_ListMatchesRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListMatchesRequest, MatchList>
+  ) -> UnaryCall<Nakama_Api_ListMatchesRequest, Nakama_Api_MatchList>
 
   func listNotifications(
-    _ request: ListNotificationsRequest,
+    _ request: Nakama_Api_ListNotificationsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListNotificationsRequest, NotificationList>
+  ) -> UnaryCall<Nakama_Api_ListNotificationsRequest, Nakama_Api_NotificationList>
 
   func listStorageObjects(
-    _ request: ListStorageObjectsRequest,
+    _ request: Nakama_Api_ListStorageObjectsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListStorageObjectsRequest, StorageObjectList>
+  ) -> UnaryCall<Nakama_Api_ListStorageObjectsRequest, Nakama_Api_StorageObjectList>
 
   func listTournaments(
-    _ request: ListTournamentsRequest,
+    _ request: Nakama_Api_ListTournamentsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListTournamentsRequest, TournamentList>
+  ) -> UnaryCall<Nakama_Api_ListTournamentsRequest, Nakama_Api_TournamentList>
 
   func listTournamentRecords(
-    _ request: ListTournamentRecordsRequest,
+    _ request: Nakama_Api_ListTournamentRecordsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListTournamentRecordsRequest, TournamentRecordList>
+  ) -> UnaryCall<Nakama_Api_ListTournamentRecordsRequest, Nakama_Api_TournamentRecordList>
 
   func listTournamentRecordsAroundOwner(
-    _ request: ListTournamentRecordsAroundOwnerRequest,
+    _ request: Nakama_Api_ListTournamentRecordsAroundOwnerRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListTournamentRecordsAroundOwnerRequest, TournamentRecordList>
+  ) -> UnaryCall<Nakama_Api_ListTournamentRecordsAroundOwnerRequest, Nakama_Api_TournamentRecordList>
 
   func listUserGroups(
-    _ request: ListUserGroupsRequest,
+    _ request: Nakama_Api_ListUserGroupsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ListUserGroupsRequest, UserGroupList>
+  ) -> UnaryCall<Nakama_Api_ListUserGroupsRequest, Nakama_Api_UserGroupList>
 
   func promoteGroupUsers(
-    _ request: PromoteGroupUsersRequest,
+    _ request: Nakama_Api_PromoteGroupUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func demoteGroupUsers(
-    _ request: DemoteGroupUsersRequest,
+    _ request: Nakama_Api_DemoteGroupUsersRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func readStorageObjects(
-    _ request: ReadStorageObjectsRequest,
+    _ request: Nakama_Api_ReadStorageObjectsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<ReadStorageObjectsRequest, StorageObjects>
+  ) -> UnaryCall<Nakama_Api_ReadStorageObjectsRequest, Nakama_Api_StorageObjects>
 
   func rpcFunc(
-    _ request: Rpc,
+    _ request: Nakama_Api_Rpc,
     callOptions: CallOptions?
-  ) -> UnaryCall<Rpc, Rpc>
+  ) -> UnaryCall<Nakama_Api_Rpc, Nakama_Api_Rpc>
 
   func unlinkApple(
-    _ request: AccountApple,
+    _ request: Nakama_Api_AccountApple,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountApple, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkCustom(
-    _ request: AccountCustom,
+    _ request: Nakama_Api_AccountCustom,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkDevice(
-    _ request: AccountDevice,
+    _ request: Nakama_Api_AccountDevice,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkEmail(
-    _ request: AccountEmail,
+    _ request: Nakama_Api_AccountEmail,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkFacebook(
-    _ request: AccountFacebook,
+    _ request: Nakama_Api_AccountFacebook,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkFacebookInstantGame(
-    _ request: AccountFacebookInstantGame,
+    _ request: Nakama_Api_AccountFacebookInstantGame,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkGameCenter(
-    _ request: AccountGameCenter,
+    _ request: Nakama_Api_AccountGameCenter,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkGoogle(
-    _ request: AccountGoogle,
+    _ request: Nakama_Api_AccountGoogle,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>
 
   func unlinkSteam(
-    _ request: AccountSteam,
+    _ request: Nakama_Api_AccountSteam,
     callOptions: CallOptions?
-  ) -> UnaryCall<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>
 
   func updateAccount(
-    _ request: UpdateAccountRequest,
+    _ request: Nakama_Api_UpdateAccountRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func updateGroup(
-    _ request: UpdateGroupRequest,
+    _ request: Nakama_Api_UpdateGroupRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
+  ) -> UnaryCall<Nakama_Api_UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>
 
   func writeLeaderboardRecord(
-    _ request: WriteLeaderboardRecordRequest,
+    _ request: Nakama_Api_WriteLeaderboardRecordRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<WriteLeaderboardRecordRequest, LeaderboardRecord>
+  ) -> UnaryCall<Nakama_Api_WriteLeaderboardRecordRequest, Nakama_Api_LeaderboardRecord>
 
   func writeStorageObjects(
-    _ request: WriteStorageObjectsRequest,
+    _ request: Nakama_Api_WriteStorageObjectsRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<WriteStorageObjectsRequest, StorageObjectAcks>
+  ) -> UnaryCall<Nakama_Api_WriteStorageObjectsRequest, Nakama_Api_StorageObjectAcks>
 
   func writeTournamentRecord(
-    _ request: WriteTournamentRecordRequest,
+    _ request: Nakama_Api_WriteTournamentRecordRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<WriteTournamentRecordRequest, LeaderboardRecord>
+  ) -> UnaryCall<Nakama_Api_WriteTournamentRecordRequest, Nakama_Api_LeaderboardRecord>
 }
 
-extension NakamaClientProtocol {
+extension Nakama_Api_NakamaClientProtocol {
   internal var serviceName: String {
     return "nakama.api.Nakama"
   }
@@ -386,9 +386,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func addFriends(
-    _ request: AddFriendsRequest,
+    _ request: Nakama_Api_AddFriendsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AddFriends",
       request: request,
@@ -404,9 +404,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func addGroupUsers(
-    _ request: AddGroupUsersRequest,
+    _ request: Nakama_Api_AddGroupUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AddGroupUsers",
       request: request,
@@ -422,9 +422,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateApple(
-    _ request: AuthenticateAppleRequest,
+    _ request: Nakama_Api_AuthenticateAppleRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateAppleRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateAppleRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateApple",
       request: request,
@@ -440,9 +440,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateCustom(
-    _ request: AuthenticateCustomRequest,
+    _ request: Nakama_Api_AuthenticateCustomRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateCustomRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateCustomRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateCustom",
       request: request,
@@ -458,9 +458,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateDevice(
-    _ request: AuthenticateDeviceRequest,
+    _ request: Nakama_Api_AuthenticateDeviceRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateDeviceRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateDeviceRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateDevice",
       request: request,
@@ -476,9 +476,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateEmail(
-    _ request: AuthenticateEmailRequest,
+    _ request: Nakama_Api_AuthenticateEmailRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateEmailRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateEmailRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateEmail",
       request: request,
@@ -494,9 +494,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateFacebook(
-    _ request: AuthenticateFacebookRequest,
+    _ request: Nakama_Api_AuthenticateFacebookRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateFacebookRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateFacebookRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateFacebook",
       request: request,
@@ -512,9 +512,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateFacebookInstantGame(
-    _ request: AuthenticateFacebookInstantGameRequest,
+    _ request: Nakama_Api_AuthenticateFacebookInstantGameRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateFacebookInstantGameRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateFacebookInstantGameRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateFacebookInstantGame",
       request: request,
@@ -530,9 +530,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateGameCenter(
-    _ request: AuthenticateGameCenterRequest,
+    _ request: Nakama_Api_AuthenticateGameCenterRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateGameCenterRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateGameCenterRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateGameCenter",
       request: request,
@@ -548,9 +548,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateGoogle(
-    _ request: AuthenticateGoogleRequest,
+    _ request: Nakama_Api_AuthenticateGoogleRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateGoogleRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateGoogleRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateGoogle",
       request: request,
@@ -566,9 +566,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func authenticateSteam(
-    _ request: AuthenticateSteamRequest,
+    _ request: Nakama_Api_AuthenticateSteamRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AuthenticateSteamRequest, Session> {
+  ) -> UnaryCall<Nakama_Api_AuthenticateSteamRequest, Nakama_Api_Session> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/AuthenticateSteam",
       request: request,
@@ -584,9 +584,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func banGroupUsers(
-    _ request: BanGroupUsersRequest,
+    _ request: Nakama_Api_BanGroupUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/BanGroupUsers",
       request: request,
@@ -602,9 +602,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func blockFriends(
-    _ request: BlockFriendsRequest,
+    _ request: Nakama_Api_BlockFriendsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/BlockFriends",
       request: request,
@@ -620,9 +620,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func createGroup(
-    _ request: CreateGroupRequest,
+    _ request: Nakama_Api_CreateGroupRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<CreateGroupRequest, Group> {
+  ) -> UnaryCall<Nakama_Api_CreateGroupRequest, Nakama_Api_Group> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/CreateGroup",
       request: request,
@@ -638,9 +638,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func deleteFriends(
-    _ request: DeleteFriendsRequest,
+    _ request: Nakama_Api_DeleteFriendsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/DeleteFriends",
       request: request,
@@ -656,9 +656,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func deleteGroup(
-    _ request: DeleteGroupRequest,
+    _ request: Nakama_Api_DeleteGroupRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/DeleteGroup",
       request: request,
@@ -674,9 +674,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func deleteLeaderboardRecord(
-    _ request: DeleteLeaderboardRecordRequest,
+    _ request: Nakama_Api_DeleteLeaderboardRecordRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/DeleteLeaderboardRecord",
       request: request,
@@ -692,9 +692,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func deleteNotifications(
-    _ request: DeleteNotificationsRequest,
+    _ request: Nakama_Api_DeleteNotificationsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/DeleteNotifications",
       request: request,
@@ -710,9 +710,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func deleteStorageObjects(
-    _ request: DeleteStorageObjectsRequest,
+    _ request: Nakama_Api_DeleteStorageObjectsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/DeleteStorageObjects",
       request: request,
@@ -728,9 +728,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func event(
-    _ request: Event,
+    _ request: Nakama_Api_Event,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<Event, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_Event, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/Event",
       request: request,
@@ -748,7 +748,7 @@ extension NakamaClientProtocol {
   internal func getAccount(
     _ request: SwiftProtobuf.Google_Protobuf_Empty,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<SwiftProtobuf.Google_Protobuf_Empty, Account> {
+  ) -> UnaryCall<SwiftProtobuf.Google_Protobuf_Empty, Nakama_Api_Account> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/GetAccount",
       request: request,
@@ -764,9 +764,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func getUsers(
-    _ request: GetUsersRequest,
+    _ request: Nakama_Api_GetUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<GetUsersRequest, Users> {
+  ) -> UnaryCall<Nakama_Api_GetUsersRequest, Nakama_Api_Users> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/GetUsers",
       request: request,
@@ -800,9 +800,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func importFacebookFriends(
-    _ request: ImportFacebookFriendsRequest,
+    _ request: Nakama_Api_ImportFacebookFriendsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ImportFacebookFriends",
       request: request,
@@ -818,9 +818,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func joinGroup(
-    _ request: JoinGroupRequest,
+    _ request: Nakama_Api_JoinGroupRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/JoinGroup",
       request: request,
@@ -836,9 +836,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func joinTournament(
-    _ request: JoinTournamentRequest,
+    _ request: Nakama_Api_JoinTournamentRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/JoinTournament",
       request: request,
@@ -854,9 +854,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func kickGroupUsers(
-    _ request: KickGroupUsersRequest,
+    _ request: Nakama_Api_KickGroupUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/KickGroupUsers",
       request: request,
@@ -872,9 +872,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func leaveGroup(
-    _ request: LeaveGroupRequest,
+    _ request: Nakama_Api_LeaveGroupRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LeaveGroup",
       request: request,
@@ -890,9 +890,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkApple(
-    _ request: AccountApple,
+    _ request: Nakama_Api_AccountApple,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountApple, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkApple",
       request: request,
@@ -908,9 +908,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkCustom(
-    _ request: AccountCustom,
+    _ request: Nakama_Api_AccountCustom,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkCustom",
       request: request,
@@ -926,9 +926,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkDevice(
-    _ request: AccountDevice,
+    _ request: Nakama_Api_AccountDevice,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkDevice",
       request: request,
@@ -944,9 +944,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkEmail(
-    _ request: AccountEmail,
+    _ request: Nakama_Api_AccountEmail,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkEmail",
       request: request,
@@ -962,9 +962,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkFacebook(
-    _ request: LinkFacebookRequest,
+    _ request: Nakama_Api_LinkFacebookRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkFacebook",
       request: request,
@@ -980,9 +980,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkFacebookInstantGame(
-    _ request: AccountFacebookInstantGame,
+    _ request: Nakama_Api_AccountFacebookInstantGame,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkFacebookInstantGame",
       request: request,
@@ -998,9 +998,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkGameCenter(
-    _ request: AccountGameCenter,
+    _ request: Nakama_Api_AccountGameCenter,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkGameCenter",
       request: request,
@@ -1016,9 +1016,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkGoogle(
-    _ request: AccountGoogle,
+    _ request: Nakama_Api_AccountGoogle,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkGoogle",
       request: request,
@@ -1034,9 +1034,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func linkSteam(
-    _ request: AccountSteam,
+    _ request: Nakama_Api_AccountSteam,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/LinkSteam",
       request: request,
@@ -1052,9 +1052,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listChannelMessages(
-    _ request: ListChannelMessagesRequest,
+    _ request: Nakama_Api_ListChannelMessagesRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListChannelMessagesRequest, ChannelMessageList> {
+  ) -> UnaryCall<Nakama_Api_ListChannelMessagesRequest, Nakama_Api_ChannelMessageList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListChannelMessages",
       request: request,
@@ -1070,9 +1070,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listFriends(
-    _ request: ListFriendsRequest,
+    _ request: Nakama_Api_ListFriendsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListFriendsRequest, FriendList> {
+  ) -> UnaryCall<Nakama_Api_ListFriendsRequest, Nakama_Api_FriendList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListFriends",
       request: request,
@@ -1088,9 +1088,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listGroups(
-    _ request: ListGroupsRequest,
+    _ request: Nakama_Api_ListGroupsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListGroupsRequest, GroupList> {
+  ) -> UnaryCall<Nakama_Api_ListGroupsRequest, Nakama_Api_GroupList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListGroups",
       request: request,
@@ -1106,9 +1106,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listGroupUsers(
-    _ request: ListGroupUsersRequest,
+    _ request: Nakama_Api_ListGroupUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListGroupUsersRequest, GroupUserList> {
+  ) -> UnaryCall<Nakama_Api_ListGroupUsersRequest, Nakama_Api_GroupUserList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListGroupUsers",
       request: request,
@@ -1124,9 +1124,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listLeaderboardRecords(
-    _ request: ListLeaderboardRecordsRequest,
+    _ request: Nakama_Api_ListLeaderboardRecordsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListLeaderboardRecordsRequest, LeaderboardRecordList> {
+  ) -> UnaryCall<Nakama_Api_ListLeaderboardRecordsRequest, Nakama_Api_LeaderboardRecordList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListLeaderboardRecords",
       request: request,
@@ -1142,9 +1142,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listLeaderboardRecordsAroundOwner(
-    _ request: ListLeaderboardRecordsAroundOwnerRequest,
+    _ request: Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListLeaderboardRecordsAroundOwnerRequest, LeaderboardRecordList> {
+  ) -> UnaryCall<Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest, Nakama_Api_LeaderboardRecordList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListLeaderboardRecordsAroundOwner",
       request: request,
@@ -1160,9 +1160,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listMatches(
-    _ request: ListMatchesRequest,
+    _ request: Nakama_Api_ListMatchesRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListMatchesRequest, MatchList> {
+  ) -> UnaryCall<Nakama_Api_ListMatchesRequest, Nakama_Api_MatchList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListMatches",
       request: request,
@@ -1178,9 +1178,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listNotifications(
-    _ request: ListNotificationsRequest,
+    _ request: Nakama_Api_ListNotificationsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListNotificationsRequest, NotificationList> {
+  ) -> UnaryCall<Nakama_Api_ListNotificationsRequest, Nakama_Api_NotificationList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListNotifications",
       request: request,
@@ -1196,9 +1196,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listStorageObjects(
-    _ request: ListStorageObjectsRequest,
+    _ request: Nakama_Api_ListStorageObjectsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListStorageObjectsRequest, StorageObjectList> {
+  ) -> UnaryCall<Nakama_Api_ListStorageObjectsRequest, Nakama_Api_StorageObjectList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListStorageObjects",
       request: request,
@@ -1214,9 +1214,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listTournaments(
-    _ request: ListTournamentsRequest,
+    _ request: Nakama_Api_ListTournamentsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListTournamentsRequest, TournamentList> {
+  ) -> UnaryCall<Nakama_Api_ListTournamentsRequest, Nakama_Api_TournamentList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListTournaments",
       request: request,
@@ -1232,9 +1232,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listTournamentRecords(
-    _ request: ListTournamentRecordsRequest,
+    _ request: Nakama_Api_ListTournamentRecordsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListTournamentRecordsRequest, TournamentRecordList> {
+  ) -> UnaryCall<Nakama_Api_ListTournamentRecordsRequest, Nakama_Api_TournamentRecordList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListTournamentRecords",
       request: request,
@@ -1250,9 +1250,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listTournamentRecordsAroundOwner(
-    _ request: ListTournamentRecordsAroundOwnerRequest,
+    _ request: Nakama_Api_ListTournamentRecordsAroundOwnerRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListTournamentRecordsAroundOwnerRequest, TournamentRecordList> {
+  ) -> UnaryCall<Nakama_Api_ListTournamentRecordsAroundOwnerRequest, Nakama_Api_TournamentRecordList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListTournamentRecordsAroundOwner",
       request: request,
@@ -1268,9 +1268,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func listUserGroups(
-    _ request: ListUserGroupsRequest,
+    _ request: Nakama_Api_ListUserGroupsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ListUserGroupsRequest, UserGroupList> {
+  ) -> UnaryCall<Nakama_Api_ListUserGroupsRequest, Nakama_Api_UserGroupList> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ListUserGroups",
       request: request,
@@ -1286,9 +1286,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func promoteGroupUsers(
-    _ request: PromoteGroupUsersRequest,
+    _ request: Nakama_Api_PromoteGroupUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/PromoteGroupUsers",
       request: request,
@@ -1304,9 +1304,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func demoteGroupUsers(
-    _ request: DemoteGroupUsersRequest,
+    _ request: Nakama_Api_DemoteGroupUsersRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/DemoteGroupUsers",
       request: request,
@@ -1322,9 +1322,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func readStorageObjects(
-    _ request: ReadStorageObjectsRequest,
+    _ request: Nakama_Api_ReadStorageObjectsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<ReadStorageObjectsRequest, StorageObjects> {
+  ) -> UnaryCall<Nakama_Api_ReadStorageObjectsRequest, Nakama_Api_StorageObjects> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/ReadStorageObjects",
       request: request,
@@ -1340,9 +1340,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func rpcFunc(
-    _ request: Rpc,
+    _ request: Nakama_Api_Rpc,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<Rpc, Rpc> {
+  ) -> UnaryCall<Nakama_Api_Rpc, Nakama_Api_Rpc> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/RpcFunc",
       request: request,
@@ -1358,9 +1358,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkApple(
-    _ request: AccountApple,
+    _ request: Nakama_Api_AccountApple,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountApple, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkApple",
       request: request,
@@ -1376,9 +1376,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkCustom(
-    _ request: AccountCustom,
+    _ request: Nakama_Api_AccountCustom,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkCustom",
       request: request,
@@ -1394,9 +1394,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkDevice(
-    _ request: AccountDevice,
+    _ request: Nakama_Api_AccountDevice,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkDevice",
       request: request,
@@ -1412,9 +1412,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkEmail(
-    _ request: AccountEmail,
+    _ request: Nakama_Api_AccountEmail,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkEmail",
       request: request,
@@ -1430,9 +1430,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkFacebook(
-    _ request: AccountFacebook,
+    _ request: Nakama_Api_AccountFacebook,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkFacebook",
       request: request,
@@ -1448,9 +1448,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkFacebookInstantGame(
-    _ request: AccountFacebookInstantGame,
+    _ request: Nakama_Api_AccountFacebookInstantGame,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkFacebookInstantGame",
       request: request,
@@ -1466,9 +1466,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkGameCenter(
-    _ request: AccountGameCenter,
+    _ request: Nakama_Api_AccountGameCenter,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkGameCenter",
       request: request,
@@ -1484,9 +1484,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkGoogle(
-    _ request: AccountGoogle,
+    _ request: Nakama_Api_AccountGoogle,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkGoogle",
       request: request,
@@ -1502,9 +1502,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func unlinkSteam(
-    _ request: AccountSteam,
+    _ request: Nakama_Api_AccountSteam,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UnlinkSteam",
       request: request,
@@ -1520,9 +1520,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func updateAccount(
-    _ request: UpdateAccountRequest,
+    _ request: Nakama_Api_UpdateAccountRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UpdateAccount",
       request: request,
@@ -1538,9 +1538,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func updateGroup(
-    _ request: UpdateGroupRequest,
+    _ request: Nakama_Api_UpdateGroupRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
+  ) -> UnaryCall<Nakama_Api_UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/UpdateGroup",
       request: request,
@@ -1556,9 +1556,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func writeLeaderboardRecord(
-    _ request: WriteLeaderboardRecordRequest,
+    _ request: Nakama_Api_WriteLeaderboardRecordRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<WriteLeaderboardRecordRequest, LeaderboardRecord> {
+  ) -> UnaryCall<Nakama_Api_WriteLeaderboardRecordRequest, Nakama_Api_LeaderboardRecord> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/WriteLeaderboardRecord",
       request: request,
@@ -1574,9 +1574,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func writeStorageObjects(
-    _ request: WriteStorageObjectsRequest,
+    _ request: Nakama_Api_WriteStorageObjectsRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<WriteStorageObjectsRequest, StorageObjectAcks> {
+  ) -> UnaryCall<Nakama_Api_WriteStorageObjectsRequest, Nakama_Api_StorageObjectAcks> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/WriteStorageObjects",
       request: request,
@@ -1592,9 +1592,9 @@ extension NakamaClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   internal func writeTournamentRecord(
-    _ request: WriteTournamentRecordRequest,
+    _ request: Nakama_Api_WriteTournamentRecordRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<WriteTournamentRecordRequest, LeaderboardRecord> {
+  ) -> UnaryCall<Nakama_Api_WriteTournamentRecordRequest, Nakama_Api_LeaderboardRecord> {
     return self.makeUnaryCall(
       path: "/nakama.api.Nakama/WriteTournamentRecord",
       request: request,
@@ -1604,217 +1604,217 @@ extension NakamaClientProtocol {
   }
 }
 
-internal protocol NakamaClientInterceptorFactoryProtocol {
+internal protocol Nakama_Api_NakamaClientInterceptorFactoryProtocol {
 
   /// - Returns: Interceptors to use when invoking 'addFriends'.
-  func makeAddFriendsInterceptors() -> [ClientInterceptor<AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeAddFriendsInterceptors() -> [ClientInterceptor<Nakama_Api_AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'addGroupUsers'.
-  func makeAddGroupUsersInterceptors() -> [ClientInterceptor<AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeAddGroupUsersInterceptors() -> [ClientInterceptor<Nakama_Api_AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateApple'.
-  func makeAuthenticateAppleInterceptors() -> [ClientInterceptor<AuthenticateAppleRequest, Session>]
+  func makeAuthenticateAppleInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateAppleRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateCustom'.
-  func makeAuthenticateCustomInterceptors() -> [ClientInterceptor<AuthenticateCustomRequest, Session>]
+  func makeAuthenticateCustomInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateCustomRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateDevice'.
-  func makeAuthenticateDeviceInterceptors() -> [ClientInterceptor<AuthenticateDeviceRequest, Session>]
+  func makeAuthenticateDeviceInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateDeviceRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateEmail'.
-  func makeAuthenticateEmailInterceptors() -> [ClientInterceptor<AuthenticateEmailRequest, Session>]
+  func makeAuthenticateEmailInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateEmailRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateFacebook'.
-  func makeAuthenticateFacebookInterceptors() -> [ClientInterceptor<AuthenticateFacebookRequest, Session>]
+  func makeAuthenticateFacebookInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateFacebookRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateFacebookInstantGame'.
-  func makeAuthenticateFacebookInstantGameInterceptors() -> [ClientInterceptor<AuthenticateFacebookInstantGameRequest, Session>]
+  func makeAuthenticateFacebookInstantGameInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateFacebookInstantGameRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateGameCenter'.
-  func makeAuthenticateGameCenterInterceptors() -> [ClientInterceptor<AuthenticateGameCenterRequest, Session>]
+  func makeAuthenticateGameCenterInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateGameCenterRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateGoogle'.
-  func makeAuthenticateGoogleInterceptors() -> [ClientInterceptor<AuthenticateGoogleRequest, Session>]
+  func makeAuthenticateGoogleInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateGoogleRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'authenticateSteam'.
-  func makeAuthenticateSteamInterceptors() -> [ClientInterceptor<AuthenticateSteamRequest, Session>]
+  func makeAuthenticateSteamInterceptors() -> [ClientInterceptor<Nakama_Api_AuthenticateSteamRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when invoking 'banGroupUsers'.
-  func makeBanGroupUsersInterceptors() -> [ClientInterceptor<BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeBanGroupUsersInterceptors() -> [ClientInterceptor<Nakama_Api_BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'blockFriends'.
-  func makeBlockFriendsInterceptors() -> [ClientInterceptor<BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeBlockFriendsInterceptors() -> [ClientInterceptor<Nakama_Api_BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'createGroup'.
-  func makeCreateGroupInterceptors() -> [ClientInterceptor<CreateGroupRequest, Group>]
+  func makeCreateGroupInterceptors() -> [ClientInterceptor<Nakama_Api_CreateGroupRequest, Nakama_Api_Group>]
 
   /// - Returns: Interceptors to use when invoking 'deleteFriends'.
-  func makeDeleteFriendsInterceptors() -> [ClientInterceptor<DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteFriendsInterceptors() -> [ClientInterceptor<Nakama_Api_DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'deleteGroup'.
-  func makeDeleteGroupInterceptors() -> [ClientInterceptor<DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteGroupInterceptors() -> [ClientInterceptor<Nakama_Api_DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'deleteLeaderboardRecord'.
-  func makeDeleteLeaderboardRecordInterceptors() -> [ClientInterceptor<DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteLeaderboardRecordInterceptors() -> [ClientInterceptor<Nakama_Api_DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'deleteNotifications'.
-  func makeDeleteNotificationsInterceptors() -> [ClientInterceptor<DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteNotificationsInterceptors() -> [ClientInterceptor<Nakama_Api_DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'deleteStorageObjects'.
-  func makeDeleteStorageObjectsInterceptors() -> [ClientInterceptor<DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteStorageObjectsInterceptors() -> [ClientInterceptor<Nakama_Api_DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'event'.
-  func makeEventInterceptors() -> [ClientInterceptor<Event, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeEventInterceptors() -> [ClientInterceptor<Nakama_Api_Event, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'getAccount'.
-  func makeGetAccountInterceptors() -> [ClientInterceptor<SwiftProtobuf.Google_Protobuf_Empty, Account>]
+  func makeGetAccountInterceptors() -> [ClientInterceptor<SwiftProtobuf.Google_Protobuf_Empty, Nakama_Api_Account>]
 
   /// - Returns: Interceptors to use when invoking 'getUsers'.
-  func makeGetUsersInterceptors() -> [ClientInterceptor<GetUsersRequest, Users>]
+  func makeGetUsersInterceptors() -> [ClientInterceptor<Nakama_Api_GetUsersRequest, Nakama_Api_Users>]
 
   /// - Returns: Interceptors to use when invoking 'healthcheck'.
   func makeHealthcheckInterceptors() -> [ClientInterceptor<SwiftProtobuf.Google_Protobuf_Empty, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'importFacebookFriends'.
-  func makeImportFacebookFriendsInterceptors() -> [ClientInterceptor<ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeImportFacebookFriendsInterceptors() -> [ClientInterceptor<Nakama_Api_ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'joinGroup'.
-  func makeJoinGroupInterceptors() -> [ClientInterceptor<JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeJoinGroupInterceptors() -> [ClientInterceptor<Nakama_Api_JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'joinTournament'.
-  func makeJoinTournamentInterceptors() -> [ClientInterceptor<JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeJoinTournamentInterceptors() -> [ClientInterceptor<Nakama_Api_JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'kickGroupUsers'.
-  func makeKickGroupUsersInterceptors() -> [ClientInterceptor<KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeKickGroupUsersInterceptors() -> [ClientInterceptor<Nakama_Api_KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'leaveGroup'.
-  func makeLeaveGroupInterceptors() -> [ClientInterceptor<LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLeaveGroupInterceptors() -> [ClientInterceptor<Nakama_Api_LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkApple'.
-  func makeLinkAppleInterceptors() -> [ClientInterceptor<AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkAppleInterceptors() -> [ClientInterceptor<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkCustom'.
-  func makeLinkCustomInterceptors() -> [ClientInterceptor<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkCustomInterceptors() -> [ClientInterceptor<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkDevice'.
-  func makeLinkDeviceInterceptors() -> [ClientInterceptor<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkDeviceInterceptors() -> [ClientInterceptor<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkEmail'.
-  func makeLinkEmailInterceptors() -> [ClientInterceptor<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkEmailInterceptors() -> [ClientInterceptor<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkFacebook'.
-  func makeLinkFacebookInterceptors() -> [ClientInterceptor<LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkFacebookInterceptors() -> [ClientInterceptor<Nakama_Api_LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkFacebookInstantGame'.
-  func makeLinkFacebookInstantGameInterceptors() -> [ClientInterceptor<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkFacebookInstantGameInterceptors() -> [ClientInterceptor<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkGameCenter'.
-  func makeLinkGameCenterInterceptors() -> [ClientInterceptor<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkGameCenterInterceptors() -> [ClientInterceptor<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkGoogle'.
-  func makeLinkGoogleInterceptors() -> [ClientInterceptor<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkGoogleInterceptors() -> [ClientInterceptor<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'linkSteam'.
-  func makeLinkSteamInterceptors() -> [ClientInterceptor<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkSteamInterceptors() -> [ClientInterceptor<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'listChannelMessages'.
-  func makeListChannelMessagesInterceptors() -> [ClientInterceptor<ListChannelMessagesRequest, ChannelMessageList>]
+  func makeListChannelMessagesInterceptors() -> [ClientInterceptor<Nakama_Api_ListChannelMessagesRequest, Nakama_Api_ChannelMessageList>]
 
   /// - Returns: Interceptors to use when invoking 'listFriends'.
-  func makeListFriendsInterceptors() -> [ClientInterceptor<ListFriendsRequest, FriendList>]
+  func makeListFriendsInterceptors() -> [ClientInterceptor<Nakama_Api_ListFriendsRequest, Nakama_Api_FriendList>]
 
   /// - Returns: Interceptors to use when invoking 'listGroups'.
-  func makeListGroupsInterceptors() -> [ClientInterceptor<ListGroupsRequest, GroupList>]
+  func makeListGroupsInterceptors() -> [ClientInterceptor<Nakama_Api_ListGroupsRequest, Nakama_Api_GroupList>]
 
   /// - Returns: Interceptors to use when invoking 'listGroupUsers'.
-  func makeListGroupUsersInterceptors() -> [ClientInterceptor<ListGroupUsersRequest, GroupUserList>]
+  func makeListGroupUsersInterceptors() -> [ClientInterceptor<Nakama_Api_ListGroupUsersRequest, Nakama_Api_GroupUserList>]
 
   /// - Returns: Interceptors to use when invoking 'listLeaderboardRecords'.
-  func makeListLeaderboardRecordsInterceptors() -> [ClientInterceptor<ListLeaderboardRecordsRequest, LeaderboardRecordList>]
+  func makeListLeaderboardRecordsInterceptors() -> [ClientInterceptor<Nakama_Api_ListLeaderboardRecordsRequest, Nakama_Api_LeaderboardRecordList>]
 
   /// - Returns: Interceptors to use when invoking 'listLeaderboardRecordsAroundOwner'.
-  func makeListLeaderboardRecordsAroundOwnerInterceptors() -> [ClientInterceptor<ListLeaderboardRecordsAroundOwnerRequest, LeaderboardRecordList>]
+  func makeListLeaderboardRecordsAroundOwnerInterceptors() -> [ClientInterceptor<Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest, Nakama_Api_LeaderboardRecordList>]
 
   /// - Returns: Interceptors to use when invoking 'listMatches'.
-  func makeListMatchesInterceptors() -> [ClientInterceptor<ListMatchesRequest, MatchList>]
+  func makeListMatchesInterceptors() -> [ClientInterceptor<Nakama_Api_ListMatchesRequest, Nakama_Api_MatchList>]
 
   /// - Returns: Interceptors to use when invoking 'listNotifications'.
-  func makeListNotificationsInterceptors() -> [ClientInterceptor<ListNotificationsRequest, NotificationList>]
+  func makeListNotificationsInterceptors() -> [ClientInterceptor<Nakama_Api_ListNotificationsRequest, Nakama_Api_NotificationList>]
 
   /// - Returns: Interceptors to use when invoking 'listStorageObjects'.
-  func makeListStorageObjectsInterceptors() -> [ClientInterceptor<ListStorageObjectsRequest, StorageObjectList>]
+  func makeListStorageObjectsInterceptors() -> [ClientInterceptor<Nakama_Api_ListStorageObjectsRequest, Nakama_Api_StorageObjectList>]
 
   /// - Returns: Interceptors to use when invoking 'listTournaments'.
-  func makeListTournamentsInterceptors() -> [ClientInterceptor<ListTournamentsRequest, TournamentList>]
+  func makeListTournamentsInterceptors() -> [ClientInterceptor<Nakama_Api_ListTournamentsRequest, Nakama_Api_TournamentList>]
 
   /// - Returns: Interceptors to use when invoking 'listTournamentRecords'.
-  func makeListTournamentRecordsInterceptors() -> [ClientInterceptor<ListTournamentRecordsRequest, TournamentRecordList>]
+  func makeListTournamentRecordsInterceptors() -> [ClientInterceptor<Nakama_Api_ListTournamentRecordsRequest, Nakama_Api_TournamentRecordList>]
 
   /// - Returns: Interceptors to use when invoking 'listTournamentRecordsAroundOwner'.
-  func makeListTournamentRecordsAroundOwnerInterceptors() -> [ClientInterceptor<ListTournamentRecordsAroundOwnerRequest, TournamentRecordList>]
+  func makeListTournamentRecordsAroundOwnerInterceptors() -> [ClientInterceptor<Nakama_Api_ListTournamentRecordsAroundOwnerRequest, Nakama_Api_TournamentRecordList>]
 
   /// - Returns: Interceptors to use when invoking 'listUserGroups'.
-  func makeListUserGroupsInterceptors() -> [ClientInterceptor<ListUserGroupsRequest, UserGroupList>]
+  func makeListUserGroupsInterceptors() -> [ClientInterceptor<Nakama_Api_ListUserGroupsRequest, Nakama_Api_UserGroupList>]
 
   /// - Returns: Interceptors to use when invoking 'promoteGroupUsers'.
-  func makePromoteGroupUsersInterceptors() -> [ClientInterceptor<PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makePromoteGroupUsersInterceptors() -> [ClientInterceptor<Nakama_Api_PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'demoteGroupUsers'.
-  func makeDemoteGroupUsersInterceptors() -> [ClientInterceptor<DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDemoteGroupUsersInterceptors() -> [ClientInterceptor<Nakama_Api_DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'readStorageObjects'.
-  func makeReadStorageObjectsInterceptors() -> [ClientInterceptor<ReadStorageObjectsRequest, StorageObjects>]
+  func makeReadStorageObjectsInterceptors() -> [ClientInterceptor<Nakama_Api_ReadStorageObjectsRequest, Nakama_Api_StorageObjects>]
 
   /// - Returns: Interceptors to use when invoking 'rpcFunc'.
-  func makeRpcFuncInterceptors() -> [ClientInterceptor<Rpc, Rpc>]
+  func makeRpcFuncInterceptors() -> [ClientInterceptor<Nakama_Api_Rpc, Nakama_Api_Rpc>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkApple'.
-  func makeUnlinkAppleInterceptors() -> [ClientInterceptor<AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkAppleInterceptors() -> [ClientInterceptor<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkCustom'.
-  func makeUnlinkCustomInterceptors() -> [ClientInterceptor<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkCustomInterceptors() -> [ClientInterceptor<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkDevice'.
-  func makeUnlinkDeviceInterceptors() -> [ClientInterceptor<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkDeviceInterceptors() -> [ClientInterceptor<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkEmail'.
-  func makeUnlinkEmailInterceptors() -> [ClientInterceptor<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkEmailInterceptors() -> [ClientInterceptor<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkFacebook'.
-  func makeUnlinkFacebookInterceptors() -> [ClientInterceptor<AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkFacebookInterceptors() -> [ClientInterceptor<Nakama_Api_AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkFacebookInstantGame'.
-  func makeUnlinkFacebookInstantGameInterceptors() -> [ClientInterceptor<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkFacebookInstantGameInterceptors() -> [ClientInterceptor<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkGameCenter'.
-  func makeUnlinkGameCenterInterceptors() -> [ClientInterceptor<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkGameCenterInterceptors() -> [ClientInterceptor<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkGoogle'.
-  func makeUnlinkGoogleInterceptors() -> [ClientInterceptor<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkGoogleInterceptors() -> [ClientInterceptor<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'unlinkSteam'.
-  func makeUnlinkSteamInterceptors() -> [ClientInterceptor<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkSteamInterceptors() -> [ClientInterceptor<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'updateAccount'.
-  func makeUpdateAccountInterceptors() -> [ClientInterceptor<UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUpdateAccountInterceptors() -> [ClientInterceptor<Nakama_Api_UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'updateGroup'.
-  func makeUpdateGroupInterceptors() -> [ClientInterceptor<UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUpdateGroupInterceptors() -> [ClientInterceptor<Nakama_Api_UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when invoking 'writeLeaderboardRecord'.
-  func makeWriteLeaderboardRecordInterceptors() -> [ClientInterceptor<WriteLeaderboardRecordRequest, LeaderboardRecord>]
+  func makeWriteLeaderboardRecordInterceptors() -> [ClientInterceptor<Nakama_Api_WriteLeaderboardRecordRequest, Nakama_Api_LeaderboardRecord>]
 
   /// - Returns: Interceptors to use when invoking 'writeStorageObjects'.
-  func makeWriteStorageObjectsInterceptors() -> [ClientInterceptor<WriteStorageObjectsRequest, StorageObjectAcks>]
+  func makeWriteStorageObjectsInterceptors() -> [ClientInterceptor<Nakama_Api_WriteStorageObjectsRequest, Nakama_Api_StorageObjectAcks>]
 
   /// - Returns: Interceptors to use when invoking 'writeTournamentRecord'.
-  func makeWriteTournamentRecordInterceptors() -> [ClientInterceptor<WriteTournamentRecordRequest, LeaderboardRecord>]
+  func makeWriteTournamentRecordInterceptors() -> [ClientInterceptor<Nakama_Api_WriteTournamentRecordRequest, Nakama_Api_LeaderboardRecord>]
 }
 
-internal final class NakamaClient: NakamaClientProtocol {
+internal final class Nakama_Api_NakamaClient: Nakama_Api_NakamaClientProtocol {
   internal let channel: GRPCChannel
   internal var defaultCallOptions: CallOptions
-  internal var interceptors: NakamaClientInterceptorFactoryProtocol?
+  internal var interceptors: Nakama_Api_NakamaClientInterceptorFactoryProtocol?
 
   /// Creates a client for the nakama.api.Nakama service.
   ///
@@ -1825,7 +1825,7 @@ internal final class NakamaClient: NakamaClientProtocol {
   internal init(
     channel: GRPCChannel,
     defaultCallOptions: CallOptions = CallOptions(),
-    interceptors: NakamaClientInterceptorFactoryProtocol? = nil
+    interceptors: Nakama_Api_NakamaClientInterceptorFactoryProtocol? = nil
   ) {
     self.channel = channel
     self.defaultCallOptions = defaultCallOptions
@@ -1837,215 +1837,215 @@ internal final class NakamaClient: NakamaClientProtocol {
 /// The Nakama RPC protocol service built with GRPC.
 ///
 /// To build a server, implement a class that conforms to this protocol.
-internal protocol NakamaProvider: CallHandlerProvider {
-  var interceptors: NakamaServerInterceptorFactoryProtocol? { get }
+internal protocol Nakama_Api_NakamaProvider: CallHandlerProvider {
+  var interceptors: Nakama_Api_NakamaServerInterceptorFactoryProtocol? { get }
 
   /// Add friends by ID or username to a user's account.
-  func addFriends(request: AddFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func addFriends(request: Nakama_Api_AddFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add users to a group.
-  func addGroupUsers(request: AddGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func addGroupUsers(request: Nakama_Api_AddGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Authenticate a user with an Apple ID against the server.
-  func authenticateApple(request: AuthenticateAppleRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateApple(request: Nakama_Api_AuthenticateAppleRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with a custom id against the server.
-  func authenticateCustom(request: AuthenticateCustomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateCustom(request: Nakama_Api_AuthenticateCustomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with a device id against the server.
-  func authenticateDevice(request: AuthenticateDeviceRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateDevice(request: Nakama_Api_AuthenticateDeviceRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with an email+password against the server.
-  func authenticateEmail(request: AuthenticateEmailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateEmail(request: Nakama_Api_AuthenticateEmailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with a Facebook OAuth token against the server.
-  func authenticateFacebook(request: AuthenticateFacebookRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateFacebook(request: Nakama_Api_AuthenticateFacebookRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with a Facebook Instant Game token against the server.
-  func authenticateFacebookInstantGame(request: AuthenticateFacebookInstantGameRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateFacebookInstantGame(request: Nakama_Api_AuthenticateFacebookInstantGameRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with Apple's GameCenter against the server.
-  func authenticateGameCenter(request: AuthenticateGameCenterRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateGameCenter(request: Nakama_Api_AuthenticateGameCenterRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with Google against the server.
-  func authenticateGoogle(request: AuthenticateGoogleRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateGoogle(request: Nakama_Api_AuthenticateGoogleRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Authenticate a user with Steam against the server.
-  func authenticateSteam(request: AuthenticateSteamRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Session>
+  func authenticateSteam(request: Nakama_Api_AuthenticateSteamRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Session>
 
   /// Ban a set of users from a group.
-  func banGroupUsers(request: BanGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func banGroupUsers(request: Nakama_Api_BanGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Block one or more users by ID or username.
-  func blockFriends(request: BlockFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func blockFriends(request: Nakama_Api_BlockFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Create a new group with the current user as the owner.
-  func createGroup(request: CreateGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Group>
+  func createGroup(request: Nakama_Api_CreateGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Group>
 
   /// Delete one or more users by ID or username.
-  func deleteFriends(request: DeleteFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func deleteFriends(request: Nakama_Api_DeleteFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Delete a group by ID.
-  func deleteGroup(request: DeleteGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func deleteGroup(request: Nakama_Api_DeleteGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Delete a leaderboard record.
-  func deleteLeaderboardRecord(request: DeleteLeaderboardRecordRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func deleteLeaderboardRecord(request: Nakama_Api_DeleteLeaderboardRecordRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Delete one or more notifications for the current user.
-  func deleteNotifications(request: DeleteNotificationsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func deleteNotifications(request: Nakama_Api_DeleteNotificationsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Delete one or more objects by ID or username.
-  func deleteStorageObjects(request: DeleteStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func deleteStorageObjects(request: Nakama_Api_DeleteStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Submit an event for processing in the server's registered runtime custom events handler.
-  func event(request: Event, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func event(request: Nakama_Api_Event, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Fetch the current user's account.
-  func getAccount(request: SwiftProtobuf.Google_Protobuf_Empty, context: StatusOnlyCallContext) -> EventLoopFuture<Account>
+  func getAccount(request: SwiftProtobuf.Google_Protobuf_Empty, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Account>
 
   /// Fetch zero or more users by ID and/or username.
-  func getUsers(request: GetUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Users>
+  func getUsers(request: Nakama_Api_GetUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Users>
 
   /// A healthcheck which load balancers can use to check the service.
   func healthcheck(request: SwiftProtobuf.Google_Protobuf_Empty, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Import Facebook friends and add them to a user's account.
-  func importFacebookFriends(request: ImportFacebookFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func importFacebookFriends(request: Nakama_Api_ImportFacebookFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Immediately join an open group, or request to join a closed one.
-  func joinGroup(request: JoinGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func joinGroup(request: Nakama_Api_JoinGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Attempt to join an open and running tournament.
-  func joinTournament(request: JoinTournamentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func joinTournament(request: Nakama_Api_JoinTournamentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Kick a set of users from a group.
-  func kickGroupUsers(request: KickGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func kickGroupUsers(request: Nakama_Api_KickGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Leave a group the user is a member of.
-  func leaveGroup(request: LeaveGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func leaveGroup(request: Nakama_Api_LeaveGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add an Apple ID to the social profiles on the current user's account.
-  func linkApple(request: AccountApple, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkApple(request: Nakama_Api_AccountApple, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add a custom ID to the social profiles on the current user's account.
-  func linkCustom(request: AccountCustom, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkCustom(request: Nakama_Api_AccountCustom, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add a device ID to the social profiles on the current user's account.
-  func linkDevice(request: AccountDevice, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkDevice(request: Nakama_Api_AccountDevice, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add an email+password to the social profiles on the current user's account.
-  func linkEmail(request: AccountEmail, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkEmail(request: Nakama_Api_AccountEmail, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add Facebook to the social profiles on the current user's account.
-  func linkFacebook(request: LinkFacebookRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkFacebook(request: Nakama_Api_LinkFacebookRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add Facebook Instant Game to the social profiles on the current user's account.
-  func linkFacebookInstantGame(request: AccountFacebookInstantGame, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkFacebookInstantGame(request: Nakama_Api_AccountFacebookInstantGame, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add Apple's GameCenter to the social profiles on the current user's account.
-  func linkGameCenter(request: AccountGameCenter, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkGameCenter(request: Nakama_Api_AccountGameCenter, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add Google to the social profiles on the current user's account.
-  func linkGoogle(request: AccountGoogle, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkGoogle(request: Nakama_Api_AccountGoogle, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Add Steam to the social profiles on the current user's account.
-  func linkSteam(request: AccountSteam, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func linkSteam(request: Nakama_Api_AccountSteam, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// List a channel's message history.
-  func listChannelMessages(request: ListChannelMessagesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<ChannelMessageList>
+  func listChannelMessages(request: Nakama_Api_ListChannelMessagesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_ChannelMessageList>
 
   /// List all friends for the current user.
-  func listFriends(request: ListFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<FriendList>
+  func listFriends(request: Nakama_Api_ListFriendsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_FriendList>
 
   /// List groups based on given filters.
-  func listGroups(request: ListGroupsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<GroupList>
+  func listGroups(request: Nakama_Api_ListGroupsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_GroupList>
 
   /// List all users that are part of a group.
-  func listGroupUsers(request: ListGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<GroupUserList>
+  func listGroupUsers(request: Nakama_Api_ListGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_GroupUserList>
 
   /// List leaderboard records.
-  func listLeaderboardRecords(request: ListLeaderboardRecordsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<LeaderboardRecordList>
+  func listLeaderboardRecords(request: Nakama_Api_ListLeaderboardRecordsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
 
   /// List leaderboard records that belong to a user.
-  func listLeaderboardRecordsAroundOwner(request: ListLeaderboardRecordsAroundOwnerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<LeaderboardRecordList>
+  func listLeaderboardRecordsAroundOwner(request: Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
 
   /// Fetch list of running matches.
-  func listMatches(request: ListMatchesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<MatchList>
+  func listMatches(request: Nakama_Api_ListMatchesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_MatchList>
 
   /// Fetch list of notifications.
-  func listNotifications(request: ListNotificationsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<NotificationList>
+  func listNotifications(request: Nakama_Api_ListNotificationsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_NotificationList>
 
   /// List publicly readable storage objects in a given collection.
-  func listStorageObjects(request: ListStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<StorageObjectList>
+  func listStorageObjects(request: Nakama_Api_ListStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_StorageObjectList>
 
   /// List current or upcoming tournaments.
-  func listTournaments(request: ListTournamentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<TournamentList>
+  func listTournaments(request: Nakama_Api_ListTournamentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_TournamentList>
 
   /// List tournament records.
-  func listTournamentRecords(request: ListTournamentRecordsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<TournamentRecordList>
+  func listTournamentRecords(request: Nakama_Api_ListTournamentRecordsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
 
   /// List tournament records for a given owner.
-  func listTournamentRecordsAroundOwner(request: ListTournamentRecordsAroundOwnerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<TournamentRecordList>
+  func listTournamentRecordsAroundOwner(request: Nakama_Api_ListTournamentRecordsAroundOwnerRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
 
   /// List groups the current user belongs to.
-  func listUserGroups(request: ListUserGroupsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<UserGroupList>
+  func listUserGroups(request: Nakama_Api_ListUserGroupsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_UserGroupList>
 
   /// Promote a set of users in a group to the next role up.
-  func promoteGroupUsers(request: PromoteGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func promoteGroupUsers(request: Nakama_Api_PromoteGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Demote a set of users in a group to the next role down.
-  func demoteGroupUsers(request: DemoteGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func demoteGroupUsers(request: Nakama_Api_DemoteGroupUsersRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Get storage objects.
-  func readStorageObjects(request: ReadStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<StorageObjects>
+  func readStorageObjects(request: Nakama_Api_ReadStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_StorageObjects>
 
   /// Execute a Lua function on the server.
-  func rpcFunc(request: Rpc, context: StatusOnlyCallContext) -> EventLoopFuture<Rpc>
+  func rpcFunc(request: Nakama_Api_Rpc, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_Rpc>
 
   /// Remove the Apple ID from the social profiles on the current user's account.
-  func unlinkApple(request: AccountApple, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkApple(request: Nakama_Api_AccountApple, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove the custom ID from the social profiles on the current user's account.
-  func unlinkCustom(request: AccountCustom, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkCustom(request: Nakama_Api_AccountCustom, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove the device ID from the social profiles on the current user's account.
-  func unlinkDevice(request: AccountDevice, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkDevice(request: Nakama_Api_AccountDevice, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove the email+password from the social profiles on the current user's account.
-  func unlinkEmail(request: AccountEmail, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkEmail(request: Nakama_Api_AccountEmail, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove Facebook from the social profiles on the current user's account.
-  func unlinkFacebook(request: AccountFacebook, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkFacebook(request: Nakama_Api_AccountFacebook, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove Facebook Instant Game profile from the social profiles on the current user's account.
-  func unlinkFacebookInstantGame(request: AccountFacebookInstantGame, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkFacebookInstantGame(request: Nakama_Api_AccountFacebookInstantGame, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove Apple's GameCenter from the social profiles on the current user's account.
-  func unlinkGameCenter(request: AccountGameCenter, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkGameCenter(request: Nakama_Api_AccountGameCenter, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove Google from the social profiles on the current user's account.
-  func unlinkGoogle(request: AccountGoogle, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkGoogle(request: Nakama_Api_AccountGoogle, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Remove Steam from the social profiles on the current user's account.
-  func unlinkSteam(request: AccountSteam, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func unlinkSteam(request: Nakama_Api_AccountSteam, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Update fields in the current user's account.
-  func updateAccount(request: UpdateAccountRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func updateAccount(request: Nakama_Api_UpdateAccountRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Update fields in a given group.
-  func updateGroup(request: UpdateGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
+  func updateGroup(request: Nakama_Api_UpdateGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty>
 
   /// Write a record to a leaderboard.
-  func writeLeaderboardRecord(request: WriteLeaderboardRecordRequest, context: StatusOnlyCallContext) -> EventLoopFuture<LeaderboardRecord>
+  func writeLeaderboardRecord(request: Nakama_Api_WriteLeaderboardRecordRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
 
   /// Write objects into the storage engine.
-  func writeStorageObjects(request: WriteStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<StorageObjectAcks>
+  func writeStorageObjects(request: Nakama_Api_WriteStorageObjectsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_StorageObjectAcks>
 
   /// Write a record to a tournament.
-  func writeTournamentRecord(request: WriteTournamentRecordRequest, context: StatusOnlyCallContext) -> EventLoopFuture<LeaderboardRecord>
+  func writeTournamentRecord(request: Nakama_Api_WriteTournamentRecordRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
 }
 
-extension NakamaProvider {
+extension Nakama_Api_NakamaProvider {
   internal var serviceName: Substring { return "nakama.api.Nakama" }
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
@@ -2741,95 +2741,95 @@ extension NakamaProvider {
   }
 }
 
-internal protocol NakamaServerInterceptorFactoryProtocol {
+internal protocol Nakama_Api_NakamaServerInterceptorFactoryProtocol {
 
   /// - Returns: Interceptors to use when handling 'addFriends'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAddFriendsInterceptors() -> [ServerInterceptor<AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeAddFriendsInterceptors() -> [ServerInterceptor<Nakama_Api_AddFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'addGroupUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAddGroupUsersInterceptors() -> [ServerInterceptor<AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeAddGroupUsersInterceptors() -> [ServerInterceptor<Nakama_Api_AddGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'authenticateApple'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateAppleInterceptors() -> [ServerInterceptor<AuthenticateAppleRequest, Session>]
+  func makeAuthenticateAppleInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateAppleRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateCustom'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateCustomInterceptors() -> [ServerInterceptor<AuthenticateCustomRequest, Session>]
+  func makeAuthenticateCustomInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateCustomRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateDevice'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateDeviceInterceptors() -> [ServerInterceptor<AuthenticateDeviceRequest, Session>]
+  func makeAuthenticateDeviceInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateDeviceRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateEmail'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateEmailInterceptors() -> [ServerInterceptor<AuthenticateEmailRequest, Session>]
+  func makeAuthenticateEmailInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateEmailRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateFacebook'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateFacebookInterceptors() -> [ServerInterceptor<AuthenticateFacebookRequest, Session>]
+  func makeAuthenticateFacebookInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateFacebookRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateFacebookInstantGame'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateFacebookInstantGameInterceptors() -> [ServerInterceptor<AuthenticateFacebookInstantGameRequest, Session>]
+  func makeAuthenticateFacebookInstantGameInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateFacebookInstantGameRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateGameCenter'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateGameCenterInterceptors() -> [ServerInterceptor<AuthenticateGameCenterRequest, Session>]
+  func makeAuthenticateGameCenterInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateGameCenterRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateGoogle'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateGoogleInterceptors() -> [ServerInterceptor<AuthenticateGoogleRequest, Session>]
+  func makeAuthenticateGoogleInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateGoogleRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'authenticateSteam'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeAuthenticateSteamInterceptors() -> [ServerInterceptor<AuthenticateSteamRequest, Session>]
+  func makeAuthenticateSteamInterceptors() -> [ServerInterceptor<Nakama_Api_AuthenticateSteamRequest, Nakama_Api_Session>]
 
   /// - Returns: Interceptors to use when handling 'banGroupUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeBanGroupUsersInterceptors() -> [ServerInterceptor<BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeBanGroupUsersInterceptors() -> [ServerInterceptor<Nakama_Api_BanGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'blockFriends'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeBlockFriendsInterceptors() -> [ServerInterceptor<BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeBlockFriendsInterceptors() -> [ServerInterceptor<Nakama_Api_BlockFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'createGroup'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeCreateGroupInterceptors() -> [ServerInterceptor<CreateGroupRequest, Group>]
+  func makeCreateGroupInterceptors() -> [ServerInterceptor<Nakama_Api_CreateGroupRequest, Nakama_Api_Group>]
 
   /// - Returns: Interceptors to use when handling 'deleteFriends'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeDeleteFriendsInterceptors() -> [ServerInterceptor<DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteFriendsInterceptors() -> [ServerInterceptor<Nakama_Api_DeleteFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'deleteGroup'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeDeleteGroupInterceptors() -> [ServerInterceptor<DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteGroupInterceptors() -> [ServerInterceptor<Nakama_Api_DeleteGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'deleteLeaderboardRecord'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeDeleteLeaderboardRecordInterceptors() -> [ServerInterceptor<DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteLeaderboardRecordInterceptors() -> [ServerInterceptor<Nakama_Api_DeleteLeaderboardRecordRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'deleteNotifications'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeDeleteNotificationsInterceptors() -> [ServerInterceptor<DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteNotificationsInterceptors() -> [ServerInterceptor<Nakama_Api_DeleteNotificationsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'deleteStorageObjects'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeDeleteStorageObjectsInterceptors() -> [ServerInterceptor<DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDeleteStorageObjectsInterceptors() -> [ServerInterceptor<Nakama_Api_DeleteStorageObjectsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'event'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeEventInterceptors() -> [ServerInterceptor<Event, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeEventInterceptors() -> [ServerInterceptor<Nakama_Api_Event, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'getAccount'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeGetAccountInterceptors() -> [ServerInterceptor<SwiftProtobuf.Google_Protobuf_Empty, Account>]
+  func makeGetAccountInterceptors() -> [ServerInterceptor<SwiftProtobuf.Google_Protobuf_Empty, Nakama_Api_Account>]
 
   /// - Returns: Interceptors to use when handling 'getUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeGetUsersInterceptors() -> [ServerInterceptor<GetUsersRequest, Users>]
+  func makeGetUsersInterceptors() -> [ServerInterceptor<Nakama_Api_GetUsersRequest, Nakama_Api_Users>]
 
   /// - Returns: Interceptors to use when handling 'healthcheck'.
   ///   Defaults to calling `self.makeInterceptors()`.
@@ -2837,181 +2837,181 @@ internal protocol NakamaServerInterceptorFactoryProtocol {
 
   /// - Returns: Interceptors to use when handling 'importFacebookFriends'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeImportFacebookFriendsInterceptors() -> [ServerInterceptor<ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeImportFacebookFriendsInterceptors() -> [ServerInterceptor<Nakama_Api_ImportFacebookFriendsRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'joinGroup'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeJoinGroupInterceptors() -> [ServerInterceptor<JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeJoinGroupInterceptors() -> [ServerInterceptor<Nakama_Api_JoinGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'joinTournament'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeJoinTournamentInterceptors() -> [ServerInterceptor<JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeJoinTournamentInterceptors() -> [ServerInterceptor<Nakama_Api_JoinTournamentRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'kickGroupUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeKickGroupUsersInterceptors() -> [ServerInterceptor<KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeKickGroupUsersInterceptors() -> [ServerInterceptor<Nakama_Api_KickGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'leaveGroup'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLeaveGroupInterceptors() -> [ServerInterceptor<LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLeaveGroupInterceptors() -> [ServerInterceptor<Nakama_Api_LeaveGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkApple'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkAppleInterceptors() -> [ServerInterceptor<AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkAppleInterceptors() -> [ServerInterceptor<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkCustom'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkCustomInterceptors() -> [ServerInterceptor<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkCustomInterceptors() -> [ServerInterceptor<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkDevice'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkDeviceInterceptors() -> [ServerInterceptor<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkDeviceInterceptors() -> [ServerInterceptor<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkEmail'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkEmailInterceptors() -> [ServerInterceptor<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkEmailInterceptors() -> [ServerInterceptor<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkFacebook'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkFacebookInterceptors() -> [ServerInterceptor<LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkFacebookInterceptors() -> [ServerInterceptor<Nakama_Api_LinkFacebookRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkFacebookInstantGame'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkFacebookInstantGameInterceptors() -> [ServerInterceptor<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkFacebookInstantGameInterceptors() -> [ServerInterceptor<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkGameCenter'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkGameCenterInterceptors() -> [ServerInterceptor<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkGameCenterInterceptors() -> [ServerInterceptor<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkGoogle'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkGoogleInterceptors() -> [ServerInterceptor<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkGoogleInterceptors() -> [ServerInterceptor<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'linkSteam'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeLinkSteamInterceptors() -> [ServerInterceptor<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeLinkSteamInterceptors() -> [ServerInterceptor<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'listChannelMessages'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListChannelMessagesInterceptors() -> [ServerInterceptor<ListChannelMessagesRequest, ChannelMessageList>]
+  func makeListChannelMessagesInterceptors() -> [ServerInterceptor<Nakama_Api_ListChannelMessagesRequest, Nakama_Api_ChannelMessageList>]
 
   /// - Returns: Interceptors to use when handling 'listFriends'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListFriendsInterceptors() -> [ServerInterceptor<ListFriendsRequest, FriendList>]
+  func makeListFriendsInterceptors() -> [ServerInterceptor<Nakama_Api_ListFriendsRequest, Nakama_Api_FriendList>]
 
   /// - Returns: Interceptors to use when handling 'listGroups'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListGroupsInterceptors() -> [ServerInterceptor<ListGroupsRequest, GroupList>]
+  func makeListGroupsInterceptors() -> [ServerInterceptor<Nakama_Api_ListGroupsRequest, Nakama_Api_GroupList>]
 
   /// - Returns: Interceptors to use when handling 'listGroupUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListGroupUsersInterceptors() -> [ServerInterceptor<ListGroupUsersRequest, GroupUserList>]
+  func makeListGroupUsersInterceptors() -> [ServerInterceptor<Nakama_Api_ListGroupUsersRequest, Nakama_Api_GroupUserList>]
 
   /// - Returns: Interceptors to use when handling 'listLeaderboardRecords'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListLeaderboardRecordsInterceptors() -> [ServerInterceptor<ListLeaderboardRecordsRequest, LeaderboardRecordList>]
+  func makeListLeaderboardRecordsInterceptors() -> [ServerInterceptor<Nakama_Api_ListLeaderboardRecordsRequest, Nakama_Api_LeaderboardRecordList>]
 
   /// - Returns: Interceptors to use when handling 'listLeaderboardRecordsAroundOwner'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListLeaderboardRecordsAroundOwnerInterceptors() -> [ServerInterceptor<ListLeaderboardRecordsAroundOwnerRequest, LeaderboardRecordList>]
+  func makeListLeaderboardRecordsAroundOwnerInterceptors() -> [ServerInterceptor<Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest, Nakama_Api_LeaderboardRecordList>]
 
   /// - Returns: Interceptors to use when handling 'listMatches'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListMatchesInterceptors() -> [ServerInterceptor<ListMatchesRequest, MatchList>]
+  func makeListMatchesInterceptors() -> [ServerInterceptor<Nakama_Api_ListMatchesRequest, Nakama_Api_MatchList>]
 
   /// - Returns: Interceptors to use when handling 'listNotifications'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListNotificationsInterceptors() -> [ServerInterceptor<ListNotificationsRequest, NotificationList>]
+  func makeListNotificationsInterceptors() -> [ServerInterceptor<Nakama_Api_ListNotificationsRequest, Nakama_Api_NotificationList>]
 
   /// - Returns: Interceptors to use when handling 'listStorageObjects'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListStorageObjectsInterceptors() -> [ServerInterceptor<ListStorageObjectsRequest, StorageObjectList>]
+  func makeListStorageObjectsInterceptors() -> [ServerInterceptor<Nakama_Api_ListStorageObjectsRequest, Nakama_Api_StorageObjectList>]
 
   /// - Returns: Interceptors to use when handling 'listTournaments'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListTournamentsInterceptors() -> [ServerInterceptor<ListTournamentsRequest, TournamentList>]
+  func makeListTournamentsInterceptors() -> [ServerInterceptor<Nakama_Api_ListTournamentsRequest, Nakama_Api_TournamentList>]
 
   /// - Returns: Interceptors to use when handling 'listTournamentRecords'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListTournamentRecordsInterceptors() -> [ServerInterceptor<ListTournamentRecordsRequest, TournamentRecordList>]
+  func makeListTournamentRecordsInterceptors() -> [ServerInterceptor<Nakama_Api_ListTournamentRecordsRequest, Nakama_Api_TournamentRecordList>]
 
   /// - Returns: Interceptors to use when handling 'listTournamentRecordsAroundOwner'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListTournamentRecordsAroundOwnerInterceptors() -> [ServerInterceptor<ListTournamentRecordsAroundOwnerRequest, TournamentRecordList>]
+  func makeListTournamentRecordsAroundOwnerInterceptors() -> [ServerInterceptor<Nakama_Api_ListTournamentRecordsAroundOwnerRequest, Nakama_Api_TournamentRecordList>]
 
   /// - Returns: Interceptors to use when handling 'listUserGroups'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeListUserGroupsInterceptors() -> [ServerInterceptor<ListUserGroupsRequest, UserGroupList>]
+  func makeListUserGroupsInterceptors() -> [ServerInterceptor<Nakama_Api_ListUserGroupsRequest, Nakama_Api_UserGroupList>]
 
   /// - Returns: Interceptors to use when handling 'promoteGroupUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makePromoteGroupUsersInterceptors() -> [ServerInterceptor<PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makePromoteGroupUsersInterceptors() -> [ServerInterceptor<Nakama_Api_PromoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'demoteGroupUsers'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeDemoteGroupUsersInterceptors() -> [ServerInterceptor<DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeDemoteGroupUsersInterceptors() -> [ServerInterceptor<Nakama_Api_DemoteGroupUsersRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'readStorageObjects'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeReadStorageObjectsInterceptors() -> [ServerInterceptor<ReadStorageObjectsRequest, StorageObjects>]
+  func makeReadStorageObjectsInterceptors() -> [ServerInterceptor<Nakama_Api_ReadStorageObjectsRequest, Nakama_Api_StorageObjects>]
 
   /// - Returns: Interceptors to use when handling 'rpcFunc'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeRpcFuncInterceptors() -> [ServerInterceptor<Rpc, Rpc>]
+  func makeRpcFuncInterceptors() -> [ServerInterceptor<Nakama_Api_Rpc, Nakama_Api_Rpc>]
 
   /// - Returns: Interceptors to use when handling 'unlinkApple'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkAppleInterceptors() -> [ServerInterceptor<AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkAppleInterceptors() -> [ServerInterceptor<Nakama_Api_AccountApple, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkCustom'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkCustomInterceptors() -> [ServerInterceptor<AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkCustomInterceptors() -> [ServerInterceptor<Nakama_Api_AccountCustom, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkDevice'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkDeviceInterceptors() -> [ServerInterceptor<AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkDeviceInterceptors() -> [ServerInterceptor<Nakama_Api_AccountDevice, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkEmail'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkEmailInterceptors() -> [ServerInterceptor<AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkEmailInterceptors() -> [ServerInterceptor<Nakama_Api_AccountEmail, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkFacebook'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkFacebookInterceptors() -> [ServerInterceptor<AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkFacebookInterceptors() -> [ServerInterceptor<Nakama_Api_AccountFacebook, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkFacebookInstantGame'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkFacebookInstantGameInterceptors() -> [ServerInterceptor<AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkFacebookInstantGameInterceptors() -> [ServerInterceptor<Nakama_Api_AccountFacebookInstantGame, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkGameCenter'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkGameCenterInterceptors() -> [ServerInterceptor<AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkGameCenterInterceptors() -> [ServerInterceptor<Nakama_Api_AccountGameCenter, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkGoogle'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkGoogleInterceptors() -> [ServerInterceptor<AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkGoogleInterceptors() -> [ServerInterceptor<Nakama_Api_AccountGoogle, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'unlinkSteam'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUnlinkSteamInterceptors() -> [ServerInterceptor<AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUnlinkSteamInterceptors() -> [ServerInterceptor<Nakama_Api_AccountSteam, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'updateAccount'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUpdateAccountInterceptors() -> [ServerInterceptor<UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUpdateAccountInterceptors() -> [ServerInterceptor<Nakama_Api_UpdateAccountRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'updateGroup'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeUpdateGroupInterceptors() -> [ServerInterceptor<UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
+  func makeUpdateGroupInterceptors() -> [ServerInterceptor<Nakama_Api_UpdateGroupRequest, SwiftProtobuf.Google_Protobuf_Empty>]
 
   /// - Returns: Interceptors to use when handling 'writeLeaderboardRecord'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeWriteLeaderboardRecordInterceptors() -> [ServerInterceptor<WriteLeaderboardRecordRequest, LeaderboardRecord>]
+  func makeWriteLeaderboardRecordInterceptors() -> [ServerInterceptor<Nakama_Api_WriteLeaderboardRecordRequest, Nakama_Api_LeaderboardRecord>]
 
   /// - Returns: Interceptors to use when handling 'writeStorageObjects'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeWriteStorageObjectsInterceptors() -> [ServerInterceptor<WriteStorageObjectsRequest, StorageObjectAcks>]
+  func makeWriteStorageObjectsInterceptors() -> [ServerInterceptor<Nakama_Api_WriteStorageObjectsRequest, Nakama_Api_StorageObjectAcks>]
 
   /// - Returns: Interceptors to use when handling 'writeTournamentRecord'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeWriteTournamentRecordInterceptors() -> [ServerInterceptor<WriteTournamentRecordRequest, LeaderboardRecord>]
+  func makeWriteTournamentRecordInterceptors() -> [ServerInterceptor<Nakama_Api_WriteTournamentRecordRequest, Nakama_Api_LeaderboardRecord>]
 }

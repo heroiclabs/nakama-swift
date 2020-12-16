@@ -31,8 +31,6 @@ option java_outer_classname = "NakamaApiGrpc";
 option java_package = "com.heroiclabs.nakama.api";
 
 option csharp_namespace = "Nakama";
-option objc_class_prefix = "NKPB";
-option swift_prefix = "";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {

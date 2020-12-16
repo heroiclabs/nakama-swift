@@ -31,9 +31,6 @@ option java_package = "com.heroiclabs.nakama.rtapi";
 
 option csharp_namespace = "Nakama";
 
-option objc_class_prefix = "NKPB";
-option swift_prefix = "";
-
 // An envelope for a realtime message.
 message Envelope {
   string cid = 1;

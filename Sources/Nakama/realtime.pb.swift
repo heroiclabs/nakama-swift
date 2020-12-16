@@ -38,299 +38,299 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
 }
 
 /// An envelope for a realtime message.
-struct Envelope {
+struct Nakama_Realtime_Envelope {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   var cid: String = String()
 
-  var message: Envelope.OneOf_Message? = nil
+  var message: Nakama_Realtime_Envelope.OneOf_Message? = nil
 
   /// A response from a channel join operation.
-  var channel: Channel {
+  var channel: Nakama_Realtime_Channel {
     get {
       if case .channel(let v)? = message {return v}
-      return Channel()
+      return Nakama_Realtime_Channel()
     }
     set {message = .channel(newValue)}
   }
 
   /// Join a realtime chat channel.
-  var channelJoin: ChannelJoin {
+  var channelJoin: Nakama_Realtime_ChannelJoin {
     get {
       if case .channelJoin(let v)? = message {return v}
-      return ChannelJoin()
+      return Nakama_Realtime_ChannelJoin()
     }
     set {message = .channelJoin(newValue)}
   }
 
   /// Leave a realtime chat channel.
-  var channelLeave: ChannelLeave {
+  var channelLeave: Nakama_Realtime_ChannelLeave {
     get {
       if case .channelLeave(let v)? = message {return v}
-      return ChannelLeave()
+      return Nakama_Realtime_ChannelLeave()
     }
     set {message = .channelLeave(newValue)}
   }
 
   /// An incoming message on a realtime chat channel.
-  var channelMessage: ChannelMessage {
+  var channelMessage: Nakama_Api_ChannelMessage {
     get {
       if case .channelMessage(let v)? = message {return v}
-      return ChannelMessage()
+      return Nakama_Api_ChannelMessage()
     }
     set {message = .channelMessage(newValue)}
   }
 
   /// An acknowledgement received in response to sending a message on a chat channel.
-  var channelMessageAck: ChannelMessageAck {
+  var channelMessageAck: Nakama_Realtime_ChannelMessageAck {
     get {
       if case .channelMessageAck(let v)? = message {return v}
-      return ChannelMessageAck()
+      return Nakama_Realtime_ChannelMessageAck()
     }
     set {message = .channelMessageAck(newValue)}
   }
 
   /// Send a message to a realtime chat channel.
-  var channelMessageSend: ChannelMessageSend {
+  var channelMessageSend: Nakama_Realtime_ChannelMessageSend {
     get {
       if case .channelMessageSend(let v)? = message {return v}
-      return ChannelMessageSend()
+      return Nakama_Realtime_ChannelMessageSend()
     }
     set {message = .channelMessageSend(newValue)}
   }
 
   /// Update a message previously sent to a realtime chat channel.
-  var channelMessageUpdate: ChannelMessageUpdate {
+  var channelMessageUpdate: Nakama_Realtime_ChannelMessageUpdate {
     get {
       if case .channelMessageUpdate(let v)? = message {return v}
-      return ChannelMessageUpdate()
+      return Nakama_Realtime_ChannelMessageUpdate()
     }
     set {message = .channelMessageUpdate(newValue)}
   }
 
   /// Remove a message previously sent to a realtime chat channel.
-  var channelMessageRemove: ChannelMessageRemove {
+  var channelMessageRemove: Nakama_Realtime_ChannelMessageRemove {
     get {
       if case .channelMessageRemove(let v)? = message {return v}
-      return ChannelMessageRemove()
+      return Nakama_Realtime_ChannelMessageRemove()
     }
     set {message = .channelMessageRemove(newValue)}
   }
 
   /// Presence update for a particular realtime chat channel.
-  var channelPresenceEvent: ChannelPresenceEvent {
+  var channelPresenceEvent: Nakama_Realtime_ChannelPresenceEvent {
     get {
       if case .channelPresenceEvent(let v)? = message {return v}
-      return ChannelPresenceEvent()
+      return Nakama_Realtime_ChannelPresenceEvent()
     }
     set {message = .channelPresenceEvent(newValue)}
   }
 
   /// Describes an error which occurred on the server.
-  var error: Error {
+  var error: Nakama_Realtime_Error {
     get {
       if case .error(let v)? = message {return v}
-      return Error()
+      return Nakama_Realtime_Error()
     }
     set {message = .error(newValue)}
   }
 
   /// Incoming information about a realtime match.
-  var match: Match {
+  var match: Nakama_Realtime_Match {
     get {
       if case .match(let v)? = message {return v}
-      return Match()
+      return Nakama_Realtime_Match()
     }
     set {message = .match(newValue)}
   }
 
   /// A client to server request to create a realtime match.
-  var matchCreate: MatchCreate {
+  var matchCreate: Nakama_Realtime_MatchCreate {
     get {
       if case .matchCreate(let v)? = message {return v}
-      return MatchCreate()
+      return Nakama_Realtime_MatchCreate()
     }
     set {message = .matchCreate(newValue)}
   }
 
   /// Incoming realtime match data delivered from the server.
-  var matchData: MatchData {
+  var matchData: Nakama_Realtime_MatchData {
     get {
       if case .matchData(let v)? = message {return v}
-      return MatchData()
+      return Nakama_Realtime_MatchData()
     }
     set {message = .matchData(newValue)}
   }
 
   /// A client to server request to send data to a realtime match.
-  var matchDataSend: MatchDataSend {
+  var matchDataSend: Nakama_Realtime_MatchDataSend {
     get {
       if case .matchDataSend(let v)? = message {return v}
-      return MatchDataSend()
+      return Nakama_Realtime_MatchDataSend()
     }
     set {message = .matchDataSend(newValue)}
   }
 
   /// A client to server request to join a realtime match.
-  var matchJoin: MatchJoin {
+  var matchJoin: Nakama_Realtime_MatchJoin {
     get {
       if case .matchJoin(let v)? = message {return v}
-      return MatchJoin()
+      return Nakama_Realtime_MatchJoin()
     }
     set {message = .matchJoin(newValue)}
   }
 
   /// A client to server request to leave a realtime match.
-  var matchLeave: MatchLeave {
+  var matchLeave: Nakama_Realtime_MatchLeave {
     get {
       if case .matchLeave(let v)? = message {return v}
-      return MatchLeave()
+      return Nakama_Realtime_MatchLeave()
     }
     set {message = .matchLeave(newValue)}
   }
 
   /// Presence update for a particular realtime match.
-  var matchPresenceEvent: MatchPresenceEvent {
+  var matchPresenceEvent: Nakama_Realtime_MatchPresenceEvent {
     get {
       if case .matchPresenceEvent(let v)? = message {return v}
-      return MatchPresenceEvent()
+      return Nakama_Realtime_MatchPresenceEvent()
     }
     set {message = .matchPresenceEvent(newValue)}
   }
 
   /// Submit a new matchmaking process request.
-  var matchmakerAdd: MatchmakerAdd {
+  var matchmakerAdd: Nakama_Realtime_MatchmakerAdd {
     get {
       if case .matchmakerAdd(let v)? = message {return v}
-      return MatchmakerAdd()
+      return Nakama_Realtime_MatchmakerAdd()
     }
     set {message = .matchmakerAdd(newValue)}
   }
 
   /// A successful matchmaking result.
-  var matchmakerMatched: MatchmakerMatched {
+  var matchmakerMatched: Nakama_Realtime_MatchmakerMatched {
     get {
       if case .matchmakerMatched(let v)? = message {return v}
-      return MatchmakerMatched()
+      return Nakama_Realtime_MatchmakerMatched()
     }
     set {message = .matchmakerMatched(newValue)}
   }
 
   /// Cancel a matchmaking process using a ticket.
-  var matchmakerRemove: MatchmakerRemove {
+  var matchmakerRemove: Nakama_Realtime_MatchmakerRemove {
     get {
       if case .matchmakerRemove(let v)? = message {return v}
-      return MatchmakerRemove()
+      return Nakama_Realtime_MatchmakerRemove()
     }
     set {message = .matchmakerRemove(newValue)}
   }
 
   /// A response from starting a new matchmaking process.
-  var matchmakerTicket: MatchmakerTicket {
+  var matchmakerTicket: Nakama_Realtime_MatchmakerTicket {
     get {
       if case .matchmakerTicket(let v)? = message {return v}
-      return MatchmakerTicket()
+      return Nakama_Realtime_MatchmakerTicket()
     }
     set {message = .matchmakerTicket(newValue)}
   }
 
   /// Notifications send by the server.
-  var notifications: Notifications {
+  var notifications: Nakama_Realtime_Notifications {
     get {
       if case .notifications(let v)? = message {return v}
-      return Notifications()
+      return Nakama_Realtime_Notifications()
     }
     set {message = .notifications(newValue)}
   }
 
   /// RPC call or response.
-  var rpc: Rpc {
+  var rpc: Nakama_Api_Rpc {
     get {
       if case .rpc(let v)? = message {return v}
-      return Rpc()
+      return Nakama_Api_Rpc()
     }
     set {message = .rpc(newValue)}
   }
 
   /// An incoming status snapshot for some set of users.
-  var status: Status {
+  var status: Nakama_Realtime_Status {
     get {
       if case .status(let v)? = message {return v}
-      return Status()
+      return Nakama_Realtime_Status()
     }
     set {message = .status(newValue)}
   }
 
   /// Start following some set of users to receive their status updates.
-  var statusFollow: StatusFollow {
+  var statusFollow: Nakama_Realtime_StatusFollow {
     get {
       if case .statusFollow(let v)? = message {return v}
-      return StatusFollow()
+      return Nakama_Realtime_StatusFollow()
     }
     set {message = .statusFollow(newValue)}
   }
 
   /// An incoming status update.
-  var statusPresenceEvent: StatusPresenceEvent {
+  var statusPresenceEvent: Nakama_Realtime_StatusPresenceEvent {
     get {
       if case .statusPresenceEvent(let v)? = message {return v}
-      return StatusPresenceEvent()
+      return Nakama_Realtime_StatusPresenceEvent()
     }
     set {message = .statusPresenceEvent(newValue)}
   }
 
   /// Stop following some set of users to no longer receive their status updates.
-  var statusUnfollow: StatusUnfollow {
+  var statusUnfollow: Nakama_Realtime_StatusUnfollow {
     get {
       if case .statusUnfollow(let v)? = message {return v}
-      return StatusUnfollow()
+      return Nakama_Realtime_StatusUnfollow()
     }
     set {message = .statusUnfollow(newValue)}
   }
 
   /// Set the user's own status.
-  var statusUpdate: StatusUpdate {
+  var statusUpdate: Nakama_Realtime_StatusUpdate {
     get {
       if case .statusUpdate(let v)? = message {return v}
-      return StatusUpdate()
+      return Nakama_Realtime_StatusUpdate()
     }
     set {message = .statusUpdate(newValue)}
   }
 
   /// A data message delivered over a stream.
-  var streamData: StreamData {
+  var streamData: Nakama_Realtime_StreamData {
     get {
       if case .streamData(let v)? = message {return v}
-      return StreamData()
+      return Nakama_Realtime_StreamData()
     }
     set {message = .streamData(newValue)}
   }
 
   /// Presence update for a particular stream.
-  var streamPresenceEvent: StreamPresenceEvent {
+  var streamPresenceEvent: Nakama_Realtime_StreamPresenceEvent {
     get {
       if case .streamPresenceEvent(let v)? = message {return v}
-      return StreamPresenceEvent()
+      return Nakama_Realtime_StreamPresenceEvent()
     }
     set {message = .streamPresenceEvent(newValue)}
   }
 
   /// Application-level heartbeat and connection check.
-  var ping: Ping {
+  var ping: Nakama_Realtime_Ping {
     get {
       if case .ping(let v)? = message {return v}
-      return Ping()
+      return Nakama_Realtime_Ping()
     }
     set {message = .ping(newValue)}
   }
 
   /// Application-level heartbeat and connection check response.
-  var pong: Pong {
+  var pong: Nakama_Realtime_Pong {
     get {
       if case .pong(let v)? = message {return v}
-      return Pong()
+      return Nakama_Realtime_Pong()
     }
     set {message = .pong(newValue)}
   }
@@ -339,72 +339,72 @@ struct Envelope {
 
   enum OneOf_Message: Equatable {
     /// A response from a channel join operation.
-    case channel(Channel)
+    case channel(Nakama_Realtime_Channel)
     /// Join a realtime chat channel.
-    case channelJoin(ChannelJoin)
+    case channelJoin(Nakama_Realtime_ChannelJoin)
     /// Leave a realtime chat channel.
-    case channelLeave(ChannelLeave)
+    case channelLeave(Nakama_Realtime_ChannelLeave)
     /// An incoming message on a realtime chat channel.
-    case channelMessage(ChannelMessage)
+    case channelMessage(Nakama_Api_ChannelMessage)
     /// An acknowledgement received in response to sending a message on a chat channel.
-    case channelMessageAck(ChannelMessageAck)
+    case channelMessageAck(Nakama_Realtime_ChannelMessageAck)
     /// Send a message to a realtime chat channel.
-    case channelMessageSend(ChannelMessageSend)
+    case channelMessageSend(Nakama_Realtime_ChannelMessageSend)
     /// Update a message previously sent to a realtime chat channel.
-    case channelMessageUpdate(ChannelMessageUpdate)
+    case channelMessageUpdate(Nakama_Realtime_ChannelMessageUpdate)
     /// Remove a message previously sent to a realtime chat channel.
-    case channelMessageRemove(ChannelMessageRemove)
+    case channelMessageRemove(Nakama_Realtime_ChannelMessageRemove)
     /// Presence update for a particular realtime chat channel.
-    case channelPresenceEvent(ChannelPresenceEvent)
+    case channelPresenceEvent(Nakama_Realtime_ChannelPresenceEvent)
     /// Describes an error which occurred on the server.
-    case error(Error)
+    case error(Nakama_Realtime_Error)
     /// Incoming information about a realtime match.
-    case match(Match)
+    case match(Nakama_Realtime_Match)
     /// A client to server request to create a realtime match.
-    case matchCreate(MatchCreate)
+    case matchCreate(Nakama_Realtime_MatchCreate)
     /// Incoming realtime match data delivered from the server.
-    case matchData(MatchData)
+    case matchData(Nakama_Realtime_MatchData)
     /// A client to server request to send data to a realtime match.
-    case matchDataSend(MatchDataSend)
+    case matchDataSend(Nakama_Realtime_MatchDataSend)
     /// A client to server request to join a realtime match.
-    case matchJoin(MatchJoin)
+    case matchJoin(Nakama_Realtime_MatchJoin)
     /// A client to server request to leave a realtime match.
-    case matchLeave(MatchLeave)
+    case matchLeave(Nakama_Realtime_MatchLeave)
     /// Presence update for a particular realtime match.
-    case matchPresenceEvent(MatchPresenceEvent)
+    case matchPresenceEvent(Nakama_Realtime_MatchPresenceEvent)
     /// Submit a new matchmaking process request.
-    case matchmakerAdd(MatchmakerAdd)
+    case matchmakerAdd(Nakama_Realtime_MatchmakerAdd)
     /// A successful matchmaking result.
-    case matchmakerMatched(MatchmakerMatched)
+    case matchmakerMatched(Nakama_Realtime_MatchmakerMatched)
     /// Cancel a matchmaking process using a ticket.
-    case matchmakerRemove(MatchmakerRemove)
+    case matchmakerRemove(Nakama_Realtime_MatchmakerRemove)
     /// A response from starting a new matchmaking process.
-    case matchmakerTicket(MatchmakerTicket)
+    case matchmakerTicket(Nakama_Realtime_MatchmakerTicket)
     /// Notifications send by the server.
-    case notifications(Notifications)
+    case notifications(Nakama_Realtime_Notifications)
     /// RPC call or response.
-    case rpc(Rpc)
+    case rpc(Nakama_Api_Rpc)
     /// An incoming status snapshot for some set of users.
-    case status(Status)
+    case status(Nakama_Realtime_Status)
     /// Start following some set of users to receive their status updates.
-    case statusFollow(StatusFollow)
+    case statusFollow(Nakama_Realtime_StatusFollow)
     /// An incoming status update.
-    case statusPresenceEvent(StatusPresenceEvent)
+    case statusPresenceEvent(Nakama_Realtime_StatusPresenceEvent)
     /// Stop following some set of users to no longer receive their status updates.
-    case statusUnfollow(StatusUnfollow)
+    case statusUnfollow(Nakama_Realtime_StatusUnfollow)
     /// Set the user's own status.
-    case statusUpdate(StatusUpdate)
+    case statusUpdate(Nakama_Realtime_StatusUpdate)
     /// A data message delivered over a stream.
-    case streamData(StreamData)
+    case streamData(Nakama_Realtime_StreamData)
     /// Presence update for a particular stream.
-    case streamPresenceEvent(StreamPresenceEvent)
+    case streamPresenceEvent(Nakama_Realtime_StreamPresenceEvent)
     /// Application-level heartbeat and connection check.
-    case ping(Ping)
+    case ping(Nakama_Realtime_Ping)
     /// Application-level heartbeat and connection check response.
-    case pong(Pong)
+    case pong(Nakama_Realtime_Pong)
 
   #if !swift(>=4.1)
-    static func ==(lhs: Envelope.OneOf_Message, rhs: Envelope.OneOf_Message) -> Bool {
+    static func ==(lhs: Nakama_Realtime_Envelope.OneOf_Message, rhs: Nakama_Realtime_Envelope.OneOf_Message) -> Bool {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -547,7 +547,7 @@ struct Envelope {
 }
 
 /// A realtime chat channel.
-struct Channel {
+struct Nakama_Realtime_Channel {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -556,11 +556,11 @@ struct Channel {
   var id: String = String()
 
   /// The users currently in the channel.
-  var presences: [UserPresence] = []
+  var presences: [Nakama_Realtime_UserPresence] = []
 
   /// A reference to the current user's presence in the channel.
-  var self_p: UserPresence {
-    get {return _self_p ?? UserPresence()}
+  var self_p: Nakama_Realtime_UserPresence {
+    get {return _self_p ?? Nakama_Realtime_UserPresence()}
     set {_self_p = newValue}
   }
   /// Returns true if `self_p` has been explicitly set.
@@ -584,11 +584,11 @@ struct Channel {
 
   init() {}
 
-  fileprivate var _self_p: UserPresence? = nil
+  fileprivate var _self_p: Nakama_Realtime_UserPresence? = nil
 }
 
 /// Join operation for a realtime chat channel.
-struct ChannelJoin {
+struct Nakama_Realtime_ChannelJoin {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -672,9 +672,9 @@ struct ChannelJoin {
 
 #if swift(>=4.2)
 
-extension ChannelJoin.TypeEnum: CaseIterable {
+extension Nakama_Realtime_ChannelJoin.TypeEnum: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static var allCases: [ChannelJoin.TypeEnum] = [
+  static var allCases: [Nakama_Realtime_ChannelJoin.TypeEnum] = [
     .unspecified,
     .room,
     .directMessage,
@@ -685,7 +685,7 @@ extension ChannelJoin.TypeEnum: CaseIterable {
 #endif  // swift(>=4.2)
 
 /// Leave a realtime channel.
-struct ChannelLeave {
+struct Nakama_Realtime_ChannelLeave {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -699,7 +699,7 @@ struct ChannelLeave {
 }
 
 /// A receipt reply from a channel message send operation.
-struct ChannelMessageAck {
+struct Nakama_Realtime_ChannelMessageAck {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -776,7 +776,7 @@ struct ChannelMessageAck {
 }
 
 /// Send a message to a realtime channel.
-struct ChannelMessageSend {
+struct Nakama_Realtime_ChannelMessageSend {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -793,7 +793,7 @@ struct ChannelMessageSend {
 }
 
 /// Update a message previously sent to a realtime channel.
-struct ChannelMessageUpdate {
+struct Nakama_Realtime_ChannelMessageUpdate {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -813,7 +813,7 @@ struct ChannelMessageUpdate {
 }
 
 /// Remove a message previously sent to a realtime channel.
-struct ChannelMessageRemove {
+struct Nakama_Realtime_ChannelMessageRemove {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -830,7 +830,7 @@ struct ChannelMessageRemove {
 }
 
 /// A set of joins and leaves on a particular channel.
-struct ChannelPresenceEvent {
+struct Nakama_Realtime_ChannelPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -839,10 +839,10 @@ struct ChannelPresenceEvent {
   var channelID: String = String()
 
   /// Presences joining the channel as part of this event, if any.
-  var joins: [UserPresence] = []
+  var joins: [Nakama_Realtime_UserPresence] = []
 
   /// Presences leaving the channel as part of this event, if any.
-  var leaves: [UserPresence] = []
+  var leaves: [Nakama_Realtime_UserPresence] = []
 
   /// The name of the chat room, or an empty string if this message was not sent through a chat room.
   var roomName: String = String()
@@ -862,7 +862,7 @@ struct ChannelPresenceEvent {
 }
 
 /// A logical error which may occur on the server.
-struct Error {
+struct Nakama_Realtime_Error {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -946,9 +946,9 @@ struct Error {
 
 #if swift(>=4.2)
 
-extension Error.Code: CaseIterable {
+extension Nakama_Realtime_Error.Code: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static var allCases: [Error.Code] = [
+  static var allCases: [Nakama_Realtime_Error.Code] = [
     .runtimeException,
     .unrecognizedPayload,
     .missingPayload,
@@ -963,7 +963,7 @@ extension Error.Code: CaseIterable {
 #endif  // swift(>=4.2)
 
 /// A realtime match.
-struct Match {
+struct Nakama_Realtime_Match {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -988,11 +988,11 @@ struct Match {
   var size: Int32 = 0
 
   /// The users currently in the match.
-  var presences: [UserPresence] = []
+  var presences: [Nakama_Realtime_UserPresence] = []
 
   /// A reference to the current user's presence in the match.
-  var self_p: UserPresence {
-    get {return _self_p ?? UserPresence()}
+  var self_p: Nakama_Realtime_UserPresence {
+    get {return _self_p ?? Nakama_Realtime_UserPresence()}
     set {_self_p = newValue}
   }
   /// Returns true if `self_p` has been explicitly set.
@@ -1005,11 +1005,11 @@ struct Match {
   init() {}
 
   fileprivate var _label: SwiftProtobuf.Google_Protobuf_StringValue? = nil
-  fileprivate var _self_p: UserPresence? = nil
+  fileprivate var _self_p: Nakama_Realtime_UserPresence? = nil
 }
 
 /// Create a new realtime match.
-struct MatchCreate {
+struct Nakama_Realtime_MatchCreate {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1020,7 +1020,7 @@ struct MatchCreate {
 }
 
 /// Realtime match data received from the server.
-struct MatchData {
+struct Nakama_Realtime_MatchData {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1029,8 +1029,8 @@ struct MatchData {
   var matchID: String = String()
 
   /// A reference to the user presence that sent this data, if any.
-  var presence: UserPresence {
-    get {return _presence ?? UserPresence()}
+  var presence: Nakama_Realtime_UserPresence {
+    get {return _presence ?? Nakama_Realtime_UserPresence()}
     set {_presence = newValue}
   }
   /// Returns true if `presence` has been explicitly set.
@@ -1051,11 +1051,11 @@ struct MatchData {
 
   init() {}
 
-  fileprivate var _presence: UserPresence? = nil
+  fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
 }
 
 /// Send realtime match data to the server.
-struct MatchDataSend {
+struct Nakama_Realtime_MatchDataSend {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1070,7 +1070,7 @@ struct MatchDataSend {
   var data: Data = Data()
 
   /// List of presences in the match to deliver to, if filtering is required. Otherwise deliver to everyone in the match.
-  var presences: [UserPresence] = []
+  var presences: [Nakama_Realtime_UserPresence] = []
 
   /// True if the data should be sent reliably, false otherwise.
   var reliable: Bool = false
@@ -1081,12 +1081,12 @@ struct MatchDataSend {
 }
 
 /// Join an existing realtime match.
-struct MatchJoin {
+struct Nakama_Realtime_MatchJoin {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var id: MatchJoin.OneOf_ID? = nil
+  var id: Nakama_Realtime_MatchJoin.OneOf_ID? = nil
 
   /// The match unique ID.
   var matchID: String {
@@ -1118,7 +1118,7 @@ struct MatchJoin {
     case token(String)
 
   #if !swift(>=4.1)
-    static func ==(lhs: MatchJoin.OneOf_ID, rhs: MatchJoin.OneOf_ID) -> Bool {
+    static func ==(lhs: Nakama_Realtime_MatchJoin.OneOf_ID, rhs: Nakama_Realtime_MatchJoin.OneOf_ID) -> Bool {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -1141,7 +1141,7 @@ struct MatchJoin {
 }
 
 /// Leave a realtime match.
-struct MatchLeave {
+struct Nakama_Realtime_MatchLeave {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1155,7 +1155,7 @@ struct MatchLeave {
 }
 
 /// A set of joins and leaves on a particular realtime match.
-struct MatchPresenceEvent {
+struct Nakama_Realtime_MatchPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1164,10 +1164,10 @@ struct MatchPresenceEvent {
   var matchID: String = String()
 
   /// User presences that have just joined the match.
-  var joins: [UserPresence] = []
+  var joins: [Nakama_Realtime_UserPresence] = []
 
   /// User presences that have just left the match.
-  var leaves: [UserPresence] = []
+  var leaves: [Nakama_Realtime_UserPresence] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1175,7 +1175,7 @@ struct MatchPresenceEvent {
 }
 
 /// Start a new matchmaking process.
-struct MatchmakerAdd {
+struct Nakama_Realtime_MatchmakerAdd {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1201,7 +1201,7 @@ struct MatchmakerAdd {
 }
 
 /// A successful matchmaking result.
-struct MatchmakerMatched {
+struct Nakama_Realtime_MatchmakerMatched {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1210,7 +1210,7 @@ struct MatchmakerMatched {
   var ticket: String = String()
 
   /// The match token or match ID to join.
-  var id: MatchmakerMatched.OneOf_ID? = nil
+  var id: Nakama_Realtime_MatchmakerMatched.OneOf_ID? = nil
 
   /// Match ID.
   var matchID: String {
@@ -1231,11 +1231,11 @@ struct MatchmakerMatched {
   }
 
   /// The users that have been matched together, and information about their matchmaking data.
-  var users: [MatchmakerMatched.MatchmakerUser] = []
+  var users: [Nakama_Realtime_MatchmakerMatched.MatchmakerUser] = []
 
   /// A reference to the current user and their properties.
-  var self_p: MatchmakerMatched.MatchmakerUser {
-    get {return _self_p ?? MatchmakerMatched.MatchmakerUser()}
+  var self_p: Nakama_Realtime_MatchmakerMatched.MatchmakerUser {
+    get {return _self_p ?? Nakama_Realtime_MatchmakerMatched.MatchmakerUser()}
     set {_self_p = newValue}
   }
   /// Returns true if `self_p` has been explicitly set.
@@ -1253,7 +1253,7 @@ struct MatchmakerMatched {
     case token(String)
 
   #if !swift(>=4.1)
-    static func ==(lhs: MatchmakerMatched.OneOf_ID, rhs: MatchmakerMatched.OneOf_ID) -> Bool {
+    static func ==(lhs: Nakama_Realtime_MatchmakerMatched.OneOf_ID, rhs: Nakama_Realtime_MatchmakerMatched.OneOf_ID) -> Bool {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -1278,8 +1278,8 @@ struct MatchmakerMatched {
     // methods supported on all messages.
 
     /// User info.
-    var presence: UserPresence {
-      get {return _presence ?? UserPresence()}
+    var presence: Nakama_Realtime_UserPresence {
+      get {return _presence ?? Nakama_Realtime_UserPresence()}
       set {_presence = newValue}
     }
     /// Returns true if `presence` has been explicitly set.
@@ -1297,16 +1297,16 @@ struct MatchmakerMatched {
 
     init() {}
 
-    fileprivate var _presence: UserPresence? = nil
+    fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
   }
 
   init() {}
 
-  fileprivate var _self_p: MatchmakerMatched.MatchmakerUser? = nil
+  fileprivate var _self_p: Nakama_Realtime_MatchmakerMatched.MatchmakerUser? = nil
 }
 
 /// Cancel an existing ongoing matchmaking process.
-struct MatchmakerRemove {
+struct Nakama_Realtime_MatchmakerRemove {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1320,7 +1320,7 @@ struct MatchmakerRemove {
 }
 
 /// A ticket representing a new matchmaking process.
-struct MatchmakerTicket {
+struct Nakama_Realtime_MatchmakerTicket {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1334,13 +1334,13 @@ struct MatchmakerTicket {
 }
 
 /// A collection of zero or more notifications.
-struct Notifications {
+struct Nakama_Realtime_Notifications {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Collection of notifications.
-  var notifications: [Notification] = []
+  var notifications: [Nakama_Api_Notification] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1348,7 +1348,7 @@ struct Notifications {
 }
 
 /// Application-level heartbeat and connection check.
-struct Ping {
+struct Nakama_Realtime_Ping {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1359,7 +1359,7 @@ struct Ping {
 }
 
 /// Application-level heartbeat and connection check response.
-struct Pong {
+struct Nakama_Realtime_Pong {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1370,13 +1370,13 @@ struct Pong {
 }
 
 /// A snapshot of statuses for some set of users.
-struct Status {
+struct Nakama_Realtime_Status {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// User statuses.
-  var presences: [UserPresence] = []
+  var presences: [Nakama_Realtime_UserPresence] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1384,7 +1384,7 @@ struct Status {
 }
 
 /// Start receiving status updates for some set of users.
-struct StatusFollow {
+struct Nakama_Realtime_StatusFollow {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1401,16 +1401,16 @@ struct StatusFollow {
 }
 
 /// A batch of status updates for a given user.
-struct StatusPresenceEvent {
+struct Nakama_Realtime_StatusPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// New statuses for the user.
-  var joins: [UserPresence] = []
+  var joins: [Nakama_Realtime_UserPresence] = []
 
   /// Previous statuses for the user.
-  var leaves: [UserPresence] = []
+  var leaves: [Nakama_Realtime_UserPresence] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1418,7 +1418,7 @@ struct StatusPresenceEvent {
 }
 
 /// Stop receiving status updates for some set of users.
-struct StatusUnfollow {
+struct Nakama_Realtime_StatusUnfollow {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1432,7 +1432,7 @@ struct StatusUnfollow {
 }
 
 /// Set the user's own status.
-struct StatusUpdate {
+struct Nakama_Realtime_StatusUpdate {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1455,7 +1455,7 @@ struct StatusUpdate {
 }
 
 /// Represents identifying information for a stream.
-struct Stream {
+struct Nakama_Realtime_Stream {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1478,14 +1478,14 @@ struct Stream {
 }
 
 /// A data message delivered over a stream.
-struct StreamData {
+struct Nakama_Realtime_StreamData {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The stream this data message relates to.
-  var stream: Stream {
-    get {return _stream ?? Stream()}
+  var stream: Nakama_Realtime_Stream {
+    get {return _stream ?? Nakama_Realtime_Stream()}
     set {_stream = newValue}
   }
   /// Returns true if `stream` has been explicitly set.
@@ -1494,8 +1494,8 @@ struct StreamData {
   mutating func clearStream() {self._stream = nil}
 
   /// The sender, if any.
-  var sender: UserPresence {
-    get {return _sender ?? UserPresence()}
+  var sender: Nakama_Realtime_UserPresence {
+    get {return _sender ?? Nakama_Realtime_UserPresence()}
     set {_sender = newValue}
   }
   /// Returns true if `sender` has been explicitly set.
@@ -1513,19 +1513,19 @@ struct StreamData {
 
   init() {}
 
-  fileprivate var _stream: Stream? = nil
-  fileprivate var _sender: UserPresence? = nil
+  fileprivate var _stream: Nakama_Realtime_Stream? = nil
+  fileprivate var _sender: Nakama_Realtime_UserPresence? = nil
 }
 
 /// A set of joins and leaves on a particular stream.
-struct StreamPresenceEvent {
+struct Nakama_Realtime_StreamPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The stream this event relates to.
-  var stream: Stream {
-    get {return _stream ?? Stream()}
+  var stream: Nakama_Realtime_Stream {
+    get {return _stream ?? Nakama_Realtime_Stream()}
     set {_stream = newValue}
   }
   /// Returns true if `stream` has been explicitly set.
@@ -1534,20 +1534,20 @@ struct StreamPresenceEvent {
   mutating func clearStream() {self._stream = nil}
 
   /// Presences joining the stream as part of this event, if any.
-  var joins: [UserPresence] = []
+  var joins: [Nakama_Realtime_UserPresence] = []
 
   /// Presences leaving the stream as part of this event, if any.
-  var leaves: [UserPresence] = []
+  var leaves: [Nakama_Realtime_UserPresence] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 
-  fileprivate var _stream: Stream? = nil
+  fileprivate var _stream: Nakama_Realtime_Stream? = nil
 }
 
 /// A user session associated to a stream, usually through a list operation or a join/leave event.
-struct UserPresence {
+struct Nakama_Realtime_UserPresence {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1585,7 +1585,7 @@ struct UserPresence {
 
 fileprivate let _protobuf_package = "nakama.realtime"
 
-extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Envelope"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "cid"),
@@ -1631,7 +1631,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self.cid) }()
       case 2: try {
-        var v: Channel?
+        var v: Nakama_Realtime_Channel?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channel(let m) = current {v = m}
@@ -1640,7 +1640,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channel(v)}
       }()
       case 3: try {
-        var v: ChannelJoin?
+        var v: Nakama_Realtime_ChannelJoin?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelJoin(let m) = current {v = m}
@@ -1649,7 +1649,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelJoin(v)}
       }()
       case 4: try {
-        var v: ChannelLeave?
+        var v: Nakama_Realtime_ChannelLeave?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelLeave(let m) = current {v = m}
@@ -1658,7 +1658,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelLeave(v)}
       }()
       case 5: try {
-        var v: ChannelMessage?
+        var v: Nakama_Api_ChannelMessage?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelMessage(let m) = current {v = m}
@@ -1667,7 +1667,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelMessage(v)}
       }()
       case 6: try {
-        var v: ChannelMessageAck?
+        var v: Nakama_Realtime_ChannelMessageAck?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelMessageAck(let m) = current {v = m}
@@ -1676,7 +1676,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelMessageAck(v)}
       }()
       case 7: try {
-        var v: ChannelMessageSend?
+        var v: Nakama_Realtime_ChannelMessageSend?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelMessageSend(let m) = current {v = m}
@@ -1685,7 +1685,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelMessageSend(v)}
       }()
       case 8: try {
-        var v: ChannelMessageUpdate?
+        var v: Nakama_Realtime_ChannelMessageUpdate?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelMessageUpdate(let m) = current {v = m}
@@ -1694,7 +1694,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelMessageUpdate(v)}
       }()
       case 9: try {
-        var v: ChannelMessageRemove?
+        var v: Nakama_Realtime_ChannelMessageRemove?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelMessageRemove(let m) = current {v = m}
@@ -1703,7 +1703,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelMessageRemove(v)}
       }()
       case 10: try {
-        var v: ChannelPresenceEvent?
+        var v: Nakama_Realtime_ChannelPresenceEvent?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .channelPresenceEvent(let m) = current {v = m}
@@ -1712,7 +1712,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .channelPresenceEvent(v)}
       }()
       case 11: try {
-        var v: Error?
+        var v: Nakama_Realtime_Error?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .error(let m) = current {v = m}
@@ -1721,7 +1721,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .error(v)}
       }()
       case 12: try {
-        var v: Match?
+        var v: Nakama_Realtime_Match?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .match(let m) = current {v = m}
@@ -1730,7 +1730,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .match(v)}
       }()
       case 13: try {
-        var v: MatchCreate?
+        var v: Nakama_Realtime_MatchCreate?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchCreate(let m) = current {v = m}
@@ -1739,7 +1739,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchCreate(v)}
       }()
       case 14: try {
-        var v: MatchData?
+        var v: Nakama_Realtime_MatchData?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchData(let m) = current {v = m}
@@ -1748,7 +1748,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchData(v)}
       }()
       case 15: try {
-        var v: MatchDataSend?
+        var v: Nakama_Realtime_MatchDataSend?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchDataSend(let m) = current {v = m}
@@ -1757,7 +1757,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchDataSend(v)}
       }()
       case 16: try {
-        var v: MatchJoin?
+        var v: Nakama_Realtime_MatchJoin?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchJoin(let m) = current {v = m}
@@ -1766,7 +1766,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchJoin(v)}
       }()
       case 17: try {
-        var v: MatchLeave?
+        var v: Nakama_Realtime_MatchLeave?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchLeave(let m) = current {v = m}
@@ -1775,7 +1775,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchLeave(v)}
       }()
       case 18: try {
-        var v: MatchPresenceEvent?
+        var v: Nakama_Realtime_MatchPresenceEvent?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchPresenceEvent(let m) = current {v = m}
@@ -1784,7 +1784,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchPresenceEvent(v)}
       }()
       case 19: try {
-        var v: MatchmakerAdd?
+        var v: Nakama_Realtime_MatchmakerAdd?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchmakerAdd(let m) = current {v = m}
@@ -1793,7 +1793,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchmakerAdd(v)}
       }()
       case 20: try {
-        var v: MatchmakerMatched?
+        var v: Nakama_Realtime_MatchmakerMatched?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchmakerMatched(let m) = current {v = m}
@@ -1802,7 +1802,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchmakerMatched(v)}
       }()
       case 21: try {
-        var v: MatchmakerRemove?
+        var v: Nakama_Realtime_MatchmakerRemove?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchmakerRemove(let m) = current {v = m}
@@ -1811,7 +1811,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchmakerRemove(v)}
       }()
       case 22: try {
-        var v: MatchmakerTicket?
+        var v: Nakama_Realtime_MatchmakerTicket?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .matchmakerTicket(let m) = current {v = m}
@@ -1820,7 +1820,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .matchmakerTicket(v)}
       }()
       case 23: try {
-        var v: Notifications?
+        var v: Nakama_Realtime_Notifications?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .notifications(let m) = current {v = m}
@@ -1829,7 +1829,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .notifications(v)}
       }()
       case 24: try {
-        var v: Rpc?
+        var v: Nakama_Api_Rpc?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .rpc(let m) = current {v = m}
@@ -1838,7 +1838,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .rpc(v)}
       }()
       case 25: try {
-        var v: Status?
+        var v: Nakama_Realtime_Status?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .status(let m) = current {v = m}
@@ -1847,7 +1847,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .status(v)}
       }()
       case 26: try {
-        var v: StatusFollow?
+        var v: Nakama_Realtime_StatusFollow?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .statusFollow(let m) = current {v = m}
@@ -1856,7 +1856,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .statusFollow(v)}
       }()
       case 27: try {
-        var v: StatusPresenceEvent?
+        var v: Nakama_Realtime_StatusPresenceEvent?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .statusPresenceEvent(let m) = current {v = m}
@@ -1865,7 +1865,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .statusPresenceEvent(v)}
       }()
       case 28: try {
-        var v: StatusUnfollow?
+        var v: Nakama_Realtime_StatusUnfollow?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .statusUnfollow(let m) = current {v = m}
@@ -1874,7 +1874,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .statusUnfollow(v)}
       }()
       case 29: try {
-        var v: StatusUpdate?
+        var v: Nakama_Realtime_StatusUpdate?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .statusUpdate(let m) = current {v = m}
@@ -1883,7 +1883,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .statusUpdate(v)}
       }()
       case 30: try {
-        var v: StreamData?
+        var v: Nakama_Realtime_StreamData?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .streamData(let m) = current {v = m}
@@ -1892,7 +1892,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .streamData(v)}
       }()
       case 31: try {
-        var v: StreamPresenceEvent?
+        var v: Nakama_Realtime_StreamPresenceEvent?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .streamPresenceEvent(let m) = current {v = m}
@@ -1901,7 +1901,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .streamPresenceEvent(v)}
       }()
       case 32: try {
-        var v: Ping?
+        var v: Nakama_Realtime_Ping?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .ping(let m) = current {v = m}
@@ -1910,7 +1910,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if let v = v {self.message = .ping(v)}
       }()
       case 33: try {
-        var v: Pong?
+        var v: Nakama_Realtime_Pong?
         if let current = self.message {
           try decoder.handleConflictingOneOf()
           if case .pong(let m) = current {v = m}
@@ -2064,7 +2064,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Envelope, rhs: Envelope) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Envelope, rhs: Nakama_Realtime_Envelope) -> Bool {
     if lhs.cid != rhs.cid {return false}
     if lhs.message != rhs.message {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2072,7 +2072,7 @@ extension Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   }
 }
 
-extension Channel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Channel"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
@@ -2127,7 +2127,7 @@ extension Channel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Channel, rhs: Channel) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Channel, rhs: Nakama_Realtime_Channel) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.presences != rhs.presences {return false}
     if lhs._self_p != rhs._self_p {return false}
@@ -2140,7 +2140,7 @@ extension Channel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   }
 }
 
-extension ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelJoin"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "target"),
@@ -2180,7 +2180,7 @@ extension ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelJoin, rhs: ChannelJoin) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelJoin, rhs: Nakama_Realtime_ChannelJoin) -> Bool {
     if lhs.target != rhs.target {return false}
     if lhs.type != rhs.type {return false}
     if lhs._persistence != rhs._persistence {return false}
@@ -2190,7 +2190,7 @@ extension ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
   }
 }
 
-extension ChannelJoin.TypeEnum: SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelJoin.TypeEnum: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "TYPE_UNSPECIFIED"),
     1: .same(proto: "ROOM"),
@@ -2199,7 +2199,7 @@ extension ChannelJoin.TypeEnum: SwiftProtobuf._ProtoNameProviding {
   ]
 }
 
-extension ChannelLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelLeave"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
@@ -2224,14 +2224,14 @@ extension ChannelLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelLeave, rhs: ChannelLeave) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelLeave, rhs: Nakama_Realtime_ChannelLeave) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelMessageAck"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
@@ -2306,7 +2306,7 @@ extension ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelMessageAck, rhs: ChannelMessageAck) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelMessageAck, rhs: Nakama_Realtime_ChannelMessageAck) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.messageID != rhs.messageID {return false}
     if lhs._code != rhs._code {return false}
@@ -2323,7 +2323,7 @@ extension ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension ChannelMessageSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelMessageSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelMessageSend"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
@@ -2353,7 +2353,7 @@ extension ChannelMessageSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelMessageSend, rhs: ChannelMessageSend) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelMessageSend, rhs: Nakama_Realtime_ChannelMessageSend) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.content != rhs.content {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2361,7 +2361,7 @@ extension ChannelMessageSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelMessageUpdate"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
@@ -2396,7 +2396,7 @@ extension ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelMessageUpdate, rhs: ChannelMessageUpdate) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelMessageUpdate, rhs: Nakama_Realtime_ChannelMessageUpdate) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.messageID != rhs.messageID {return false}
     if lhs.content != rhs.content {return false}
@@ -2405,7 +2405,7 @@ extension ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   }
 }
 
-extension ChannelMessageRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelMessageRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelMessageRemove"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
@@ -2435,7 +2435,7 @@ extension ChannelMessageRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelMessageRemove, rhs: ChannelMessageRemove) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelMessageRemove, rhs: Nakama_Realtime_ChannelMessageRemove) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.messageID != rhs.messageID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2443,7 +2443,7 @@ extension ChannelMessageRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   }
 }
 
-extension ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ChannelPresenceEvent"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
@@ -2498,7 +2498,7 @@ extension ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: ChannelPresenceEvent, rhs: ChannelPresenceEvent) -> Bool {
+  static func ==(lhs: Nakama_Realtime_ChannelPresenceEvent, rhs: Nakama_Realtime_ChannelPresenceEvent) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
@@ -2511,7 +2511,7 @@ extension ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   }
 }
 
-extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Error"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "code"),
@@ -2546,7 +2546,7 @@ extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Error, rhs: Error) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Error, rhs: Nakama_Realtime_Error) -> Bool {
     if lhs.code != rhs.code {return false}
     if lhs.message != rhs.message {return false}
     if lhs.context != rhs.context {return false}
@@ -2555,7 +2555,7 @@ extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
   }
 }
 
-extension Error.Code: SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Error.Code: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "RUNTIME_EXCEPTION"),
     1: .same(proto: "UNRECOGNIZED_PAYLOAD"),
@@ -2568,7 +2568,7 @@ extension Error.Code: SwiftProtobuf._ProtoNameProviding {
   ]
 }
 
-extension Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Match"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
@@ -2618,7 +2618,7 @@ extension Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Match, rhs: Match) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Match, rhs: Nakama_Realtime_Match) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.authoritative != rhs.authoritative {return false}
     if lhs._label != rhs._label {return false}
@@ -2630,7 +2630,7 @@ extension Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
   }
 }
 
-extension MatchCreate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchCreate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchCreate"
   static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
@@ -2643,13 +2643,13 @@ extension MatchCreate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchCreate, rhs: MatchCreate) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchCreate, rhs: Nakama_Realtime_MatchCreate) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension MatchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchData"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
@@ -2694,7 +2694,7 @@ extension MatchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchData, rhs: MatchData) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchData, rhs: Nakama_Realtime_MatchData) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs._presence != rhs._presence {return false}
     if lhs.opCode != rhs.opCode {return false}
@@ -2705,7 +2705,7 @@ extension MatchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
   }
 }
 
-extension MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchDataSend"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
@@ -2750,7 +2750,7 @@ extension MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchDataSend, rhs: MatchDataSend) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchDataSend, rhs: Nakama_Realtime_MatchDataSend) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.opCode != rhs.opCode {return false}
     if lhs.data != rhs.data {return false}
@@ -2761,7 +2761,7 @@ extension MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 }
 
-extension MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchJoin"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
@@ -2814,7 +2814,7 @@ extension MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchJoin, rhs: MatchJoin) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchJoin, rhs: Nakama_Realtime_MatchJoin) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.metadata != rhs.metadata {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2822,7 +2822,7 @@ extension MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
   }
 }
 
-extension MatchLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchLeave"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
@@ -2847,14 +2847,14 @@ extension MatchLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchLeave, rhs: MatchLeave) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchLeave, rhs: Nakama_Realtime_MatchLeave) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchPresenceEvent"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
@@ -2889,7 +2889,7 @@ extension MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchPresenceEvent, rhs: MatchPresenceEvent) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchPresenceEvent, rhs: Nakama_Realtime_MatchPresenceEvent) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
@@ -2898,7 +2898,7 @@ extension MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 }
 
-extension MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchmakerAdd"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "min_count"),
@@ -2943,7 +2943,7 @@ extension MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchmakerAdd, rhs: MatchmakerAdd) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchmakerAdd, rhs: Nakama_Realtime_MatchmakerAdd) -> Bool {
     if lhs.minCount != rhs.minCount {return false}
     if lhs.maxCount != rhs.maxCount {return false}
     if lhs.query != rhs.query {return false}
@@ -2954,7 +2954,7 @@ extension MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
   }
 }
 
-extension MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchmakerMatched"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ticket"),
@@ -3017,7 +3017,7 @@ extension MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchmakerMatched, rhs: MatchmakerMatched) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchmakerMatched, rhs: Nakama_Realtime_MatchmakerMatched) -> Bool {
     if lhs.ticket != rhs.ticket {return false}
     if lhs.id != rhs.id {return false}
     if lhs.users != rhs.users {return false}
@@ -3027,8 +3027,8 @@ extension MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = MatchmakerMatched.protoMessageName + ".MatchmakerUser"
+extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Nakama_Realtime_MatchmakerMatched.protoMessageName + ".MatchmakerUser"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "presence"),
     5: .standard(proto: "string_properties"),
@@ -3062,7 +3062,7 @@ extension MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Message, SwiftProtobuf
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchmakerMatched.MatchmakerUser, rhs: MatchmakerMatched.MatchmakerUser) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser, rhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser) -> Bool {
     if lhs._presence != rhs._presence {return false}
     if lhs.stringProperties != rhs.stringProperties {return false}
     if lhs.numericProperties != rhs.numericProperties {return false}
@@ -3071,7 +3071,7 @@ extension MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Message, SwiftProtobuf
   }
 }
 
-extension MatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchmakerRemove"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ticket"),
@@ -3096,14 +3096,14 @@ extension MatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchmakerRemove, rhs: MatchmakerRemove) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchmakerRemove, rhs: Nakama_Realtime_MatchmakerRemove) -> Bool {
     if lhs.ticket != rhs.ticket {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension MatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_MatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".MatchmakerTicket"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ticket"),
@@ -3128,14 +3128,14 @@ extension MatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: MatchmakerTicket, rhs: MatchmakerTicket) -> Bool {
+  static func ==(lhs: Nakama_Realtime_MatchmakerTicket, rhs: Nakama_Realtime_MatchmakerTicket) -> Bool {
     if lhs.ticket != rhs.ticket {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Notifications: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Notifications: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Notifications"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "notifications"),
@@ -3160,14 +3160,14 @@ extension Notifications: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Notifications, rhs: Notifications) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Notifications, rhs: Nakama_Realtime_Notifications) -> Bool {
     if lhs.notifications != rhs.notifications {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Ping: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Ping: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Ping"
   static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
@@ -3180,13 +3180,13 @@ extension Ping: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase,
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Ping, rhs: Ping) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Ping, rhs: Nakama_Realtime_Ping) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Pong: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Pong: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Pong"
   static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
@@ -3199,13 +3199,13 @@ extension Pong: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase,
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Pong, rhs: Pong) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Pong, rhs: Nakama_Realtime_Pong) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Status: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Status: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Status"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "presences"),
@@ -3230,14 +3230,14 @@ extension Status: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBas
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Status, rhs: Status) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Status, rhs: Nakama_Realtime_Status) -> Bool {
     if lhs.presences != rhs.presences {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".StatusFollow"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_ids"),
@@ -3267,7 +3267,7 @@ extension StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: StatusFollow, rhs: StatusFollow) -> Bool {
+  static func ==(lhs: Nakama_Realtime_StatusFollow, rhs: Nakama_Realtime_StatusFollow) -> Bool {
     if lhs.userIds != rhs.userIds {return false}
     if lhs.usernames != rhs.usernames {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3275,7 +3275,7 @@ extension StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   }
 }
 
-extension StatusPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_StatusPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".StatusPresenceEvent"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "joins"),
@@ -3305,7 +3305,7 @@ extension StatusPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: StatusPresenceEvent, rhs: StatusPresenceEvent) -> Bool {
+  static func ==(lhs: Nakama_Realtime_StatusPresenceEvent, rhs: Nakama_Realtime_StatusPresenceEvent) -> Bool {
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3313,7 +3313,7 @@ extension StatusPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   }
 }
 
-extension StatusUnfollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_StatusUnfollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".StatusUnfollow"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_ids"),
@@ -3338,14 +3338,14 @@ extension StatusUnfollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: StatusUnfollow, rhs: StatusUnfollow) -> Bool {
+  static func ==(lhs: Nakama_Realtime_StatusUnfollow, rhs: Nakama_Realtime_StatusUnfollow) -> Bool {
     if lhs.userIds != rhs.userIds {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".StatusUpdate"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "status"),
@@ -3370,14 +3370,14 @@ extension StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: StatusUpdate, rhs: StatusUpdate) -> Bool {
+  static func ==(lhs: Nakama_Realtime_StatusUpdate, rhs: Nakama_Realtime_StatusUpdate) -> Bool {
     if lhs._status != rhs._status {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".Stream"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "mode"),
@@ -3417,7 +3417,7 @@ extension Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBas
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Stream, rhs: Stream) -> Bool {
+  static func ==(lhs: Nakama_Realtime_Stream, rhs: Nakama_Realtime_Stream) -> Bool {
     if lhs.mode != rhs.mode {return false}
     if lhs.subject != rhs.subject {return false}
     if lhs.subcontext != rhs.subcontext {return false}
@@ -3427,7 +3427,7 @@ extension Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBas
   }
 }
 
-extension StreamData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_StreamData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".StreamData"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "stream"),
@@ -3467,7 +3467,7 @@ extension StreamData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: StreamData, rhs: StreamData) -> Bool {
+  static func ==(lhs: Nakama_Realtime_StreamData, rhs: Nakama_Realtime_StreamData) -> Bool {
     if lhs._stream != rhs._stream {return false}
     if lhs._sender != rhs._sender {return false}
     if lhs.data != rhs.data {return false}
@@ -3477,7 +3477,7 @@ extension StreamData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   }
 }
 
-extension StreamPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_StreamPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".StreamPresenceEvent"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "stream"),
@@ -3512,7 +3512,7 @@ extension StreamPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: StreamPresenceEvent, rhs: StreamPresenceEvent) -> Bool {
+  static func ==(lhs: Nakama_Realtime_StreamPresenceEvent, rhs: Nakama_Realtime_StreamPresenceEvent) -> Bool {
     if lhs._stream != rhs._stream {return false}
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
@@ -3521,7 +3521,7 @@ extension StreamPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   }
 }
 
-extension UserPresence: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".UserPresence"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
@@ -3566,7 +3566,7 @@ extension UserPresence: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: UserPresence, rhs: UserPresence) -> Bool {
+  static func ==(lhs: Nakama_Realtime_UserPresence, rhs: Nakama_Realtime_UserPresence) -> Bool {
     if lhs.userID != rhs.userID {return false}
     if lhs.sessionID != rhs.sessionID {return false}
     if lhs.username != rhs.username {return false}

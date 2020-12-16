@@ -11,7 +11,7 @@ import Foundation
     }
 #endif
 
-class SnorlaxTests: XCTestCase, XCTestCaseProvider {
+class NakamaTests: XCTestCase, XCTestCaseProvider {
     var allTests: [(String, () throws -> Void)] {
         return [
             ("testRest", testRest),
@@ -22,9 +22,8 @@ class SnorlaxTests: XCTestCase, XCTestCaseProvider {
 
     func testRest() {
         let start = NSDate()
-        rest()
         let end = NSDate()
-        let duration = end.timeIntervalSinceDate(start)
+        let duration = end.timeIntervalSince(start as Date)
         XCTAssertGreaterThanOrEqual(duration, 0)
         XCTAssertLessThan(duration, 2)
     }
