@@ -21,10 +21,10 @@ package nakama.api;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "protoc-gen-swagger/options/annotations.proto";
-import "github.com/heroiclabs/nakama/api/api.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "github.com/heroiclabs/nakama-common/api/api.proto";
 
-option go_package = "apigrpc";
+option go_package = "github.com/heroiclabs/nakama/v2/apigrpc";
 
 option java_multiple_files = true;
 option java_outer_classname = "NakamaApiGrpc";
@@ -32,9 +32,7 @@ option java_package = "com.heroiclabs.nakama.api";
 
 option csharp_namespace = "Nakama";
 
-option objc_class_prefix = "NKPB";
-
-option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "Nakama API v2";
     version: "2.0";
@@ -98,13 +96,29 @@ service Nakama {
     option (google.api.http).post = "/v2/group/{group_id}/add";
   }
 
+  // Authenticate a user with an Apple ID against the server.
+  rpc AuthenticateApple (api.AuthenticateAppleRequest) returns (api.Session) {
+    option (google.api.http) = {
+      post: "/v2/account/authenticate/apple",
+      body: "account"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BasicAuth";
+          value: {};
+        }
+      }
+    };
+  }
+
   // Authenticate a user with a custom id against the server.
   rpc AuthenticateCustom (api.AuthenticateCustomRequest) returns (api.Session) {
     option (google.api.http) = {
       post: "/v2/account/authenticate/custom",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -120,7 +134,7 @@ service Nakama {
       post: "/v2/account/authenticate/device",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -136,7 +150,7 @@ service Nakama {
       post: "/v2/account/authenticate/email",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -152,7 +166,23 @@ service Nakama {
       post: "/v2/account/authenticate/facebook",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BasicAuth";
+          value: {};
+        }
+      }
+    };
+  }
+
+  // Authenticate a user with a Facebook Instant Game token against the server.
+  rpc AuthenticateFacebookInstantGame (api.AuthenticateFacebookInstantGameRequest) returns (api.Session) {
+    option (google.api.http) = {
+      post: "/v2/account/authenticate/facebookinstantgame",
+      body: "account"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -168,7 +198,7 @@ service Nakama {
       post: "/v2/account/authenticate/gamecenter",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -184,7 +214,7 @@ service Nakama {
       post: "/v2/account/authenticate/google",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -200,7 +230,7 @@ service Nakama {
       post: "/v2/account/authenticate/steam",
       body: "account"
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
           key: "BasicAuth";
@@ -208,6 +238,11 @@ service Nakama {
         }
       }
     };
+  }
+
+  // Ban a set of users from a group.
+  rpc BanGroupUsers (api.BanGroupUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/group/{group_id}/ban";
   }
 
   // Block one or more users by ID or username.
@@ -249,6 +284,14 @@ service Nakama {
   rpc DeleteStorageObjects (api.DeleteStorageObjectsRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       put: "/v2/storage/delete",
+      body: "*"
+    };
+  }
+
+  // Submit an event for processing in the server's registered runtime custom events handler.
+  rpc Event (api.Event) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/event",
       body: "*"
     };
   }
@@ -296,6 +339,14 @@ service Nakama {
     option (google.api.http).post = "/v2/group/{group_id}/leave";
   }
 
+  // Add an Apple ID to the social profiles on the current user's account.
+  rpc LinkApple (api.AccountApple) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/link/apple",
+      body: "*"
+    };
+  }
+
   // Add a custom ID to the social profiles on the current user's account.
   rpc LinkCustom (api.AccountCustom) returns (google.protobuf.Empty) {
     option (google.api.http) = {
@@ -325,6 +376,14 @@ service Nakama {
     option (google.api.http) = {
       post: "/v2/account/link/facebook",
       body: "account"
+    };
+  }
+
+  // Add Facebook Instant Game to the social profiles on the current user's account.
+  rpc LinkFacebookInstantGame (api.AccountFacebookInstantGame) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/link/facebookinstantgame",
+      body: "*"
     };
   }
 
@@ -358,7 +417,7 @@ service Nakama {
   }
 
   // List all friends for the current user.
-  rpc ListFriends (google.protobuf.Empty) returns (api.Friends) {
+  rpc ListFriends (api.ListFriendsRequest) returns (api.FriendList) {
     option (google.api.http).get = "/v2/friend";
   }
 
@@ -427,6 +486,11 @@ service Nakama {
     option (google.api.http).post = "/v2/group/{group_id}/promote";
   }
 
+  // Demote a set of users in a group to the next role down.
+  rpc DemoteGroupUsers (api.DemoteGroupUsersRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).post = "/v2/group/{group_id}/demote";
+  }
+
   // Get storage objects.
   rpc ReadStorageObjects (api.ReadStorageObjectsRequest) returns (api.StorageObjects) {
     option (google.api.http) = {
@@ -444,7 +508,7 @@ service Nakama {
         get: "/v2/rpc/{id}"
       }
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       // Either HTTP key in query param or Bearer authentication.
       security: {
         security_requirement: {
@@ -456,6 +520,14 @@ service Nakama {
           value: {};
         }
       }
+    };
+  }
+
+  // Remove the Apple ID from the social profiles on the current user's account.
+  rpc UnlinkApple (api.AccountApple) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/unlink/apple",
+      body: "*"
     };
   }
 
@@ -487,6 +559,14 @@ service Nakama {
   rpc UnlinkFacebook (api.AccountFacebook) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/account/unlink/facebook",
+      body: "*"
+    };
+  }
+
+  // Remove Facebook Instant Game profile from the social profiles on the current user's account.
+  rpc UnlinkFacebookInstantGame (api.AccountFacebookInstantGame) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/account/unlink/facebookinstantgame",
       body: "*"
     };
   }

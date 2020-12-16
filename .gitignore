@@ -1,9 +1,5 @@
 # Created by https://www.gitignore.io/api/xcode,macos,linux,swift,swiftpm,windows,carthage,cocoapods,sublimetext,intellij+all,intellij+iml,xcodeinjection,swiftpackagemanager
 
-*.xcodeproj
-
-Sources/Nakama/Server.Api.pb.*
-
 ### Carthage ###
 # Carthage
 #
@@ -11,7 +7,6 @@ Sources/Nakama/Server.Api.pb.*
 # Carthage/Checkouts
 
 Carthage/Build
-Carthage/Checkouts
 
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
