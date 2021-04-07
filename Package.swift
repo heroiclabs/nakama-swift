@@ -28,6 +28,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.9.2"),
         .package(name: "SwiftProtobuf", url: "https://github.com/apple/swift-protobuf.git", from: "1.14.0"),
         .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0"),
+        .package(url: "https://github.com/daltoniam/Starscream.git", from: "4.0.4"),
         .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.0")
     ],
     targets: [
