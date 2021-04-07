@@ -382,7 +382,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
     private let timeout: Int
     private let trace: Bool
     private let grpcClient: Nakama_Api_NakamaServiceClient
-
+    
+    //Nakama_Api_NakamaClientProtocol need to fix
+    
     private var wsComponent: URLComponents
     private var socket: WebSocket?
     private var collationIDs = [String: Any]()
@@ -566,6 +568,12 @@ internal class DefaultClient: Client, WebSocketDelegate {
     func logout() {
     }
 
+    
+    func didReceive(event: WebSocketEvent, client: WebSocket) {
+        NSLog("event \(event) | client \(client) ")
+        
+    }
+    
     func websocketDidConnect(socket: WebSocketClient) {
     }
 
@@ -666,8 +674,8 @@ internal class DefaultClient: Client, WebSocketDelegate {
             URLQueryItem.init(name: "status", value: session.created.description),
             URLQueryItem.init(name: "lang", value: lang)
         ]
-
-        socket = WebSocket(url: wsComponent.url!)
+        let url = URLRequest(url: wsComponent.url!)
+        socket = WebSocket(request: url )
 
         socket!.delegate = self
         socket!.enableCompression = true

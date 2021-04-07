@@ -43,6 +43,7 @@ let package = Package(
             .product(name: "GRPC", package: "grpc-swift"),
             "SwiftProtobuf",
             "PromiseKit",
+            "Starscream"
         ]
         ), // and its tests.
         .testTarget(
