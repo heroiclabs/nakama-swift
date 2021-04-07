@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "Nakama"
-  s.version      = "3.0.11"
+  s.version      = "3.0.110"
   s.summary      = "Swift client for Nakama server."
   s.description  = <<-DESC
   Swift client for Nakama server.
