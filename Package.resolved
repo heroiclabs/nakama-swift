@@ -2,21 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "Commander",
-        "repositoryURL": "https://github.com/kylef/Commander.git",
+        "package": "grpc-swift",
+        "repositoryURL": "https://github.com/grpc/grpc-swift.git",
         "state": {
           "branch": null,
-          "revision": "e5b50ad7b2e91eeb828393e89b03577b16be7db9",
-          "version": "0.8.0"
-        }
-      },
-      {
-        "package": "SwiftGRPC",
-        "repositoryURL": "https://github.com/grpc/grpc-swift",
-        "state": {
-          "branch": null,
-          "revision": "f11ad0b7986211a67e4ab843a12fe34ff5fddc77",
-          "version": "0.5.0"
+          "revision": "9e464a75079928366aa7041769a271fac89271bf",
+          "version": "1.0.0"
         }
       },
       {
@@ -24,35 +15,62 @@
         "repositoryURL": "https://github.com/mxcl/PromiseKit.git",
         "state": {
           "branch": null,
-          "revision": "66bcc386163121f14ee543aa20b682973cc98dd7",
-          "version": "6.5.2"
+          "revision": "aea48ea1855f5d82e2dffa6027afce3aab8f3dd7",
+          "version": "6.13.3"
         }
       },
       {
-        "package": "Spectre",
-        "repositoryURL": "https://github.com/kylef/Spectre.git",
+        "package": "swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
           "branch": null,
-          "revision": "f14ff47f45642aa5703900980b014c2e9394b6e5",
-          "version": "0.9.0"
+          "revision": "173f567a2dfec11d74588eea82cecea555bdc0bc",
+          "version": "1.4.0"
         }
       },
       {
-        "package": "Starscream",
-        "repositoryURL": "https://github.com/daltoniam/Starscream.git",
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "ebdc260ea64e68f7569c62e8744b5cd15d3a49d6",
-          "version": "3.0.6"
+          "revision": "3be4e0980075de10a4bc8dee07491d49175cfd7a",
+          "version": "2.27.0"
         }
       },
       {
-        "package": "swift-nio-zlib-support",
-        "repositoryURL": "https://github.com/apple/swift-nio-zlib-support.git",
+        "package": "swift-nio-extras",
+        "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
         "state": {
           "branch": null,
-          "revision": "37760e9a52030bb9011972c5213c3350fa9d41fd",
-          "version": "1.0.0"
+          "revision": "e5b5d191a80667a14827bfeb0ae4a511f7677942",
+          "version": "1.7.0"
+        }
+      },
+      {
+        "package": "swift-nio-http2",
+        "repositoryURL": "https://github.com/apple/swift-nio-http2.git",
+        "state": {
+          "branch": null,
+          "revision": "d4060ac4d056a48d946298f04968f6f6080cc618",
+          "version": "1.16.2"
+        }
+      },
+      {
+        "package": "swift-nio-ssl",
+        "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
+        "state": {
+          "branch": null,
+          "revision": "07c160b8724ee53a4b776328122be6338ff12bf2",
+          "version": "2.11.0"
+        }
+      },
+      {
+        "package": "swift-nio-transport-services",
+        "repositoryURL": "https://github.com/apple/swift-nio-transport-services.git",
+        "state": {
+          "branch": null,
+          "revision": "1d28d48e071727f4558a8a4bb1894472abc47a58",
+          "version": "1.9.2"
         }
       },
       {
@@ -60,8 +78,8 @@
         "repositoryURL": "https://github.com/apple/swift-protobuf.git",
         "state": {
           "branch": null,
-          "revision": "86c579d280d629416c7bd9d32a5dfacab8e0b0b4",
-          "version": "1.2.0"
+          "revision": "da9a52be9cd36c63993291ce3f1b65dafcd1e826",
+          "version": "1.14.0"
         }
       }
     ]

@@ -5,7 +5,7 @@ Nakama Swift
 
 Nakama is an [open-source](https://github.com/heroiclabs/nakama) distributed server for social and realtime games and apps. For more information have a look at the [documentation](https://heroiclabs.com/docs/).
 
-This client implements the protocol and all features available in the server. It is compatible with Swift 4.2+.
+This client implements the protocol and all features available in the server. It is compatible with Swift 5.3+.
 
 If you encounter any issues with the server you can generate diagnostics for us with the [doctor](https://heroiclabs.com/docs/install-server-cli/#doctor) subcommand. Send these to support@heroiclabs.com or [open an issue](https://github.com/heroiclabs/nakama/issues). If you experience any issues with the client, it can be useful to [enable trace](https://heroiclabs.com/docs/swift-ios-client-guide/#logs-and-errors) to produce detailed logs and [open an issue](https://github.com/heroiclabs/nakama-swift/issues).
 

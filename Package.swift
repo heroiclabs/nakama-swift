@@ -1,4 +1,4 @@
-// swift-tools-version:3.1
+// swift-tools-version:5.3
 /*
  * Copyright 2017 Heroic Labs
  *
@@ -19,10 +19,34 @@ import PackageDescription
 
 let package = Package(
     name: "Nakama",
+    products: [
+        .library(name: "Nakama", targets: ["Nakama"])
+    ],    
     dependencies: [
-        .Package(url: "https://github.com/apple/swift-protobuf.git", majorVersion: 1),
-        .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 3),
-        .Package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 6),
-        .Package(url: "https://github.com/grpc/grpc-swift.git", majorVersion: 0)
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.26.0"),
+        .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "2.10.4"),
+        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.9.2"),
+        .package(name: "SwiftProtobuf", url: "https://github.com/apple/swift-protobuf.git", from: "1.14.0"),
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0"),
+        .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.0")
+    ],
+    targets: [
+        // The main GRPC module.
+        .target(
+        name: "Nakama",
+        dependencies: [
+            .product(name: "NIO", package: "swift-nio"),
+            .product(name: "NIOFoundationCompat", package: "swift-nio"),
+            .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),
+            .product(name: "NIOSSL", package: "swift-nio-ssl"),
+            .product(name: "GRPC", package: "grpc-swift"),
+            "SwiftProtobuf",
+            "PromiseKit",
+        ]
+        ), // and its tests.
+        .testTarget(
+        name: "NakamaTests",
+        dependencies: ["Nakama"]
+        )
     ]
 )
