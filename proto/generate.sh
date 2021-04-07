@@ -25,7 +25,7 @@ protoc --plugin protoc-gen-swift -I. --swift_opt=FileNaming=DropPath --swift_out
 protoc --plugin protoc-gen-swift -I. --swift_opt=FileNaming=DropPath --swift_out=../Sources/Nakama ./github.com/heroiclabs/nakama-common/rtapi/realtime.proto
 
 # need to be added the grpc gateway
-protoc --plugin protoc-gen-swift --plugin protoc-gen-grpc-swift --swift_opt=plugins=grpc --grpc-swift_out=../Sources/Nakama --swift_opt=paths=source_relative -I. -I./apigrpc.proto
+#protoc --plugin protoc-gen-swift --plugin protoc-gen-grpc-swift --swift_opt=plugins=grpc --grpc-swift_out=../Sources/Nakama --swift_opt=paths=source_relative -I. -I./apigrpc.proto
 #protoc --plugin protoc-gen-swift --plugin protoc-gen-grpc-swift --swift_opt=plugins=grpc --grpc-swift_out=../Sources/Nakama --swift_opt=paths=source_relative -I. -I./grpc-gateway-2.0.0-beta.5/third_party/googleapis apigrpc.proto
 
 echo "end generate.sh()"
