@@ -21,8 +21,9 @@ import Dispatch
 import PromiseKit
 import Starscream
 import SwiftProtobuf
-import SwiftGRPC
-
+//import SwiftGRPC
+// migration to new SwiftGRPC version
+import GRPC
 
 /**
  A message which requires no acknowledgement by the server.
