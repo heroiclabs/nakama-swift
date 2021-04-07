@@ -24,6 +24,8 @@ import SwiftProtobuf
 //import SwiftGRPC
 // migration to new SwiftGRPC version
 import GRPC
+import NIO
+import NIOSSL
 
 /**
  A message which requires no acknowledgement by the server.
@@ -381,8 +383,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     private let lang: String
     private let timeout: Int
     private let trace: Bool
-    private let grpcClient: Nakama_Api_NakamaServiceClient
-    
+    private let grpcClient: Nakama_Api_NakamaClient
     //Nakama_Api_NakamaClientProtocol need to fix
     
     private var wsComponent: URLComponents
@@ -424,10 +425,19 @@ internal class DefaultClient: Client, WebSocketDelegate {
         self.wsComponent.path = "/ws"
 
         //set up the gRPC client
-        self.grpcClient = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
+        let configuration = ClientConnection.Configuration(
+                target: .hostAndPort(host, port),
+                eventLoopGroup: MultiThreadedEventLoopGroup(numberOfThreads: 1)
+            )
+        //Nakama_Api_NakamaClient.init(channel: , )
+        
+        //self.grpcClient = Nakama_Api_NakamaClient.init(channel: channel )
+        /*self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)*/
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
-        try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
+        // need to add authorization
+        // self.grpcClient
+        //try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
 
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
     }
