@@ -25,6 +25,8 @@ import SwiftProtobuf
 // migration to new SwiftGRPC version
 import GRPC
 import NIO
+import NIOHTTP1
+
 /**
  A message which requires no acknowledgement by the server.
  */
@@ -439,7 +441,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
         self.grpcClient = client
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
-        //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: <#T##Sequence#>)
+        //self.grpcClient.defaultCallOptions.customMetadata
+        //var header = NIOHTTP1.HTTPHeaders.init()
+        self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
+        //
+        //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: T##Sequence)
         //try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
 
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
@@ -625,6 +631,22 @@ internal class DefaultClient: Client, WebSocketDelegate {
             }
 
         })*/
+        let rsp  =  try? self.grpcClient.authenticateDevice(  message ).response
+    
+        rsp?.whenSuccess({ (Nakama_Api_Session) in
+            NSLog("Nakama_Api_Session \(Nakama_Api_Session)")
+            let create = Nakama_Api_Session.created
+            let token = Nakama_Api_Session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })
+        /*rsp?.whenComplete({ (Result<Nakama_Api_Session, Error>) in
+            NSLog("Result")
+        })*/
+        /*rsp?.response.always({ (Result, <Nakama_Api_Session, Error>) in
+            NSLog("Result \(Result)")
+            
+        })*/
         //self.grpcClient.authenticateDevice(Nakama_Api_AuthenticateDeviceRequest)
         return p
     }
@@ -635,10 +657,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 //self.grpcClient.metadata = Metadata()
                 //self.grpcClient.defaultCallOptions.customMetadata = Metadata()
                 /*try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)*/
+            
+                self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
                 //
-                /*let callOptions = CallOptions(customMetadata: HTTPHeaders([("authorization", "Bearer \(self.activeSession!.authToken)")]))
-                self.grpcClient.defaultCallOptions = callOptions*/
-                CallOptions()
             }catch {
                 NSLog("\(error)")
             }
@@ -673,6 +694,17 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP \(rsp.statusCode.rawValue) \n \(rsp.statusMessage ?? "None")")))
             }
         })*/
+        let rsp = self.grpcClient.listMatches(message).response
+        rsp.whenSuccess { (Nakama_Api_MatchList) in
+            if Nakama_Api_MatchList.matches != nil{
+                seal.fulfill(DefaultMatchListing(response: Nakama_Api_MatchList) as! MatchListing)
+            }else{
+                seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP ")))
+            }
+        }
+        /*rsp.whenComplete { (Result,<Nakama_Api_MatchList, Error>) in
+            NSLog("Result \(Result)")
+        }*/
         return p
     }
 
