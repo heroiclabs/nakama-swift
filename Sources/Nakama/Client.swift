@@ -24,7 +24,7 @@ import SwiftProtobuf
 //import SwiftGRPC
 // migration to new SwiftGRPC version
 import GRPC
-
+import NIO
 /**
  A message which requires no acknowledgement by the server.
  */
@@ -381,7 +381,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     private let lang: String
     private let timeout: Int
     private let trace: Bool
-    private let grpcClient: Nakama_Api_NakamaServiceClient
+    private let grpcClient: Nakama_Api_NakamaClient
     
     //Nakama_Api_NakamaClientProtocol need to fix
     
@@ -424,10 +424,23 @@ internal class DefaultClient: Client, WebSocketDelegate {
         self.wsComponent.path = "/ws"
 
         //set up the gRPC client
-        self.grpcClient = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
+        //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
+        //Nakama_Api_NakamaClient.init(channel: )
+        let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        defer {
+          try? group.syncShutdownGracefully()
+        }
+
+        let channel = ClientConnection.insecure(group: group)
+          .connect(host: host, port: port)
+
+        let client = Nakama_Api_NakamaClient(channel: channel)
+        NSLog("client \(client)")
+        self.grpcClient = client
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
-        try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
+        //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: <#T##Sequence#>)
+        //try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
 
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
     }
@@ -567,12 +580,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
     func logout() {
     }
-
-    
-    func didReceive(event: WebSocketEvent, client: WebSocket) {
-        NSLog("event \(event) | client \(client) ")
-        
-    }
     
     func websocketDidConnect(socket: WebSocketClient) {
     }
@@ -607,7 +614,8 @@ internal class DefaultClient: Client, WebSocketDelegate {
         message.username = deviceID
         message.create = true
         let (p, seal) = Promise<Session>.pending()
-        _ = try? self.grpcClient.authenticateDevice(message, completion: { (session, rsp) in
+        //self.grpcClient.defaultCallOptions.customMetadata.
+        /*_ = try? self.grpcClient.authenticateDevice(message, completion: { (session, rsp) in
             if rsp.success {
                 self.activeSession = DefaultSession(token: session!.token, created: session!.created)
                 seal.fulfill(self.activeSession!)
@@ -616,15 +624,21 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error - HTTP %@", rsp.statusCode.rawValue)))
             }
 
-        })
+        })*/
+        //self.grpcClient.authenticateDevice(Nakama_Api_AuthenticateDeviceRequest)
         return p
     }
 
     func updateMetaDataIfNeeded(){
         if !bearerIsSetup{
             do {
-                self.grpcClient.metadata = Metadata()
-                try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)
+                //self.grpcClient.metadata = Metadata()
+                //self.grpcClient.defaultCallOptions.customMetadata = Metadata()
+                /*try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)*/
+                //
+                /*let callOptions = CallOptions(customMetadata: HTTPHeaders([("authorization", "Bearer \(self.activeSession!.authToken)")]))
+                self.grpcClient.defaultCallOptions = callOptions*/
+                CallOptions()
             }catch {
                 NSLog("\(error)")
             }
@@ -652,19 +666,20 @@ internal class DefaultClient: Client, WebSocketDelegate {
             message.maxSize = Google_Protobuf_Int32Value(maxSize!)
         }
         let (p, seal) = Promise<MatchListing>.pending()
-        _ = try? self.grpcClient.listMatches(message, completion: { (matchList, rsp) in
+        /*_ = try? self.grpcClient.listMatches(message, completion: { (matchList, rsp) in
             if rsp.success && matchList != nil {
                 seal.fulfill(DefaultMatchListing(response: matchList!))
             } else {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP \(rsp.statusCode.rawValue) \n \(rsp.statusMessage ?? "None")")))
             }
-        })
+        })*/
         return p
     }
 
     func createSocket(to session: Session) -> Promise<Session> {
         if (socket != nil) {
-            precondition(socket!.isConnected, "socket is already connected")
+            NSLog("socket is already connected")
+            //precondition(socket!.isConnected, "socket is already connected")
         }
 
         let (promise, seal) = Promise<Session>.pending()
@@ -678,6 +693,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
         socket = WebSocket(request: url )
 
         socket!.delegate = self
+        //
         socket!.enableCompression = true
         socket!.onConnect = {
             if promise.isPending {
