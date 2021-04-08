@@ -689,10 +689,10 @@ internal class DefaultClient: Client, WebSocketDelegate {
         let (p, seal) = Promise<Session>.pending()
         let rsp = try? self.grpcClient.authenticateEmail(message).response
         print(rsp)
-        try? rsp?.whenSuccess({ (Nakama_Api_Session) in
-            NSLog("authenticateEmail \(Nakama_Api_Session)")
-            let create = Nakama_Api_Session.created
-            let token = Nakama_Api_Session.token
+        try? rsp?.whenSuccess( { nakama_session in
+            NSLog("authenticateEmail \(nakama_session)")
+            let create = nakama_session.created
+            let token = nakama_session.token
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
         })
@@ -710,10 +710,10 @@ internal class DefaultClient: Client, WebSocketDelegate {
         let rsp = try? self.grpcClient.authenticateEmail(message).response
         //
         NSLog("rsp \(rsp)")
-        rsp?.whenSuccess({ (Nakama_Api_Session) in
-            NSLog("authenticateEmail \(Nakama_Api_Session)")
-            let create = Nakama_Api_Session.created
-            let token = Nakama_Api_Session.token
+        rsp?.whenSuccess( { nakama_session in
+            NSLog("authenticateEmail \(nakama_session)")
+            let create = nakama_session.created
+            let token = nakama_session.token
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
         })
@@ -729,10 +729,10 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //
         let (p, seal) = Promise<Session>.pending()
         let rsp = try? self.grpcClient.authenticateCustom(message).response
-        rsp?.whenSuccess({ (Nakama_Api_Session) in
-            NSLog("authenticateCustom \(Nakama_Api_Session)")
-            let create = Nakama_Api_Session.created
-            let token = Nakama_Api_Session.token
+        rsp?.whenSuccess({ nakama_session in
+            NSLog("authenticateCustom \(nakama_session)")
+            let create = nakama_session.created
+            let token = nakama_session.token
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
         })
