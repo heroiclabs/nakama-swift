@@ -708,6 +708,8 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //
         let (p, seal) = Promise<Session>.pending()
         let rsp = try? self.grpcClient.authenticateEmail(message).response
+        //
+        NSLog("rsp \(rsp)")
         rsp?.whenSuccess({ (Nakama_Api_Session) in
             NSLog("authenticateEmail \(Nakama_Api_Session)")
             let create = Nakama_Api_Session.created
