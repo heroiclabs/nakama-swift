@@ -372,7 +372,6 @@ public protocol Client {
      */
     func authenticateEmail( email: String, password: String ) -> Promise<Session>
 
-    
     /**
      * Authenticate a user with an email and password.
      * @param email The email address of the user.
@@ -382,6 +381,22 @@ public protocol Client {
      */
     func authenticateEmail(email: String, password: String, create : Bool ) -> Promise<Session>
 
+    /**
+     * Authenticate a user with a custom id.
+     * @param id A custom identifier usually obtained from an external authentication service.
+     * @param username A username used to create the user.
+     * @return A future to resolve a session object.
+     */
+    func authenticateCustom( id: String , username: String ) -> Promise<Session>
+    
+    /**
+     * Fetch the user account owned by the session.
+     *
+     * @param session The session of the user.
+     * @return A future to resolve an account object.
+     */
+    //func getAccount( session: Session) -> Promise<Acco>
+    
     /**
     list the already activated game on the server
     - Parameter limit
@@ -658,13 +673,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
         })
-        /*rsp?.whenComplete({ (Result<Nakama_Api_Session, Error>) in
-            NSLog("Result")
-        })*/
-        /*rsp?.response.always({ (Result, <Nakama_Api_Session, Error>) in
-            NSLog("Result \(Result)")
-            
-        })*/
         //self.grpcClient.authenticateDevice(Nakama_Api_AuthenticateDeviceRequest)
         return p
     }
@@ -672,18 +680,57 @@ internal class DefaultClient: Client, WebSocketDelegate {
     
     func authenticateEmail(email: String, password: String ) -> Promise<Session> {
         NSLog("authenticateEmail ", email, password )
+        var message = Nakama_Api_AuthenticateEmailRequest.init()
+        message.account = Nakama_Api_AccountEmail.init()
+        //
         let (p, seal) = Promise<Session>.pending()
+        let rsp = try? self.grpcClient.authenticateEmail(message).response
+        rsp?.whenSuccess({ (Nakama_Api_Session) in
+            NSLog("authenticateEmail \(Nakama_Api_Session)")
+            let create = Nakama_Api_Session.created
+            let token = Nakama_Api_Session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })
+        
         return p
     }
     
     
     func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
         NSLog("authenticateEmail ", email, password, create )
+        var message = Nakama_Api_AuthenticateEmailRequest.init()
+        message.account = Nakama_Api_AccountEmail.init()
+        //
         let (p, seal) = Promise<Session>.pending()
+        let rsp = try? self.grpcClient.authenticateEmail(message).response
+        rsp?.whenSuccess({ (Nakama_Api_Session) in
+            NSLog("authenticateEmail \(Nakama_Api_Session)")
+            let create = Nakama_Api_Session.created
+            let token = Nakama_Api_Session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })
         return p
     }
     
 
+    func authenticateCustom(id: String, username: String) -> Promise<Session> {
+        NSLog("authenticateCustom ", id, username  )
+        var message     = Nakama_Api_AuthenticateCustomRequest.init()
+        message.account = Nakama_Api_AccountCustom.init()
+        //
+        let (p, seal) = Promise<Session>.pending()
+        let rsp = try? self.grpcClient.authenticateCustom(message).response
+        rsp?.whenSuccess({ (Nakama_Api_Session) in
+            NSLog("authenticateCustom \(Nakama_Api_Session)")
+            let create = Nakama_Api_Session.created
+            let token = Nakama_Api_Session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })
+        return p
+    }
 
     
     func updateMetaDataIfNeeded(){
