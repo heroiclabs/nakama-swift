@@ -363,6 +363,24 @@ public protocol Client {
 
 
     func loginOrRegister(with deviceID: String) -> Promise<Session>
+    
+    /**
+     * Authenticate a user with an email and password.
+     * @param email The email address of the user.
+     * @param password The password for the user.
+     * @return A future to resolve a session object.
+     */
+    func authenticateEmail( email: String, password: String ) -> Promise<Session>
+
+    
+    /**
+     * Authenticate a user with an email and password.
+     * @param email The email address of the user.
+     * @param password The password for the user.
+     * @param create True if the user should be created when authenticated.
+     * @return A future to resolve a session object.
+     */
+    func authenticateEmail(email: String, password: String, create : Bool ) -> Promise<Session>
 
     /**
     list the already activated game on the server
@@ -377,8 +395,8 @@ public protocol Client {
 }
 
 internal class DefaultClient: Client, WebSocketDelegate {
-
-
+    
+    
     private let serverKey: String
     private let lang: String
     private let timeout: Int
@@ -651,6 +669,23 @@ internal class DefaultClient: Client, WebSocketDelegate {
         return p
     }
 
+    
+    func authenticateEmail(email: String, password: String ) -> Promise<Session> {
+        NSLog("authenticateEmail ", email, password )
+        let (p, seal) = Promise<Session>.pending()
+        return p
+    }
+    
+    
+    func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
+        NSLog("authenticateEmail ", email, password, create )
+        let (p, seal) = Promise<Session>.pending()
+        return p
+    }
+    
+
+
+    
     func updateMetaDataIfNeeded(){
         if !bearerIsSetup{
             do {
@@ -766,6 +801,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
     func send(message: Message) {
 //        let binaryData = try! JSONEncoder().encode(message)
 //        self.socket?.write(data: binaryData)
+        print("message ", message)
+        /*let jsonData = try! JSONEncoder().encode(message)
+        let binaryData = String(data: jsonData, encoding: .utf8)!
+        print(binaryData)*/
+        //self.socket?.write(data: binaryData)
     }
 
     fileprivate  func processText(text: String){
