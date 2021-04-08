@@ -683,8 +683,10 @@ internal class DefaultClient: Client, WebSocketDelegate {
     
     func authenticateEmail(email: String, password: String ) -> Promise<Session> {
         NSLog("authenticateEmail ", email, password )
-        var message = Nakama_Api_AuthenticateEmailRequest.init()
-        message.account = Nakama_Api_AccountEmail.init()
+        var message                 = Nakama_Api_AuthenticateEmailRequest.init()
+        message.account             = Nakama_Api_AccountEmail.init()
+        message.account.email       = email
+        message.account.password    = password
         //
         let (p, seal) = Promise<Session>.pending()
         let rsp = try? self.grpcClient.authenticateEmail(message).response
@@ -746,6 +748,8 @@ internal class DefaultClient: Client, WebSocketDelegate {
         NSLog("authenticateCustom ", id, username  )
         var message     = Nakama_Api_AuthenticateCustomRequest.init()
         message.account = Nakama_Api_AccountCustom.init()
+        message.account.id  = id
+        //message.account.vars
         //
         let (p, seal) = Promise<Session>.pending()
         let rsp = try? self.grpcClient.authenticateCustom(message).response
