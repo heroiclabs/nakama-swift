@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 Heroic Labs
+ * Updated 08/04/2021 - Allan Nava
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -448,16 +449,16 @@ internal class DefaultClient: Client, WebSocketDelegate {
                   ssl: Bool, timeout: Int, trace: Bool) {
 
         self.serverKey = serverKey
-        self.lang = lang
-        self.timeout = timeout
-        self.trace = trace
+        self.lang       = lang
+        self.timeout    = timeout
+        self.trace      = trace
 
         self.wsComponent = URLComponents()
         self.wsComponent.host = host
         self.wsComponent.port = 7350
         self.wsComponent.scheme = ssl ? "https" : "ws"
         self.wsComponent.path = "/ws"
-
+        //
         //set up the gRPC client
         //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
         //Nakama_Api_NakamaClient.init(channel: )
@@ -465,12 +466,14 @@ internal class DefaultClient: Client, WebSocketDelegate {
         defer {
           try? group.syncShutdownGracefully()
         }
-
-        let channel = ClientConnection.insecure(group: group)
-          .connect(host: host, port: port)
-
-        let client = Nakama_Api_NakamaClient(channel: channel)
-        NSLog("client \(client)")
+        var channel : ClientConnection? = nil
+        if(ssl){
+            channel = ClientConnection.secure(group: group).connect(host: host, port: port)
+        }else{
+            channel = ClientConnection.insecure(group: group).connect(host: host, port: port)
+        }
+        let client = Nakama_Api_NakamaClient(channel: channel!)
+        NSLog("client \(client)  | ssl = \(ssl) ")
         self.grpcClient = client
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
