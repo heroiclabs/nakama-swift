@@ -704,8 +704,13 @@ internal class DefaultClient: Client, WebSocketDelegate {
     func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
         NSLog("authenticateEmail ", email, password, create )
         //
-        var message = Nakama_Api_AuthenticateEmailRequest.init()
-        message.account = Nakama_Api_AccountEmail.init()
+        var message                 = Nakama_Api_AuthenticateEmailRequest.init()
+        message.account             = Nakama_Api_AccountEmail.init()
+        message.account.email       = email
+        message.account.password    = password
+        //
+        // need to add the create boolean
+        //message.account.me
         let (p, seal) = Promise<Session>.pending()
         //
         do {
