@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 Heroic Labs
+ * Updated 08/04/2021 - Allan Nava
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +27,7 @@ import SwiftProtobuf
 import GRPC
 import NIO
 import NIOSSL
+import NIOHTTP1
 
 /**
  A message which requires no acknowledgement by the server.
@@ -363,7 +365,40 @@ public protocol Client {
 
 
     func loginOrRegister(with deviceID: String) -> Promise<Session>
+    
+    /**
+     * Authenticate a user with an email and password.
+     * @param email The email address of the user.
+     * @param password The password for the user.
+     * @return A future to resolve a session object.
+     */
+    func authenticateEmail( email: String, password: String ) -> Promise<Session>
 
+    /**
+     * Authenticate a user with an email and password.
+     * @param email The email address of the user.
+     * @param password The password for the user.
+     * @param create True if the user should be created when authenticated.
+     * @return A future to resolve a session object.
+     */
+    func authenticateEmail(email: String, password: String, create : Bool ) -> Promise<Session>
+
+    /**
+     * Authenticate a user with a custom id.
+     * @param id A custom identifier usually obtained from an external authentication service.
+     * @param username A username used to create the user.
+     * @return A future to resolve a session object.
+     */
+    func authenticateCustom( id: String , username: String ) -> Promise<Session>
+    
+    /**
+     * Fetch the user account owned by the session.
+     *
+     * @param session The session of the user.
+     * @return A future to resolve an account object.
+     */
+    //func getAccount( session: Session) -> Promise<Acco>
+    
     /**
     list the already activated game on the server
     - Parameter limit
@@ -377,8 +412,8 @@ public protocol Client {
 }
 
 internal class DefaultClient: Client, WebSocketDelegate {
-
-
+    
+    
     private let serverKey: String
     private let lang: String
     private let timeout: Int
@@ -414,29 +449,39 @@ internal class DefaultClient: Client, WebSocketDelegate {
                   ssl: Bool, timeout: Int, trace: Bool) {
 
         self.serverKey = serverKey
-        self.lang = lang
-        self.timeout = timeout
-        self.trace = trace
+        self.lang       = lang
+        self.timeout    = timeout
+        self.trace      = trace
 
         self.wsComponent = URLComponents()
         self.wsComponent.host = host
         self.wsComponent.port = 7350
         self.wsComponent.scheme = ssl ? "https" : "ws"
         self.wsComponent.path = "/ws"
-
+        //
         //set up the gRPC client
-        let configuration = ClientConnection.Configuration(
-                target: .hostAndPort(host, port),
-                eventLoopGroup: MultiThreadedEventLoopGroup(numberOfThreads: 1)
-            )
-        //Nakama_Api_NakamaClient.init(channel: , )
-        
-        //self.grpcClient = Nakama_Api_NakamaClient.init(channel: channel )
-        /*self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)*/
+        //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
+        //Nakama_Api_NakamaClient.init(channel: )
+        let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        defer {
+          try? group.syncShutdownGracefully()
+        }
+        var channel : ClientConnection? = nil
+        if(ssl){
+            channel = ClientConnection.secure(group: group).connect(host: host, port: port)
+        }else{
+            channel = ClientConnection.insecure(group: group).connect(host: host, port: port)
+        }
+        let client = Nakama_Api_NakamaClient(channel: channel!)
+        NSLog("client \(client)  | ssl = \(ssl) | channel \(channel)")
+        self.grpcClient = client
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
-        // need to add authorization
-        // self.grpcClient
+        //self.grpcClient.defaultCallOptions.customMetadata
+        //var header = NIOHTTP1.HTTPHeaders.init()
+        self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
+        //
+        //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: T##Sequence)
         //try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
 
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
@@ -577,12 +622,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
     func logout() {
     }
-
-    
-    func didReceive(event: WebSocketEvent, client: WebSocket) {
-        NSLog("event \(event) | client \(client) ")
-        
-    }
     
     func websocketDidConnect(socket: WebSocketClient) {
     }
@@ -617,7 +656,8 @@ internal class DefaultClient: Client, WebSocketDelegate {
         message.username = deviceID
         message.create = true
         let (p, seal) = Promise<Session>.pending()
-        _ = try? self.grpcClient.authenticateDevice(message, completion: { (session, rsp) in
+        //self.grpcClient.defaultCallOptions.customMetadata.
+        /*_ = try? self.grpcClient.authenticateDevice(message, completion: { (session, rsp) in
             if rsp.success {
                 self.activeSession = DefaultSession(token: session!.token, created: session!.created)
                 seal.fulfill(self.activeSession!)
@@ -626,15 +666,189 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error - HTTP %@", rsp.statusCode.rawValue)))
             }
 
-        })
+        })*/
+        do {
+            let rsp = self.grpcClient.authenticateDevice(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        /*let rsp  =  try? self.grpcClient.authenticateDevice(  message ).response
+    
+        rsp?.whenSuccess({ (Nakama_Api_Session) in
+            NSLog("Nakama_Api_Session \(Nakama_Api_Session)")
+            let create = Nakama_Api_Session.created
+            let token = Nakama_Api_Session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })*/
+        //self.grpcClient.authenticateDevice(Nakama_Api_AuthenticateDeviceRequest)
         return p
     }
 
+    
+    func authenticateEmail(email: String, password: String ) -> Promise<Session> {
+        NSLog("authenticateEmail ", email, password )
+        var message                 = Nakama_Api_AuthenticateEmailRequest.init()
+        message.account             = Nakama_Api_AccountEmail.init()
+        message.account.email       = email
+        message.account.password    = password
+        //
+        let (p, seal) = Promise<Session>.pending()
+        do {
+            let rsp = self.grpcClient.authenticateEmail(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        /*let rsp = try? self.grpcClient.authenticateEmail(message).response
+        print(rsp)
+        try? rsp?.whenSuccess( { nakama_session in
+            NSLog("authenticateEmail \(nakama_session)")
+            let create = nakama_session.created
+            let token = nakama_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })*/
+        
+        return p
+    }
+    
+    
+    func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
+        NSLog("authenticateEmail ", email, password, create )
+        //
+        var message                 = Nakama_Api_AuthenticateEmailRequest.init()
+        message.account             = Nakama_Api_AccountEmail.init()
+        message.account.email       = email
+        message.account.password    = password
+        //
+        // need to add the create boolean
+        //message.account.me
+        let (p, seal) = Promise<Session>.pending()
+        //
+        do {
+            let rsp = self.grpcClient.authenticateEmail(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        return p
+    }
+    
+
+    func authenticateCustom(id: String, username: String) -> Promise<Session> {
+        NSLog("authenticateCustom ", id, username  )
+        var message     = Nakama_Api_AuthenticateCustomRequest.init()
+        message.account = Nakama_Api_AccountCustom.init()
+        message.account.id  = id
+        //message.account.vars
+        NSLog("authenticateCustom message \(message)")
+        //
+        let (p, seal) = Promise<Session>.pending()
+        do {
+            let rsp = self.grpcClient.authenticateCustom(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        /*let rsp = try? self.grpcClient.authenticateCustom(message)
+        rsp?.response.whenSuccess({ nakama_session in
+            NSLog("authenticateCustom \(nakama_session)")
+            let create = nakama_session.created
+            let token = nakama_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            seal.fulfill(self.activeSession!)
+        })*/
+        return p
+    }
+
+    
     func updateMetaDataIfNeeded(){
         if !bearerIsSetup{
             do {
-                self.grpcClient.metadata = Metadata()
-                try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)
+                //self.grpcClient.metadata = Metadata()
+                //self.grpcClient.defaultCallOptions.customMetadata = Metadata()
+                /*try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)*/
+            
+                self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
+                //
             }catch {
                 NSLog("\(error)")
             }
@@ -662,19 +876,31 @@ internal class DefaultClient: Client, WebSocketDelegate {
             message.maxSize = Google_Protobuf_Int32Value(maxSize!)
         }
         let (p, seal) = Promise<MatchListing>.pending()
-        _ = try? self.grpcClient.listMatches(message, completion: { (matchList, rsp) in
+        /*_ = try? self.grpcClient.listMatches(message, completion: { (matchList, rsp) in
             if rsp.success && matchList != nil {
                 seal.fulfill(DefaultMatchListing(response: matchList!))
             } else {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP \(rsp.statusCode.rawValue) \n \(rsp.statusMessage ?? "None")")))
             }
-        })
+        })*/
+        let rsp = self.grpcClient.listMatches(message).response
+        rsp.whenSuccess { (Nakama_Api_MatchList) in
+            if Nakama_Api_MatchList.matches != nil{
+                seal.fulfill(DefaultMatchListing(response: Nakama_Api_MatchList) as! MatchListing)
+            }else{
+                seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP ")))
+            }
+        }
+        /*rsp.whenComplete { (Result,<Nakama_Api_MatchList, Error>) in
+            NSLog("Result \(Result)")
+        }*/
         return p
     }
 
     func createSocket(to session: Session) -> Promise<Session> {
         if (socket != nil) {
-            precondition(socket!.isConnected, "socket is already connected")
+            NSLog("socket is already connected")
+            //precondition(socket!.isConnected, "socket is already connected")
         }
 
         let (promise, seal) = Promise<Session>.pending()
@@ -688,6 +914,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
         socket = WebSocket(request: url )
 
         socket!.delegate = self
+        //
         socket!.enableCompression = true
         socket!.onConnect = {
             if promise.isPending {
@@ -728,6 +955,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
     func send(message: Message) {
 //        let binaryData = try! JSONEncoder().encode(message)
 //        self.socket?.write(data: binaryData)
+        print("message ", message)
+        /*let jsonData = try! JSONEncoder().encode(message)
+        let binaryData = String(data: jsonData, encoding: .utf8)!
+        print(binaryData)*/
+        //self.socket?.write(data: binaryData)
     }
 
     fileprivate  func processText(text: String){
