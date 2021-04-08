@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "Nakama"
-  s.version      = "3.0.115"
+  s.version      = "3.0.116"
   s.summary      = "Swift client for Nakama server."
   s.description  = <<-DESC
   Swift client for Nakama server.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Allan-Nava/nakama-swift.git", :tag => "v#{s.version}" }
   s.source_files  = "Sources/Nakama/*.{h,m,swift}"
 
-  s.dependency "Starscream", ">= 3.1.1"
+  s.dependency "Starscream", ">= 3.1.1", '< 4'
   s.dependency 'SwiftNIO', '>= 2.26.0', '< 3'
   s.dependency 'SwiftNIOSSL', '>= 2.10.4', '< 3'
   s.dependency 'SwiftNIOTransportServices', '>= 1.9.1', '< 2'
