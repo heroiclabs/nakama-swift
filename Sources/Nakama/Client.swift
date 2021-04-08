@@ -473,7 +473,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
             channel = ClientConnection.insecure(group: group).connect(host: host, port: port)
         }
         let client = Nakama_Api_NakamaClient(channel: channel!)
-        NSLog("client \(client)  | ssl = \(ssl) ")
+        NSLog("client \(client)  | ssl = \(ssl) | channel \(channel)")
         self.grpcClient = client
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
@@ -667,7 +667,32 @@ internal class DefaultClient: Client, WebSocketDelegate {
             }
 
         })*/
-        let rsp  =  try? self.grpcClient.authenticateDevice(  message ).response
+        do {
+            let rsp = self.grpcClient.authenticateDevice(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        /*let rsp  =  try? self.grpcClient.authenticateDevice(  message ).response
     
         rsp?.whenSuccess({ (Nakama_Api_Session) in
             NSLog("Nakama_Api_Session \(Nakama_Api_Session)")
@@ -675,7 +700,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
             let token = Nakama_Api_Session.token
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
-        })
+        })*/
         //self.grpcClient.authenticateDevice(Nakama_Api_AuthenticateDeviceRequest)
         return p
     }
@@ -689,7 +714,32 @@ internal class DefaultClient: Client, WebSocketDelegate {
         message.account.password    = password
         //
         let (p, seal) = Promise<Session>.pending()
-        let rsp = try? self.grpcClient.authenticateEmail(message).response
+        do {
+            let rsp = self.grpcClient.authenticateEmail(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        /*let rsp = try? self.grpcClient.authenticateEmail(message).response
         print(rsp)
         try? rsp?.whenSuccess( { nakama_session in
             NSLog("authenticateEmail \(nakama_session)")
@@ -697,7 +747,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
             let token = nakama_session.token
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
-        })
+        })*/
         
         return p
     }
@@ -750,16 +800,42 @@ internal class DefaultClient: Client, WebSocketDelegate {
         message.account = Nakama_Api_AccountCustom.init()
         message.account.id  = id
         //message.account.vars
+        NSLog("authenticateCustom message \(message)")
         //
         let (p, seal) = Promise<Session>.pending()
-        let rsp = try? self.grpcClient.authenticateCustom(message).response
-        rsp?.whenSuccess({ nakama_session in
+        do {
+            let rsp = self.grpcClient.authenticateCustom(message)
+            //
+            NSLog("rsp \(rsp)")
+            rsp.status.whenSuccess { status in
+                if status.code == .ok {
+                    NSLog("Finished RouteChat")
+                } else {
+                    NSLog("RouteChat Failed: \(status)")
+                }
+            }
+            NSLog("rsp \( rsp.response)")
+            let namaka_session = try rsp.response.wait()
+            NSLog("authenticateEmail when session \(namaka_session)")
+            let create  = namaka_session.created
+            let token   = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        /*let rsp = try? self.grpcClient.authenticateCustom(message)
+        rsp?.response.whenSuccess({ nakama_session in
             NSLog("authenticateCustom \(nakama_session)")
             let create = nakama_session.created
             let token = nakama_session.token
             self.activeSession = DefaultSession(token: token, created: create)
             seal.fulfill(self.activeSession!)
-        })
+        })*/
         return p
     }
 
