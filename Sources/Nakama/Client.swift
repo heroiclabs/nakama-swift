@@ -395,6 +395,64 @@ public protocol Client {
     func authenticateCustom( id: String , username: String ) -> Promise<Session>
     
     /**
+     * Add one or more friends by id.
+     * @param session The session of the user.
+     * @param ids The ids of the users to add or invite as friends.
+     * @return A future.
+     */
+    func addFriends( session : Session,  ids: [String] ) -> Promise<Void>
+    
+    /**
+     * Add one or more friends by id or username.
+     * @param session The session of the user.
+     * @param ids The ids of the users to add or invite as friends.
+     * @param usernames The usernames of the users to add as friends.
+     * @return A future.
+     */
+    func addFriends( session: Session ,  ids: [String] , usernames: [ String ] ) -> Promise<Void>
+
+    /**
+     * Add one or more users to the group.
+     * @param session The session of the user.
+     * @param groupId The id of the group to add users into.
+     * @param ids The ids of the users to add or invite to the group.
+     * @return A future.
+     */
+    func addGroupUsers( session: Session ,  groupId: String , ids : [ String ] ) -> Promise<Void>
+
+    /**
+    * Authenticate a user with an Apple token.
+    * @param token The ID token received from Apple to validate.
+    * @return A future to resolve a session object.
+    */
+    func authenticateApple( token : String ) -> Promise<Session>
+
+    /**
+     * Authenticate a user with an Apple token.
+     * @param token The ID token received from Apple to validate.
+     * @param vars Extra information that will be bundled in the session token.
+     * @return A future to resolve a session object.
+     */
+    func authenticateApple( token: String , vars: [ String: String ] ) -> Promise<Session>
+
+    /**
+     * Authenticate a user with an Apple token.
+     * @param token The ID token received from Apple to validate.
+     * @param username A username used to create the user.
+     * @return A future to resolve a session object.
+     */
+    func authenticateApple( token : String , username : String ) -> Promise<Session>
+
+    /**
+     * Authenticate a user with an Apple token.
+     * @param token The ID token received from Apple to validate.
+     * @param create True if the user should be created when authenticated.
+     * @return A future to resolve a session object.
+     */
+    func authenticateApple( token : String, create: Bool ) -> Promise<Session>
+
+    
+    /**
      * Fetch the user account owned by the session.
      *
      * @param session The session of the user.
@@ -909,6 +967,163 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP ")))
             }
         }*/
+        
+        return p
+    }
+    
+    func addFriends(session: Session, ids: [String]) -> Promise<Void> {
+        /*if trace {
+            NSLog("addFriends ", ids, session  )
+        }*/
+        let (p, seal)   = Promise<Void>.pending()
+        var message     = Nakama_Api_AddFriendsRequest.init()
+        message.ids     = ids
+        do {
+            let rsp = self.grpcClient.addFriends(message)
+            let r = try rsp.response.wait()
+            //
+            seal.fulfill_()
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        
+        return p
+    }
+    
+    func addFriends(session: Session, ids: [String], usernames: [String]) -> Promise<Void> {
+        let (p, seal)       = Promise<Void>.pending()
+        var message         = Nakama_Api_AddFriendsRequest.init()
+        message.ids         = ids
+        message.usernames   = usernames
+        do {
+            let rsp = self.grpcClient.addFriends(message)
+            let r = try rsp.response.wait()
+            //
+            seal.fulfill_()
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        //message.account.ids  = ids
+        return p
+    }
+    
+    
+    func addGroupUsers(session: Session, groupId: String, ids: [String]) -> Promise<Void> {
+        let (p, seal) = Promise<Void>.pending()
+        var message     = Nakama_Api_AddGroupUsersRequest.init()
+        message.groupID = groupId
+        message.userIds = ids
+        do {
+            let rsp = self.grpcClient.addGroupUsers(message)
+            let r = try rsp.response.wait()
+            //
+            seal.fulfill_()
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        
+        //
+        return p
+    }
+    
+    func authenticateApple(token: String) -> Promise<Session> {
+        let (p, seal)           = Promise<Session>.pending()
+        //
+        var message             = Nakama_Api_AuthenticateAppleRequest.init()
+        message.account         = Nakama_Api_AccountApple.init()
+        message.account.token   = token
+        do {
+            let rsp             = self.grpcClient.authenticateApple(message)
+            let namaka_session  = try rsp.response.wait()
+            let create          = namaka_session.created
+            let token           = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        
+        return p
+    }
+    
+    func authenticateApple(token: String, vars: [String : String]) -> Promise<Session> {
+        let (p, seal) = Promise<Session>.pending()
+        var message             = Nakama_Api_AuthenticateAppleRequest.init()
+        message.account         = Nakama_Api_AccountApple.init()
+        message.account.token   = token
+        do {
+            let rsp             = self.grpcClient.authenticateApple(message)
+            let namaka_session  = try rsp.response.wait()
+            let create          = namaka_session.created
+            let token           = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        return p
+    }
+    
+    func authenticateApple(token: String, username: String) -> Promise<Session> {
+        let (p, seal) = Promise<Session>.pending()
+        var message             = Nakama_Api_AuthenticateAppleRequest.init()
+        message.account         = Nakama_Api_AccountApple.init()
+        message.account.token   = token
+        message.username        = username
+        do {
+            let rsp             = self.grpcClient.authenticateApple(message)
+            let namaka_session  = try rsp.response.wait()
+            let create          = namaka_session.created
+            let token           = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        return p
+    }
+    
+    func authenticateApple(token: String, create: Bool) -> Promise<Session> {
+        let (p, seal) = Promise<Session>.pending()
+        var message             = Nakama_Api_AuthenticateAppleRequest.init()
+        message.account         = Nakama_Api_AccountApple.init()
+        message.account.token   = token
+        message.create          = Google_Protobuf_BoolValue(create)
+        do {
+            let rsp             = self.grpcClient.authenticateApple(message)
+            let namaka_session  = try rsp.response.wait()
+            let create          = namaka_session.created
+            let token           = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
         
         return p
     }
