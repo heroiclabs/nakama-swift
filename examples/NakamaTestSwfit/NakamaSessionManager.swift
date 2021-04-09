@@ -3,7 +3,7 @@
 //  NakamaExampleApp
 //
 //  Created by Allan Nava on 07/04/2021.
-//  Updated by Allan Nava on 07/04/2021.
+//  Updated by Allan Nava on 09/04/2021.
 //
 
 import Nakama
@@ -35,12 +35,14 @@ public class NakamaSessionManager {
     {
         let email = "super@heroes.com";
         let password = "batsignal";
-        //client.
-        /*client.authenticateEmail( email: email, password: password, create: true ).then { [weak self] session -> Promise<Session> in
-            
-        }*/
+        //
         print("startV2")
-        client.authenticateEmail( email: email, password: password, create : true )
+        let r = client.authenticateEmail( email: email, password: password, create : true )
+        r.done(on: DispatchQueue.main) { response in
+            print("response \(response) | \(response.authToken) ")
+            NakamaSessionManager.defaults.set(response.authToken, forKey: NakamaSessionManager.sessionKey)
+            self.connect(with: response)
+        }
         //
     }
     
@@ -73,7 +75,7 @@ public class NakamaSessionManager {
             NakamaSessionManager.defaults.set(deviceId!, forKey: NakamaSessionManager.deviceKey)
         }
 
-        /*let message = AuthenticateMessage(device: deviceId!)
+        let message = AuthenticateMessage(device: deviceId!)
         client.login(with: message).then { session in
             NakamaSessionManager.defaults.set(session.token, forKey: NakamaSessionManager.sessionKey)
             self.connect(with: session)
@@ -92,25 +94,19 @@ public class NakamaSessionManager {
                 }
             }
             print("Could not login: %@", err)
-        }*/
+        }
     }
 
 
     private func connect(with session: Session) {
-        /*self.client.createSocket(to: session).then { (Session) -> rsp; in
+        print("connect \(session)")
+        self.client.createSocket(to: session).done(on: DispatchQueue.main){  rsp in
             //Session
-            //self.session =
-            self.session =  rsp.session
-            NakamaSessionManager.defaults.set(session.token, forKey: NakamaSessionManager.sessionKey)
-        }*/
-        /*client.connect(to: session).then { _ in
-            self.session = session
-
-            // Store session for quick reconnects.
-            NakamaSessionManager.defaults.set(session.token, forKey: NakamaSessionManager.sessionKey)
-            }.catch{ err in
+            self.session = rsp
+            NakamaSessionManager.defaults.set(session.authToken, forKey: NakamaSessionManager.sessionKey)
+        }.catch{ err in
             print("Failed to connect to server: %@", err)
-        }*/
+        }
     }
     
 }
