@@ -890,7 +890,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
             let rsp         = self.grpcClient.listMatches(message)
             //
             let matches     = try rsp.response.wait()
-            NSLog("matchList  \(matches)")
+            if trace {
+                NSLog("matchList  \(matches)")
+            }
             //
             seal.fulfill( DefaultMatchListing(response: matches ) )
             //
@@ -914,7 +916,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     func createSocket(to session: Session) -> Promise<Session> {
         if (socket != nil) {
             NSLog("socket is already connected")
-            precondition(socket!.isConnected, "socket is already connected")
+            //precondition(socket!.isConnected, "socket is already connected")
         }
 
         let (promise, seal) = Promise<Session>.pending()
@@ -926,9 +928,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
             URLQueryItem.init(name: "lang", value: lang)
         ]
         let url = URLRequest(url: wsComponent.url!)
-        NSLog("createSocket url | \(url)")
         socket = WebSocket(request: url )
-        NSLog("createSocket socket | \(String(describing: socket))")
+        //
+        /*if trace {
+            NSLog("createSocket socket \(String(describing: socket)) | \n \(url)")
+        }*/
         socket!.delegate = self
         //
         socket!.enableCompression = true
