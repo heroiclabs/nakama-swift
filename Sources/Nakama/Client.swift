@@ -471,7 +471,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //
         authValue                   = "Basic " + "\(serverKey)".data(using: .utf8)!.base64EncodedString()
         //
-        let headers: HPACKHeaders   = [ "authorization": authValue ]
+        let httpHeaders             =  HTTPHeaders.init(  [("authorization", authValue)]  )
+        let headers: HPACKHeaders   = HPACKHeaders(httpHeaders: httpHeaders )
+        //[ "authorization": authValue ]
         let callOptions             = CallOptions(customMetadata: headers )
         //
         if(ssl){
@@ -480,6 +482,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
         }else{
             channel = ClientConnection.insecure( group: group ).connect(host: host, port: port)
         }
+        
         self.grpcClient = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
         //
         //
