@@ -461,14 +461,16 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //
         //set up the gRPC client
         //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
-        //Nakama_Api_NakamaClient.init(channel: )
-        let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        //
+        /*let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         NSLog("group \(group) | ")
         //
         defer {
           try? group.syncShutdownGracefully()
             //NSLog("group \(group)")
-        }
+        }*/
+        let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
+        NSLog("group \(group) | ")
         var channel : ClientConnection? = nil
         if(ssl){
             channel = ClientConnection.secure(group: group).connect(host: host, port: port)
@@ -476,15 +478,15 @@ internal class DefaultClient: Client, WebSocketDelegate {
             channel = ClientConnection.insecure(group: group).connect(host: host, port: port)
         }
         let client = Nakama_Api_NakamaClient(channel: channel!)
-        NSLog("client \(client)  | ssl = \(ssl) | channel \(channel)")
         self.grpcClient = client
         let basicAuth = "\(serverKey)"
         authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
+        //
+        NSLog("client \(client)  | ssl = \(ssl) | channel \(channel)")
         //self.grpcClient.defaultCallOptions.customMetadata
-        //var header = NIOHTTP1.HTTPHeaders.init()
         self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
         //
-        NSLog("self.grpcClient \(self.grpcClient) | ")
+        NSLog("self.grpcClient \(self.grpcClient) | \(self.grpcClient.channel) | \(self.grpcClient.defaultCallOptions)")
         //
         //
         //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: T##Sequence)
