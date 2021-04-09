@@ -879,7 +879,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     func createSocket(to session: Session) -> Promise<Session> {
         if (socket != nil) {
             NSLog("socket is already connected")
-            //precondition(socket!.isConnected, "socket is already connected")
+            precondition(socket!.isConnected, "socket is already connected")
         }
 
         let (promise, seal) = Promise<Session>.pending()
@@ -890,6 +890,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
             URLQueryItem.init(name: "lang", value: lang)
         ]
         let url = URLRequest(url: wsComponent.url!)
+        NSLog("url | \(url)")
         socket = WebSocket(request: url )
 
         socket!.delegate = self
@@ -922,12 +923,12 @@ internal class DefaultClient: Client, WebSocketDelegate {
     fileprivate func send<T>(proto: WebSocketEnvelope) -> Promise<T> {
         let collationID = UUID.init().uuidString
         let payload = proto.serialize(collationID: collationID)
-
+        NSLog("send payload \(payload)")
         let (p, seal) = Promise<T>.pending()
         self.collationIDs[collationID] = (seal.fulfill, seal.reject)
-
+        
         self.socket!.write(data: payload)
-
+        
         return p
     }
 
@@ -942,6 +943,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
     fileprivate  func processText(text: String){
         do{
+            NSLog("proccessText \(text)")
             // 1. let's deserialize as an envelope
             let data = text.data(using: .utf8)!
             let envelope = WebSocketEnvelope.deserialize(data: data)
