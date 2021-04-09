@@ -465,34 +465,25 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //set up the gRPC client
         //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
         //
-        /*let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
-        NSLog("group \(group) | ")
-        //
-        defer {
-          try? group.syncShutdownGracefully()
-            //NSLog("group \(group)")
-        }*/
         let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
         NSLog("group \(group) | ")
         var channel : ClientConnection? = nil
         //
-        let basicAuth               = "\(serverKey)"
-        authValue                   = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
+        authValue                   = "Basic " + "\(serverKey)".data(using: .utf8)!.base64EncodedString()
         //
         let headers: HPACKHeaders   = [ "authorization": authValue ]
         let callOptions             = CallOptions(customMetadata: headers )
         //
         if(ssl){
+            //Step ii: create TLS configuration
             channel = ClientConnection.secure( group: group ).connect(host: host, port: port)
         }else{
             channel = ClientConnection.insecure( group: group ).connect(host: host, port: port)
         }
-        let client = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
-        self.grpcClient = client
+        self.grpcClient = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
         //
-        NSLog("client \(client)  | ssl = \(ssl) | channel \(channel)")
         //
-        NSLog("self.grpcClient \(self.grpcClient) | \(self.grpcClient.channel) | \(self.grpcClient.defaultCallOptions)")
+        NSLog("self.grpcClient \(self.grpcClient) | \(self.grpcClient.channel) | \(self.grpcClient.defaultCallOptions) | ssl = \(ssl) | channel \(channel)")
         //
         //
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
