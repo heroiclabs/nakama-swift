@@ -493,6 +493,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
 
     func joinChat(targetChannelId: String, channelType: ChannelType) -> Promise<Channel> {
+        if trace{
+            NSLog("joinChat \(targetChannelId)")
+        }
         let msg = ChannelJoinMessage(target: targetChannelId, type: channelType.rawValue, hidden: false, persistence: true)
         let env = WebSocketEnvelope()
         env.channelJoin = msg
@@ -500,13 +503,22 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
 
     func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool) -> Promise<Channel> {
+        if trace{
+            NSLog("joinChat \(targetChannelId)")
+        }
         let msg = ChannelJoinMessage(target: targetChannelId, type: channelType.rawValue, hidden: false, persistence: IsPersisted)
         let env = WebSocketEnvelope()
         env.channelJoin = msg
+        if trace{
+            NSLog("joinChat  env \(env) | msg \(msg)")
+        }
         return self.send(proto: env)
     }
 
     func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool, IsHidden: Bool) -> Promise<Channel> {
+        if trace{
+            NSLog("joinChat \(targetChannelId)")
+        }
         let msg = ChannelJoinMessage(target: targetChannelId, type: channelType.rawValue, hidden: IsHidden, persistence: IsPersisted)
         let env = WebSocketEnvelope()
         env.channelJoin = msg
@@ -514,6 +526,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
 
     func leaveChat(targetChannelId: String) {
+        if trace{
+            NSLog("leaveChat \(targetChannelId)")
+        }
         let msg = ChannelLeaveMessage(channelId: targetChannelId)
         let env = WebSocketEnvelope()
         env.channelLeave = msg
@@ -626,16 +641,24 @@ internal class DefaultClient: Client, WebSocketDelegate {
 
 
     func logout() {
+        if trace {
+            NSLog("logout() ")
+        }
     }
     
     func websocketDidConnect(socket: WebSocketClient) {
-        NSLog("websocketDidConnect \(socket)")
+        if trace {
+            NSLog("websocketDidConnect \(socket)")
+        }
     }
 
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         self.collationIDs.removeAll()
         if self.onDisconnect != nil {
             self.onDisconnect!(error)
+        }
+        if trace {
+            NSLog("websocketDidDisconnect: \(socket)" )
         }
     }
 
@@ -649,7 +672,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
 
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        NSLog("Received Data instead of text")
+        if trace {
+            NSLog("Received Data instead of text: \(data)" )
+        }
     }
 
 
@@ -676,10 +701,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
         do {
             let rsp = self.grpcClient.authenticateDevice(message)
             //
-            NSLog("rsp \(rsp)")
-            NSLog("rsp \( rsp.response)")
+            if trace{
+                NSLog("rsp \(rsp)")
+                NSLog("rsp \( rsp.response)")
+            }
             let namaka_session = try rsp.response.wait()
-            NSLog("authenticateEmail when session \(namaka_session)")
             let create  = namaka_session.created
             let token   = namaka_session.token
             self.activeSession = DefaultSession(token: token, created: create)
@@ -691,16 +717,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
             NSLog("ERROR \(error)")
             seal.reject(error)
         }
-        /*let rsp  =  try? self.grpcClient.authenticateDevice(  message ).response
-    
-        rsp?.whenSuccess({ (Nakama_Api_Session) in
-            NSLog("Nakama_Api_Session \(Nakama_Api_Session)")
-            let create = Nakama_Api_Session.created
-            let token = Nakama_Api_Session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            seal.fulfill(self.activeSession!)
-        })*/
-        //self.grpcClient.authenticateDevice(Nakama_Api_AuthenticateDeviceRequest)
+        //
         return p
     }
 
@@ -716,10 +733,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
         do {
             let rsp = self.grpcClient.authenticateEmail(message)
             //
-            NSLog("rsp \(rsp)")
-            NSLog("rsp \( rsp.response)")
+            if trace {
+                NSLog("rsp \(rsp)")
+                NSLog("rsp \( rsp.response)")
+            }
             let namaka_session = try rsp.response.wait()
-            NSLog("authenticateEmail wait() \(namaka_session)")
             let create  = namaka_session.created
             let token   = namaka_session.token
             self.activeSession = DefaultSession(token: token, created: create)
@@ -746,7 +764,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
     
     
     func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
-        NSLog("authenticateEmail \(email)", password, create )
+        if trace {
+            NSLog("authenticateEmail \(email)", password, create )
+        }
         //
         var message                 = Nakama_Api_AuthenticateEmailRequest.init()
         message.account             = Nakama_Api_AccountEmail.init()
@@ -783,19 +803,19 @@ internal class DefaultClient: Client, WebSocketDelegate {
     
 
     func authenticateCustom(id: String, username: String) -> Promise<Session> {
-        NSLog("authenticateCustom ", id, username  )
+        if trace {
+            NSLog("authenticateCustom ", id, username  )
+        }
         var message     = Nakama_Api_AuthenticateCustomRequest.init()
         message.account = Nakama_Api_AccountCustom.init()
         message.account.id  = id
         //message.account.vars
-        NSLog("authenticateCustom message \(message)")
         //
         let (p, seal) = Promise<Session>.pending()
         do {
             let rsp = self.grpcClient.authenticateCustom(message)
             //
             let namaka_session = try rsp.response.wait()
-            NSLog("authenticateEmail when session \(namaka_session)")
             let create  = namaka_session.created
             let token   = namaka_session.token
             self.activeSession = DefaultSession(token: token, created: create)
@@ -895,16 +915,17 @@ internal class DefaultClient: Client, WebSocketDelegate {
         }
 
         let (promise, seal) = Promise<Session>.pending()
-
+        
+        NSLog("createSocket session | \(session)")
         wsComponent.queryItems = [
             URLQueryItem.init(name: "token", value: session.authToken),
             URLQueryItem.init(name: "status", value: session.created.description),
             URLQueryItem.init(name: "lang", value: lang)
         ]
         let url = URLRequest(url: wsComponent.url!)
-        NSLog("url | \(url)")
+        NSLog("createSocket url | \(url)")
         socket = WebSocket(request: url )
-
+        NSLog("createSocket socket | \(String(describing: socket))")
         socket!.delegate = self
         //
         socket!.enableCompression = true
@@ -929,6 +950,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
 
     func disconnect() {
+        NSLog("discconnect()")
         socket?.disconnect()
     }
 
