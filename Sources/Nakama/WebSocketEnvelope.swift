@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 Heroic Labs
+ * Updated 09/04/2021 - Allan Nava
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
  */
 
 import Foundation
+import os
 
 
 /**
@@ -25,8 +27,8 @@ class WebSocketEnvelope: Codable, Envelope {
         cid = collationID
         let d = try! JSONEncoder().encode(self)
         let s = try! JSONDecoder().decode(WebSocketEnvelope.self, from: d)
-        print(s.cid)
-        print(String(data: d, encoding: .utf8))
+        NSLog("s.cid \(s.cid)" )
+        //NSLog(String(data: d, encoding: .utf8))
         return d
     }
 

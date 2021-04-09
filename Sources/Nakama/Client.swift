@@ -1,6 +1,6 @@
 /*
  * Copyright 2018 Heroic Labs
- * Updated 08/04/2021 - Allan Nava
+ * Updated 09/04/2021 - Allan Nava
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -488,6 +488,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
         
         self.grpcClient = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
         //
+        if trace {
+            NSLog("DefaultClient init() | \(grpcClient)")
+        }
         //
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
     }
@@ -957,11 +960,14 @@ internal class DefaultClient: Client, WebSocketDelegate {
     fileprivate func send<T>(proto: WebSocketEnvelope) -> Promise<T> {
         let collationID = UUID.init().uuidString
         let payload = proto.serialize(collationID: collationID)
-        NSLog("send payload \(payload)")
         let (p, seal) = Promise<T>.pending()
         self.collationIDs[collationID] = (seal.fulfill, seal.reject)
         
         self.socket!.write(data: payload)
+        
+        if trace {
+            NSLog("send payload \(payload) | \n collation \(collationID)  | \n collationIDs \(self.collationIDs) |")
+        }
         
         return p
     }
