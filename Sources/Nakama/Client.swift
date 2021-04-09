@@ -463,8 +463,11 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
         //Nakama_Api_NakamaClient.init(channel: )
         let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        NSLog("group \(group) | ")
+        //
         defer {
           try? group.syncShutdownGracefully()
+            //NSLog("group \(group)")
         }
         var channel : ClientConnection? = nil
         if(ssl){
@@ -480,6 +483,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //self.grpcClient.defaultCallOptions.customMetadata
         //var header = NIOHTTP1.HTTPHeaders.init()
         self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
+        //
+        NSLog("self.grpcClient \(self.grpcClient) | ")
+        //
         //
         //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: T##Sequence)
         //try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
@@ -624,6 +630,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     }
     
     func websocketDidConnect(socket: WebSocketClient) {
+        NSLog("websocketDidConnect \(socket)")
     }
 
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
