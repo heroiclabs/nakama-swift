@@ -82,6 +82,7 @@ $> swift test
 This is explain how to implement it 
 - https://docs.servicestack.net/grpc-swift 
 - https://levelup.gitconnected.com/swift-grpc-577ce1a4d1b7
+- https://medium.com/@ambrose12silveira/ios-swift-grpc-integration-with-tls-client-authentication-f2e2164ed125
 
 
 To generate documentation, you'll need to install `jazzy`:

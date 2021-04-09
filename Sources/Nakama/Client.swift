@@ -28,6 +28,9 @@ import GRPC
 import NIO
 import NIOSSL
 import NIOHTTP1
+import NIOHTTP2
+import NIOHPACK
+
 
 /**
  A message which requires no acknowledgement by the server.
@@ -472,26 +475,26 @@ internal class DefaultClient: Client, WebSocketDelegate {
         let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
         NSLog("group \(group) | ")
         var channel : ClientConnection? = nil
+        //
+        let basicAuth               = "\(serverKey)"
+        authValue                   = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
+        //
+        let headers: HPACKHeaders   = [ "authorization": authValue ]
+        let callOptions             = CallOptions(customMetadata: headers )
+        //
         if(ssl){
-            channel = ClientConnection.secure(group: group).connect(host: host, port: port)
+            channel = ClientConnection.secure( group: group ).connect(host: host, port: port)
         }else{
-            channel = ClientConnection.insecure(group: group).connect(host: host, port: port)
+            channel = ClientConnection.insecure( group: group ).connect(host: host, port: port)
         }
-        let client = Nakama_Api_NakamaClient(channel: channel!)
+        let client = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
         self.grpcClient = client
-        let basicAuth = "\(serverKey)"
-        authValue = "Basic " + basicAuth.data(using: .utf8)!.base64EncodedString()
         //
         NSLog("client \(client)  | ssl = \(ssl) | channel \(channel)")
-        //self.grpcClient.defaultCallOptions.customMetadata
-        self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
         //
         NSLog("self.grpcClient \(self.grpcClient) | \(self.grpcClient.channel) | \(self.grpcClient.defaultCallOptions)")
         //
         //
-        //self.grpcClient.defaultCallOptions.customMetadata.add(contentsOf: T##Sequence)
-        //try? self.grpcClient.metadata.add(key: "authorization", value: authValue)
-
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
     }
 
@@ -771,7 +774,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
             let rsp = self.grpcClient.authenticateEmail(message)
             //
             NSLog("rsp \(rsp)")
-            NSLog("rsp \( rsp.response)")
+            NSLog("rsp rsponse\( rsp.response)")
             let namaka_session = try rsp.response.wait()
             NSLog("authenticateEmail  \(namaka_session)")
             let create  = namaka_session.created
