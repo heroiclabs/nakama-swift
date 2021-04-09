@@ -825,7 +825,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 //self.grpcClient.metadata = Metadata()
                 //self.grpcClient.defaultCallOptions.customMetadata = Metadata()
                 /*try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)*/
-            
+                //
                 self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
                 //
             }catch {
@@ -862,17 +862,29 @@ internal class DefaultClient: Client, WebSocketDelegate {
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP \(rsp.statusCode.rawValue) \n \(rsp.statusMessage ?? "None")")))
             }
         })*/
-        let rsp = self.grpcClient.listMatches(message).response
-        rsp.whenSuccess { (Nakama_Api_MatchList) in
+        //
+        do {
+            let rsp         = self.grpcClient.listMatches(message)
+            //
+            let matches     = try rsp.response.wait()
+            NSLog("matchList  \(matches)")
+            //
+            seal.fulfill( DefaultMatchListing(response: matches ) )
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(NakamaError.runtimeException( String(format: "Internal Server Error: Not able to get matchList- HTTP \(error)") ) )
+            //seal.reject(error)
+        }
+        /*rsp.whenSuccess { (Nakama_Api_MatchList) in
             if Nakama_Api_MatchList.matches != nil{
                 seal.fulfill(DefaultMatchListing(response: Nakama_Api_MatchList) as! MatchListing)
             }else{
                 seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP ")))
             }
-        }
-        /*rsp.whenComplete { (Result,<Nakama_Api_MatchList, Error>) in
-            NSLog("Result \(Result)")
         }*/
+        
         return p
     }
 
