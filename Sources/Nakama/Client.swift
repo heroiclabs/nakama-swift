@@ -451,6 +451,25 @@ public protocol Client {
      */
     func authenticateApple( token : String, create: Bool ) -> Promise<Session>
 
+    /**
+     * Bans a user from a group. This will prevent the user from being able to rejoin the group.
+     * @param session The session of the user.
+     * @param groupId The group to ban the users from.
+     * @param ids The users to ban from the group..
+     * @return A future.
+     */
+    func banGroupUsers( session : Session, groupId : String, ids: [ String ]) -> Promise<Void>
+    
+    /**
+     * Submit an event for processing in the server's registered runtime custom events handler.
+     *
+     * @param session The session of the user.
+     * @param name An event name, type, category, or identifier.
+     * @param properties Arbitrary event property values.
+     * @return A future.
+     */
+    func emitEvent( session : Session, name : String , properties : [ String : String ] ) -> Promise<Void>
+
     
     /**
      * Fetch the user account owned by the session.
@@ -1127,7 +1146,34 @@ internal class DefaultClient: Client, WebSocketDelegate {
         
         return p
     }
+    
+    func banGroupUsers(session: Session, groupId: String, ids: [String]) -> Promise<Void> {
+        let (p, seal) = Promise<Void>.pending()
+        var message     = Nakama_Api_BanGroupUsersRequest.init()
+        message.groupID = groupId
+        message.userIds = ids
+        do{
+            let rsp             = self.grpcClient.banGroupUsers(message)
+            let r               = try rsp.response.wait()
+            if trace{
+                NSLog("r \(r)")
+            }
+            seal.fulfill_()
+        }catch{
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        return p
+    }
 
+    func emitEvent(session: Session, name: String, properties: [String : String]) -> Promise<Void> {
+        let (p, seal) = Promise<Void>.pending()
+        // need to understand how to implement it 
+        seal.fulfill_()
+        return p
+    }
+    
+    
     func createSocket(to session: Session) -> Promise<Session> {
         if (socket != nil) {
             NSLog("socket is already connected")
