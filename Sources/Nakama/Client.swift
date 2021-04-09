@@ -467,12 +467,12 @@ internal class DefaultClient: Client, WebSocketDelegate {
         // basicAuth Basic ZGVmYXVsdGtleTo= --> need to fix the encodedString
         //
         let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
-        NSLog("group \(group) | ")
+        //NSLog("group \(group) | ")
         var channel : ClientConnection? = nil
         //
         let base64Auth              = "\(serverKey):".data(using: .utf8)!.base64EncodedString()
         authValue                   = "Basic " + base64Auth
-        NSLog("authValue \(authValue) | base64Auth \(base64Auth)")
+        //NSLog("authValue \(authValue) | base64Auth \(base64Auth)")
         //
         let httpHeaders             =  HTTPHeaders.init(  [("authorization", authValue)]  )
         let headers: HPACKHeaders   = HPACKHeaders(httpHeaders: httpHeaders )
@@ -487,9 +487,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
         }
         
         self.grpcClient = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
-        //
-        //
-        NSLog("self.grpcClient \(self.grpcClient) | \(self.grpcClient.channel) | \(self.grpcClient.defaultCallOptions) | ssl = \(ssl) | channel \(channel)")
         //
         //
 //        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
@@ -680,13 +677,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
             let rsp = self.grpcClient.authenticateDevice(message)
             //
             NSLog("rsp \(rsp)")
-            rsp.status.whenSuccess { status in
-                if status.code == .ok {
-                    NSLog("Finished RouteChat")
-                } else {
-                    NSLog("RouteChat Failed: \(status)")
-                }
-            }
             NSLog("rsp \( rsp.response)")
             let namaka_session = try rsp.response.wait()
             NSLog("authenticateEmail when session \(namaka_session)")
@@ -772,14 +762,14 @@ internal class DefaultClient: Client, WebSocketDelegate {
         do {
             let rsp = self.grpcClient.authenticateEmail(message)
             //
-            NSLog("rsp \(rsp) | \(rsp.options)")
-            NSLog("rsp rsponse \( rsp.response)")
+            //NSLog("rsp \(rsp) | \(rsp.options)")
+            //NSLog("rsp rsponse \( rsp.response)")
             let namaka_session = try rsp.response.wait()
-            NSLog("authenticateEmail  \(namaka_session)")
+            //NSLog("authenticateEmail  \(namaka_session)")
             let create  = namaka_session.created
             let token   = namaka_session.token
             self.activeSession = DefaultSession(token: token, created: create)
-            NSLog("activeSession \(self.activeSession)")
+            //NSLog("activeSession \(self.activeSession)")
             //
             seal.fulfill(self.activeSession!)
             //
@@ -804,15 +794,6 @@ internal class DefaultClient: Client, WebSocketDelegate {
         do {
             let rsp = self.grpcClient.authenticateCustom(message)
             //
-            NSLog("rsp \(rsp)")
-            rsp.status.whenSuccess { status in
-                if status.code == .ok {
-                    NSLog("Finished RouteChat")
-                } else {
-                    NSLog("RouteChat Failed: \(status)")
-                }
-            }
-            NSLog("rsp \( rsp.response)")
             let namaka_session = try rsp.response.wait()
             NSLog("authenticateEmail when session \(namaka_session)")
             let create  = namaka_session.created
@@ -954,10 +935,9 @@ internal class DefaultClient: Client, WebSocketDelegate {
 //        let binaryData = try! JSONEncoder().encode(message)
 //        self.socket?.write(data: binaryData)
         print("message ", message)
-        /*let jsonData = try! JSONEncoder().encode(message)
-        let binaryData = String(data: jsonData, encoding: .utf8)!
-        print(binaryData)*/
-        //self.socket?.write(data: binaryData)
+        //
+        self.socket?.write(string: "\(message)")
+        //
     }
 
     fileprivate  func processText(text: String){
