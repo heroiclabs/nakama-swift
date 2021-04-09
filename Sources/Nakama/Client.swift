@@ -464,12 +464,15 @@ internal class DefaultClient: Client, WebSocketDelegate {
         //
         //set up the gRPC client
         //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
+        // basicAuth Basic ZGVmYXVsdGtleTo= --> need to fix the encodedString
         //
         let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
         NSLog("group \(group) | ")
         var channel : ClientConnection? = nil
         //
-        authValue                   = "Basic " + "\(serverKey)".data(using: .utf8)!.base64EncodedString()
+        let base64Auth              = serverKey.data(using: .utf8)!.base64EncodedString()
+        authValue                   = "Basic " + base64Auth
+        NSLog("authValue \(authValue) | base64Auth \(base64Auth)")
         //
         let httpHeaders             =  HTTPHeaders.init(  [("authorization", authValue)]  )
         let headers: HPACKHeaders   = HPACKHeaders(httpHeaders: httpHeaders )
@@ -759,16 +762,18 @@ internal class DefaultClient: Client, WebSocketDelegate {
         message.account             = Nakama_Api_AccountEmail.init()
         message.account.email       = email
         message.account.password    = password
+        if create{
+            message.create          = Google_Protobuf_BoolValue.init( create )
+        }
+        //message.create              =
         //
-        // need to add the create boolean
-        //message.account.me
         let (p, seal) = Promise<Session>.pending()
         //
         do {
             let rsp = self.grpcClient.authenticateEmail(message)
             //
-            NSLog("rsp \(rsp)")
-            NSLog("rsp rsponse\( rsp.response)")
+            NSLog("rsp \(rsp) | \(rsp.options)")
+            NSLog("rsp rsponse \( rsp.response)")
             let namaka_session = try rsp.response.wait()
             NSLog("authenticateEmail  \(namaka_session)")
             let create  = namaka_session.created
