@@ -470,7 +470,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
         NSLog("group \(group) | ")
         var channel : ClientConnection? = nil
         //
-        let base64Auth              = serverKey.data(using: .utf8)!.base64EncodedString()
+        let base64Auth              = "\(serverKey):".data(using: .utf8)!.base64EncodedString()
         authValue                   = "Basic " + base64Auth
         NSLog("authValue \(authValue) | base64Auth \(base64Auth)")
         //
