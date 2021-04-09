@@ -756,7 +756,7 @@ internal class DefaultClient: Client, WebSocketDelegate {
     
     
     func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
-        NSLog("authenticateEmail ", email, password, create )
+        NSLog("authenticateEmail \(email)", password, create )
         //
         var message                 = Nakama_Api_AuthenticateEmailRequest.init()
         message.account             = Nakama_Api_AccountEmail.init()
@@ -771,19 +771,13 @@ internal class DefaultClient: Client, WebSocketDelegate {
             let rsp = self.grpcClient.authenticateEmail(message)
             //
             NSLog("rsp \(rsp)")
-            rsp.status.whenSuccess { status in
-                if status.code == .ok {
-                    NSLog("Finished RouteChat")
-                } else {
-                    NSLog("RouteChat Failed: \(status)")
-                }
-            }
             NSLog("rsp \( rsp.response)")
             let namaka_session = try rsp.response.wait()
-            NSLog("authenticateEmail when session \(namaka_session)")
+            NSLog("authenticateEmail  \(namaka_session)")
             let create  = namaka_session.created
             let token   = namaka_session.token
             self.activeSession = DefaultSession(token: token, created: create)
+            NSLog("activeSession \(self.activeSession)")
             //
             seal.fulfill(self.activeSession!)
             //
