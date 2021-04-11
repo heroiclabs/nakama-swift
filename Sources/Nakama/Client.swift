@@ -1,6 +1,6 @@
 /*
  * Copyright 2018 Heroic Labs
- * Updated 09/04/2021 - Allan Nava
+ * Updated 11/04/2021 - Allan Nava
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -469,6 +469,14 @@ public protocol Client {
      * @return A future.
      */
     func emitEvent( session : Session, name : String , properties : [ String : String ] ) -> Promise<Void>
+
+    
+    /**
+     * Authenticate a user with a Facebook auth token.
+     * @param accessToken An OAuth access token from the Facebook SDK.
+     * @return A future to resolve a session object.
+     */
+    func authenticateFacebook( accessToken : String ) -> Promise<Session>
 
     
     /**
@@ -1173,6 +1181,27 @@ internal class DefaultClient: Client, WebSocketDelegate {
         return p
     }
     
+    func authenticateFacebook(accessToken: String) -> Promise<Session> {
+        let (p, seal) = Promise<Session>.pending()
+        var message             = Nakama_Api_AuthenticateFacebookRequest.init()
+        message.account         = Nakama_Api_AccountFacebook.init()
+        message.account.token   = accessToken
+        do {
+            let rsp             = self.grpcClient.authenticateFacebook(message)
+            let namaka_session  = try rsp.response.wait()
+            let create          = namaka_session.created
+            let token           = namaka_session.token
+            self.activeSession = DefaultSession(token: token, created: create)
+            //
+            seal.fulfill(self.activeSession!)
+            //
+            return p
+        }catch {
+            NSLog("ERROR \(error)")
+            seal.reject(error)
+        }
+        return p
+    }
     
     func createSocket(to session: Session) -> Promise<Session> {
         if (socket != nil) {
