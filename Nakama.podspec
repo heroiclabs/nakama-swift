@@ -26,5 +26,5 @@ Pod::Spec.new do |s|
   s.dependency "gRPC-Swift", '>= 1.0.0-alpha.22', '< 2'
   s.dependency "PromiseKit", '>= 6', '< 7'
   # Need to fix with https://github.com/apple/swift-atomics
-  s.dependency "Atomics", '~> 0.0.2', '< 0.0.3', :git => "https://github.com/apple/swift-atomics"
+  #s.dependency "Atomics", '~> 0.0.2', '< 0.0.3', :git => "https://github.com/apple/swift-atomics"
 end
