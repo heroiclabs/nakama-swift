@@ -25,5 +25,5 @@ Pod::Spec.new do |s|
   s.dependency 'SwiftProtobuf', '>= 1.13.0', '< 2'
   s.dependency "gRPC-Swift", '>= 1.0.0-alpha.22', '< 2'
   s.dependency "PromiseKit", '>= 6', '< 7'
-  s.dependency "Atomics", '>= 0.0.1', '< 0.0.4'
+  s.dependency "Atomics", '~> 0.0.2', '< 0.0.3'
 end
