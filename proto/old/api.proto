@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2019 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,15 +22,13 @@ package nakama.api;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option go_package = "api";
+option go_package = "github.com/heroiclabs/nakama-common/api";
 
 option java_multiple_files = true;
 option java_outer_classname = "NakamaApi";
 option java_package = "com.heroiclabs.nakama.api";
 
 option csharp_namespace = "Nakama";
-
-option objc_class_prefix = "NKPB";
 
 // A user with additional account details. Always the current user.
 message Account {
@@ -46,18 +44,32 @@ message Account {
   string custom_id = 5;
   // The UNIX time when the user's email was verified.
   google.protobuf.Timestamp verify_time = 6;
+  // The UNIX time when the user's account was disabled/banned.
+  google.protobuf.Timestamp disable_time = 7;
+}
+
+// Send a Apple Sign In token to the server. Used with authenticate/link/unlink.
+message AccountApple {
+  // The ID token received from Apple to validate.
+  string token = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
 }
 
 // Send a custom ID to the server. Used with authenticate/link/unlink.
 message AccountCustom {
   // A custom identifier.
   string id = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
 }
 
 // Send a device to the server. Used with authenticate/link/unlink and user.
 message AccountDevice {
   // A device identifier. Should be obtained by a platform-specific device API.
   string id = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
 }
 
 // Send an email with password to the server. Used with authenticate/link/unlink.
@@ -66,12 +78,24 @@ message AccountEmail {
   string email = 1;
   // A password for the user account.
   string password = 2; // Ignored with unlink operations.
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 3;
 }
 
 // Send a Facebook token to the server. Used with authenticate/link/unlink.
 message AccountFacebook {
   // The OAuth token received from Facebook to access their profile API.
   string token = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
+}
+
+// Send a Facebook Instant Game token to the server. Used with authenticate/link/unlink.
+message AccountFacebookInstantGame {
+  // The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the nakama configuration)
+  string signed_player_info = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
 }
 
 // Send Apple's Game Center account credentials to the server. Used with authenticate/link/unlink.
@@ -90,18 +114,24 @@ message AccountGameCenter {
   string signature = 5;
   // The URL for the public encryption key.
   string public_key_url = 6;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 7;
 }
 
 // Send a Google token to the server. Used with authenticate/link/unlink.
 message AccountGoogle {
   // The OAuth token received from Google to access their profile API.
   string token = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
 }
 
 // Send a Steam token to the server. Used with authenticate/link/unlink.
 message AccountSteam {
   // The account token received from Steam to access their profile API.
   string token = 1;
+  // Extra information that will be bundled in the session token.
+  map<string, string> vars = 2;
 }
 
 // Add one or more friends to the current user.
@@ -118,6 +148,16 @@ message AddGroupUsersRequest {
   string group_id = 1;
   // The users to add.
   repeated string user_ids = 2;
+}
+
+// Authenticate against the server with Apple Sign In.
+message AuthenticateAppleRequest {
+  // The Apple account details.
+  AccountApple account = 1;
+  // Register the account if the user does not already exist.
+  google.protobuf.BoolValue create = 2;
+  // Set the username on the account at register. Must be unique.
+  string username = 3;
 }
 
 // Authenticate against the server with a custom ID.
@@ -159,7 +199,17 @@ message AuthenticateFacebookRequest {
   // Set the username on the account at register. Must be unique.
   string username = 3;
   // Import Facebook friends for the user.
-  google.protobuf.BoolValue import = 4;
+  google.protobuf.BoolValue sync = 4;
+}
+
+// Authenticate against the server with Facebook Instant Game token.
+message AuthenticateFacebookInstantGameRequest {
+  // The Facebook Instant Game account details.
+  AccountFacebookInstantGame account = 1;
+  // Register the account if the user does not already exist.
+  google.protobuf.BoolValue create = 2;
+  // Set the username on the account at register. Must be unique.
+  string username = 3;
 }
 
 // Authenticate against the server with Apple's Game Center.
@@ -192,6 +242,14 @@ message AuthenticateSteamRequest {
   string username = 3;
 }
 
+// Ban users from a group.
+message BanGroupUsersRequest {
+  // The group to ban users from.
+  string group_id = 1;
+  // The users to ban.
+  repeated string user_ids = 2;
+}
+
 // Block one or more friends for the current user.
 message BlockFriendsRequest {
   // The account id of a user.
@@ -220,16 +278,26 @@ message ChannelMessage {
   google.protobuf.Timestamp update_time = 8;
   // True if the message was persisted to the channel's history, false otherwise.
   google.protobuf.BoolValue persistent = 9;
+  // The name of the chat room, or an empty string if this message was not sent through a chat room.
+  string room_name = 10;
+  // The ID of the group, or an empty string if this message was not sent through a group channel.
+  string group_id = 11;
+  // The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  string user_id_one = 12;
+  // The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  string user_id_two = 13;
 }
 
 // A list of channel messages, usually a result of a list operation.
 message ChannelMessageList {
   // A list of messages.
   repeated ChannelMessage messages = 1;
-  // The cursor to send when retireving the next page, if any.
+  // The cursor to send when retrieving the next page, if any.
   string next_cursor = 2;
   // The cursor to send when retrieving the previous page, if any.
   string prev_cursor = 3;
+  // Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
+  string cacheable_cursor = 4;
 }
 
 // Create a group with the current user as owner.
@@ -244,6 +312,8 @@ message CreateGroupRequest {
   string avatar_url = 4;
   // Mark a group as open or not where only admins can accept members.
   bool open = 5;
+  // Maximum number of group members.
+  int32 max_count = 6;
 }
 
 // Delete one or more friends for the current user.
@@ -288,32 +358,46 @@ message DeleteStorageObjectsRequest {
   repeated DeleteStorageObjectId object_ids = 1;
 }
 
+// Represents an event to be passed through the server to registered event handlers.
+message Event {
+  // An event name, type, category, or identifier.
+  string name = 1;
+  // Arbitrary event property values.
+  map<string, string> properties = 2;
+  // The time when the event was triggered.
+  google.protobuf.Timestamp timestamp = 3;
+  // True if the event came directly from a client call, false otherwise.
+  bool external = 4;
+}
+
 // A friend of a user.
 message Friend {
   // The friendship status.
   enum State {
-    // Default case. Assumed as FRIEND state.
-    STATE_UNSPECIFIED = 0;
     // The user is a friend of the current user.
-    FRIEND = 1;
-    // The user has sent an invite to the current user.
-    INVITE_SENT = 2;
-    // The current user has sent an invite to this user.
-    INVITE_RECEIVED = 3;
+    FRIEND = 0;
+    // The current user has sent an invite to the user.
+    INVITE_SENT = 1;
+    // The current user has received an invite from this user.
+    INVITE_RECEIVED = 2;
     // The current user has blocked this user.
-    BLOCKED = 4;
+    BLOCKED = 3;
   }
 
   // The user object.
   User user = 1;
   // The friend status.
-  int32 state = 2; // one of "Friend.State".
+  google.protobuf.Int32Value state = 2; // one of "Friend.State".
+  // Time of the latest relationship update.
+  google.protobuf.Timestamp update_time = 3;
 }
 
 // A collection of zero or more friends of the user.
-message Friends {
+message FriendList {
   // The Friend objects.
   repeated Friend friends = 1;
+  // Cursor for the next page of results, if any.
+  string cursor = 2;
 }
 
 // Fetch a batch of zero or more users from the server.
@@ -368,26 +452,26 @@ message GroupUserList {
   message GroupUser {
     // The group role status.
     enum State {
-      // Default case. Assumed as SUPERADMIN state.
-      STATE_UNSPECIFIED = 0;
       // The user is a superadmin with full control of the group.
-      SUPERADMIN = 1;
+      SUPERADMIN = 0;
       // The user is an admin with additional privileges.
-      ADMIN = 2;
+      ADMIN = 1;
       // The user is a regular member.
-      MEMBER = 3;
+      MEMBER = 2;
       // The user has requested to join the group
-      JOIN_REQUEST = 4;
+      JOIN_REQUEST = 3;
     }
 
     // User.
     User user = 1;
     // Their relationship to the group.
-    int32 state = 2;
+    google.protobuf.Int32Value state = 2;
   }
 
   // User-role pairs for a group.
   repeated GroupUser group_users = 1;
+  // Cursor for the next page of results, if any.
+  string cursor = 2;
 }
 
 // Import Facebook friends into the current user's account.
@@ -450,9 +534,9 @@ message LeaderboardRecord {
 message LeaderboardRecordList {
   // A list of leaderboard records.
   repeated LeaderboardRecord records = 1;
-  // A batched set of leaderobard records belonging to specified owners.
+  // A batched set of leaderboard records belonging to specified owners.
   repeated LeaderboardRecord owner_records = 2;
-  // The cursor to send when retireving the next page, if any.
+  // The cursor to send when retrieving the next page, if any.
   string next_cursor = 3;
   // The cursor to send when retrieving the previous page, if any.
   string prev_cursor = 4;
@@ -469,7 +553,7 @@ message LinkFacebookRequest {
   // The Facebook account details.
   AccountFacebook account = 1;
   // Import Facebook friends for the user.
-  google.protobuf.BoolValue import = 4;
+  google.protobuf.BoolValue sync = 4;
 }
 
 // List a channel's message history.
@@ -482,6 +566,16 @@ message ListChannelMessagesRequest {
   google.protobuf.BoolValue forward = 3;
   // A pagination cursor, if any.
   string cursor = 4;
+}
+
+// List friends for a user.
+message ListFriendsRequest {
+  // Max number of records to return. Between 1 and 100.
+  google.protobuf.Int32Value limit = 1;
+  // The friend state to list.
+  google.protobuf.Int32Value state = 2;
+  // An optional next page cursor.
+  string cursor = 3;
 }
 
 // List groups based on given filters.
@@ -498,6 +592,12 @@ message ListGroupsRequest {
 message ListGroupUsersRequest {
   // The group ID to list from.
   string group_id = 1;
+  // Max number of records to return. Between 1 and 100.
+  google.protobuf.Int32Value limit = 2;
+  // The group user state to list.
+  google.protobuf.Int32Value state = 3;
+  // An optional next page cursor.
+  string cursor = 4;
 }
 
 // List leaerboard records from a given leaderboard around the owner.
@@ -508,6 +608,8 @@ message ListLeaderboardRecordsAroundOwnerRequest {
   google.protobuf.UInt32Value limit = 2;
   // The owner to retrieve records around.
   string owner_id = 3;
+  // Expiry in seconds (since epoch) to begin fetching records from.
+  google.protobuf.Int64Value expiry = 4;
 }
 
 // List leaderboard records from a given leaderboard.
@@ -520,6 +622,8 @@ message ListLeaderboardRecordsRequest {
   google.protobuf.Int32Value limit = 3;
   // A next or previous page cursor.
   string cursor = 4;
+  // Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.
+  google.protobuf.Int64Value expiry = 5;
 }
 
 // List realtime matches.
@@ -566,6 +670,8 @@ message ListTournamentRecordsAroundOwnerRequest {
   google.protobuf.UInt32Value limit = 2;
   // The owner to retrieve records around.
   string owner_id = 3;
+  // Expiry in seconds (since epoch) to begin fetching records from.
+  google.protobuf.Int64Value expiry = 4;
 }
 
 // List tournament records from a given tournament.
@@ -578,6 +684,8 @@ message ListTournamentRecordsRequest {
   google.protobuf.Int32Value limit = 3;
   // A next or previous page cursor.
   string cursor = 4;
+  // Expiry in seconds (since epoch) to begin fetching records from.
+  google.protobuf.Int64Value expiry = 5;
 }
 
 // List active/upcoming tournaments based on given filters.
@@ -600,6 +708,12 @@ message ListTournamentsRequest {
 message ListUserGroupsRequest {
   // ID of the user.
   string user_id = 1;
+  // Max number of records to return. Between 1 and 100.
+  google.protobuf.Int32Value limit = 2;
+  // The user group state to list.
+  google.protobuf.Int32Value state = 3;
+  // An optional next page cursor.
+  string cursor = 4;
 }
 
 // Represents a realtime match.
@@ -654,6 +768,14 @@ message PromoteGroupUsersRequest {
   repeated string user_ids = 2;
 }
 
+// Demote a set of users in a group to the next role down.
+message DemoteGroupUsersRequest {
+  // The group ID to demote in.
+  string group_id = 1;
+  // The users to demote.
+  repeated string user_ids = 2;
+}
+
 // Storage objects to get.
 message ReadStorageObjectId {
   // The collection which stores the object.
@@ -686,8 +808,6 @@ message Session {
   bool created = 1;
   // Authentication credentials.
   string token = 2;
-  // rUDP specific authentication credentials.
-  string udp_token = 3; // TODO(zyro): will we remove it?
 }
 
 // An object within the storage engine.
@@ -740,7 +860,7 @@ message StorageObjects {
 message StorageObjectList {
   // The list of storage objects.
   repeated StorageObject objects = 1;
-  // The cursor associated with the query a page of results.
+  // The cursor for the next page of results, if any.
   string cursor = 2;
 }
 
@@ -764,9 +884,9 @@ message Tournament {
   uint32 max_num_score = 8;
   // True if the tournament is active and can enter. A computed value.
   bool can_enter = 9;
-  // The UNIX timestamp when the tournament stops being active until next reset. A computed value.
+  // The UNIX time when the tournament stops being active until next reset. A computed value.
   uint32 end_active = 10;
-  // The UNIX timestamp when the tournament is next playable. A computed value.
+  // The UNIX time when the tournament is next playable. A computed value.
   uint32 next_reset = 11;
   // Additional information stored as a JSON object.
   string metadata = 12;
@@ -776,6 +896,10 @@ message Tournament {
   google.protobuf.Timestamp start_time = 14;
   // The UNIX time when the tournament will be stopped.
   google.protobuf.Timestamp end_time = 15;
+  // Duration of the tournament in seconds.
+  uint32 duration = 16;
+  // The UNIX time when the tournament start being active. A computed value.
+  uint32 start_active = 17;
 }
 
 // A list of tournaments.
@@ -864,6 +988,10 @@ message User {
   google.protobuf.Timestamp create_time = 15;
   // The UNIX time when the user was last updated.
   google.protobuf.Timestamp update_time = 16;
+  // The Facebook Instant Game ID in the user's account.
+  string facebook_instant_game_id = 17;
+  // The Apple Sign In ID in the user's account.
+  string apple_id = 18;
 }
 
 // A list of groups belonging to a user, along with the user's role in each group.
@@ -872,26 +1000,26 @@ message UserGroupList {
   message UserGroup {
     // The group role status.
     enum State {
-      // Default case. Assumed as SUPERADMIN state.
-      STATE_UNSPECIFIED = 0;
       // The user is a superadmin with full control of the group.
-      SUPERADMIN = 1;
+      SUPERADMIN = 0;
       // The user is an admin with additional privileges.
-      ADMIN = 2;
+      ADMIN = 1;
       // The user is a regular member.
-      MEMBER = 3;
+      MEMBER = 2;
       // The user has requested to join the group
-      JOIN_REQUEST = 4;
+      JOIN_REQUEST = 3;
     }
 
     // Group.
     Group group = 1;
     // The user's relationship to the group.
-    int32 state = 2;
+    google.protobuf.Int32Value state = 2;
   }
 
   // Group-role pairs for a user.
   repeated UserGroup user_groups = 1;
+  // Cursor for the next page of results, if any.
+  string cursor = 2;
 }
 
 // A collection of zero or more users.

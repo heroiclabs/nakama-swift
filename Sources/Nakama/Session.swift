@@ -1,6 +1,5 @@
 /*
- * Copyright 2018 Heroic Labs
- * Updated 08/04/2021 - Allan Nava
+ * Copyright 2021 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,96 +16,91 @@
 
 import Foundation
 
-/**
- A session connects a user to the server.
- */
-public protocol Session : CustomStringConvertible {
-    /**
-     The session token returned by the server after register or login.
+public protocol Session {
+    /*
+     * The authentication token used to construct this session.
      */
-var authToken: String { get }
-  /**
-   UTC timestamp when the session was restored.
-   */
-  var createTime: Int { get }
-
-  /**
-   UTC timestamp when the session expires.
-   */
-  var expireTime: Int { get }
-
+    var token: String { get }
     
-    /**
-     The username of the user.
+    /*
+     * True if the user account for this session was just created.
      */
-    var userName: String? { get }
-
-  /**
-   The ID of the user.
-   */
-  var userID: String { get }
-
-    /**
-     True if the user of the session was just created
-    */
-    var created: Bool { get}
+    var created: Bool { get }
     
-  /**
-   - Parameter currentTimeSince1970: The current time in milliseconds to compare with token.
-   - Returns: True if the session has expired.
-   */
-  func isExpired(currentTimeSince1970 : TimeInterval) -> Bool
+    /*
+     * The timestamp in seconds when this session object was created.
+     */
+    var createTime: Date { get }
+    
+    /*
+     * True if the session has expired against the current time.
+     */
+    var expired: Bool { get }
+    
+    /*
+     * True if the session has expired against the current time.
+     */
+    func expired(date: Date) -> Bool
+    
+    /*
+     * The timestamp in seconds when this session will expire.
+     */
+    var expiryTime: Date { get }
+    
+    /*
+     * The username of the user who owns this session.
+     */
+    var username: String { get }
+    
+    /*
+     * The ID of the user who owns this session.
+     */
+    var userId: String { get }
+    
+    /*
+     * Get session vars.
+     */
+    var sessionVars: [String:String] { get }
 }
 
-public struct DefaultSession : Session {
-    public var created: Bool
+class DefaultSession: Session {
+    var token: String
+    var created: Bool
+    var createTime: Date
+    var expiryTime: Date
+    var username: String
+    var userId: String
+    var sessionVars: [String : String]
     
-    public var userID: String
+    init(token: String, created: Bool) {
+        self.token = token
+        self.created = created
+        self.createTime = Date()
+        
+        let decoded = token.components(separatedBy: ".")
+        var claims = decoded[1]
+        claims = claims.padding(toLength: ((claims.count+3)/4)*4, withPad: "=", startingAt: 0)
+        
+        let jsonData = Data(base64Encoded: claims)!
+        let jsonDict =  try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String:AnyObject]
+        self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
+        self.userId = jsonDict["uid"] as! String
+        self.username = jsonDict["usn"] as! String
+        self.sessionVars = jsonDict["vrs"] as! [String:String]
+    }
     
-    public var authToken: String
-    
-    public var createTime: Int
-    
-    public var expireTime: Int
-
-    public var userName: String?
-    
-
-
-    internal init(token: String, created: Bool) {
-    let encoded: [String] = token.components(separatedBy: ".");
-    precondition(encoded.count == 3, "Invalid token provided")
-    
-    var encodedToken = encoded[1]
-    encodedToken = encodedToken.padding(toLength: ((encodedToken.count+3)/4)*4, withPad: "=", startingAt: 0)
-    
-    let decodedData = Data(base64Encoded: encodedToken)
-    let jsonMap = try? JSONSerialization.jsonObject(with: decodedData!, options: []) as! [String: Any]
-    
-    createTime = Int(Date().timeIntervalSince1970 * 1000.0)
-    expireTime = Int(round(jsonMap?["exp"] as! Double * 1000.0))
-        if let n = jsonMap?["usn"]{
-            userName = n as! String
+    var expired: Bool {
+        get {
+            let now = Date()
+            return now > self.expiryTime
         }
+    }
     
-    userID = jsonMap?["uid"] as! String
-    self.created = created
-    self.authToken = token;
-  }
-  
-  public func isExpired(currentTimeSince1970: TimeInterval) -> Bool {
-    return !currentTimeSince1970.isLess(than: Double(expireTime))
-  }
-  
-  public var description: String {
-    return String(format: "userID=%@,userName=%@,expiresAt=%d,createdAt=%d,token=%@", userID, userName ?? "", expireTime, createTime, authToken)
-  }
-  
-  /**
-   - Parameter token: The token to restore session from.
-   - Returns: A new Session object that is restored.
-   */
-  public static func restore(token: String) -> Session {
-    return DefaultSession.init(token: token, created: false)
-  }
+    func expired(date: Date) -> Bool {
+        return date > self.expiryTime
+    }
+    
+    public static func restore(token: String) -> Session {
+        return DefaultSession(token: token, created: false)
+    }
 }

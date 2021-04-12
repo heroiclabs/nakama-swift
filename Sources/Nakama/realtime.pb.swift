@@ -38,17 +38,17 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
 }
 
 /// An envelope for a realtime message.
-struct Nakama_Realtime_Envelope {
+public struct Nakama_Realtime_Envelope {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var cid: String = String()
+  public var cid: String = String()
 
-  var message: Nakama_Realtime_Envelope.OneOf_Message? = nil
+  public var message: Nakama_Realtime_Envelope.OneOf_Message? = nil
 
   /// A response from a channel join operation.
-  var channel: Nakama_Realtime_Channel {
+  public var channel: Nakama_Realtime_Channel {
     get {
       if case .channel(let v)? = message {return v}
       return Nakama_Realtime_Channel()
@@ -57,7 +57,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Join a realtime chat channel.
-  var channelJoin: Nakama_Realtime_ChannelJoin {
+  public var channelJoin: Nakama_Realtime_ChannelJoin {
     get {
       if case .channelJoin(let v)? = message {return v}
       return Nakama_Realtime_ChannelJoin()
@@ -66,7 +66,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Leave a realtime chat channel.
-  var channelLeave: Nakama_Realtime_ChannelLeave {
+  public var channelLeave: Nakama_Realtime_ChannelLeave {
     get {
       if case .channelLeave(let v)? = message {return v}
       return Nakama_Realtime_ChannelLeave()
@@ -75,7 +75,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// An incoming message on a realtime chat channel.
-  var channelMessage: Nakama_Api_ChannelMessage {
+  public var channelMessage: Nakama_Api_ChannelMessage {
     get {
       if case .channelMessage(let v)? = message {return v}
       return Nakama_Api_ChannelMessage()
@@ -84,7 +84,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// An acknowledgement received in response to sending a message on a chat channel.
-  var channelMessageAck: Nakama_Realtime_ChannelMessageAck {
+  public var channelMessageAck: Nakama_Realtime_ChannelMessageAck {
     get {
       if case .channelMessageAck(let v)? = message {return v}
       return Nakama_Realtime_ChannelMessageAck()
@@ -93,7 +93,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Send a message to a realtime chat channel.
-  var channelMessageSend: Nakama_Realtime_ChannelMessageSend {
+  public var channelMessageSend: Nakama_Realtime_ChannelMessageSend {
     get {
       if case .channelMessageSend(let v)? = message {return v}
       return Nakama_Realtime_ChannelMessageSend()
@@ -102,7 +102,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Update a message previously sent to a realtime chat channel.
-  var channelMessageUpdate: Nakama_Realtime_ChannelMessageUpdate {
+  public var channelMessageUpdate: Nakama_Realtime_ChannelMessageUpdate {
     get {
       if case .channelMessageUpdate(let v)? = message {return v}
       return Nakama_Realtime_ChannelMessageUpdate()
@@ -111,7 +111,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Remove a message previously sent to a realtime chat channel.
-  var channelMessageRemove: Nakama_Realtime_ChannelMessageRemove {
+  public var channelMessageRemove: Nakama_Realtime_ChannelMessageRemove {
     get {
       if case .channelMessageRemove(let v)? = message {return v}
       return Nakama_Realtime_ChannelMessageRemove()
@@ -120,7 +120,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Presence update for a particular realtime chat channel.
-  var channelPresenceEvent: Nakama_Realtime_ChannelPresenceEvent {
+  public var channelPresenceEvent: Nakama_Realtime_ChannelPresenceEvent {
     get {
       if case .channelPresenceEvent(let v)? = message {return v}
       return Nakama_Realtime_ChannelPresenceEvent()
@@ -129,7 +129,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Describes an error which occurred on the server.
-  var error: Nakama_Realtime_Error {
+  public var error: Nakama_Realtime_Error {
     get {
       if case .error(let v)? = message {return v}
       return Nakama_Realtime_Error()
@@ -138,7 +138,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Incoming information about a realtime match.
-  var match: Nakama_Realtime_Match {
+  public var match: Nakama_Realtime_Match {
     get {
       if case .match(let v)? = message {return v}
       return Nakama_Realtime_Match()
@@ -147,7 +147,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A client to server request to create a realtime match.
-  var matchCreate: Nakama_Realtime_MatchCreate {
+  public var matchCreate: Nakama_Realtime_MatchCreate {
     get {
       if case .matchCreate(let v)? = message {return v}
       return Nakama_Realtime_MatchCreate()
@@ -156,7 +156,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Incoming realtime match data delivered from the server.
-  var matchData: Nakama_Realtime_MatchData {
+  public var matchData: Nakama_Realtime_MatchData {
     get {
       if case .matchData(let v)? = message {return v}
       return Nakama_Realtime_MatchData()
@@ -165,7 +165,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A client to server request to send data to a realtime match.
-  var matchDataSend: Nakama_Realtime_MatchDataSend {
+  public var matchDataSend: Nakama_Realtime_MatchDataSend {
     get {
       if case .matchDataSend(let v)? = message {return v}
       return Nakama_Realtime_MatchDataSend()
@@ -174,7 +174,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A client to server request to join a realtime match.
-  var matchJoin: Nakama_Realtime_MatchJoin {
+  public var matchJoin: Nakama_Realtime_MatchJoin {
     get {
       if case .matchJoin(let v)? = message {return v}
       return Nakama_Realtime_MatchJoin()
@@ -183,7 +183,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A client to server request to leave a realtime match.
-  var matchLeave: Nakama_Realtime_MatchLeave {
+  public var matchLeave: Nakama_Realtime_MatchLeave {
     get {
       if case .matchLeave(let v)? = message {return v}
       return Nakama_Realtime_MatchLeave()
@@ -192,7 +192,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Presence update for a particular realtime match.
-  var matchPresenceEvent: Nakama_Realtime_MatchPresenceEvent {
+  public var matchPresenceEvent: Nakama_Realtime_MatchPresenceEvent {
     get {
       if case .matchPresenceEvent(let v)? = message {return v}
       return Nakama_Realtime_MatchPresenceEvent()
@@ -201,7 +201,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Submit a new matchmaking process request.
-  var matchmakerAdd: Nakama_Realtime_MatchmakerAdd {
+  public var matchmakerAdd: Nakama_Realtime_MatchmakerAdd {
     get {
       if case .matchmakerAdd(let v)? = message {return v}
       return Nakama_Realtime_MatchmakerAdd()
@@ -210,7 +210,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A successful matchmaking result.
-  var matchmakerMatched: Nakama_Realtime_MatchmakerMatched {
+  public var matchmakerMatched: Nakama_Realtime_MatchmakerMatched {
     get {
       if case .matchmakerMatched(let v)? = message {return v}
       return Nakama_Realtime_MatchmakerMatched()
@@ -219,7 +219,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Cancel a matchmaking process using a ticket.
-  var matchmakerRemove: Nakama_Realtime_MatchmakerRemove {
+  public var matchmakerRemove: Nakama_Realtime_MatchmakerRemove {
     get {
       if case .matchmakerRemove(let v)? = message {return v}
       return Nakama_Realtime_MatchmakerRemove()
@@ -228,7 +228,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A response from starting a new matchmaking process.
-  var matchmakerTicket: Nakama_Realtime_MatchmakerTicket {
+  public var matchmakerTicket: Nakama_Realtime_MatchmakerTicket {
     get {
       if case .matchmakerTicket(let v)? = message {return v}
       return Nakama_Realtime_MatchmakerTicket()
@@ -237,7 +237,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Notifications send by the server.
-  var notifications: Nakama_Realtime_Notifications {
+  public var notifications: Nakama_Realtime_Notifications {
     get {
       if case .notifications(let v)? = message {return v}
       return Nakama_Realtime_Notifications()
@@ -246,7 +246,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// RPC call or response.
-  var rpc: Nakama_Api_Rpc {
+  public var rpc: Nakama_Api_Rpc {
     get {
       if case .rpc(let v)? = message {return v}
       return Nakama_Api_Rpc()
@@ -255,7 +255,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// An incoming status snapshot for some set of users.
-  var status: Nakama_Realtime_Status {
+  public var status: Nakama_Realtime_Status {
     get {
       if case .status(let v)? = message {return v}
       return Nakama_Realtime_Status()
@@ -264,7 +264,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Start following some set of users to receive their status updates.
-  var statusFollow: Nakama_Realtime_StatusFollow {
+  public var statusFollow: Nakama_Realtime_StatusFollow {
     get {
       if case .statusFollow(let v)? = message {return v}
       return Nakama_Realtime_StatusFollow()
@@ -273,7 +273,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// An incoming status update.
-  var statusPresenceEvent: Nakama_Realtime_StatusPresenceEvent {
+  public var statusPresenceEvent: Nakama_Realtime_StatusPresenceEvent {
     get {
       if case .statusPresenceEvent(let v)? = message {return v}
       return Nakama_Realtime_StatusPresenceEvent()
@@ -282,7 +282,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Stop following some set of users to no longer receive their status updates.
-  var statusUnfollow: Nakama_Realtime_StatusUnfollow {
+  public var statusUnfollow: Nakama_Realtime_StatusUnfollow {
     get {
       if case .statusUnfollow(let v)? = message {return v}
       return Nakama_Realtime_StatusUnfollow()
@@ -291,7 +291,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Set the user's own status.
-  var statusUpdate: Nakama_Realtime_StatusUpdate {
+  public var statusUpdate: Nakama_Realtime_StatusUpdate {
     get {
       if case .statusUpdate(let v)? = message {return v}
       return Nakama_Realtime_StatusUpdate()
@@ -300,7 +300,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// A data message delivered over a stream.
-  var streamData: Nakama_Realtime_StreamData {
+  public var streamData: Nakama_Realtime_StreamData {
     get {
       if case .streamData(let v)? = message {return v}
       return Nakama_Realtime_StreamData()
@@ -309,7 +309,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Presence update for a particular stream.
-  var streamPresenceEvent: Nakama_Realtime_StreamPresenceEvent {
+  public var streamPresenceEvent: Nakama_Realtime_StreamPresenceEvent {
     get {
       if case .streamPresenceEvent(let v)? = message {return v}
       return Nakama_Realtime_StreamPresenceEvent()
@@ -318,7 +318,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Application-level heartbeat and connection check.
-  var ping: Nakama_Realtime_Ping {
+  public var ping: Nakama_Realtime_Ping {
     get {
       if case .ping(let v)? = message {return v}
       return Nakama_Realtime_Ping()
@@ -327,7 +327,7 @@ struct Nakama_Realtime_Envelope {
   }
 
   /// Application-level heartbeat and connection check response.
-  var pong: Nakama_Realtime_Pong {
+  public var pong: Nakama_Realtime_Pong {
     get {
       if case .pong(let v)? = message {return v}
       return Nakama_Realtime_Pong()
@@ -335,9 +335,9 @@ struct Nakama_Realtime_Envelope {
     set {message = .pong(newValue)}
   }
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum OneOf_Message: Equatable {
+  public enum OneOf_Message: Equatable {
     /// A response from a channel join operation.
     case channel(Nakama_Realtime_Channel)
     /// Join a realtime chat channel.
@@ -404,7 +404,7 @@ struct Nakama_Realtime_Envelope {
     case pong(Nakama_Realtime_Pong)
 
   #if !swift(>=4.1)
-    static func ==(lhs: Nakama_Realtime_Envelope.OneOf_Message, rhs: Nakama_Realtime_Envelope.OneOf_Message) -> Bool {
+    public static func ==(lhs: Nakama_Realtime_Envelope.OneOf_Message, rhs: Nakama_Realtime_Envelope.OneOf_Message) -> Bool {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -543,87 +543,87 @@ struct Nakama_Realtime_Envelope {
   #endif
   }
 
-  init() {}
+  public init() {}
 }
 
 /// A realtime chat channel.
-struct Nakama_Realtime_Channel {
+public struct Nakama_Realtime_Channel {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The ID of the channel.
-  var id: String = String()
+  public var id: String = String()
 
   /// The users currently in the channel.
-  var presences: [Nakama_Realtime_UserPresence] = []
+  public var presences: [Nakama_Realtime_UserPresence] = []
 
   /// A reference to the current user's presence in the channel.
-  var self_p: Nakama_Realtime_UserPresence {
+  public var self_p: Nakama_Realtime_UserPresence {
     get {return _self_p ?? Nakama_Realtime_UserPresence()}
     set {_self_p = newValue}
   }
   /// Returns true if `self_p` has been explicitly set.
-  var hasSelf_p: Bool {return self._self_p != nil}
+  public var hasSelf_p: Bool {return self._self_p != nil}
   /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
-  mutating func clearSelf_p() {self._self_p = nil}
+  public mutating func clearSelf_p() {self._self_p = nil}
 
   /// The name of the chat room, or an empty string if this message was not sent through a chat room.
-  var roomName: String = String()
+  public var roomName: String = String()
 
   /// The ID of the group, or an empty string if this message was not sent through a group channel.
-  var groupID: String = String()
+  public var groupID: String = String()
 
   /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  var userIDOne: String = String()
+  public var userIDOne: String = String()
 
   /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  var userIDTwo: String = String()
+  public var userIDTwo: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _self_p: Nakama_Realtime_UserPresence? = nil
 }
 
 /// Join operation for a realtime chat channel.
-struct Nakama_Realtime_ChannelJoin {
+public struct Nakama_Realtime_ChannelJoin {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The user ID to DM with, group ID to chat with, or room channel name to join.
-  var target: String = String()
+  public var target: String = String()
 
   /// The type of the chat channel.
-  var type: Int32 = 0
+  public var type: Int32 = 0
 
   /// Whether messages sent on this channel should be persistent.
-  var persistence: SwiftProtobuf.Google_Protobuf_BoolValue {
+  public var persistence: SwiftProtobuf.Google_Protobuf_BoolValue {
     get {return _persistence ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
     set {_persistence = newValue}
   }
   /// Returns true if `persistence` has been explicitly set.
-  var hasPersistence: Bool {return self._persistence != nil}
+  public var hasPersistence: Bool {return self._persistence != nil}
   /// Clears the value of `persistence`. Subsequent reads from it will return its default value.
-  mutating func clearPersistence() {self._persistence = nil}
+  public mutating func clearPersistence() {self._persistence = nil}
 
   /// Whether the user should appear in the channel's presence list and events.
-  var hidden: SwiftProtobuf.Google_Protobuf_BoolValue {
+  public var hidden: SwiftProtobuf.Google_Protobuf_BoolValue {
     get {return _hidden ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
     set {_hidden = newValue}
   }
   /// Returns true if `hidden` has been explicitly set.
-  var hasHidden: Bool {return self._hidden != nil}
+  public var hasHidden: Bool {return self._hidden != nil}
   /// Clears the value of `hidden`. Subsequent reads from it will return its default value.
-  mutating func clearHidden() {self._hidden = nil}
+  public mutating func clearHidden() {self._hidden = nil}
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   /// The type of chat channel.
-  enum TypeEnum: SwiftProtobuf.Enum {
-    typealias RawValue = Int
+  public enum TypeEnum: SwiftProtobuf.Enum {
+    public typealias RawValue = Int
 
     /// Default case. Assumed as ROOM type.
     case unspecified // = 0
@@ -638,11 +638,11 @@ struct Nakama_Realtime_ChannelJoin {
     case group // = 3
     case UNRECOGNIZED(Int)
 
-    init() {
+    public init() {
       self = .unspecified
     }
 
-    init?(rawValue: Int) {
+    public init?(rawValue: Int) {
       switch rawValue {
       case 0: self = .unspecified
       case 1: self = .room
@@ -652,7 +652,7 @@ struct Nakama_Realtime_ChannelJoin {
       }
     }
 
-    var rawValue: Int {
+    public var rawValue: Int {
       switch self {
       case .unspecified: return 0
       case .room: return 1
@@ -664,7 +664,7 @@ struct Nakama_Realtime_ChannelJoin {
 
   }
 
-  init() {}
+  public init() {}
 
   fileprivate var _persistence: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
   fileprivate var _hidden: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
@@ -674,7 +674,7 @@ struct Nakama_Realtime_ChannelJoin {
 
 extension Nakama_Realtime_ChannelJoin.TypeEnum: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static var allCases: [Nakama_Realtime_ChannelJoin.TypeEnum] = [
+  public static var allCases: [Nakama_Realtime_ChannelJoin.TypeEnum] = [
     .unspecified,
     .room,
     .directMessage,
@@ -685,89 +685,89 @@ extension Nakama_Realtime_ChannelJoin.TypeEnum: CaseIterable {
 #endif  // swift(>=4.2)
 
 /// Leave a realtime channel.
-struct Nakama_Realtime_ChannelLeave {
+public struct Nakama_Realtime_ChannelLeave {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The ID of the channel to leave.
-  var channelID: String = String()
+  public var channelID: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A receipt reply from a channel message send operation.
-struct Nakama_Realtime_ChannelMessageAck {
+public struct Nakama_Realtime_ChannelMessageAck {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The channel the message was sent to.
-  var channelID: String = String()
+  public var channelID: String = String()
 
   /// The unique ID assigned to the message.
-  var messageID: String = String()
+  public var messageID: String = String()
 
   /// The code representing a message type or category.
-  var code: SwiftProtobuf.Google_Protobuf_Int32Value {
+  public var code: SwiftProtobuf.Google_Protobuf_Int32Value {
     get {return _code ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
     set {_code = newValue}
   }
   /// Returns true if `code` has been explicitly set.
-  var hasCode: Bool {return self._code != nil}
+  public var hasCode: Bool {return self._code != nil}
   /// Clears the value of `code`. Subsequent reads from it will return its default value.
-  mutating func clearCode() {self._code = nil}
+  public mutating func clearCode() {self._code = nil}
 
   /// Username of the message sender.
-  var username: String = String()
+  public var username: String = String()
 
   /// The UNIX time when the message was created.
-  var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+  public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
   }
   /// Returns true if `createTime` has been explicitly set.
-  var hasCreateTime: Bool {return self._createTime != nil}
+  public var hasCreateTime: Bool {return self._createTime != nil}
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
-  mutating func clearCreateTime() {self._createTime = nil}
+  public mutating func clearCreateTime() {self._createTime = nil}
 
   /// The UNIX time when the message was last updated.
-  var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+  public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_updateTime = newValue}
   }
   /// Returns true if `updateTime` has been explicitly set.
-  var hasUpdateTime: Bool {return self._updateTime != nil}
+  public var hasUpdateTime: Bool {return self._updateTime != nil}
   /// Clears the value of `updateTime`. Subsequent reads from it will return its default value.
-  mutating func clearUpdateTime() {self._updateTime = nil}
+  public mutating func clearUpdateTime() {self._updateTime = nil}
 
   /// True if the message was persisted to the channel's history, false otherwise.
-  var persistent: SwiftProtobuf.Google_Protobuf_BoolValue {
+  public var persistent: SwiftProtobuf.Google_Protobuf_BoolValue {
     get {return _persistent ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
     set {_persistent = newValue}
   }
   /// Returns true if `persistent` has been explicitly set.
-  var hasPersistent: Bool {return self._persistent != nil}
+  public var hasPersistent: Bool {return self._persistent != nil}
   /// Clears the value of `persistent`. Subsequent reads from it will return its default value.
-  mutating func clearPersistent() {self._persistent = nil}
+  public mutating func clearPersistent() {self._persistent = nil}
 
   /// The name of the chat room, or an empty string if this message was not sent through a chat room.
-  var roomName: String = String()
+  public var roomName: String = String()
 
   /// The ID of the group, or an empty string if this message was not sent through a group channel.
-  var groupID: String = String()
+  public var groupID: String = String()
 
   /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  var userIDOne: String = String()
+  public var userIDOne: String = String()
 
   /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  var userIDTwo: String = String()
+  public var userIDTwo: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _code: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
   fileprivate var _createTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
@@ -776,111 +776,111 @@ struct Nakama_Realtime_ChannelMessageAck {
 }
 
 /// Send a message to a realtime channel.
-struct Nakama_Realtime_ChannelMessageSend {
+public struct Nakama_Realtime_ChannelMessageSend {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The channel to sent to.
-  var channelID: String = String()
+  public var channelID: String = String()
 
   /// Message content.
-  var content: String = String()
+  public var content: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Update a message previously sent to a realtime channel.
-struct Nakama_Realtime_ChannelMessageUpdate {
+public struct Nakama_Realtime_ChannelMessageUpdate {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The channel the message was sent to.
-  var channelID: String = String()
+  public var channelID: String = String()
 
   /// The ID assigned to the message to update.
-  var messageID: String = String()
+  public var messageID: String = String()
 
   /// New message content.
-  var content: String = String()
+  public var content: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Remove a message previously sent to a realtime channel.
-struct Nakama_Realtime_ChannelMessageRemove {
+public struct Nakama_Realtime_ChannelMessageRemove {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The channel the message was sent to.
-  var channelID: String = String()
+  public var channelID: String = String()
 
   /// The ID assigned to the message to update.
-  var messageID: String = String()
+  public var messageID: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A set of joins and leaves on a particular channel.
-struct Nakama_Realtime_ChannelPresenceEvent {
+public struct Nakama_Realtime_ChannelPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The channel identifier this event is for.
-  var channelID: String = String()
+  public var channelID: String = String()
 
   /// Presences joining the channel as part of this event, if any.
-  var joins: [Nakama_Realtime_UserPresence] = []
+  public var joins: [Nakama_Realtime_UserPresence] = []
 
   /// Presences leaving the channel as part of this event, if any.
-  var leaves: [Nakama_Realtime_UserPresence] = []
+  public var leaves: [Nakama_Realtime_UserPresence] = []
 
   /// The name of the chat room, or an empty string if this message was not sent through a chat room.
-  var roomName: String = String()
+  public var roomName: String = String()
 
   /// The ID of the group, or an empty string if this message was not sent through a group channel.
-  var groupID: String = String()
+  public var groupID: String = String()
 
   /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  var userIDOne: String = String()
+  public var userIDOne: String = String()
 
   /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  var userIDTwo: String = String()
+  public var userIDTwo: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A logical error which may occur on the server.
-struct Nakama_Realtime_Error {
+public struct Nakama_Realtime_Error {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The error code which should be one of "Error.Code" enums.
-  var code: Int32 = 0
+  public var code: Int32 = 0
 
   /// A message in English to help developers debug the response.
-  var message: String = String()
+  public var message: String = String()
 
   /// Additional error details which may be different for each response.
-  var context: Dictionary<String,String> = [:]
+  public var context: Dictionary<String,String> = [:]
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   /// The selection of possible error codes.
-  enum Code: SwiftProtobuf.Enum {
-    typealias RawValue = Int
+  public enum Code: SwiftProtobuf.Enum {
+    public typealias RawValue = Int
 
     /// An unexpected result from the server.
     case runtimeException // = 0
@@ -907,11 +907,11 @@ struct Nakama_Realtime_Error {
     case runtimeFunctionException // = 7
     case UNRECOGNIZED(Int)
 
-    init() {
+    public init() {
       self = .runtimeException
     }
 
-    init?(rawValue: Int) {
+    public init?(rawValue: Int) {
       switch rawValue {
       case 0: self = .runtimeException
       case 1: self = .unrecognizedPayload
@@ -925,7 +925,7 @@ struct Nakama_Realtime_Error {
       }
     }
 
-    var rawValue: Int {
+    public var rawValue: Int {
       switch self {
       case .runtimeException: return 0
       case .unrecognizedPayload: return 1
@@ -941,14 +941,14 @@ struct Nakama_Realtime_Error {
 
   }
 
-  init() {}
+  public init() {}
 }
 
 #if swift(>=4.2)
 
 extension Nakama_Realtime_Error.Code: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static var allCases: [Nakama_Realtime_Error.Code] = [
+  public static var allCases: [Nakama_Realtime_Error.Code] = [
     .runtimeException,
     .unrecognizedPayload,
     .missingPayload,
@@ -963,133 +963,133 @@ extension Nakama_Realtime_Error.Code: CaseIterable {
 #endif  // swift(>=4.2)
 
 /// A realtime match.
-struct Nakama_Realtime_Match {
+public struct Nakama_Realtime_Match {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The match unique ID.
-  var matchID: String = String()
+  public var matchID: String = String()
 
   /// True if it's an server-managed authoritative match, false otherwise.
-  var authoritative: Bool = false
+  public var authoritative: Bool = false
 
   /// Match label, if any.
-  var label: SwiftProtobuf.Google_Protobuf_StringValue {
+  public var label: SwiftProtobuf.Google_Protobuf_StringValue {
     get {return _label ?? SwiftProtobuf.Google_Protobuf_StringValue()}
     set {_label = newValue}
   }
   /// Returns true if `label` has been explicitly set.
-  var hasLabel: Bool {return self._label != nil}
+  public var hasLabel: Bool {return self._label != nil}
   /// Clears the value of `label`. Subsequent reads from it will return its default value.
-  mutating func clearLabel() {self._label = nil}
+  public mutating func clearLabel() {self._label = nil}
 
   /// The number of users currently in the match.
-  var size: Int32 = 0
+  public var size: Int32 = 0
 
   /// The users currently in the match.
-  var presences: [Nakama_Realtime_UserPresence] = []
+  public var presences: [Nakama_Realtime_UserPresence] = []
 
   /// A reference to the current user's presence in the match.
-  var self_p: Nakama_Realtime_UserPresence {
+  public var self_p: Nakama_Realtime_UserPresence {
     get {return _self_p ?? Nakama_Realtime_UserPresence()}
     set {_self_p = newValue}
   }
   /// Returns true if `self_p` has been explicitly set.
-  var hasSelf_p: Bool {return self._self_p != nil}
+  public var hasSelf_p: Bool {return self._self_p != nil}
   /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
-  mutating func clearSelf_p() {self._self_p = nil}
+  public mutating func clearSelf_p() {self._self_p = nil}
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _label: SwiftProtobuf.Google_Protobuf_StringValue? = nil
   fileprivate var _self_p: Nakama_Realtime_UserPresence? = nil
 }
 
 /// Create a new realtime match.
-struct Nakama_Realtime_MatchCreate {
+public struct Nakama_Realtime_MatchCreate {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Realtime match data received from the server.
-struct Nakama_Realtime_MatchData {
+public struct Nakama_Realtime_MatchData {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The match unique ID.
-  var matchID: String = String()
+  public var matchID: String = String()
 
   /// A reference to the user presence that sent this data, if any.
-  var presence: Nakama_Realtime_UserPresence {
+  public var presence: Nakama_Realtime_UserPresence {
     get {return _presence ?? Nakama_Realtime_UserPresence()}
     set {_presence = newValue}
   }
   /// Returns true if `presence` has been explicitly set.
-  var hasPresence: Bool {return self._presence != nil}
+  public var hasPresence: Bool {return self._presence != nil}
   /// Clears the value of `presence`. Subsequent reads from it will return its default value.
-  mutating func clearPresence() {self._presence = nil}
+  public mutating func clearPresence() {self._presence = nil}
 
   /// Op code value.
-  var opCode: Int64 = 0
+  public var opCode: Int64 = 0
 
   /// Data payload, if any.
-  var data: Data = Data()
+  public var data: Data = Data()
 
   /// True if this data was delivered reliably, false otherwise.
-  var reliable: Bool = false
+  public var reliable: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
 }
 
 /// Send realtime match data to the server.
-struct Nakama_Realtime_MatchDataSend {
+public struct Nakama_Realtime_MatchDataSend {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The match unique ID.
-  var matchID: String = String()
+  public var matchID: String = String()
 
   /// Op code value.
-  var opCode: Int64 = 0
+  public var opCode: Int64 = 0
 
   /// Data payload, if any.
-  var data: Data = Data()
+  public var data: Data = Data()
 
   /// List of presences in the match to deliver to, if filtering is required. Otherwise deliver to everyone in the match.
-  var presences: [Nakama_Realtime_UserPresence] = []
+  public var presences: [Nakama_Realtime_UserPresence] = []
 
   /// True if the data should be sent reliably, false otherwise.
-  var reliable: Bool = false
+  public var reliable: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Join an existing realtime match.
-struct Nakama_Realtime_MatchJoin {
+public struct Nakama_Realtime_MatchJoin {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var id: Nakama_Realtime_MatchJoin.OneOf_ID? = nil
+  public var id: Nakama_Realtime_MatchJoin.OneOf_ID? = nil
 
   /// The match unique ID.
-  var matchID: String {
+  public var matchID: String {
     get {
       if case .matchID(let v)? = id {return v}
       return String()
@@ -1098,7 +1098,7 @@ struct Nakama_Realtime_MatchJoin {
   }
 
   /// A matchmaking result token.
-  var token: String {
+  public var token: String {
     get {
       if case .token(let v)? = id {return v}
       return String()
@@ -1107,18 +1107,18 @@ struct Nakama_Realtime_MatchJoin {
   }
 
   /// An optional set of key-value metadata pairs to be passed to the match handler, if any.
-  var metadata: Dictionary<String,String> = [:]
+  public var metadata: Dictionary<String,String> = [:]
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum OneOf_ID: Equatable {
+  public enum OneOf_ID: Equatable {
     /// The match unique ID.
     case matchID(String)
     /// A matchmaking result token.
     case token(String)
 
   #if !swift(>=4.1)
-    static func ==(lhs: Nakama_Realtime_MatchJoin.OneOf_ID, rhs: Nakama_Realtime_MatchJoin.OneOf_ID) -> Bool {
+    public static func ==(lhs: Nakama_Realtime_MatchJoin.OneOf_ID, rhs: Nakama_Realtime_MatchJoin.OneOf_ID) -> Bool {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -1137,83 +1137,83 @@ struct Nakama_Realtime_MatchJoin {
   #endif
   }
 
-  init() {}
+  public init() {}
 }
 
 /// Leave a realtime match.
-struct Nakama_Realtime_MatchLeave {
+public struct Nakama_Realtime_MatchLeave {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The match unique ID.
-  var matchID: String = String()
+  public var matchID: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A set of joins and leaves on a particular realtime match.
-struct Nakama_Realtime_MatchPresenceEvent {
+public struct Nakama_Realtime_MatchPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The match unique ID.
-  var matchID: String = String()
+  public var matchID: String = String()
 
   /// User presences that have just joined the match.
-  var joins: [Nakama_Realtime_UserPresence] = []
+  public var joins: [Nakama_Realtime_UserPresence] = []
 
   /// User presences that have just left the match.
-  var leaves: [Nakama_Realtime_UserPresence] = []
+  public var leaves: [Nakama_Realtime_UserPresence] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Start a new matchmaking process.
-struct Nakama_Realtime_MatchmakerAdd {
+public struct Nakama_Realtime_MatchmakerAdd {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Minimum total user count to match together.
-  var minCount: Int32 = 0
+  public var minCount: Int32 = 0
 
   /// Maximum total user count to match together.
-  var maxCount: Int32 = 0
+  public var maxCount: Int32 = 0
 
   /// Filter query used to identify suitable users.
-  var query: String = String()
+  public var query: String = String()
 
   /// String properties.
-  var stringProperties: Dictionary<String,String> = [:]
+  public var stringProperties: Dictionary<String,String> = [:]
 
   /// Numeric properties.
-  var numericProperties: Dictionary<String,Double> = [:]
+  public var numericProperties: Dictionary<String,Double> = [:]
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A successful matchmaking result.
-struct Nakama_Realtime_MatchmakerMatched {
+public struct Nakama_Realtime_MatchmakerMatched {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The matchmaking ticket that has completed.
-  var ticket: String = String()
+  public var ticket: String = String()
 
   /// The match token or match ID to join.
-  var id: Nakama_Realtime_MatchmakerMatched.OneOf_ID? = nil
+  public var id: Nakama_Realtime_MatchmakerMatched.OneOf_ID? = nil
 
   /// Match ID.
-  var matchID: String {
+  public var matchID: String {
     get {
       if case .matchID(let v)? = id {return v}
       return String()
@@ -1222,7 +1222,7 @@ struct Nakama_Realtime_MatchmakerMatched {
   }
 
   /// Match join token.
-  var token: String {
+  public var token: String {
     get {
       if case .token(let v)? = id {return v}
       return String()
@@ -1231,29 +1231,29 @@ struct Nakama_Realtime_MatchmakerMatched {
   }
 
   /// The users that have been matched together, and information about their matchmaking data.
-  var users: [Nakama_Realtime_MatchmakerMatched.MatchmakerUser] = []
+  public var users: [Nakama_Realtime_MatchmakerMatched.MatchmakerUser] = []
 
   /// A reference to the current user and their properties.
-  var self_p: Nakama_Realtime_MatchmakerMatched.MatchmakerUser {
+  public var self_p: Nakama_Realtime_MatchmakerMatched.MatchmakerUser {
     get {return _self_p ?? Nakama_Realtime_MatchmakerMatched.MatchmakerUser()}
     set {_self_p = newValue}
   }
   /// Returns true if `self_p` has been explicitly set.
-  var hasSelf_p: Bool {return self._self_p != nil}
+  public var hasSelf_p: Bool {return self._self_p != nil}
   /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
-  mutating func clearSelf_p() {self._self_p = nil}
+  public mutating func clearSelf_p() {self._self_p = nil}
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   /// The match token or match ID to join.
-  enum OneOf_ID: Equatable {
+  public enum OneOf_ID: Equatable {
     /// Match ID.
     case matchID(String)
     /// Match join token.
     case token(String)
 
   #if !swift(>=4.1)
-    static func ==(lhs: Nakama_Realtime_MatchmakerMatched.OneOf_ID, rhs: Nakama_Realtime_MatchmakerMatched.OneOf_ID) -> Bool {
+    public static func ==(lhs: Nakama_Realtime_MatchmakerMatched.OneOf_ID, rhs: Nakama_Realtime_MatchmakerMatched.OneOf_ID) -> Bool {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -1272,311 +1272,311 @@ struct Nakama_Realtime_MatchmakerMatched {
   #endif
   }
 
-  struct MatchmakerUser {
+  public struct MatchmakerUser {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
     /// User info.
-    var presence: Nakama_Realtime_UserPresence {
+    public var presence: Nakama_Realtime_UserPresence {
       get {return _presence ?? Nakama_Realtime_UserPresence()}
       set {_presence = newValue}
     }
     /// Returns true if `presence` has been explicitly set.
-    var hasPresence: Bool {return self._presence != nil}
+    public var hasPresence: Bool {return self._presence != nil}
     /// Clears the value of `presence`. Subsequent reads from it will return its default value.
-    mutating func clearPresence() {self._presence = nil}
+    public mutating func clearPresence() {self._presence = nil}
 
     /// String properties.
-    var stringProperties: Dictionary<String,String> = [:]
+    public var stringProperties: Dictionary<String,String> = [:]
 
     /// Numeric properties.
-    var numericProperties: Dictionary<String,Double> = [:]
+    public var numericProperties: Dictionary<String,Double> = [:]
 
-    var unknownFields = SwiftProtobuf.UnknownStorage()
+    public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-    init() {}
+    public init() {}
 
     fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
   }
 
-  init() {}
+  public init() {}
 
   fileprivate var _self_p: Nakama_Realtime_MatchmakerMatched.MatchmakerUser? = nil
 }
 
 /// Cancel an existing ongoing matchmaking process.
-struct Nakama_Realtime_MatchmakerRemove {
+public struct Nakama_Realtime_MatchmakerRemove {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The ticket to cancel.
-  var ticket: String = String()
+  public var ticket: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A ticket representing a new matchmaking process.
-struct Nakama_Realtime_MatchmakerTicket {
+public struct Nakama_Realtime_MatchmakerTicket {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The ticket that can be used to cancel matchmaking.
-  var ticket: String = String()
+  public var ticket: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A collection of zero or more notifications.
-struct Nakama_Realtime_Notifications {
+public struct Nakama_Realtime_Notifications {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Collection of notifications.
-  var notifications: [Nakama_Api_Notification] = []
+  public var notifications: [Nakama_Api_Notification] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Application-level heartbeat and connection check.
-struct Nakama_Realtime_Ping {
+public struct Nakama_Realtime_Ping {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Application-level heartbeat and connection check response.
-struct Nakama_Realtime_Pong {
+public struct Nakama_Realtime_Pong {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A snapshot of statuses for some set of users.
-struct Nakama_Realtime_Status {
+public struct Nakama_Realtime_Status {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// User statuses.
-  var presences: [Nakama_Realtime_UserPresence] = []
+  public var presences: [Nakama_Realtime_UserPresence] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Start receiving status updates for some set of users.
-struct Nakama_Realtime_StatusFollow {
+public struct Nakama_Realtime_StatusFollow {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// User IDs to follow.
-  var userIds: [String] = []
+  public var userIds: [String] = []
 
   /// Usernames to follow.
-  var usernames: [String] = []
+  public var usernames: [String] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A batch of status updates for a given user.
-struct Nakama_Realtime_StatusPresenceEvent {
+public struct Nakama_Realtime_StatusPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// New statuses for the user.
-  var joins: [Nakama_Realtime_UserPresence] = []
+  public var joins: [Nakama_Realtime_UserPresence] = []
 
   /// Previous statuses for the user.
-  var leaves: [Nakama_Realtime_UserPresence] = []
+  public var leaves: [Nakama_Realtime_UserPresence] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Stop receiving status updates for some set of users.
-struct Nakama_Realtime_StatusUnfollow {
+public struct Nakama_Realtime_StatusUnfollow {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Users to unfollow.
-  var userIds: [String] = []
+  public var userIds: [String] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// Set the user's own status.
-struct Nakama_Realtime_StatusUpdate {
+public struct Nakama_Realtime_StatusUpdate {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Status string to set, if not present the user will appear offline.
-  var status: SwiftProtobuf.Google_Protobuf_StringValue {
+  public var status: SwiftProtobuf.Google_Protobuf_StringValue {
     get {return _status ?? SwiftProtobuf.Google_Protobuf_StringValue()}
     set {_status = newValue}
   }
   /// Returns true if `status` has been explicitly set.
-  var hasStatus: Bool {return self._status != nil}
+  public var hasStatus: Bool {return self._status != nil}
   /// Clears the value of `status`. Subsequent reads from it will return its default value.
-  mutating func clearStatus() {self._status = nil}
+  public mutating func clearStatus() {self._status = nil}
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _status: SwiftProtobuf.Google_Protobuf_StringValue? = nil
 }
 
 /// Represents identifying information for a stream.
-struct Nakama_Realtime_Stream {
+public struct Nakama_Realtime_Stream {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// Mode identifies the type of stream.
-  var mode: Int32 = 0
+  public var mode: Int32 = 0
 
   /// Subject is the primary identifier, if any.
-  var subject: String = String()
+  public var subject: String = String()
 
   /// Subcontext is a secondary identifier, if any.
-  var subcontext: String = String()
+  public var subcontext: String = String()
 
   /// The label is an arbitrary identifying string, if the stream has one.
-  var label: String = String()
+  public var label: String = String()
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 }
 
 /// A data message delivered over a stream.
-struct Nakama_Realtime_StreamData {
+public struct Nakama_Realtime_StreamData {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The stream this data message relates to.
-  var stream: Nakama_Realtime_Stream {
+  public var stream: Nakama_Realtime_Stream {
     get {return _stream ?? Nakama_Realtime_Stream()}
     set {_stream = newValue}
   }
   /// Returns true if `stream` has been explicitly set.
-  var hasStream: Bool {return self._stream != nil}
+  public var hasStream: Bool {return self._stream != nil}
   /// Clears the value of `stream`. Subsequent reads from it will return its default value.
-  mutating func clearStream() {self._stream = nil}
+  public mutating func clearStream() {self._stream = nil}
 
   /// The sender, if any.
-  var sender: Nakama_Realtime_UserPresence {
+  public var sender: Nakama_Realtime_UserPresence {
     get {return _sender ?? Nakama_Realtime_UserPresence()}
     set {_sender = newValue}
   }
   /// Returns true if `sender` has been explicitly set.
-  var hasSender: Bool {return self._sender != nil}
+  public var hasSender: Bool {return self._sender != nil}
   /// Clears the value of `sender`. Subsequent reads from it will return its default value.
-  mutating func clearSender() {self._sender = nil}
+  public mutating func clearSender() {self._sender = nil}
 
   /// Arbitrary contents of the data message.
-  var data: String = String()
+  public var data: String = String()
 
   /// True if this data was delivered reliably, false otherwise.
-  var reliable: Bool = false
+  public var reliable: Bool = false
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _stream: Nakama_Realtime_Stream? = nil
   fileprivate var _sender: Nakama_Realtime_UserPresence? = nil
 }
 
 /// A set of joins and leaves on a particular stream.
-struct Nakama_Realtime_StreamPresenceEvent {
+public struct Nakama_Realtime_StreamPresenceEvent {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The stream this event relates to.
-  var stream: Nakama_Realtime_Stream {
+  public var stream: Nakama_Realtime_Stream {
     get {return _stream ?? Nakama_Realtime_Stream()}
     set {_stream = newValue}
   }
   /// Returns true if `stream` has been explicitly set.
-  var hasStream: Bool {return self._stream != nil}
+  public var hasStream: Bool {return self._stream != nil}
   /// Clears the value of `stream`. Subsequent reads from it will return its default value.
-  mutating func clearStream() {self._stream = nil}
+  public mutating func clearStream() {self._stream = nil}
 
   /// Presences joining the stream as part of this event, if any.
-  var joins: [Nakama_Realtime_UserPresence] = []
+  public var joins: [Nakama_Realtime_UserPresence] = []
 
   /// Presences leaving the stream as part of this event, if any.
-  var leaves: [Nakama_Realtime_UserPresence] = []
+  public var leaves: [Nakama_Realtime_UserPresence] = []
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _stream: Nakama_Realtime_Stream? = nil
 }
 
 /// A user session associated to a stream, usually through a list operation or a join/leave event.
-struct Nakama_Realtime_UserPresence {
+public struct Nakama_Realtime_UserPresence {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
   /// The user this presence belongs to.
-  var userID: String = String()
+  public var userID: String = String()
 
   /// A unique session ID identifying the particular connection, because the user may have many.
-  var sessionID: String = String()
+  public var sessionID: String = String()
 
   /// The username for display purposes.
-  var username: String = String()
+  public var username: String = String()
 
   /// Whether this presence generates persistent data/messages, if applicable for the stream type.
-  var persistence: Bool = false
+  public var persistence: Bool = false
 
   /// A user-set status message for this stream, if applicable.
-  var status: SwiftProtobuf.Google_Protobuf_StringValue {
+  public var status: SwiftProtobuf.Google_Protobuf_StringValue {
     get {return _status ?? SwiftProtobuf.Google_Protobuf_StringValue()}
     set {_status = newValue}
   }
   /// Returns true if `status` has been explicitly set.
-  var hasStatus: Bool {return self._status != nil}
+  public var hasStatus: Bool {return self._status != nil}
   /// Clears the value of `status`. Subsequent reads from it will return its default value.
-  mutating func clearStatus() {self._status = nil}
+  public mutating func clearStatus() {self._status = nil}
 
-  var unknownFields = SwiftProtobuf.UnknownStorage()
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  init() {}
+  public init() {}
 
   fileprivate var _status: SwiftProtobuf.Google_Protobuf_StringValue? = nil
 }
@@ -1586,8 +1586,8 @@ struct Nakama_Realtime_UserPresence {
 fileprivate let _protobuf_package = "nakama.realtime"
 
 extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Envelope"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Envelope"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "cid"),
     2: .same(proto: "channel"),
     3: .standard(proto: "channel_join"),
@@ -1623,7 +1623,7 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
     33: .same(proto: "pong"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -1923,7 +1923,7 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.cid.isEmpty {
       try visitor.visitSingularStringField(value: self.cid, fieldNumber: 1)
     }
@@ -2064,7 +2064,7 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Envelope, rhs: Nakama_Realtime_Envelope) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Envelope, rhs: Nakama_Realtime_Envelope) -> Bool {
     if lhs.cid != rhs.cid {return false}
     if lhs.message != rhs.message {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2073,8 +2073,8 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
 }
 
 extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Channel"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Channel"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
     2: .same(proto: "presences"),
     3: .same(proto: "self"),
@@ -2084,7 +2084,7 @@ extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._Message
     7: .standard(proto: "user_id_two"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2102,7 +2102,7 @@ extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._Message
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.id.isEmpty {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
@@ -2127,7 +2127,7 @@ extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._Message
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Channel, rhs: Nakama_Realtime_Channel) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Channel, rhs: Nakama_Realtime_Channel) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.presences != rhs.presences {return false}
     if lhs._self_p != rhs._self_p {return false}
@@ -2141,15 +2141,15 @@ extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._Message
 }
 
 extension Nakama_Realtime_ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelJoin"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelJoin"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "target"),
     2: .same(proto: "type"),
     3: .same(proto: "persistence"),
     4: .same(proto: "hidden"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2164,7 +2164,7 @@ extension Nakama_Realtime_ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._Mes
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.target.isEmpty {
       try visitor.visitSingularStringField(value: self.target, fieldNumber: 1)
     }
@@ -2180,7 +2180,7 @@ extension Nakama_Realtime_ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._Mes
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelJoin, rhs: Nakama_Realtime_ChannelJoin) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelJoin, rhs: Nakama_Realtime_ChannelJoin) -> Bool {
     if lhs.target != rhs.target {return false}
     if lhs.type != rhs.type {return false}
     if lhs._persistence != rhs._persistence {return false}
@@ -2191,7 +2191,7 @@ extension Nakama_Realtime_ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._Mes
 }
 
 extension Nakama_Realtime_ChannelJoin.TypeEnum: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "TYPE_UNSPECIFIED"),
     1: .same(proto: "ROOM"),
     2: .same(proto: "DIRECT_MESSAGE"),
@@ -2200,12 +2200,12 @@ extension Nakama_Realtime_ChannelJoin.TypeEnum: SwiftProtobuf._ProtoNameProvidin
 }
 
 extension Nakama_Realtime_ChannelLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelLeave"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelLeave"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2217,14 +2217,14 @@ extension Nakama_Realtime_ChannelLeave: SwiftProtobuf.Message, SwiftProtobuf._Me
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelLeave, rhs: Nakama_Realtime_ChannelLeave) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelLeave, rhs: Nakama_Realtime_ChannelLeave) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -2232,8 +2232,8 @@ extension Nakama_Realtime_ChannelLeave: SwiftProtobuf.Message, SwiftProtobuf._Me
 }
 
 extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelMessageAck"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelMessageAck"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
     2: .standard(proto: "message_id"),
     3: .same(proto: "code"),
@@ -2247,7 +2247,7 @@ extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobu
     11: .standard(proto: "user_id_two"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2269,7 +2269,7 @@ extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobu
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
@@ -2306,7 +2306,7 @@ extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobu
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelMessageAck, rhs: Nakama_Realtime_ChannelMessageAck) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelMessageAck, rhs: Nakama_Realtime_ChannelMessageAck) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.messageID != rhs.messageID {return false}
     if lhs._code != rhs._code {return false}
@@ -2324,13 +2324,13 @@ extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobu
 }
 
 extension Nakama_Realtime_ChannelMessageSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelMessageSend"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelMessageSend"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
     2: .same(proto: "content"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2343,7 +2343,7 @@ extension Nakama_Realtime_ChannelMessageSend: SwiftProtobuf.Message, SwiftProtob
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
@@ -2353,7 +2353,7 @@ extension Nakama_Realtime_ChannelMessageSend: SwiftProtobuf.Message, SwiftProtob
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelMessageSend, rhs: Nakama_Realtime_ChannelMessageSend) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelMessageSend, rhs: Nakama_Realtime_ChannelMessageSend) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.content != rhs.content {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2362,14 +2362,14 @@ extension Nakama_Realtime_ChannelMessageSend: SwiftProtobuf.Message, SwiftProtob
 }
 
 extension Nakama_Realtime_ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelMessageUpdate"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelMessageUpdate"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
     2: .standard(proto: "message_id"),
     3: .same(proto: "content"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2383,7 +2383,7 @@ extension Nakama_Realtime_ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProt
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
@@ -2396,7 +2396,7 @@ extension Nakama_Realtime_ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProt
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelMessageUpdate, rhs: Nakama_Realtime_ChannelMessageUpdate) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelMessageUpdate, rhs: Nakama_Realtime_ChannelMessageUpdate) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.messageID != rhs.messageID {return false}
     if lhs.content != rhs.content {return false}
@@ -2406,13 +2406,13 @@ extension Nakama_Realtime_ChannelMessageUpdate: SwiftProtobuf.Message, SwiftProt
 }
 
 extension Nakama_Realtime_ChannelMessageRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelMessageRemove"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelMessageRemove"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
     2: .standard(proto: "message_id"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2425,7 +2425,7 @@ extension Nakama_Realtime_ChannelMessageRemove: SwiftProtobuf.Message, SwiftProt
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
@@ -2435,7 +2435,7 @@ extension Nakama_Realtime_ChannelMessageRemove: SwiftProtobuf.Message, SwiftProt
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelMessageRemove, rhs: Nakama_Realtime_ChannelMessageRemove) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelMessageRemove, rhs: Nakama_Realtime_ChannelMessageRemove) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.messageID != rhs.messageID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2444,8 +2444,8 @@ extension Nakama_Realtime_ChannelMessageRemove: SwiftProtobuf.Message, SwiftProt
 }
 
 extension Nakama_Realtime_ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ChannelPresenceEvent"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".ChannelPresenceEvent"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "channel_id"),
     2: .same(proto: "joins"),
     3: .same(proto: "leaves"),
@@ -2455,7 +2455,7 @@ extension Nakama_Realtime_ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProt
     7: .standard(proto: "user_id_two"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2473,7 +2473,7 @@ extension Nakama_Realtime_ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProt
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
@@ -2498,7 +2498,7 @@ extension Nakama_Realtime_ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProt
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_ChannelPresenceEvent, rhs: Nakama_Realtime_ChannelPresenceEvent) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_ChannelPresenceEvent, rhs: Nakama_Realtime_ChannelPresenceEvent) -> Bool {
     if lhs.channelID != rhs.channelID {return false}
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
@@ -2512,14 +2512,14 @@ extension Nakama_Realtime_ChannelPresenceEvent: SwiftProtobuf.Message, SwiftProt
 }
 
 extension Nakama_Realtime_Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Error"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Error"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "code"),
     2: .same(proto: "message"),
     3: .same(proto: "context"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2533,7 +2533,7 @@ extension Nakama_Realtime_Error: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if self.code != 0 {
       try visitor.visitSingularInt32Field(value: self.code, fieldNumber: 1)
     }
@@ -2546,7 +2546,7 @@ extension Nakama_Realtime_Error: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Error, rhs: Nakama_Realtime_Error) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Error, rhs: Nakama_Realtime_Error) -> Bool {
     if lhs.code != rhs.code {return false}
     if lhs.message != rhs.message {return false}
     if lhs.context != rhs.context {return false}
@@ -2556,7 +2556,7 @@ extension Nakama_Realtime_Error: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
 }
 
 extension Nakama_Realtime_Error.Code: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "RUNTIME_EXCEPTION"),
     1: .same(proto: "UNRECOGNIZED_PAYLOAD"),
     2: .same(proto: "MISSING_PAYLOAD"),
@@ -2569,8 +2569,8 @@ extension Nakama_Realtime_Error.Code: SwiftProtobuf._ProtoNameProviding {
 }
 
 extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Match"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Match"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
     2: .same(proto: "authoritative"),
     3: .same(proto: "label"),
@@ -2579,7 +2579,7 @@ extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     6: .same(proto: "self"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2596,7 +2596,7 @@ extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
@@ -2618,7 +2618,7 @@ extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Match, rhs: Nakama_Realtime_Match) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Match, rhs: Nakama_Realtime_Match) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.authoritative != rhs.authoritative {return false}
     if lhs._label != rhs._label {return false}
@@ -2631,27 +2631,27 @@ extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
 }
 
 extension Nakama_Realtime_MatchCreate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchCreate"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+  public static let protoMessageName: String = _protobuf_package + ".MatchCreate"
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let _ = try decoder.nextFieldNumber() {
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchCreate, rhs: Nakama_Realtime_MatchCreate) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchCreate, rhs: Nakama_Realtime_MatchCreate) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
 extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchData"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchData"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
     2: .same(proto: "presence"),
     3: .standard(proto: "op_code"),
@@ -2659,7 +2659,7 @@ extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._Messa
     5: .same(proto: "reliable"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2675,7 +2675,7 @@ extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._Messa
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
@@ -2694,7 +2694,7 @@ extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._Messa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchData, rhs: Nakama_Realtime_MatchData) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchData, rhs: Nakama_Realtime_MatchData) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs._presence != rhs._presence {return false}
     if lhs.opCode != rhs.opCode {return false}
@@ -2706,8 +2706,8 @@ extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._Messa
 }
 
 extension Nakama_Realtime_MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchDataSend"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchDataSend"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
     2: .standard(proto: "op_code"),
     3: .same(proto: "data"),
@@ -2715,7 +2715,7 @@ extension Nakama_Realtime_MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._M
     5: .same(proto: "reliable"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2731,7 +2731,7 @@ extension Nakama_Realtime_MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._M
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
@@ -2750,7 +2750,7 @@ extension Nakama_Realtime_MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._M
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchDataSend, rhs: Nakama_Realtime_MatchDataSend) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchDataSend, rhs: Nakama_Realtime_MatchDataSend) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.opCode != rhs.opCode {return false}
     if lhs.data != rhs.data {return false}
@@ -2762,14 +2762,14 @@ extension Nakama_Realtime_MatchDataSend: SwiftProtobuf.Message, SwiftProtobuf._M
 }
 
 extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchJoin"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchJoin"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
     2: .same(proto: "token"),
     3: .same(proto: "metadata"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2793,7 +2793,7 @@ extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._Messa
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
     // allocates stack space for every case branch when no optimizations are
     // enabled. https://github.com/apple/swift-protobuf/issues/1034
@@ -2814,7 +2814,7 @@ extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._Messa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchJoin, rhs: Nakama_Realtime_MatchJoin) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchJoin, rhs: Nakama_Realtime_MatchJoin) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.metadata != rhs.metadata {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2823,12 +2823,12 @@ extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._Messa
 }
 
 extension Nakama_Realtime_MatchLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchLeave"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchLeave"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2840,14 +2840,14 @@ extension Nakama_Realtime_MatchLeave: SwiftProtobuf.Message, SwiftProtobuf._Mess
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchLeave, rhs: Nakama_Realtime_MatchLeave) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchLeave, rhs: Nakama_Realtime_MatchLeave) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -2855,14 +2855,14 @@ extension Nakama_Realtime_MatchLeave: SwiftProtobuf.Message, SwiftProtobuf._Mess
 }
 
 extension Nakama_Realtime_MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchPresenceEvent"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchPresenceEvent"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "match_id"),
     2: .same(proto: "joins"),
     3: .same(proto: "leaves"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2876,7 +2876,7 @@ extension Nakama_Realtime_MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtob
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
@@ -2889,7 +2889,7 @@ extension Nakama_Realtime_MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtob
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchPresenceEvent, rhs: Nakama_Realtime_MatchPresenceEvent) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchPresenceEvent, rhs: Nakama_Realtime_MatchPresenceEvent) -> Bool {
     if lhs.matchID != rhs.matchID {return false}
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
@@ -2899,8 +2899,8 @@ extension Nakama_Realtime_MatchPresenceEvent: SwiftProtobuf.Message, SwiftProtob
 }
 
 extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchmakerAdd"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchmakerAdd"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "min_count"),
     2: .standard(proto: "max_count"),
     3: .same(proto: "query"),
@@ -2908,7 +2908,7 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
     5: .standard(proto: "numeric_properties"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2924,7 +2924,7 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if self.minCount != 0 {
       try visitor.visitSingularInt32Field(value: self.minCount, fieldNumber: 1)
     }
@@ -2943,7 +2943,7 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchmakerAdd, rhs: Nakama_Realtime_MatchmakerAdd) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchmakerAdd, rhs: Nakama_Realtime_MatchmakerAdd) -> Bool {
     if lhs.minCount != rhs.minCount {return false}
     if lhs.maxCount != rhs.maxCount {return false}
     if lhs.query != rhs.query {return false}
@@ -2955,8 +2955,8 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
 }
 
 extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchmakerMatched"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchmakerMatched"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ticket"),
     2: .standard(proto: "match_id"),
     3: .same(proto: "token"),
@@ -2964,7 +2964,7 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
     5: .same(proto: "self"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -2990,7 +2990,7 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.ticket.isEmpty {
       try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 1)
     }
@@ -3017,7 +3017,7 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchmakerMatched, rhs: Nakama_Realtime_MatchmakerMatched) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchmakerMatched, rhs: Nakama_Realtime_MatchmakerMatched) -> Bool {
     if lhs.ticket != rhs.ticket {return false}
     if lhs.id != rhs.id {return false}
     if lhs.users != rhs.users {return false}
@@ -3028,14 +3028,14 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
 }
 
 extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = Nakama_Realtime_MatchmakerMatched.protoMessageName + ".MatchmakerUser"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = Nakama_Realtime_MatchmakerMatched.protoMessageName + ".MatchmakerUser"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "presence"),
     5: .standard(proto: "string_properties"),
     6: .standard(proto: "numeric_properties"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3049,7 +3049,7 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._presence {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
     }
@@ -3062,7 +3062,7 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser, rhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser, rhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser) -> Bool {
     if lhs._presence != rhs._presence {return false}
     if lhs.stringProperties != rhs.stringProperties {return false}
     if lhs.numericProperties != rhs.numericProperties {return false}
@@ -3072,12 +3072,12 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
 }
 
 extension Nakama_Realtime_MatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchmakerRemove"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchmakerRemove"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ticket"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3089,14 +3089,14 @@ extension Nakama_Realtime_MatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.ticket.isEmpty {
       try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchmakerRemove, rhs: Nakama_Realtime_MatchmakerRemove) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchmakerRemove, rhs: Nakama_Realtime_MatchmakerRemove) -> Bool {
     if lhs.ticket != rhs.ticket {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3104,12 +3104,12 @@ extension Nakama_Realtime_MatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf
 }
 
 extension Nakama_Realtime_MatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".MatchmakerTicket"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".MatchmakerTicket"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ticket"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3121,14 +3121,14 @@ extension Nakama_Realtime_MatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.ticket.isEmpty {
       try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_MatchmakerTicket, rhs: Nakama_Realtime_MatchmakerTicket) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_MatchmakerTicket, rhs: Nakama_Realtime_MatchmakerTicket) -> Bool {
     if lhs.ticket != rhs.ticket {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3136,12 +3136,12 @@ extension Nakama_Realtime_MatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf
 }
 
 extension Nakama_Realtime_Notifications: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Notifications"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Notifications"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "notifications"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3153,14 +3153,14 @@ extension Nakama_Realtime_Notifications: SwiftProtobuf.Message, SwiftProtobuf._M
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.notifications.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.notifications, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Notifications, rhs: Nakama_Realtime_Notifications) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Notifications, rhs: Nakama_Realtime_Notifications) -> Bool {
     if lhs.notifications != rhs.notifications {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3168,50 +3168,50 @@ extension Nakama_Realtime_Notifications: SwiftProtobuf.Message, SwiftProtobuf._M
 }
 
 extension Nakama_Realtime_Ping: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Ping"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+  public static let protoMessageName: String = _protobuf_package + ".Ping"
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let _ = try decoder.nextFieldNumber() {
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Ping, rhs: Nakama_Realtime_Ping) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Ping, rhs: Nakama_Realtime_Ping) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
 extension Nakama_Realtime_Pong: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Pong"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+  public static let protoMessageName: String = _protobuf_package + ".Pong"
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let _ = try decoder.nextFieldNumber() {
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Pong, rhs: Nakama_Realtime_Pong) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Pong, rhs: Nakama_Realtime_Pong) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
 extension Nakama_Realtime_Status: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Status"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Status"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "presences"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3223,14 +3223,14 @@ extension Nakama_Realtime_Status: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.presences.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Status, rhs: Nakama_Realtime_Status) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Status, rhs: Nakama_Realtime_Status) -> Bool {
     if lhs.presences != rhs.presences {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3238,13 +3238,13 @@ extension Nakama_Realtime_Status: SwiftProtobuf.Message, SwiftProtobuf._MessageI
 }
 
 extension Nakama_Realtime_StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".StatusFollow"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".StatusFollow"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_ids"),
     2: .same(proto: "usernames"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3257,7 +3257,7 @@ extension Nakama_Realtime_StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._Me
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userIds.isEmpty {
       try visitor.visitRepeatedStringField(value: self.userIds, fieldNumber: 1)
     }
@@ -3267,7 +3267,7 @@ extension Nakama_Realtime_StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._Me
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_StatusFollow, rhs: Nakama_Realtime_StatusFollow) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_StatusFollow, rhs: Nakama_Realtime_StatusFollow) -> Bool {
     if lhs.userIds != rhs.userIds {return false}
     if lhs.usernames != rhs.usernames {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3276,13 +3276,13 @@ extension Nakama_Realtime_StatusFollow: SwiftProtobuf.Message, SwiftProtobuf._Me
 }
 
 extension Nakama_Realtime_StatusPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".StatusPresenceEvent"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".StatusPresenceEvent"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     2: .same(proto: "joins"),
     3: .same(proto: "leaves"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3295,7 +3295,7 @@ extension Nakama_Realtime_StatusPresenceEvent: SwiftProtobuf.Message, SwiftProto
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.joins.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.joins, fieldNumber: 2)
     }
@@ -3305,7 +3305,7 @@ extension Nakama_Realtime_StatusPresenceEvent: SwiftProtobuf.Message, SwiftProto
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_StatusPresenceEvent, rhs: Nakama_Realtime_StatusPresenceEvent) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_StatusPresenceEvent, rhs: Nakama_Realtime_StatusPresenceEvent) -> Bool {
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3314,12 +3314,12 @@ extension Nakama_Realtime_StatusPresenceEvent: SwiftProtobuf.Message, SwiftProto
 }
 
 extension Nakama_Realtime_StatusUnfollow: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".StatusUnfollow"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".StatusUnfollow"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_ids"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3331,14 +3331,14 @@ extension Nakama_Realtime_StatusUnfollow: SwiftProtobuf.Message, SwiftProtobuf._
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userIds.isEmpty {
       try visitor.visitRepeatedStringField(value: self.userIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_StatusUnfollow, rhs: Nakama_Realtime_StatusUnfollow) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_StatusUnfollow, rhs: Nakama_Realtime_StatusUnfollow) -> Bool {
     if lhs.userIds != rhs.userIds {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3346,12 +3346,12 @@ extension Nakama_Realtime_StatusUnfollow: SwiftProtobuf.Message, SwiftProtobuf._
 }
 
 extension Nakama_Realtime_StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".StatusUpdate"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".StatusUpdate"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "status"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3363,14 +3363,14 @@ extension Nakama_Realtime_StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._Me
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._status {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_StatusUpdate, rhs: Nakama_Realtime_StatusUpdate) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_StatusUpdate, rhs: Nakama_Realtime_StatusUpdate) -> Bool {
     if lhs._status != rhs._status {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3378,15 +3378,15 @@ extension Nakama_Realtime_StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._Me
 }
 
 extension Nakama_Realtime_Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".Stream"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".Stream"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "mode"),
     2: .same(proto: "subject"),
     3: .same(proto: "subcontext"),
     4: .same(proto: "label"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3401,7 +3401,7 @@ extension Nakama_Realtime_Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if self.mode != 0 {
       try visitor.visitSingularInt32Field(value: self.mode, fieldNumber: 1)
     }
@@ -3417,7 +3417,7 @@ extension Nakama_Realtime_Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_Stream, rhs: Nakama_Realtime_Stream) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_Stream, rhs: Nakama_Realtime_Stream) -> Bool {
     if lhs.mode != rhs.mode {return false}
     if lhs.subject != rhs.subject {return false}
     if lhs.subcontext != rhs.subcontext {return false}
@@ -3428,15 +3428,15 @@ extension Nakama_Realtime_Stream: SwiftProtobuf.Message, SwiftProtobuf._MessageI
 }
 
 extension Nakama_Realtime_StreamData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".StreamData"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".StreamData"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "stream"),
     2: .same(proto: "sender"),
     3: .same(proto: "data"),
     4: .same(proto: "reliable"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3451,7 +3451,7 @@ extension Nakama_Realtime_StreamData: SwiftProtobuf.Message, SwiftProtobuf._Mess
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._stream {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
     }
@@ -3467,7 +3467,7 @@ extension Nakama_Realtime_StreamData: SwiftProtobuf.Message, SwiftProtobuf._Mess
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_StreamData, rhs: Nakama_Realtime_StreamData) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_StreamData, rhs: Nakama_Realtime_StreamData) -> Bool {
     if lhs._stream != rhs._stream {return false}
     if lhs._sender != rhs._sender {return false}
     if lhs.data != rhs.data {return false}
@@ -3478,14 +3478,14 @@ extension Nakama_Realtime_StreamData: SwiftProtobuf.Message, SwiftProtobuf._Mess
 }
 
 extension Nakama_Realtime_StreamPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".StreamPresenceEvent"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".StreamPresenceEvent"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "stream"),
     2: .same(proto: "joins"),
     3: .same(proto: "leaves"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3499,7 +3499,7 @@ extension Nakama_Realtime_StreamPresenceEvent: SwiftProtobuf.Message, SwiftProto
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if let v = self._stream {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
     }
@@ -3512,7 +3512,7 @@ extension Nakama_Realtime_StreamPresenceEvent: SwiftProtobuf.Message, SwiftProto
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_StreamPresenceEvent, rhs: Nakama_Realtime_StreamPresenceEvent) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_StreamPresenceEvent, rhs: Nakama_Realtime_StreamPresenceEvent) -> Bool {
     if lhs._stream != rhs._stream {return false}
     if lhs.joins != rhs.joins {return false}
     if lhs.leaves != rhs.leaves {return false}
@@ -3522,8 +3522,8 @@ extension Nakama_Realtime_StreamPresenceEvent: SwiftProtobuf.Message, SwiftProto
 }
 
 extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".UserPresence"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+  public static let protoMessageName: String = _protobuf_package + ".UserPresence"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
     2: .standard(proto: "session_id"),
     3: .same(proto: "username"),
@@ -3531,7 +3531,7 @@ extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._Me
     5: .same(proto: "status"),
   ]
 
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       // The use of inline closures is to circumvent an issue where the compiler
       // allocates stack space for every case branch when no optimizations are
@@ -3547,7 +3547,7 @@ extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._Me
     }
   }
 
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
@@ -3566,7 +3566,7 @@ extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._Me
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Nakama_Realtime_UserPresence, rhs: Nakama_Realtime_UserPresence) -> Bool {
+  public static func ==(lhs: Nakama_Realtime_UserPresence, rhs: Nakama_Realtime_UserPresence) -> Bool {
     if lhs.userID != rhs.userID {return false}
     if lhs.sessionID != rhs.sessionID {return false}
     if lhs.username != rhs.username {return false}

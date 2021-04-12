@@ -2050,622 +2050,690 @@ extension Nakama_Api_NakamaProvider {
 
   /// Determines, calls and returns the appropriate request handler, depending on the request's method.
   /// Returns nil for methods not handled by this service.
-  internal func handle(
-    method name: Substring,
-    context: CallHandlerContext
-  ) -> GRPCServerHandlerProtocol? {
-    switch name {
+  internal func handleMethod(
+    _ methodName: Substring,
+    callHandlerContext: CallHandlerContext
+  ) -> GRPCCallHandler? {
+    switch methodName {
     case "AddFriends":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AddFriendsRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeAddFriendsInterceptors() ?? [],
-        userFunction: self.addFriends(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAddFriendsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.addFriends(request: request, context: context)
+        }
+      }
 
     case "AddGroupUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AddGroupUsersRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeAddGroupUsersInterceptors() ?? [],
-        userFunction: self.addGroupUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAddGroupUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.addGroupUsers(request: request, context: context)
+        }
+      }
 
     case "AuthenticateApple":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateAppleRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateAppleInterceptors() ?? [],
-        userFunction: self.authenticateApple(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateAppleInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateApple(request: request, context: context)
+        }
+      }
 
     case "AuthenticateCustom":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateCustomRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateCustomInterceptors() ?? [],
-        userFunction: self.authenticateCustom(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateCustomInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateCustom(request: request, context: context)
+        }
+      }
 
     case "AuthenticateDevice":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateDeviceRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateDeviceInterceptors() ?? [],
-        userFunction: self.authenticateDevice(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateDeviceInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateDevice(request: request, context: context)
+        }
+      }
 
     case "AuthenticateEmail":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateEmailRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateEmailInterceptors() ?? [],
-        userFunction: self.authenticateEmail(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateEmailInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateEmail(request: request, context: context)
+        }
+      }
 
     case "AuthenticateFacebook":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateFacebookRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateFacebookInterceptors() ?? [],
-        userFunction: self.authenticateFacebook(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateFacebookInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateFacebook(request: request, context: context)
+        }
+      }
 
     case "AuthenticateFacebookInstantGame":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateFacebookInstantGameRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateFacebookInstantGameInterceptors() ?? [],
-        userFunction: self.authenticateFacebookInstantGame(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateFacebookInstantGameInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateFacebookInstantGame(request: request, context: context)
+        }
+      }
 
     case "AuthenticateGameCenter":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateGameCenterRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateGameCenterInterceptors() ?? [],
-        userFunction: self.authenticateGameCenter(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateGameCenterInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateGameCenter(request: request, context: context)
+        }
+      }
 
     case "AuthenticateGoogle":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateGoogleRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateGoogleInterceptors() ?? [],
-        userFunction: self.authenticateGoogle(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateGoogleInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateGoogle(request: request, context: context)
+        }
+      }
 
     case "AuthenticateSteam":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AuthenticateSteamRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Session>(),
-        interceptors: self.interceptors?.makeAuthenticateSteamInterceptors() ?? [],
-        userFunction: self.authenticateSteam(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeAuthenticateSteamInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.authenticateSteam(request: request, context: context)
+        }
+      }
 
     case "BanGroupUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_BanGroupUsersRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeBanGroupUsersInterceptors() ?? [],
-        userFunction: self.banGroupUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeBanGroupUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.banGroupUsers(request: request, context: context)
+        }
+      }
 
     case "BlockFriends":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_BlockFriendsRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeBlockFriendsInterceptors() ?? [],
-        userFunction: self.blockFriends(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeBlockFriendsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.blockFriends(request: request, context: context)
+        }
+      }
 
     case "CreateGroup":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_CreateGroupRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Group>(),
-        interceptors: self.interceptors?.makeCreateGroupInterceptors() ?? [],
-        userFunction: self.createGroup(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeCreateGroupInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.createGroup(request: request, context: context)
+        }
+      }
 
     case "DeleteFriends":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_DeleteFriendsRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeDeleteFriendsInterceptors() ?? [],
-        userFunction: self.deleteFriends(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeDeleteFriendsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.deleteFriends(request: request, context: context)
+        }
+      }
 
     case "DeleteGroup":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_DeleteGroupRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeDeleteGroupInterceptors() ?? [],
-        userFunction: self.deleteGroup(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeDeleteGroupInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.deleteGroup(request: request, context: context)
+        }
+      }
 
     case "DeleteLeaderboardRecord":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_DeleteLeaderboardRecordRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeDeleteLeaderboardRecordInterceptors() ?? [],
-        userFunction: self.deleteLeaderboardRecord(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeDeleteLeaderboardRecordInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.deleteLeaderboardRecord(request: request, context: context)
+        }
+      }
 
     case "DeleteNotifications":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_DeleteNotificationsRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeDeleteNotificationsInterceptors() ?? [],
-        userFunction: self.deleteNotifications(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeDeleteNotificationsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.deleteNotifications(request: request, context: context)
+        }
+      }
 
     case "DeleteStorageObjects":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_DeleteStorageObjectsRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeDeleteStorageObjectsInterceptors() ?? [],
-        userFunction: self.deleteStorageObjects(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeDeleteStorageObjectsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.deleteStorageObjects(request: request, context: context)
+        }
+      }
 
     case "Event":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_Event>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeEventInterceptors() ?? [],
-        userFunction: self.event(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeEventInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.event(request: request, context: context)
+        }
+      }
 
     case "GetAccount":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Account>(),
-        interceptors: self.interceptors?.makeGetAccountInterceptors() ?? [],
-        userFunction: self.getAccount(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeGetAccountInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.getAccount(request: request, context: context)
+        }
+      }
 
     case "GetUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_GetUsersRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Users>(),
-        interceptors: self.interceptors?.makeGetUsersInterceptors() ?? [],
-        userFunction: self.getUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeGetUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.getUsers(request: request, context: context)
+        }
+      }
 
     case "Healthcheck":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeHealthcheckInterceptors() ?? [],
-        userFunction: self.healthcheck(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeHealthcheckInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.healthcheck(request: request, context: context)
+        }
+      }
 
     case "ImportFacebookFriends":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ImportFacebookFriendsRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeImportFacebookFriendsInterceptors() ?? [],
-        userFunction: self.importFacebookFriends(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeImportFacebookFriendsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.importFacebookFriends(request: request, context: context)
+        }
+      }
 
     case "JoinGroup":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_JoinGroupRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeJoinGroupInterceptors() ?? [],
-        userFunction: self.joinGroup(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeJoinGroupInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.joinGroup(request: request, context: context)
+        }
+      }
 
     case "JoinTournament":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_JoinTournamentRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeJoinTournamentInterceptors() ?? [],
-        userFunction: self.joinTournament(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeJoinTournamentInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.joinTournament(request: request, context: context)
+        }
+      }
 
     case "KickGroupUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_KickGroupUsersRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeKickGroupUsersInterceptors() ?? [],
-        userFunction: self.kickGroupUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeKickGroupUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.kickGroupUsers(request: request, context: context)
+        }
+      }
 
     case "LeaveGroup":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_LeaveGroupRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLeaveGroupInterceptors() ?? [],
-        userFunction: self.leaveGroup(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLeaveGroupInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.leaveGroup(request: request, context: context)
+        }
+      }
 
     case "LinkApple":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountApple>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkAppleInterceptors() ?? [],
-        userFunction: self.linkApple(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkAppleInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkApple(request: request, context: context)
+        }
+      }
 
     case "LinkCustom":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountCustom>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkCustomInterceptors() ?? [],
-        userFunction: self.linkCustom(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkCustomInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkCustom(request: request, context: context)
+        }
+      }
 
     case "LinkDevice":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountDevice>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkDeviceInterceptors() ?? [],
-        userFunction: self.linkDevice(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkDeviceInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkDevice(request: request, context: context)
+        }
+      }
 
     case "LinkEmail":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountEmail>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkEmailInterceptors() ?? [],
-        userFunction: self.linkEmail(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkEmailInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkEmail(request: request, context: context)
+        }
+      }
 
     case "LinkFacebook":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_LinkFacebookRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkFacebookInterceptors() ?? [],
-        userFunction: self.linkFacebook(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkFacebookInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkFacebook(request: request, context: context)
+        }
+      }
 
     case "LinkFacebookInstantGame":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountFacebookInstantGame>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkFacebookInstantGameInterceptors() ?? [],
-        userFunction: self.linkFacebookInstantGame(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkFacebookInstantGameInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkFacebookInstantGame(request: request, context: context)
+        }
+      }
 
     case "LinkGameCenter":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountGameCenter>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkGameCenterInterceptors() ?? [],
-        userFunction: self.linkGameCenter(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkGameCenterInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkGameCenter(request: request, context: context)
+        }
+      }
 
     case "LinkGoogle":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountGoogle>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkGoogleInterceptors() ?? [],
-        userFunction: self.linkGoogle(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkGoogleInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkGoogle(request: request, context: context)
+        }
+      }
 
     case "LinkSteam":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountSteam>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeLinkSteamInterceptors() ?? [],
-        userFunction: self.linkSteam(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeLinkSteamInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.linkSteam(request: request, context: context)
+        }
+      }
 
     case "ListChannelMessages":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListChannelMessagesRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_ChannelMessageList>(),
-        interceptors: self.interceptors?.makeListChannelMessagesInterceptors() ?? [],
-        userFunction: self.listChannelMessages(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListChannelMessagesInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listChannelMessages(request: request, context: context)
+        }
+      }
 
     case "ListFriends":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListFriendsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_FriendList>(),
-        interceptors: self.interceptors?.makeListFriendsInterceptors() ?? [],
-        userFunction: self.listFriends(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListFriendsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listFriends(request: request, context: context)
+        }
+      }
 
     case "ListGroups":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListGroupsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_GroupList>(),
-        interceptors: self.interceptors?.makeListGroupsInterceptors() ?? [],
-        userFunction: self.listGroups(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListGroupsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listGroups(request: request, context: context)
+        }
+      }
 
     case "ListGroupUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListGroupUsersRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_GroupUserList>(),
-        interceptors: self.interceptors?.makeListGroupUsersInterceptors() ?? [],
-        userFunction: self.listGroupUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListGroupUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listGroupUsers(request: request, context: context)
+        }
+      }
 
     case "ListLeaderboardRecords":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListLeaderboardRecordsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_LeaderboardRecordList>(),
-        interceptors: self.interceptors?.makeListLeaderboardRecordsInterceptors() ?? [],
-        userFunction: self.listLeaderboardRecords(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListLeaderboardRecordsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listLeaderboardRecords(request: request, context: context)
+        }
+      }
 
     case "ListLeaderboardRecordsAroundOwner":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_LeaderboardRecordList>(),
-        interceptors: self.interceptors?.makeListLeaderboardRecordsAroundOwnerInterceptors() ?? [],
-        userFunction: self.listLeaderboardRecordsAroundOwner(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListLeaderboardRecordsAroundOwnerInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listLeaderboardRecordsAroundOwner(request: request, context: context)
+        }
+      }
 
     case "ListMatches":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListMatchesRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_MatchList>(),
-        interceptors: self.interceptors?.makeListMatchesInterceptors() ?? [],
-        userFunction: self.listMatches(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListMatchesInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listMatches(request: request, context: context)
+        }
+      }
 
     case "ListNotifications":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListNotificationsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_NotificationList>(),
-        interceptors: self.interceptors?.makeListNotificationsInterceptors() ?? [],
-        userFunction: self.listNotifications(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListNotificationsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listNotifications(request: request, context: context)
+        }
+      }
 
     case "ListStorageObjects":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListStorageObjectsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_StorageObjectList>(),
-        interceptors: self.interceptors?.makeListStorageObjectsInterceptors() ?? [],
-        userFunction: self.listStorageObjects(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListStorageObjectsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listStorageObjects(request: request, context: context)
+        }
+      }
 
     case "ListTournaments":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListTournamentsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_TournamentList>(),
-        interceptors: self.interceptors?.makeListTournamentsInterceptors() ?? [],
-        userFunction: self.listTournaments(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListTournamentsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listTournaments(request: request, context: context)
+        }
+      }
 
     case "ListTournamentRecords":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListTournamentRecordsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_TournamentRecordList>(),
-        interceptors: self.interceptors?.makeListTournamentRecordsInterceptors() ?? [],
-        userFunction: self.listTournamentRecords(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListTournamentRecordsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listTournamentRecords(request: request, context: context)
+        }
+      }
 
     case "ListTournamentRecordsAroundOwner":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListTournamentRecordsAroundOwnerRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_TournamentRecordList>(),
-        interceptors: self.interceptors?.makeListTournamentRecordsAroundOwnerInterceptors() ?? [],
-        userFunction: self.listTournamentRecordsAroundOwner(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListTournamentRecordsAroundOwnerInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listTournamentRecordsAroundOwner(request: request, context: context)
+        }
+      }
 
     case "ListUserGroups":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ListUserGroupsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_UserGroupList>(),
-        interceptors: self.interceptors?.makeListUserGroupsInterceptors() ?? [],
-        userFunction: self.listUserGroups(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeListUserGroupsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.listUserGroups(request: request, context: context)
+        }
+      }
 
     case "PromoteGroupUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_PromoteGroupUsersRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makePromoteGroupUsersInterceptors() ?? [],
-        userFunction: self.promoteGroupUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makePromoteGroupUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.promoteGroupUsers(request: request, context: context)
+        }
+      }
 
     case "DemoteGroupUsers":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_DemoteGroupUsersRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeDemoteGroupUsersInterceptors() ?? [],
-        userFunction: self.demoteGroupUsers(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeDemoteGroupUsersInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.demoteGroupUsers(request: request, context: context)
+        }
+      }
 
     case "ReadStorageObjects":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_ReadStorageObjectsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_StorageObjects>(),
-        interceptors: self.interceptors?.makeReadStorageObjectsInterceptors() ?? [],
-        userFunction: self.readStorageObjects(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeReadStorageObjectsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.readStorageObjects(request: request, context: context)
+        }
+      }
 
     case "RpcFunc":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_Rpc>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_Rpc>(),
-        interceptors: self.interceptors?.makeRpcFuncInterceptors() ?? [],
-        userFunction: self.rpcFunc(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeRpcFuncInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.rpcFunc(request: request, context: context)
+        }
+      }
 
     case "UnlinkApple":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountApple>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkAppleInterceptors() ?? [],
-        userFunction: self.unlinkApple(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkAppleInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkApple(request: request, context: context)
+        }
+      }
 
     case "UnlinkCustom":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountCustom>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkCustomInterceptors() ?? [],
-        userFunction: self.unlinkCustom(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkCustomInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkCustom(request: request, context: context)
+        }
+      }
 
     case "UnlinkDevice":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountDevice>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkDeviceInterceptors() ?? [],
-        userFunction: self.unlinkDevice(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkDeviceInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkDevice(request: request, context: context)
+        }
+      }
 
     case "UnlinkEmail":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountEmail>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkEmailInterceptors() ?? [],
-        userFunction: self.unlinkEmail(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkEmailInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkEmail(request: request, context: context)
+        }
+      }
 
     case "UnlinkFacebook":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountFacebook>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkFacebookInterceptors() ?? [],
-        userFunction: self.unlinkFacebook(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkFacebookInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkFacebook(request: request, context: context)
+        }
+      }
 
     case "UnlinkFacebookInstantGame":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountFacebookInstantGame>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkFacebookInstantGameInterceptors() ?? [],
-        userFunction: self.unlinkFacebookInstantGame(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkFacebookInstantGameInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkFacebookInstantGame(request: request, context: context)
+        }
+      }
 
     case "UnlinkGameCenter":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountGameCenter>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkGameCenterInterceptors() ?? [],
-        userFunction: self.unlinkGameCenter(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkGameCenterInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkGameCenter(request: request, context: context)
+        }
+      }
 
     case "UnlinkGoogle":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountGoogle>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkGoogleInterceptors() ?? [],
-        userFunction: self.unlinkGoogle(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkGoogleInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkGoogle(request: request, context: context)
+        }
+      }
 
     case "UnlinkSteam":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_AccountSteam>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUnlinkSteamInterceptors() ?? [],
-        userFunction: self.unlinkSteam(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUnlinkSteamInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.unlinkSteam(request: request, context: context)
+        }
+      }
 
     case "UpdateAccount":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_UpdateAccountRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUpdateAccountInterceptors() ?? [],
-        userFunction: self.updateAccount(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUpdateAccountInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.updateAccount(request: request, context: context)
+        }
+      }
 
     case "UpdateGroup":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_UpdateGroupRequest>(),
-        responseSerializer: ProtobufSerializer<SwiftProtobuf.Google_Protobuf_Empty>(),
-        interceptors: self.interceptors?.makeUpdateGroupInterceptors() ?? [],
-        userFunction: self.updateGroup(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeUpdateGroupInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.updateGroup(request: request, context: context)
+        }
+      }
 
     case "WriteLeaderboardRecord":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_WriteLeaderboardRecordRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_LeaderboardRecord>(),
-        interceptors: self.interceptors?.makeWriteLeaderboardRecordInterceptors() ?? [],
-        userFunction: self.writeLeaderboardRecord(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeWriteLeaderboardRecordInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.writeLeaderboardRecord(request: request, context: context)
+        }
+      }
 
     case "WriteStorageObjects":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_WriteStorageObjectsRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_StorageObjectAcks>(),
-        interceptors: self.interceptors?.makeWriteStorageObjectsInterceptors() ?? [],
-        userFunction: self.writeStorageObjects(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeWriteStorageObjectsInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.writeStorageObjects(request: request, context: context)
+        }
+      }
 
     case "WriteTournamentRecord":
-      return UnaryServerHandler(
-        context: context,
-        requestDeserializer: ProtobufDeserializer<Nakama_Api_WriteTournamentRecordRequest>(),
-        responseSerializer: ProtobufSerializer<Nakama_Api_LeaderboardRecord>(),
-        interceptors: self.interceptors?.makeWriteTournamentRecordInterceptors() ?? [],
-        userFunction: self.writeTournamentRecord(request:context:)
-      )
+      return CallHandlerFactory.makeUnary(
+        callHandlerContext: callHandlerContext,
+        interceptors: self.interceptors?.makeWriteTournamentRecordInterceptors() ?? []
+      ) { context in
+        return { request in
+          self.writeTournamentRecord(request: request, context: context)
+        }
+      }
 
     default:
       return nil

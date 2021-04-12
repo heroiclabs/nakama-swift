@@ -1,6 +1,5 @@
 /*
- * Copyright 2018 Heroic Labs
- * Updated 11/04/2021 - Allan Nava
+ * Copyright 2021 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,1342 +15,405 @@
  */
 
 import Foundation
-import os
-
-import Dispatch
-import PromiseKit
-import Starscream
-import SwiftProtobuf
-//import SwiftGRPC
-// migration to new SwiftGRPC version
-import GRPC
 import NIO
-import NIOSSL
-import NIOHTTP1
-import NIOHTTP2
-import NIOHPACK
-
 
 /**
- A message which requires no acknowledgement by the server.
- */
-public protocol Message: Codable {
-}
-
-
-/**
- A message which returns a response from the server.
-
- - Parameter <T>: The type of the message response.
- */
-public protocol CollatedMessage: Codable {
-}
-
-/**
- A message which returns a response from the server.
-
- - Parameter <T>: The type of the message response.
- */
-public protocol Envelope: CollatedMessage {
-    /**
-     - Parameter collationId: The collation ID to assign to the serialized message instance.
-     - Returns: The serialized format of the message.
-     */
-    func serialize(collationID: String) -> Data
-
-}
-
-public class Builder {
-    private let serverKey: String
-    private var host: String = "127.0.0.1"
-    private var port: Int = 7350
-    private var lang: String = "en"
-    private var ssl: Bool = false
-    private var timeout: Int = 5000
-    private var trace: Bool = false
-
-    public init(serverKey: String) {
-        self.serverKey = serverKey
-    }
-
-    public func build() -> Client {
-        return DefaultClient(serverKey: serverKey, host: host, port: port, lang: lang, ssl: ssl, timeout: timeout, trace: trace)
-    }
-
-    public func host(_ host: String) -> Builder {
-        self.host = host
-        return self
-    }
-
-    public func port(_ port: Int) -> Builder {
-        self.port = port
-        return self
-    }
-
-    public func lang(_ lang: String) -> Builder {
-        self.lang = lang
-        return self
-    }
-
-    public func ssl(_ ssl: Bool) -> Builder {
-        self.ssl = ssl
-        return self
-    }
-
-    public func timeout(_ timeout: Int) -> Builder {
-        self.timeout = timeout
-        return self
-    }
-
-    public func trace(_ trace: Bool) -> Builder {
-        self.trace = trace
-        return self
-    }
-
-    public class func defaults(serverKey: String) -> Client {
-        return Builder(serverKey: serverKey).build()
-    }
-}
-
-/**
- A client for the Nakama server.
+ * A client to interact with Nakama server.
  */
 public protocol Client {
+    var host: String { get }
+    var port: Int { get }
+    var ssl: Bool { get }
+    
     /**
-     - Returns: The current server time in UTC milliseconds as reported by the server
-     during the last heartbeat exchange. If this client has never been
-     connected the function returns local device current UTC milliseconds.
+     Disconnects the client. This function kills all outgoing exchanges immediately without waiting.
      */
-    var serverTime: Int { get }
+    func disconnect() -> EventLoopFuture<Void>
 
     /**
-     This is invoked when the socket connection has been disconnected
+     Create a new socket from the client.
+     - Parameter host: The host URL of the server.
+     - Parameter port: The port number of the server. Default should be 7350.
+     - Parameter ssl: Whether to use SSL to connect to the server.
+     - Returns: A new SocketClient instance.
      */
-    var onDisconnect: ((Error?) -> Void)? { get set }
-
+    func createSocket(host: String?, port: Int?, ssl: Bool?) -> SocketClient
+    
     /**
-     This is invoked when there is a server error.
+     Create a new socket from the client.
+     - Parameter host: The host URL of the server.
+     - Parameter port: The port number of the server. Default should be 7350.
+     - Parameter ssl: Whether to use SSL to connect to the server.
+     - Parameter socketAdapter: The socketAdapter to use to create socket. If set to nil, WebSocketAdapter is used.
+     - Returns: A new SocketClient instance.
      */
-    var onError: ((NakamaError) -> Void)? { get set }
+    func createSocket(host: String?, port: Int?, ssl: Bool?, socketAdapter: SocketAdapter?) -> SocketClient
 
     /**
-     This is invoked when a new channel message is received.
-     */
-    var onChannelMessage: ((ChannelMessage) -> Void)? { get set }
-
-    /**
-     This is invoked when a new topic presence update is received.
-     */
-    var onChannelPresence: ((ChannelPresenceEvent) -> Void)? { get set }
-
-    /**
-    This is invoked when a matchmaking has found a match
-    */
-    var onMatchMakerMatched: ((MatchmakerMatched) -> Void)? { get set }
-
-    /**
-     This is invoked when an new match presence  is recevied
-    */
-    var onMatchData: ((MatchData) -> Void)? { get set }
-
-    /**
-     This is invoked when an ew match data  is recevied
-     */
-    var onMatchPresence: ((MatchPresenceEvent) -> Void)? { get set }
-//
-    /**
-     This is invoked when a new notification is received.
-     */
-    var onNotification: ((GRPCNotification) -> Void)? { get set }
-
-    /**
-     This is invoked when a new status presence update is received
-    */
-    var onStatusPresence: ((StatusPresenceEvent) -> Void)? { get set }
-
-    /**
-     This is invoked when a new stream presence updates
-    */
-    var onStreamPresence: ((StreamPresenceEvent) -> Void)? { get set }
-
-    /**
-     This is invoked when a new stream data is received
-     */
-    var onStreamData: ((StreamData) -> Void)? { get set }
-//
-
-    /**
-     - Sends a disconnect request to the server. When disconnected, `onDisconnect` is invoked.
-     */
-    func disconnect()
-
-    /**
-     - Send a logout request to the server
-     */
-    func logout()
-
-    /**
-     Join a chat channel on the server.
-
-     - Parameter target The target channel to join.
-     - Parameter type The type of channel to join.
-     - Returns: A future which resolves to a Channel response.
-     */
-    func joinChat(targetChannelId: String, channelType: ChannelType) -> Promise<Channel>
-
-    /**
-     Join a chat channel on the server.
-
-     - Parameter target The target channel to join.
-     - Parameter type The type of channel to join.
-     - Parameter persistence True if chat messages should be stored.
-     - Returns: A future which resolves to a Channel response.
-     */
-    func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool) -> Promise<Channel>
-    /**
-     Join a chat channel on the server.
-
-     - Parameter target The target channel to join.
-     - Parameter type The type of channel to join.
-     - Parameter persistence True if chat messages should be stored.
-     - Parameter hidden True if the user should be hidden on the channel.
-     - Returns: A future which resolves to a Channel response.
-     */
-    func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool, IsHidden: Bool) -> Promise<Channel>
-
-    /**
-     Leave a chat channel on the server.
-
-     - Parameter channelId The channel to leave.
+     Add one or more friends by id or username.
+     - Parameter session: The session of the user.
+     - Parameter ids: The ids of the users to add or invite as friends.
      - Returns: A future.
      */
-    func leaveChat(targetChannelId: String)
-
+    func addFriends(session: Session, ids: String...) -> EventLoopFuture<Void>
+    
     /**
-     Remove a chat message from a channel on the server.
-
-     - Parameter channelId The chat channel with the message.
-     - Parameter messageId The ID of a chat message to update.
+     Add one or more friends by id or username.
+     - Parameter session: The session of the user.
+     - Parameter ids: The ids of the users to add or invite as friends.
+     - Parameter usernames: The usernames of the users to add as friends.
      - Returns: A future.
      */
-    func removeChatMessage(channelId: String, messageId: String) -> Promise<ChannelMessageAck>
-
+    func addFriends(session: Session, ids: [String]?, usernames: [String]?) -> EventLoopFuture<Void>
+    
     /**
-     Send a chat message to a channel on the server.
-
-     - Parameter channelId The channel to send on.
-     - Parameter content The content of the chat message.
-     - Returns: A future which resolves to a Channel Ack response.
-     */
-    func writeChatMessage(channelId: String, content: String) -> Promise<ChannelMessageAck>
-
-
-    /**
-     Update a chat message to a channel on the server.
-
-     - Parameter channelId The ID of the chat channel with the message.
-     - Parameter messageId The ID of the message to update.
-     - Parameter content The content update for the message.
+     Add one or more users to the group.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The id of the group to add users into.
+     - Parameter id:s: The ids of the users to add or invite to the group.
      - Returns: A future.
      */
-    func updateChatMessage(channelId: String, messageId: String, content: String) -> Promise<ChannelMessageAck>
+    func addGroupUsers(session: Session, groupId: String, ids: String...) -> EventLoopFuture<Void>
 
     /**
-     - Parameter message : message The message to send.
+     Authenticate a user with a custom id.
+     - Parameter id: A custom identifier usually obtained from an external authentication service.
+     - Returns: A future to resolve a session object.
      */
-    func send(message: Message)
-
+    func authenticateCustom(id: String) -> EventLoopFuture<Session>
+    
     /**
-     Create a multiplayer match on the server.
-
-     - Returns: A future.
+     Authenticate a user with a custom id.
+     - Parameter id: A custom identifier usually obtained from an external authentication service.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
      */
-    func createMatch() -> Promise<Match>
-
+    func authenticateCustom(id: String, create: Bool?) -> EventLoopFuture<Session>
+    
     /**
-     Join a multiplayer match by ID.
-
-     - Parameter matchId A match ID.
-     - Returns: A future which resolves to the match joined.
+     Authenticate a user with a custom id.
+     - Parameter id: A custom identifier usually obtained from an external authentication service.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
      */
-    func joinMatch(token: String) -> Promise<Match>
-
+    func authenticateCustom(id: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
+    
     /**
-    Join a multiplayer match with a matchmaker.
-
-    - Parameter token A matchmaker ticket result object.
-    - Returns: A future which resolves to the match joined.
-    */
-    func joinMatch(matchId: String) -> Promise<Match>
-
-    /**
-     Leave a match on the server.
-
-     - Parameter matchId The match to leave.
-     - Returns: A future.
+     Authenticate a user with a custom id.
+     - Parameter id: A custom identifier usually obtained from an external authentication service.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
      */
-    func leaveMatch(matchId: String) -> Promise<Void>
+    func authenticateCustom(id: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
 
     /**
-     Join the matchmaker pool and search for opponents on the server.
-
-     - Parameter query A matchmaker query to search for opponents.
-     - Parameter minCount The minimum number of players to compete against.
-     - Parameter maxCount The maximum number of players to compete against.
-     - Parameter stringProperties A set of k/v properties to provide in searches.
-     - Parameter numericProperties A set of k/v numeric properties to provide in searches.
-     - Returns: A future which resolves to a matchmaker ticket object.
+     Authenticate a user with a device id.
+     - Parameter id: A device identifier usually obtained from a platform API.
+     - Returns: A future to resolve a session object.
      */
-    func addMatchMaker(minCount: Int?, maxCount: Int?, query: String?, stringProperties: [String: String]?, numericProperties: [String: Double]?) -> Promise<MatchmakerTicket>
-
+    func authenticateDevice(id: String) -> EventLoopFuture<Session>
+    
     /**
-     Leave the matchmaker pool by ticket.
-
-     - Parameter ticket The ticket returned by the matchmaker on join. See <c>IMatchmakerTicket.Ticket</c>.
-     - Returns: A future.
+     Authenticate a user with a device id.
+     - Parameter id: A device identifier usually obtained from a platform API.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
      */
-    func removeMatchMaker(ticket: String) -> Promise<Void>
-
+    func authenticateDevice(id: String, create: Bool?) -> EventLoopFuture<Session>
+    
     /**
-     Send a state change to a match on the server.
-
-     When no presences are supplied the new match state will be sent to all presences.
-
-     - Parameter matchId The Id of the match.
-     - Parameter opCode An operation code for the match state.
-     - Parameter data The new state to send to the match.
-     - Parameter presences The presences in the match to send the state.
+     Authenticate a user with a device id.
+     - Parameter id: A device identifier usually obtained from a platform API.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
      */
-    func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [UserPresence]?) -> Promise<Void>
-
+    func authenticateDevice(id: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
+    
     /**
-     Send an RPC message to the server.
-
-     - Parameter id The ID of the function to execute.
-     - Parameter payload The string content to send to the server.
-     - Returns: A future which resolves to an RPC response.
+     Authenticate a user with a device id.
+     - Parameter id: A device identifier usually obtained from a platform API.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
      */
-    func rpc(id: String, payload: String?) -> Promise<RpcMessage>
+    func authenticateDevice(id: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
 
     /**
-     Follow one or more users for status updates.
-
-     - Parameter userIds The user Ids to follow.
-     - Returns: A future.
+     Authenticate a user with an email and password.
+     - Parameter email: The email address of the user.
+     - Parameter password: The password for the user.
+     - Returns: A future to resolve a session object.
      */
-    func followUsers(userIds: [String]) -> Promise<Status>
-
+    func authenticateEmail(email: String, password: String) -> EventLoopFuture<Session>
+    
     /**
-     Unfollow status updates for one or more users.
-
-     - Parameter userIds The ids of users to unfollow.
-     - Returns: A future.
+     Authenticate a user with an email and password.
+     - Parameter email: The email address of the user.
+     - Parameter password: The password for the user.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
      */
-    func unfollowUsers(userIds: [String]) -> Promise<Void>
-
+    func authenticateEmail(email: String, password: String, create: Bool?) -> EventLoopFuture<Session>
+    
     /**
-     Update the user's status online.
-
-     - Parameter status The new status of the user.
-     - Returns: A future.
+     Authenticate a user with an email and password.
+     - Parameter email: The email address of the user.
+     - Parameter password: The password for the user.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
      */
-    func updateStatus(status: String) -> Promise<Void>
-
+    func authenticateEmail(email: String, password: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
+    
     /**
-     Connect to the server.
-     - Parameter session The session of the user.
-     - Parameter listener An event listener to notify on updates.
-     - Parameter createStatus True if the socket should show the user as online to others.
-     - Returns: A future.
+     Authenticate a user with an email and password.
+     - Parameter email: The email address of the user.
+     - Parameter password: The password for the user.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
      */
-    func createSocket(to session: Session) -> Promise<Session>
+    func authenticateEmail(email: String, password: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
 
-
-    func loginOrRegister(with deviceID: String) -> Promise<Session>
-    
     /**
-     * Authenticate a user with an email and password.
-     * @param email The email address of the user.
-     * @param password The password for the user.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Facebook auth token.
+     - Parameter accessToken: An OAuth access token from the Facebook SDK.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateEmail( email: String, password: String ) -> Promise<Session>
-
+    func authenticateFacebook(accessToken: String) -> EventLoopFuture<Session>
+    
     /**
-     * Authenticate a user with an email and password.
-     * @param email The email address of the user.
-     * @param password The password for the user.
-     * @param create True if the user should be created when authenticated.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Facebook auth token.
+     - Parameter accessToken: An OAuth access token from the Facebook SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateEmail(email: String, password: String, create : Bool ) -> Promise<Session>
-
+    func authenticateFacebook(accessToken: String, create: Bool?) -> EventLoopFuture<Session>
+    
     /**
-     * Authenticate a user with a custom id.
-     * @param id A custom identifier usually obtained from an external authentication service.
-     * @param username A username used to create the user.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Facebook auth token.
+     - Parameter accessToken: An OAuth access token from the Facebook SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateCustom( id: String , username: String ) -> Promise<Session>
+    func authenticateFacebook(accessToken: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
     
     /**
-     * Add one or more friends by id.
-     * @param session The session of the user.
-     * @param ids The ids of the users to add or invite as friends.
-     * @return A future.
+     Authenticate a user with a Facebook auth token.
+     - Parameter accessToken: An OAuth access token from the Facebook SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter importFriends True if the Facebook friends should be imported.
+     - Returns: A future to resolve a session object.
      */
-    func addFriends( session : Session,  ids: [String] ) -> Promise<Void>
+    func authenticateFacebook(accessToken: String, create: Bool?, username: String?, importFriends: Bool?) -> EventLoopFuture<Session>
     
     /**
-     * Add one or more friends by id or username.
-     * @param session The session of the user.
-     * @param ids The ids of the users to add or invite as friends.
-     * @param usernames The usernames of the users to add as friends.
-     * @return A future.
+     Authenticate a user with a Facebook auth token.
+     - Parameter accessToken: An OAuth access token from the Facebook SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter importFriends True if the Facebook friends should be imported.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
      */
-    func addFriends( session: Session ,  ids: [String] , usernames: [ String ] ) -> Promise<Void>
+    func authenticateFacebook(accessToken: String, create: Bool?, username: String?, importFriends: Bool?, vars: [String:String]?) -> EventLoopFuture<Session>
 
     /**
-     * Add one or more users to the group.
-     * @param session The session of the user.
-     * @param groupId The id of the group to add users into.
-     * @param ids The ids of the users to add or invite to the group.
-     * @return A future.
+     Authenticate a user with a Google auth token.
+     - Parameter accessToken: An OAuth access token from the Google SDK.
+     - Returns: A future to resolve a session object.
      */
-    func addGroupUsers( session: Session ,  groupId: String , ids : [ String ] ) -> Promise<Void>
-
+    func authenticateGoogle(accessToken: String) -> EventLoopFuture<Session>
+    
     /**
-    * Authenticate a user with an Apple token.
-    * @param token The ID token received from Apple to validate.
-    * @return A future to resolve a session object.
-    */
-    func authenticateApple( token : String ) -> Promise<Session>
-
-    /**
-     * Authenticate a user with an Apple token.
-     * @param token The ID token received from Apple to validate.
-     * @param vars Extra information that will be bundled in the session token.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Google auth token.
+     - Parameter accessToken: An OAuth access token from the Google SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateApple( token: String , vars: [ String: String ] ) -> Promise<Session>
-
+    func authenticateGoogle(accessToken: String, create: Bool?) -> EventLoopFuture<Session>
+    
     /**
-     * Authenticate a user with an Apple token.
-     * @param token The ID token received from Apple to validate.
-     * @param username A username used to create the user.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Google auth token.
+     - Parameter accessToken: An OAuth access token from the Google SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateApple( token : String , username : String ) -> Promise<Session>
-
+    func authenticateGoogle(accessToken: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
+    
     /**
-     * Authenticate a user with an Apple token.
-     * @param token The ID token received from Apple to validate.
-     * @param create True if the user should be created when authenticated.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Google auth token.
+     - Parameter accessToken: An OAuth access token from the Google SDK.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateApple( token : String, create: Bool ) -> Promise<Session>
+    func authenticateGoogle(accessToken: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
 
     /**
-     * Bans a user from a group. This will prevent the user from being able to rejoin the group.
-     * @param session The session of the user.
-     * @param groupId The group to ban the users from.
-     * @param ids The users to ban from the group..
-     * @return A future.
+     Authenticate a user with a Steam auth token.
+     - Parameter token: An authentication token from the Steam network.
+     - Returns: A future to resolve a session object.
      */
-    func banGroupUsers( session : Session, groupId : String, ids: [ String ]) -> Promise<Void>
+    func authenticateSteam(token: String) -> EventLoopFuture<Session>
     
     /**
-     * Submit an event for processing in the server's registered runtime custom events handler.
-     *
-     * @param session The session of the user.
-     * @param name An event name, type, category, or identifier.
-     * @param properties Arbitrary event property values.
-     * @return A future.
+     Authenticate a user with a Steam auth token.
+     - Parameter token: An authentication token from the Steam network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
      */
-    func emitEvent( session : Session, name : String , properties : [ String : String ] ) -> Promise<Void>
-
+    func authenticateSteam(token: String, create: Bool?) -> EventLoopFuture<Session>
     
     /**
-     * Authenticate a user with a Facebook auth token.
-     * @param accessToken An OAuth access token from the Facebook SDK.
-     * @return A future to resolve a session object.
+     Authenticate a user with a Steam auth token.
+     - Parameter token: An authentication token from the Steam network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
      */
-    func authenticateFacebook( accessToken : String ) -> Promise<Session>
-
+    func authenticateSteam(token: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
     
     /**
-     * Fetch the user account owned by the session.
-     *
-     * @param session The session of the user.
-     * @return A future to resolve an account object.
+     Authenticate a user with a Steam auth token.
+     - Parameter token: An authentication token from the Steam network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
      */
-    //func getAccount( session: Session) -> Promise<Acco>
+    func authenticateSteam(token: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
+    
     
     /**
-    list the already activated game on the server
-    - Parameter limit
-    - Parameter isAuthoritative true if the game is authoritative otherwise relayed games
-    - Parameter label field filter query
-    - Parameter minSize minimum size filter
-    - Parameter maxSize maximum size filter
-    */
-    func matchList(limit: Int32, isAuthoritative: Bool?, label: String?,
-                   minSize: Int32?, maxSize: Int32?) -> Promise<MatchListing>
-}
-
-internal class DefaultClient: Client, WebSocketDelegate {
+     Authenticate a user with an Apple auth token.
+     - Parameter token: An authentication token from the Apple network.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateApple(token: String) -> EventLoopFuture<Session>
     
+    /**
+     Authenticate a user with an Apple auth token.
+     - Parameter token: An authentication token from the Apple network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateApple(token: String, create: Bool?) -> EventLoopFuture<Session>
     
-    private let serverKey: String
-    private let lang: String
-    private let timeout: Int
-    private let trace: Bool
-    private let grpcClient: Nakama_Api_NakamaClient
-    //Nakama_Api_NakamaClientProtocol need to fix
+    /**
+     Authenticate a user with an Apple auth token.
+     - Parameter token: An authentication token from the Apple network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateApple(token: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
     
-    private var wsComponent: URLComponents
-    private var socket: WebSocket?
-    private var collationIDs = [String: Any]()
-    private var _serverTime: Int = 0
-    private let authValue: String
-    var onDisconnect: ((Error?) -> Void)?
-    var onError: ((NakamaError) -> Void)?
-    var onNotification: ((GRPCNotification) -> Void)?
-    var onChannelMessage: ((ChannelMessage) -> Void)?
-    var onChannelPresence: ((ChannelPresenceEvent) -> Void)?
-    var onMatchMakerMatched: ((MatchmakerMatched) -> Void)?
-    var onMatchData: ((MatchData) -> Void)?
-    var onMatchPresence: ((MatchPresenceEvent) -> Void)?
-    var onStatusPresence: ((StatusPresenceEvent) -> Void)?
-    var onStreamPresence: ((StreamPresenceEvent) -> Void)?
-    var onStreamData: ((StreamData) -> Void)?
-    var activeSession: Session?
-    var bearerIsSetup: Bool = false
-//    private var grpcClient2: Nakama_Api_NakamaServiceClient
-
-    var serverTime: Int {
-        return self._serverTime != 0 ? self._serverTime : Int(Date().timeIntervalSince1970 * 1000.0);
-    }
-
-    internal init(serverKey: String, host: String, port: Int, lang: String,
-                  ssl: Bool, timeout: Int, trace: Bool) {
-
-        self.serverKey = serverKey
-        self.lang       = lang
-        self.timeout    = timeout
-        self.trace      = trace
-
-        self.wsComponent = URLComponents()
-        self.wsComponent.host = host
-        self.wsComponent.port = 7350
-        self.wsComponent.scheme = ssl ? "https" : "ws"
-        self.wsComponent.path = "/ws"
-        //
-        //set up the gRPC client
-        //self.grpcClient = Nakama_Api_NakamaClient.init(address: "\(host):\(port)", secure: ssl)
-        // basicAuth Basic ZGVmYXVsdGtleTo= --> need to fix the encodedString
-        //
-        let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
-        //NSLog("group \(group) | ")
-        var channel : ClientConnection? = nil
-        //
-        let base64Auth              = "\(serverKey):".data(using: .utf8)!.base64EncodedString()
-        authValue                   = "Basic " + base64Auth
-        //NSLog("authValue \(authValue) | base64Auth \(base64Auth)")
-        //
-        let httpHeaders             =  HTTPHeaders.init(  [("authorization", authValue)]  )
-        let headers: HPACKHeaders   = HPACKHeaders(httpHeaders: httpHeaders )
-        //[ "authorization": authValue ]
-        let callOptions             = CallOptions(customMetadata: headers )
-        //
-        if(ssl){
-            //Step ii: create TLS configuration
-            channel = ClientConnection.secure( group: group ).connect(host: host, port: port)
-        }else{
-            channel = ClientConnection.insecure( group: group ).connect(host: host, port: port)
-        }
-        
-        self.grpcClient = Nakama_Api_NakamaClient( channel: channel!, defaultCallOptions: callOptions )
-        //
-        if trace {
-            NSLog("DefaultClient init() | \(grpcClient)")
-        }
-        //
-//        self.grpcClient2 = Nakama_Api_NakamaServiceClient.init(address: "\(host):\(port)", secure: ssl)
-    }
-
-    func joinChat(targetChannelId: String, channelType: ChannelType) -> Promise<Channel> {
-        if trace{
-            NSLog("joinChat \(targetChannelId)")
-        }
-        let msg = ChannelJoinMessage(target: targetChannelId, type: channelType.rawValue, hidden: false, persistence: true)
-        let env = WebSocketEnvelope()
-        env.channelJoin = msg
-        return self.send(proto: env)
-    }
-
-    func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool) -> Promise<Channel> {
-        if trace{
-            NSLog("joinChat \(targetChannelId)")
-        }
-        let msg = ChannelJoinMessage(target: targetChannelId, type: channelType.rawValue, hidden: false, persistence: IsPersisted)
-        let env = WebSocketEnvelope()
-        env.channelJoin = msg
-        if trace{
-            NSLog("joinChat  env \(env) | msg \(msg)")
-        }
-        return self.send(proto: env)
-    }
-
-    func joinChat(targetChannelId: String, channelType: ChannelType, IsPersisted: Bool, IsHidden: Bool) -> Promise<Channel> {
-        if trace{
-            NSLog("joinChat \(targetChannelId)")
-        }
-        let msg = ChannelJoinMessage(target: targetChannelId, type: channelType.rawValue, hidden: IsHidden, persistence: IsPersisted)
-        let env = WebSocketEnvelope()
-        env.channelJoin = msg
-        return self.send(proto: env)
-    }
-
-    func leaveChat(targetChannelId: String) {
-        if trace{
-            NSLog("leaveChat \(targetChannelId)")
-        }
-        let msg = ChannelLeaveMessage(channelId: targetChannelId)
-        let env = WebSocketEnvelope()
-        env.channelLeave = msg
-        self.send(message: msg)
-
-    }
-
-    func removeChatMessage(channelId: String, messageId: String) -> Promise<ChannelMessageAck> {
-        let msg = ChannelRemoveMessage(channelId: channelId, messageId: messageId)
-        let env = WebSocketEnvelope()
-        env.channelRemoveMessage = msg
-        return self.send(proto: env)
-
-    }
-
-    func writeChatMessage(channelId: String, content: String) -> Promise<ChannelMessageAck> {
-        let msg = ChannelMessageSend(channelId: channelId, content: content)
-        let env = WebSocketEnvelope()
-        env.channelMessageSend = msg
-        return self.send(proto: env)
-    }
-
-    func updateChatMessage(channelId: String, messageId: String, content: String) -> Promise<ChannelMessageAck> {
-        let msg = ChannelMessageUpdate(channelId: channelId, messageId: messageId, content: content)
-        let env = WebSocketEnvelope()
-        env.channelMessageUpdate = msg
-        return self.send(proto: env)
-    }
-
-    func createMatch() -> Promise<Match> {
-        let msg = MatchCreateMessage()
-        let env = WebSocketEnvelope()
-        env.matchCreate = msg
-        return self.send(proto: env)
-    }
-
-    func joinMatch(matchId: String) -> Promise<Match> {
-        let msg = MatchJoinMessage(matchId: matchId, token: nil)
-        let env = WebSocketEnvelope()
-        env.matchJoin = msg
-        return self.send(proto: env)
-    }
-
-    func joinMatch(token: String) -> Promise<Match> {
-        let msg = MatchJoinMessage(matchId: nil, token: token)
-        let env = WebSocketEnvelope()
-        env.matchJoin = msg
-        return self.send(proto: env)
-    }
-
-    func leaveMatch(matchId: String) -> Promise<Void> {
-        let msg = MatchLeaveMessage(matchId: matchId)
-        let env = WebSocketEnvelope()
-        env.matchLeave = msg
-        return self.send(proto: env)
-    }
-
-    func addMatchMaker(minCount: Int?, maxCount: Int?, query: String?, stringProperties: [String: String]?, numericProperties: [String: Double]?) -> Promise<MatchmakerTicket> {
-        let msg = MatchmakerAddMessage(minCount: minCount, maxCount: maxCount, query: query,
-                numericProperties: numericProperties, stringProperties: stringProperties)
-
-        let env = WebSocketEnvelope()
-        env.matchmakerAdd = msg
-        return self.send(proto: env)
-    }
-
-    func removeMatchMaker(ticket: String) -> Promise<Void> {
-        let msg = MatchmakerRemoveMessage(ticket: ticket)
-        let env = WebSocketEnvelope()
-        env.matchmakerRemove = msg
-        return self.send(proto: env)
-    }
-
-    func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [UserPresence]?) -> Promise<Void> {
-        let p = presences != nil ? presences : [UserPresence]()
-        let msg = MatchSendMessage(matchId: matchId, opCode: opCode, data: data.base64EncodedString(), presences: p!)
-
-        let env = WebSocketEnvelope()
-        env.matchDataSend = msg
-        return self.send(proto: env)
-    }
-
-    func rpc(id: String, payload: String?) -> Promise<RpcMessage> {
-        let msg = RpcMessage(id: id, payload: payload)
-        let env = WebSocketEnvelope()
-        env.rpc = msg
-        return  self.send(proto: env)
-    }
-
-    func followUsers(userIds: [String]) -> Promise<Status> {
-        let msg = StatusFollowMessage(userIds: userIds)
-        let env = WebSocketEnvelope()
-        env.statusFollow = msg
-        return  self.send(proto: env)
-    }
-
-    func unfollowUsers(userIds: [String]) -> Promise<Void> {
-        let msg = StatusUnfollowMessage(userIds: userIds)
-        let env = WebSocketEnvelope()
-        env.statusUnfollow = msg
-        return  self.send(proto: env)
-    }
-
-    func updateStatus(status: String) -> Promise<Void> {
-        let msg = StatusUpdateMessage(status: status)
-        let env = WebSocketEnvelope()
-        env.statusUpdate = msg
-        return  self.send(proto: env)
-    }
-
-
-    func logout() {
-        if trace {
-            NSLog("logout() ")
-        }
-    }
+    /**
+     Authenticate a user with an Apple auth token.
+     - Parameter token: An authentication token from the Apple network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateApple(token: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
     
-    func websocketDidConnect(socket: WebSocketClient) {
-        if trace {
-            NSLog("websocketDidConnect \(socket)")
-        }
-    }
-
-    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        self.collationIDs.removeAll()
-        if self.onDisconnect != nil {
-            self.onDisconnect!(error)
-        }
-        if trace {
-            NSLog("websocketDidDisconnect: \(socket)" )
-        }
-    }
-
-    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("TTTTTTTTtTTTTTTTTTTTTTTtTTTTTTTTTTTTTTtTTTTTTTTTTTTTTtTTTTTT")
-        print(text)
-        processText(text: text)
-        if trace {
-            NSLog("Unexpected string message from server: %@", text);
-        }
-    }
-
-    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        if trace {
-            NSLog("Received Data instead of text: \(data)" )
-        }
-    }
-
-
-    func loginOrRegister(with deviceID: String) -> Promise<Session> {
-        //let's authenitcate using the device id
-
-        var message = Nakama_Api_AuthenticateDeviceRequest.init()
-        message.account = Nakama_Api_AccountDevice.init()
-        message.account.id = deviceID
-        message.username = deviceID
-        message.create = true
-        let (p, seal) = Promise<Session>.pending()
-        //self.grpcClient.defaultCallOptions.customMetadata.
-        /*_ = try? self.grpcClient.authenticateDevice(message, completion: { (session, rsp) in
-            if rsp.success {
-                self.activeSession = DefaultSession(token: session!.token, created: session!.created)
-                seal.fulfill(self.activeSession!)
-
-            } else {
-                seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error - HTTP %@", rsp.statusCode.rawValue)))
-            }
-
-        })*/
-        do {
-            let rsp = self.grpcClient.authenticateDevice(message)
-            //
-            if trace{
-                NSLog("rsp \(rsp)")
-                NSLog("rsp \( rsp.response)")
-            }
-            let namaka_session = try rsp.response.wait()
-            let create  = namaka_session.created
-            let token   = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        //
-        return p
-    }
-
+    /**
+     Authenticate a user with an Facebook Instant Game auth token.
+     - Parameter token: An authentication token from the Facebook Instant Game network.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateFacebookInstantGame(signedPlayerInfo: String) -> EventLoopFuture<Session>
     
-    func authenticateEmail(email: String, password: String ) -> Promise<Session> {
-        NSLog("authenticateEmail \(email)", password )
-        var message                 = Nakama_Api_AuthenticateEmailRequest.init()
-        message.account             = Nakama_Api_AccountEmail.init()
-        message.account.email       = email
-        message.account.password    = password
-        //
-        let (p, seal) = Promise<Session>.pending()
-        do {
-            let rsp = self.grpcClient.authenticateEmail(message)
-            //
-            if trace {
-                NSLog("rsp \(rsp)")
-                NSLog("rsp \( rsp.response)")
-            }
-            let namaka_session = try rsp.response.wait()
-            let create  = namaka_session.created
-            let token   = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        /*let rsp = try? self.grpcClient.authenticateEmail(message).response
-        print(rsp)
-        try? rsp?.whenSuccess( { nakama_session in
-            NSLog("authenticateEmail \(nakama_session)")
-            let create = nakama_session.created
-            let token = nakama_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            seal.fulfill(self.activeSession!)
-        })*/
-        
-        return p
-    }
+    /**
+     Authenticate a user with an Facebook Instant Game auth token.
+     - Parameter token: An authentication token from the Facebook Instant Game network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool?) -> EventLoopFuture<Session>
     
+    /**
+     Authenticate a user with an Facebook Instant Game auth token.
+     - Parameter token: An authentication token from the Facebook Instant Game network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
     
-    func authenticateEmail(email: String, password: String, create: Bool) -> Promise<Session> {
-        if trace {
-            NSLog("authenticateEmail \(email)", password, create )
-        }
-        //
-        var message                 = Nakama_Api_AuthenticateEmailRequest.init()
-        message.account             = Nakama_Api_AccountEmail.init()
-        message.account.email       = email
-        message.account.password    = password
-        if create{
-            message.create          = Google_Protobuf_BoolValue.init( create )
-        }
-        //message.create              =
-        //
-        let (p, seal) = Promise<Session>.pending()
-        //
-        do {
-            let rsp = self.grpcClient.authenticateEmail(message)
-            //
-            //NSLog("rsp \(rsp) | \(rsp.options)")
-            //NSLog("rsp rsponse \( rsp.response)")
-            let namaka_session = try rsp.response.wait()
-            //NSLog("authenticateEmail  \(namaka_session)")
-            let create  = namaka_session.created
-            let token   = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //NSLog("activeSession \(self.activeSession)")
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        return p
-    }
+    /**
+     Authenticate a user with an Facebook Instant Game auth token.
+     - Parameter token: An authentication token from the Facebook Instant Game network.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
+
+    /**
+     Authenticate a user with Apple Game Center.
+     - Parameter playerId: The player id of the user in Game Center.
+     - Parameter bundleId: The bundle id of the Game Center application.
+     - Parameter timestampSeconds: The date and time that the signature was created.
+     - Parameter salt: A random <c>NSString</c> used to compute the hash and keep it randomized.
+     - Parameter signature: The verification signature data generated.
+     - Parameter publicKeyUrl: The URL for the public encryption key.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String) -> EventLoopFuture<Session>
     
-
-    func authenticateCustom(id: String, username: String) -> Promise<Session> {
-        if trace {
-            NSLog("authenticateCustom ", id, username  )
-        }
-        var message     = Nakama_Api_AuthenticateCustomRequest.init()
-        message.account = Nakama_Api_AccountCustom.init()
-        message.account.id  = id
-        //message.account.vars
-        //
-        let (p, seal) = Promise<Session>.pending()
-        do {
-            let rsp = self.grpcClient.authenticateCustom(message)
-            //
-            let namaka_session = try rsp.response.wait()
-            let create  = namaka_session.created
-            let token   = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        /*let rsp = try? self.grpcClient.authenticateCustom(message)
-        rsp?.response.whenSuccess({ nakama_session in
-            NSLog("authenticateCustom \(nakama_session)")
-            let create = nakama_session.created
-            let token = nakama_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            seal.fulfill(self.activeSession!)
-        })*/
-        return p
-    }
-
+    /**
+     Authenticate a user with Apple Game Center.
+     - Parameter playerId: The player id of the user in Game Center.
+     - Parameter bundleId: The bundle id of the Game Center application.
+     - Parameter timestampSeconds: The date and time that the signature was created.
+     - Parameter salt: A random <c>NSString</c> used to compute the hash and keep it randomized.
+     - Parameter signature: The verification signature data generated.
+     - Parameter publicKeyUrl: The URL for the public encryption key.
+     - Parameter create: True if the user should be created when authenticated.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?) -> EventLoopFuture<Session>
     
-    func updateMetaDataIfNeeded(){
-        if !bearerIsSetup{
-            do {
-                //self.grpcClient.metadata = Metadata()
-                //self.grpcClient.defaultCallOptions.customMetadata = Metadata()
-                /*try self.grpcClient.metadata.add(key: "authorization", value: "Bearer " + self.activeSession!.authToken)*/
-                //
-                self.grpcClient.defaultCallOptions.customMetadata.add(name: "authorization", value: authValue)
-                //
-            }catch {
-                NSLog("\(error)")
-            }
-            bearerIsSetup = true
-
-        }
-
-    }
-
-    func matchList(limit: Int32, isAuthoritative: Bool?=false, label: String?,
-                   minSize:Int32?, maxSize: Int32?) -> Promise<MatchListing> {
-        updateMetaDataIfNeeded()
-        var message = Nakama_Api_ListMatchesRequest.init()
-        message.limit = Google_Protobuf_Int32Value(limit)
-        if label != nil {
-            message.label = Google_Protobuf_StringValue(label!)
-        }
-        if isAuthoritative != nil {
-            message.authoritative = Google_Protobuf_BoolValue(isAuthoritative!)
-        }
-        if minSize != nil {
-            message.minSize = Google_Protobuf_Int32Value(minSize!)
-        }
-        if maxSize != nil {
-            message.maxSize = Google_Protobuf_Int32Value(maxSize!)
-        }
-        let (p, seal) = Promise<MatchListing>.pending()
-        /*_ = try? self.grpcClient.listMatches(message, completion: { (matchList, rsp) in
-            if rsp.success && matchList != nil {
-                seal.fulfill(DefaultMatchListing(response: matchList!))
-            } else {
-                seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP \(rsp.statusCode.rawValue) \n \(rsp.statusMessage ?? "None")")))
-            }
-        })*/
-        //
-        do {
-            let rsp         = self.grpcClient.listMatches(message)
-            //
-            let matches     = try rsp.response.wait()
-            if trace {
-                NSLog("matchList  \(matches)")
-            }
-            //
-            seal.fulfill( DefaultMatchListing(response: matches ) )
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(NakamaError.runtimeException( String(format: "Internal Server Error: Not able to get matchList- HTTP \(error)") ) )
-            //seal.reject(error)
-        }
-        /*rsp.whenSuccess { (Nakama_Api_MatchList) in
-            if Nakama_Api_MatchList.matches != nil{
-                seal.fulfill(DefaultMatchListing(response: Nakama_Api_MatchList) as! MatchListing)
-            }else{
-                seal.reject(NakamaError.runtimeException(String(format: "Internal Server Error: Not able to get matchList- HTTP ")))
-            }
-        }*/
-        
-        return p
-    }
+    /**
+     Authenticate a user with Apple Game Center.
+     - Parameter playerId: The player id of the user in Game Center.
+     - Parameter bundleId: The bundle id of the Game Center application.
+     - Parameter timestampSeconds: The date and time that the signature was created.
+     - Parameter salt: A random <c>NSString</c> used to compute the hash and keep it randomized.
+     - Parameter signature: The verification signature data generated.
+     - Parameter publicKeyUrl: The URL for the public encryption key.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?) -> EventLoopFuture<Session>
     
-    func addFriends(session: Session, ids: [String]) -> Promise<Void> {
-        /*if trace {
-            NSLog("addFriends ", ids, session  )
-        }*/
-        let (p, seal)   = Promise<Void>.pending()
-        var message     = Nakama_Api_AddFriendsRequest.init()
-        message.ids     = ids
-        do {
-            let rsp = self.grpcClient.addFriends(message)
-            let r = try rsp.response.wait()
-            //
-            seal.fulfill_()
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        
-        return p
-    }
-    
-    func addFriends(session: Session, ids: [String], usernames: [String]) -> Promise<Void> {
-        let (p, seal)       = Promise<Void>.pending()
-        var message         = Nakama_Api_AddFriendsRequest.init()
-        message.ids         = ids
-        message.usernames   = usernames
-        do {
-            let rsp = self.grpcClient.addFriends(message)
-            let r = try rsp.response.wait()
-            //
-            seal.fulfill_()
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        //message.account.ids  = ids
-        return p
-    }
-    
-    
-    func addGroupUsers(session: Session, groupId: String, ids: [String]) -> Promise<Void> {
-        let (p, seal) = Promise<Void>.pending()
-        var message     = Nakama_Api_AddGroupUsersRequest.init()
-        message.groupID = groupId
-        message.userIds = ids
-        do {
-            let rsp = self.grpcClient.addGroupUsers(message)
-            let r = try rsp.response.wait()
-            //
-            seal.fulfill_()
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        
-        //
-        return p
-    }
-    
-    func authenticateApple(token: String) -> Promise<Session> {
-        let (p, seal)           = Promise<Session>.pending()
-        //
-        var message             = Nakama_Api_AuthenticateAppleRequest.init()
-        message.account         = Nakama_Api_AccountApple.init()
-        message.account.token   = token
-        do {
-            let rsp             = self.grpcClient.authenticateApple(message)
-            let namaka_session  = try rsp.response.wait()
-            let create          = namaka_session.created
-            let token           = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        
-        return p
-    }
-    
-    func authenticateApple(token: String, vars: [String : String]) -> Promise<Session> {
-        let (p, seal) = Promise<Session>.pending()
-        var message             = Nakama_Api_AuthenticateAppleRequest.init()
-        message.account         = Nakama_Api_AccountApple.init()
-        message.account.token   = token
-        do {
-            let rsp             = self.grpcClient.authenticateApple(message)
-            let namaka_session  = try rsp.response.wait()
-            let create          = namaka_session.created
-            let token           = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        return p
-    }
-    
-    func authenticateApple(token: String, username: String) -> Promise<Session> {
-        let (p, seal) = Promise<Session>.pending()
-        var message             = Nakama_Api_AuthenticateAppleRequest.init()
-        message.account         = Nakama_Api_AccountApple.init()
-        message.account.token   = token
-        message.username        = username
-        do {
-            let rsp             = self.grpcClient.authenticateApple(message)
-            let namaka_session  = try rsp.response.wait()
-            let create          = namaka_session.created
-            let token           = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        return p
-    }
-    
-    func authenticateApple(token: String, create: Bool) -> Promise<Session> {
-        let (p, seal) = Promise<Session>.pending()
-        var message             = Nakama_Api_AuthenticateAppleRequest.init()
-        message.account         = Nakama_Api_AccountApple.init()
-        message.account.token   = token
-        message.create          = Google_Protobuf_BoolValue(create)
-        do {
-            let rsp             = self.grpcClient.authenticateApple(message)
-            let namaka_session  = try rsp.response.wait()
-            let create          = namaka_session.created
-            let token           = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        
-        return p
-    }
-    
-    func banGroupUsers(session: Session, groupId: String, ids: [String]) -> Promise<Void> {
-        let (p, seal) = Promise<Void>.pending()
-        var message     = Nakama_Api_BanGroupUsersRequest.init()
-        message.groupID = groupId
-        message.userIds = ids
-        do{
-            let rsp             = self.grpcClient.banGroupUsers(message)
-            let r               = try rsp.response.wait()
-            if trace{
-                NSLog("r \(r)")
-            }
-            seal.fulfill_()
-        }catch{
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        return p
-    }
-
-    func emitEvent(session: Session, name: String, properties: [String : String]) -> Promise<Void> {
-        let (p, seal) = Promise<Void>.pending()
-        // need to understand how to implement it 
-        seal.fulfill_()
-        return p
-    }
-    
-    func authenticateFacebook(accessToken: String) -> Promise<Session> {
-        let (p, seal) = Promise<Session>.pending()
-        var message             = Nakama_Api_AuthenticateFacebookRequest.init()
-        message.account         = Nakama_Api_AccountFacebook.init()
-        message.account.token   = accessToken
-        do {
-            let rsp             = self.grpcClient.authenticateFacebook(message)
-            let namaka_session  = try rsp.response.wait()
-            let create          = namaka_session.created
-            let token           = namaka_session.token
-            self.activeSession = DefaultSession(token: token, created: create)
-            //
-            seal.fulfill(self.activeSession!)
-            //
-            return p
-        }catch {
-            NSLog("ERROR \(error)")
-            seal.reject(error)
-        }
-        return p
-    }
-    
-    func createSocket(to session: Session) -> Promise<Session> {
-        if (socket != nil) {
-            NSLog("socket is already connected")
-            //precondition(socket!.isConnected, "socket is already connected")
-        }
-
-        let (promise, seal) = Promise<Session>.pending()
-        
-        NSLog("createSocket session | \(session)")
-        wsComponent.queryItems = [
-            URLQueryItem.init(name: "token", value: session.authToken),
-            URLQueryItem.init(name: "status", value: session.created.description),
-            URLQueryItem.init(name: "lang", value: lang)
-        ]
-        let url = URLRequest(url: wsComponent.url!)
-        socket = WebSocket(request: url )
-        //
-        /*if trace {
-            NSLog("createSocket socket \(String(describing: socket)) | \n \(url)")
-        }*/
-        socket!.delegate = self
-        //
-        socket!.enableCompression = true
-        socket!.onConnect = {
-            if promise.isPending {
-                seal.fulfill(session)
-            }
-        }
-        socket!.onDisconnect = { error in
-            if promise.isPending {
-                seal.reject(error ?? NSError(domain: NakamaError.Domain, code: 0, userInfo: nil))
-            }
-            // do not call onDisconnect as it is handled in the delegate
-        }
-
-        if trace {
-            NSLog("Connect: %@" + wsComponent.url!.absoluteString);
-        }
-
-        socket!.connect()
-        return promise
-    }
-
-    func disconnect() {
-        NSLog("discconnect()")
-        socket?.disconnect()
-    }
-
-    fileprivate func send<T>(proto: WebSocketEnvelope) -> Promise<T> {
-        let collationID = UUID.init().uuidString
-        let payload = proto.serialize(collationID: collationID)
-        let (p, seal) = Promise<T>.pending()
-        self.collationIDs[collationID] = (seal.fulfill, seal.reject)
-        
-        self.socket!.write(data: payload)
-        
-        if trace {
-            NSLog("send payload \(payload) | \n collation \(collationID)  | \n collationIDs \(self.collationIDs) |")
-        }
-        
-        return p
-    }
-
-    func send(message: Message) {
-//        let binaryData = try! JSONEncoder().encode(message)
-//        self.socket?.write(data: binaryData)
-        print("message ", message)
-        //
-        self.socket?.write(string: "\(message)")
-        //
-    }
-
-    fileprivate  func processText(text: String){
-        do{
-            NSLog("proccessText \(text)")
-            // 1. let's deserialize as an envelope
-            let data = text.data(using: .utf8)!
-            let envelope = WebSocketEnvelope.deserialize(data: data)
-            if envelope.cid == nil || envelope.cid!.isEmpty {
-                if envelope.error != nil {
-                    self.onError!(NakamaError.missingPayload("No payload in incoming message from server: \(envelope.error?.message)"))
-                } else if let msg = envelope.channelMessage {
-                    self.onChannelMessage!(msg)
-                } else if let msg = envelope.channelPresenceEvent {
-                    self.onChannelPresence!(msg)
-                } else if let msg = envelope.matchData {
-                    self.onMatchData!(msg)
-                } else if let msg = envelope.matchPresenceEvent {
-                    self.onMatchPresence!(msg)
-                } else if let msg = envelope.matchmakerMatched {
-                    self.onMatchMakerMatched!(msg)
-                } else if let msgs = envelope.notifications {
-                    for msg in msgs.notifications {
-                        self.onNotification!(msg)
-                    }
-                } else if let msg = envelope.statusPresenceEvent {
-                    self.onStatusPresence!(msg)
-                } else if let msg = envelope.streamData {
-                    self.onStreamData!(msg)
-                } else if let msg = envelope.streamPresenceEvent {
-                    self.onStreamPresence!(msg)
-                } else {
-                    NSLog("Unrecognised incoming uncollated message from server")
-                }
-            }else if let promiseTuple = self.collationIDs[envelope.cid!]{
-                if let err = envelope.error {
-                    let (_, reject): (fulfill: Any, reject: (Error) -> Void) = promiseTuple as! (fulfill: Any, reject: (Error) -> Void)
-                    reject(NakamaError.make(from: Int32(err.code), msg: err.message))
-                }
-                else if let msg = envelope.rpc {
-                    let (fulfill, _): (fulfill: (RpcMessage) -> Void, reject: Any) = promiseTuple as! (fulfill: (RpcMessage) -> Void, reject: Any)
-                    fulfill(msg)
-                }
-                else if let msg = envelope.channel {
-                    let (fulfill, _): (fulfill: (Channel) -> Void, reject: Any) = promiseTuple as! (fulfill: (Channel) -> Void, reject: Any)
-                    fulfill(msg)
-                }
-                else if let msg = envelope.channelMessageAck {
-                    let (fulfill, _): (fulfill: (ChannelMessageAck) -> Void, reject: Any) = promiseTuple as! (fulfill: (ChannelMessageAck) -> Void, reject: Any)
-                    fulfill(msg)
-                }
-                else if let msg = envelope.match {
-                    let (fulfill, _): (fulfill: (Match) -> Void, reject: Any) = promiseTuple as! (fulfill: (Match) -> Void, reject: Any)
-                    fulfill(msg)
-                }
-                else if let msg = envelope.matchmakerTicket {
-                    let (fulfill, _): (fulfill: (MatchmakerTicket) -> Void, reject: Any) = promiseTuple as! (fulfill: (MatchmakerTicket) -> Void, reject: Any)
-                    fulfill(msg)
-                }
-                else if let msg = envelope.status {
-                    let (fulfill, _): (fulfill: (Status) -> Void, reject: Any) = promiseTuple as! (fulfill: (Status) -> Void, reject: Any)
-                    fulfill(msg)
-                }
-                else if let future = self.collationIDs.removeValue(forKey: envelope.cid!) {
-                    let (fulfill, _): (fulfill: (() -> Void), reject: Any) = promiseTuple as! (fulfill: (() -> Void), reject: Any)
-                    fulfill()
-                    return
-                }
-            }else {
-                if trace {
-                    NSLog("No matching promise for incoming message: \(envelope)")
-                }
-
-            }
-        }catch{
-            self.onError!(NakamaError.runtimeException("Error decoding incoming message from server: \(error)"))
-
-        }
-
-    }
-
+    /**
+     Authenticate a user with Apple Game Center.
+     - Parameter playerId: The player id of the user in Game Center.
+     - Parameter bundleId: The bundle id of the Game Center application.
+     - Parameter timestampSeconds: The date and time that the signature was created.
+     - Parameter salt: A random <c>NSString</c> used to compute the hash and keep it randomized.
+     - Parameter signature: The verification signature data generated.
+     - Parameter publicKeyUrl: The URL for the public encryption key.
+     - Parameter create: True if the user should be created when authenticated.
+     - Parameter username: A username used to create the user.
+     - Parameter vars: Extra information that will be bundled in the session token.
+     - Returns: A future to resolve a session object.
+     */
+    func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
 }
