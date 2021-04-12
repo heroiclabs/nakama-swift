@@ -83,6 +83,7 @@ class DefaultSession: Session {
         
         let jsonData = Data(base64Encoded: claims)!
         let jsonDict =  try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String:AnyObject]
+        NSLog("DefaultSession init --> jsonDict \(jsonDict)")
         self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
         self.userId = jsonDict["uid"] as! String
         self.username = jsonDict["usn"] as! String
