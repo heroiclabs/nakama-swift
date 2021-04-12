@@ -527,4 +527,41 @@ public protocol Client {
      */
     func deleteFriends( session: Session , ids : [String]?,  usernames : [String]? ) -> EventLoopFuture<Void>
 
+    /**
+     * Delete a group by id.
+     *
+     * @param session The session of the user.
+     * @param groupId The group id to to remove.
+     * @return A future.
+     */
+    func deleteGroup( session : Session, groupId : String ) -> EventLoopFuture<Void>
+
+    /**
+     * Delete a leaderboard record.
+     *
+     * @param session The session of the user.
+     * @param leaderboardId The id of the leaderboard with the record to be deleted.
+     * @return A future.
+     */
+    func deleteLeaderboardRecord( session : Session,  leaderboardId : String ) -> EventLoopFuture<Void>
+
+    /**
+     * Delete one or more notifications by id.
+     *
+     * @param session The session of the user.
+     * @param notificationIds The notification ids to remove.
+     * @return A future.
+     */
+    func deleteNotifications( session : Session ,  notificationIds : String...  ) -> EventLoopFuture<Void>
+
+    /**
+     * Delete one or more storage objects.
+     *
+     * @param session The session of the user.
+     * @param objectIds The ids of the objects to delete.
+     * @return A future.
+     */
+    //func deleteStorageObjects( session : Session,  StorageObjectId... objectIds);
+
+    
 }

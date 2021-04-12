@@ -458,4 +458,22 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.deleteFriends( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
     }
     
+    public func deleteGroup(session: Session, groupId: String) -> EventLoopFuture<Void> {
+        var req         = Nakama_Api_DeleteGroupRequest.init()
+        req.groupID     = groupId
+        return self.nakamaGrpcClient.deleteGroup( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
+    
+    public func deleteLeaderboardRecord(session: Session, leaderboardId: String) -> EventLoopFuture<Void> {
+        var req         = Nakama_Api_DeleteLeaderboardRecordRequest.init()
+        req.leaderboardID     = leaderboardId
+        return self.nakamaGrpcClient.deleteLeaderboardRecord( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
+    
+    public func deleteNotifications(session: Session, notificationIds: String...) -> EventLoopFuture<Void> {
+        var req     = Nakama_Api_DeleteNotificationsRequest.init()
+        req.ids     = notificationIds
+        return self.nakamaGrpcClient.deleteNotifications( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
+    
 }
