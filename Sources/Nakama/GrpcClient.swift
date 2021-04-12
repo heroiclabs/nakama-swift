@@ -371,20 +371,21 @@ public class GrpcClient : Client {
         req.userIds = ids
         req.groupID = groupId
         return self.nakamaGrpcClient.banGroupUsers( req, callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
-        
-    }
-    
-    public func banGroupUsers(session: Session, ids : String... ) -> EventLoopFuture<Void> {
-        //
-        var req = Nakama_Api_BanGroupUsersRequest.init()
-        req.userIds = ids
-        return self.nakamaGrpcClient.banGroupUsers( req , callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
     }
     
     
     public func blockFriends(session: Session, ids: String...) -> EventLoopFuture<Void> {
-        var req = Nakama_Api_BlockFriendsRequest.init()
-        req.ids = ids
+        return self.blockFriends(session: session, ids: ids , usernames: nil)
+    }
+    
+    public func blockFriends(session: Session, ids: [ String ]?, usernames: [String]? ) -> EventLoopFuture<Void> {
+        var req         = Nakama_Api_BlockFriendsRequest.init()
+        if ids != nil{
+            req.ids         = ids!
+        }
+        if usernames != nil {
+            req.usernames   = usernames!
+        }
         return self.nakamaGrpcClient.blockFriends( req , callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
     }
     

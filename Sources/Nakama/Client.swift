@@ -432,7 +432,18 @@ public protocol Client {
      * @param ids The ids of the users to block.
      * @return A future.
      */
-    func blockFriends( session : Session,  ids: String...) -> EventLoopFuture<Void>
+    func blockFriends( session : Session,  ids: String... ) -> EventLoopFuture<Void>
 
 
+    /**
+     * Block one or more friends by id or username.
+     * @param session The session of the user.
+     * @param ids The ids of the users to block.
+     * @param usernames The usernames of the users to block.
+     * @return A future.
+     */
+    func blockFriends(  session : Session, ids : [ String ]?,  usernames:  [ String ]? ) -> EventLoopFuture<Void>
+    
+    
+    
 }
