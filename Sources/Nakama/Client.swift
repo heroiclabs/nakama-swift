@@ -416,4 +416,23 @@ public protocol Client {
      - Returns: A future to resolve a session object.
      */
     func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?, vars: [String:String]?) -> EventLoopFuture<Session>
+    
+    /**
+     * Bans a user from a group. This will prevent the user from being able to rejoin the group.
+     * @param session The session of the user.
+     * @param groupId The group to ban the users from.
+     * @param ids The users to ban from the group..
+     * @return A future.
+     */
+    func banGroupUsers( session : Session, groupId : String, ids : String... ) -> EventLoopFuture<Void>
+    
+    /**
+     * Block one or more friends by id.
+     * @param session The session of the user.
+     * @param ids The ids of the users to block.
+     * @return A future.
+     */
+    func blockFriends( session : Session,  ids: String...) -> EventLoopFuture<Void>
+
+
 }

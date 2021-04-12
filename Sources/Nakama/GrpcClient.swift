@@ -365,4 +365,28 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.authenticateGameCenter(req).response.flatMap(mapSession())
     }
+    
+    public func banGroupUsers(session: Session, groupId: String, ids : String... ) -> EventLoopFuture<Void> {
+        var req = Nakama_Api_BanGroupUsersRequest.init()
+        req.userIds = ids
+        req.groupID = groupId
+        return self.nakamaGrpcClient.banGroupUsers( req, callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
+        
+    }
+    
+    public func banGroupUsers(session: Session, ids : String... ) -> EventLoopFuture<Void> {
+        //
+        var req = Nakama_Api_BanGroupUsersRequest.init()
+        req.userIds = ids
+        return self.nakamaGrpcClient.banGroupUsers( req , callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
+    }
+    
+    
+    public func blockFriends(session: Session, ids: String...) -> EventLoopFuture<Void> {
+        var req = Nakama_Api_BlockFriendsRequest.init()
+        req.ids = ids
+        return self.nakamaGrpcClient.blockFriends( req , callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
+    }
+    
+    
 }
