@@ -60,7 +60,7 @@ public protocol Session {
     /*
      * Get session vars.
      */
-    var sessionVars: [String:String] { get }
+    var sessionVars: [String:String]? { get }
 }
 
 class DefaultSession: Session {
@@ -70,24 +70,29 @@ class DefaultSession: Session {
     var expiryTime: Date
     var username: String
     var userId: String
-    var sessionVars: [String : String]
+    var sessionVars: [String : String]?
     
     init(token: String, created: Bool) {
         self.token = token
         self.created = created
         self.createTime = Date()
-        
+        //
         let decoded = token.components(separatedBy: ".")
         var claims = decoded[1]
         claims = claims.padding(toLength: ((claims.count+3)/4)*4, withPad: "=", startingAt: 0)
-        
+        //
         let jsonData = Data(base64Encoded: claims)!
         let jsonDict =  try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String:AnyObject]
         NSLog("DefaultSession init --> jsonDict \(jsonDict)")
         self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
         self.userId = jsonDict["uid"] as! String
         self.username = jsonDict["usn"] as! String
-        self.sessionVars = jsonDict["vrs"] as! [String:String]
+        //
+        if let vrs = jsonDict["vrs"] as? [String:String] {
+            self.sessionVars =  vrs
+            //self.sessionVars = jsonDict["vrs"] as!
+        }
+
     }
     
     var expired: Bool {
