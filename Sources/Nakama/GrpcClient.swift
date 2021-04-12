@@ -443,5 +443,19 @@ public class GrpcClient : Client {
     }
     */
 
+    public func deleteFriends(session: Session, ids: String...) -> EventLoopFuture<Void> {
+        return self.deleteFriends(session: session, ids: ids, usernames: nil)
+    }
+    
+    public func deleteFriends(session: Session, ids: [String]?, usernames: [String]?) -> EventLoopFuture<Void> {
+        var req         = Nakama_Api_DeleteFriendsRequest.init()
+        if ids != nil{
+            req.ids         = ids!
+        }
+        if usernames != nil {
+            req.usernames = usernames!
+        }
+        return self.nakamaGrpcClient.deleteFriends( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
     
 }

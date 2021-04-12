@@ -509,4 +509,22 @@ public protocol Client {
     func createGroup( session: Session,  name: String?, description : String?, avatarUrl : String?, langTag : String? ,  open: Bool?, maxCount : Int32?) -> EventLoopFuture<[Nakama_Api_Group]>
 
     */
+    
+    /**
+     * Delete one more or users by id.
+     * @param session The session of the user.
+     * @param ids the user ids to remove as friends.
+     * @return A future.
+     */
+    func deleteFriends( session: Session,  ids : String... ) -> EventLoopFuture<Void>
+
+    /**
+     * Delete one more or users by id or username from friends.
+     * @param session The session of the user.
+     * @param ids the user ids to remove as friends.
+     * @param usernames The usernames to remove as friends.
+     * @return A future.
+     */
+    func deleteFriends( session: Session , ids : [String]?,  usernames : [String]? ) -> EventLoopFuture<Void>
+
 }
