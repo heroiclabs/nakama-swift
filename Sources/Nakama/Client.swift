@@ -444,6 +444,69 @@ public protocol Client {
      */
     func blockFriends(  session : Session, ids : [ String ]?,  usernames:  [ String ]? ) -> EventLoopFuture<Void>
     
+    /*
+    /**
+     * Create a group.
+     * @param session The session of the user.
+     * @param name The name for the group.
+     * @return A future to resolve a new group object.
+     */
+    func createGroup( session: Session, name: String ) -> EventLoopFuture<[Nakama_Api_Group]>
     
-    
+    /**
+     * Create a group.
+     * @param session The session of the user.
+     * @param name The name for the group.
+     * @param description A description for the group.
+     * @return A future to resolve a new group object.
+     */
+    func createGroup( session : Session, name: String? ,  description : String?) -> EventLoopFuture<[Nakama_Api_Group]>
+
+    /**
+     * Create a group.
+     * @param session The session of the user.
+     * @param name The name for the group.
+     * @param description A description for the group.
+     * @param avatarUrl An avatar url for the group.
+     * @return A future to resolve a new group object.
+     */
+    func createGroup( session: Session, name: String?,  description: String?,  avatarUrl : String? ) -> EventLoopFuture<[Nakama_Api_Group]>
+
+    /**
+     * Create a group.
+     * @param session The session of the user.
+     * @param name The name for the group.
+     * @param description A description for the group.
+     * @param avatarUrl An avatar url for the group.
+     * @param langTag A language tag in BCP-47 format for the group.
+     * @return A future to resolve a new group object.
+     */
+    func createGroup( session : Session,  name : String?, description : String?, avatarUrl : String?,  langTag : String?) -> EventLoopFuture<[Nakama_Api_Group]>
+
+    /**
+     * Create a group.
+     * @param session The session of the user.
+     * @param name The name for the group.
+     * @param description A description for the group.
+     * @param avatarUrl An avatar url for the group.
+     * @param langTag A language tag in BCP-47 format for the group.
+     * @param open True if the group should have open membership.
+     * @return A future to resolve a new group object.
+     */
+    func createGroup( session : Session,  name : String? , description : String?, avatarUrl : String? ,  langTag : String?, open: Bool?) -> EventLoopFuture<[Nakama_Api_Group]>
+
+    /**
+     * Create a group.
+     * @param session The session of the user.
+     * @param name The name for the group.
+     * @param description A description for the group.
+     * @param avatarUrl An avatar url for the group.
+     * @param langTag A language tag in BCP-47 format for the group.
+     * @param open True if the group should have open membership.
+     * @param maxCount Maximum number of group members.
+     * @return A future to resolve a new group object.
+     */
+    func createGroup( session: Session,  name: String?, description : String?, avatarUrl : String?, langTag : String? ,  open: Bool?, maxCount : Int32?) -> EventLoopFuture<[Nakama_Api_Group]>
+
+    */
 }
