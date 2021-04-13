@@ -58,10 +58,10 @@ public class GrpcClient : Client {
         }
     }
     
-    func mapGroups() -> (Nakama_Api_GroupList) -> EventLoopFuture<[Nakama_Api_Group]>{
-        return { (groupList: Nakama_Api_GroupList) -> EventLoopFuture<[Nakama_Api_Group]> in
-            return self.eventLoopGroup.next().submit { () -> [Nakama_Api_Group] in
-                return groupList.groups
+    func mapGroups() -> (Nakama_Api_Group) -> EventLoopFuture<Nakama_Api_Group>{
+        return { (groupList: Nakama_Api_Group) -> EventLoopFuture<Nakama_Api_Group> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_Group in
+                return groupList
             }
         }
     }
@@ -406,28 +406,27 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.blockFriends( req , callOptions: sessionCallOption(session: session)).response.flatMap(mapEmptyVoid())
     }
     
-    /*
-    public func createGroup(session: Session, name: String) -> EventLoopFuture<[Nakama_Api_Group]> {
+    public func createGroup(session: Session, name: String) -> EventLoopFuture< Nakama_Api_Group > {
         return self.createGroup(session: session, name: name, description: nil, avatarUrl: nil, langTag: nil, open: nil, maxCount: nil)
     }
     
-    public func createGroup(session: Session, name: String?, description: String?) -> EventLoopFuture<[Nakama_Api_Group]> {
+    public func createGroup(session: Session, name: String?, description: String?) -> EventLoopFuture< Nakama_Api_Group > {
         return self.createGroup(session: session, name: name, description: description, avatarUrl: nil, langTag: nil, open: nil, maxCount: nil)
     }
     
-    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?) -> EventLoopFuture<[Nakama_Api_Group]> {
+    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?) -> EventLoopFuture< Nakama_Api_Group > {
         return self.createGroup(session: session, name: name, description: description, avatarUrl: avatarUrl, langTag: nil, open: nil, maxCount: nil)
     }
     
-    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?, langTag: String?) -> EventLoopFuture<[Nakama_Api_Group]> {
+    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?, langTag: String?) -> EventLoopFuture< Nakama_Api_Group > {
         return self.createGroup(session: session, name: name, description: description, avatarUrl: avatarUrl, langTag: langTag, open: nil, maxCount: nil)
     }
     
-    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?, langTag: String?, open: Bool?) -> EventLoopFuture<[Nakama_Api_Group]> {
+    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?, langTag: String?, open: Bool?) -> EventLoopFuture< Nakama_Api_Group > {
         return self.createGroup(session: session, name: name, description: description, avatarUrl: avatarUrl, langTag: langTag, open: open, maxCount: nil)
     }
     
-    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?, langTag: String?, open: Bool?, maxCount: Int32?) -> EventLoopFuture<[Nakama_Api_Group]> {
+    public func createGroup(session: Session, name: String?, description: String?, avatarUrl: String?, langTag: String?, open: Bool?, maxCount: Int32?) -> EventLoopFuture< Nakama_Api_Group > {
         var req         = Nakama_Api_CreateGroupRequest.init()
         if name != nil{
             req.name         = name!
@@ -449,7 +448,6 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.createGroup( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapGroups() )
     }
-    */
 
     public func deleteFriends(session: Session, ids: String...) -> EventLoopFuture<Void> {
         return self.deleteFriends(session: session, ids: ids, usernames: nil)
