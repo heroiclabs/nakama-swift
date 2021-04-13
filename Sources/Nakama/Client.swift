@@ -563,5 +563,24 @@ public protocol Client {
      */
     //func deleteStorageObjects( session : Session,  StorageObjectId... objectIds);
 
+    /**
+     * Demote a set of users in a group to the next role down.
+     *
+     * @param groupId The group ID to demote in.
+     * @param userIds The users to demote.
+     * @return A future.
+     */
+    func demoteGroupUsers( session : Session, groupId : String,  userIds : String... ) -> EventLoopFuture<Void>;
+
+    /**
+     * Submit an event for processing in the server's registered runtime custom events handler.
+     *
+     * @param session The session of the user.
+     * @param name An event name, type, category, or identifier.
+     * @param properties Arbitrary event property values.
+     * @return A future.
+     */
+    //func emitEvent( session : Session, name : String, properties : [ String: String ]) -> EventLoopFuture<Void>;
+
     
 }

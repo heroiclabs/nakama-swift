@@ -476,4 +476,15 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.deleteNotifications( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
     }
     
+    public func demoteGroupUsers(session: Session, groupId: String, userIds: String...) -> EventLoopFuture<Void> {
+        var req = Nakama_Api_DemoteGroupUsersRequest.init()
+        req.groupID = groupId
+        req.userIds = userIds
+        return self.nakamaGrpcClient.demoteGroupUsers( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
+    
+    /*public func emitEvent(session: Session, name: String, properties: [String : String]) -> EventLoopFuture<Void> {
+        
+    }*/
+    
 }
