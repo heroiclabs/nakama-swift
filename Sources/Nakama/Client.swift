@@ -660,5 +660,52 @@ public protocol Client {
      */
     func joinTournament( session : Session, tournamentId : String ) -> EventLoopFuture<Void>
 
+    /**
+     * Kick one or more users from the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group.
+     * @param ids The ids of the users to kick.
+     * @return A future.
+     */
+    func kickGroupUsers( session : Session, groupId : String, ids:  String...) -> EventLoopFuture<Void>
+
+    /**
+     * Leave a group by id.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to leave.
+     * @return A future.
+     */
+    func leaveGroup( session : Session, groupId : String ) -> EventLoopFuture<Void>
     
+    /**
+     * Add an Apple ID to the social profiles on the current user's account.
+     *
+     * @param session The session of the user.
+     * @param id The ID token received from Apple to validate.
+     * @return A future.
+     */
+    //func linkApple( session : Session,  token : String ) -> EventLoopFuture<Void>
+
+    /**
+     * Link a custom id to the user account owned by the session.
+     *
+     * @param session The session of the user.
+     * @param id A custom identifier usually obtained from an external authentication service.
+     * @return A future.
+     */
+    //func linkCustom( session : Session,  id: String) -> EventLoopFuture<Void>
+
+    /**
+     * Link a device id to the user account owned by the session.
+     *
+     * @param session The session of the user.
+     * @param id A device identifier usually obtained from a platform API.
+     * @return A future.
+     */
+    //func linkDevice( session : Session, id : String ) -> EventLoopFuture<Void>
+
+    
+
 }

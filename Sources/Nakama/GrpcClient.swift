@@ -546,4 +546,30 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.joinTournament(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
     }
     
+    public func kickGroupUsers(session: Session, groupId: String, ids: String...) -> EventLoopFuture<Void> {
+        var req     = Nakama_Api_KickGroupUsersRequest.init()
+        req.groupID = groupId
+        req.userIds = ids
+        return self.nakamaGrpcClient.kickGroupUsers(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    }
+    
+    public func leaveGroup(session: Session, groupId: String) -> EventLoopFuture<Void> {
+        var req     = Nakama_Api_LeaveGroupRequest.init()
+        req.groupID = groupId
+        return self.nakamaGrpcClient.leaveGroup( req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    }
+    
+    /*public func linkApple(session: Session, token: String) -> EventLoopFuture<Void> {
+        var req = NakamaLinkApp
+    }*/
+    
+    /*public func linkCustom(session: Session, id: String) -> EventLoopFuture<Void> {
+        var req = NakamaLink
+    }
+    
+    public func linkDevice(session: Session, id: String) -> EventLoopFuture<Void> {
+        
+    }*/
+    
+    
 }
