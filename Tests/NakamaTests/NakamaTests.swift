@@ -29,6 +29,20 @@ final class NakamaTests: XCTestCase {
         return session
     }
     
+    func newSessionCustom() -> Session {
+        let session = try! client.authenticateCustom(id: UUID().uuidString).wait()
+        return session
+    }
+    
+    func testSessionCustom() {
+        let session = newSessionCustom()
+        XCTAssertFalse(session.expired)
+        XCTAssertNotEqual(session.username, "")
+        XCTAssertNotEqual(session.userId, "")
+        XCTAssertNotEqual(session.token, "")
+        logger.info("Created new session for user \(session.username) (\(session.userId)): \(session.token)")
+    }
+    
     func testSession() {
         let session = newSession()
         XCTAssertFalse(session.expired)
@@ -90,5 +104,14 @@ final class NakamaTests: XCTestCase {
         socket1.disconnect()
         socket2.disconnect()
         try! client.disconnect().wait()
+    }
+    
+    func testAuthenticateCustom(){
+        let session = newSessionCustom()
+        var socket1 = client.createSocket(host: client.host, port: 7350, ssl: client.ssl)
+        socket1.connect(session: session, createStatus: true)
+        //
+        //XCTAssertNotEqual(socket1, )
+        //
     }
 }
