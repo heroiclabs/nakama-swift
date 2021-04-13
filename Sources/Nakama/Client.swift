@@ -582,5 +582,86 @@ public protocol Client {
      */
     //func emitEvent( session : Session, name : String, properties : [ String: String ]) -> EventLoopFuture<Void>;
 
+    /**
+     * Fetch the user account owned by the session.
+     *
+     * @param session The session of the user.
+     * @return A future to resolve an account object.
+     */
+    //func getAccount( session : Session ) -> EventLoopFuture<Nakama_Api_Account>
+
+    /**
+     * Fetch one or more users by id, usernames, and Facebook ids.
+     *
+     * @param session The session of the user.
+     * @param ids List of user IDs.
+     * @return A future to resolve user objects.
+     */
+    func getUsers( session : Session, ids :  String... ) -> EventLoopFuture<Nakama_Api_Users>
+
+    /**
+     * Fetch one or more users by id, usernames, and Facebook ids.
+     *
+     * @param session The session of the user.
+     * @param ids List of user IDs.
+     * @param usernames List of usernames.
+     * @return A future to resolve user objects.
+     */
+    func getUsers( session : Session, ids : [String]?, usernames : [String]? ) -> EventLoopFuture<Nakama_Api_Users>
+
+    /**
+     * Fetch one or more users by id, usernames, and Facebook ids.
+     *
+     * @param session The session of the user.
+     * @param ids List of user IDs.
+     * @param usernames List of usernames.
+     * @param facebookIds List of Facebook IDs.
+     * @return A future to resolve user objects.
+     */
+    func getUsers( session : Session, ids : [String]?, usernames : [String]?, facebookIds : [String]? ) -> EventLoopFuture<Nakama_Api_Users>
+
+    /**
+     * Import Facebook friends and add them to the user's account.
+     *
+     * The server will import friends when the user authenticates with Facebook. This function can be used to be
+     * explicit with the import operation.
+     *
+     * @param session The session of the user.
+     * @param token An OAuth access token from the Facebook SDK.
+     * @return A future.
+     */
+    func importFacebookFriends( session : Session, token : String ) -> EventLoopFuture<Void>
+    
+    /**
+     * Import Facebook friends and add them to the user's account.
+     *
+     * The server will import friends when the user authenticates with Facebook. This function can be used to be
+     * explicit with the import operation.
+     *
+     * @param session The session of the user.
+     * @param token An OAuth access token from the Facebook SDK.
+     * @param reset True if the Facebook friend import for the user should be reset.
+     * @return A future.
+     */
+    func importFacebookFriends( session: Session, token: String? , reset : Bool? ) -> EventLoopFuture<Void>
+
+    /**
+     * Join a group if it has open membership or request to join it.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to join.
+     * @return A future.
+     */
+    func joinGroup( session : Session,  groupId : String ) -> EventLoopFuture<Void>
+
+    /**
+     * Join a group if it has open membership or request to join it.
+     *
+     * @param session The session of the user.
+     * @param tournamentId The id of the tournament to join.
+     * @return A future.
+     */
+    func joinTournament( session : Session, tournamentId : String ) -> EventLoopFuture<Void>
+
     
 }

@@ -66,6 +66,14 @@ public class GrpcClient : Client {
         }
     }
     
+    func mapUsers() -> (Nakama_Api_Users) -> EventLoopFuture<Nakama_Api_Users>{
+        return { (apiUsers : Nakama_Api_Users) -> EventLoopFuture<Nakama_Api_Users> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_Users in
+                return apiUsers
+            }
+        }
+    }
+    
     /**
     A client to interact with Nakama server.
     - Parameter serverKey: The key used to authenticate with the server without a session. Defaults to "defaultkey".
@@ -486,5 +494,58 @@ public class GrpcClient : Client {
     /*public func emitEvent(session: Session, name: String, properties: [String : String]) -> EventLoopFuture<Void> {
         
     }*/
+    
+    /*public func getAccount(session: Session) -> EventLoopFuture<Nakama_Api_Account> {
+        var req = Nakama_Api_UpdateAccountRequest.init()
+        
+    }*/
+    
+    public func getUsers(session: Session, ids: String...) -> EventLoopFuture<Nakama_Api_Users> {
+        return self.getUsers(session: session, ids: ids, usernames: nil, facebookIds: nil)
+    }
+    
+    public func getUsers(session: Session, ids: [String]?, usernames: [String]?) -> EventLoopFuture<Nakama_Api_Users> {
+        return self.getUsers(session: session, ids: ids, usernames: usernames, facebookIds: nil)
+    }
+    
+    public func getUsers(session: Session, ids: [String]?, usernames: [String]?, facebookIds: [String]?) -> EventLoopFuture<Nakama_Api_Users> {
+        var req = Nakama_Api_GetUsersRequest.init()
+        if ids != nil{
+            req.ids = ids!
+        }
+        if usernames != nil{
+            req.ids = ids!
+        }
+        return self.nakamaGrpcClient.getUsers( req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapUsers() )
+    }
+    
+    public func importFacebookFriends(session: Session, token: String) -> EventLoopFuture<Void> {
+        return self.importFacebookFriends(session: session, token: token, reset: nil)
+    }
+    
+    public func importFacebookFriends(session: Session, token: String?, reset: Bool? ) -> EventLoopFuture<Void> {
+        var req         = Nakama_Api_ImportFacebookFriendsRequest.init()
+        req.account     = Nakama_Api_AccountFacebook.init()
+        if token != nil {
+            req.account.token = token!
+        }
+        //
+        req.reset       = SwiftProtobuf.Google_Protobuf_BoolValue()
+        req.reset.value = reset ?? true
+        //
+        return self.nakamaGrpcClient.importFacebookFriends(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    
+    }
+    
+    public func joinGroup(session: Session, groupId: String) -> EventLoopFuture<Void> {
+        var req = Nakama_Api_JoinGroupRequest.init()
+        return self.nakamaGrpcClient.joinGroup(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    }
+    
+    public func joinTournament(session: Session, tournamentId: String) -> EventLoopFuture<Void> {
+        var req             = Nakama_Api_JoinTournamentRequest.init()
+        req.tournamentID    = tournamentId
+        return self.nakamaGrpcClient.joinTournament(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    }
     
 }
