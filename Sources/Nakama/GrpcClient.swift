@@ -892,5 +892,47 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.readStorageObjects( req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjects() )
     }
     
+    public func updateGroup(session: Session, groupId: String, name: String) -> EventLoopFuture<Void> {
+        return self.updateGroup(session: session, groupId: groupId, name: name, description: nil, avatarUrl: nil, langTag: nil, open: nil)
+    }
     
+    public func updateGroup(session: Session, groupId: String?, name: String?, description: String?) -> EventLoopFuture<Void> {
+        return self.updateGroup(session: session, groupId: groupId, name: name, description: description, avatarUrl: nil, langTag: nil, open: nil)
+    }
+    
+    public func updateGroup(session: Session, groupId: String?, name: String?, description: String?, avatarUrl: String?) -> EventLoopFuture<Void> {
+        return self.updateGroup(session: session, groupId: groupId, name: name, description: description, avatarUrl: avatarUrl, langTag: nil, open: nil)
+    }
+    
+    public func updateGroup(session: Session, groupId: String?, name: String?, description: String?, avatarUrl: String?, langTag: String?) -> EventLoopFuture<Void> {
+        return self.updateGroup(session: session, groupId: groupId, name: name, description: description, avatarUrl: avatarUrl, langTag: langTag, open: nil)
+    }
+    
+    public func updateGroup(session: Session, groupId: String?, name: String?, description: String?, avatarUrl: String?, langTag: String?, open: Bool?) -> EventLoopFuture<Void> {
+        var req = Nakama_Api_UpdateGroupRequest.init()
+        if groupId != nil {
+            req.groupID = groupId!
+        }
+        req.name = Google_Protobuf_StringValue()
+        if name != nil {
+            req.name.value = name!
+        }
+        req.description_p = Google_Protobuf_StringValue()
+        if description != nil {
+            req.description_p.value = description!
+        }
+        req.avatarURL = Google_Protobuf_StringValue()
+        if avatarUrl != nil {
+            req.avatarURL.value = avatarUrl!
+        }
+        req.langTag = Google_Protobuf_StringValue()
+        if langTag != nil {
+            req.langTag.value = langTag!
+        }
+        req.open = Google_Protobuf_BoolValue()
+        if open != nil {
+            req.open.value = open!
+        }
+        return self.nakamaGrpcClient.updateGroup(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    }
 }

@@ -1031,5 +1031,75 @@ public protocol Client {
      */
     func readStorageObjects( session : Session, objectIds: Nakama_Api_ReadStorageObjectId... ) -> EventLoopFuture<Nakama_Api_StorageObjects>
 
+    /**
+     * Update a group.
+     *
+     * The user must have the correct access permissions for the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to update.
+     * @param name A new name for the group.
+     * @return A future.
+     */
+    func updateGroup( session : Session, groupId : String, name : String ) -> EventLoopFuture<Void>
+
+    /**
+     * Update a group.
+     *
+     * The user must have the correct access permissions for the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to update.
+     * @param name A new name for the group.
+     * @param description A new description for the group.
+     * @return A future.
+     */
+    func updateGroup( session : Session, groupId : String?, name : String?, description : String? ) -> EventLoopFuture<Void>
+
+    /**
+     * Update a group.
+     *
+     * The user must have the correct access permissions for the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to update.
+     * @param name A new name for the group.
+     * @param description A new description for the group.
+     * @param avatarUrl A new avatar url for the group.
+     * @return A future.
+     */
+    func updateGroup( session : Session, groupId : String?, name : String?, description : String? , avatarUrl : String? ) -> EventLoopFuture<Void>
+
+    /**
+     * Update a group.
+     *
+     * The user must have the correct access permissions for the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to update.
+     * @param name A new name for the group.
+     * @param description A new description for the group.
+     * @param avatarUrl A new avatar url for the group.
+     * @param langTag A new language tag in BCP-47 format for the group.
+     * @return A future.
+     */
+    func updateGroup( session : Session, groupId : String?, name : String?, description : String? , avatarUrl : String? , langTag : String? ) -> EventLoopFuture<Void>
+
+    /**
+     * Update a group.
+     *
+     * The user must have the correct access permissions for the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to update.
+     * @param name A new name for the group.
+     * @param description A new description for the group.
+     * @param avatarUrl A new avatar url for the group.
+     * @param langTag A new language tag in BCP-47 format for the group.
+     * @param open True if the group should have open membership.
+     * @return A future.
+     */
+    func updateGroup( session : Session, groupId : String?, name : String?, description : String? , avatarUrl : String? , langTag : String? , open : Bool? ) -> EventLoopFuture<Void>
+    
 
 }
