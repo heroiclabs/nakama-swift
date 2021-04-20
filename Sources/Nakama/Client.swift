@@ -1198,4 +1198,24 @@ public protocol Client {
      */
     func writeTournamentRecord(session: Session, tournamentId : String? , score : Int64?, subscore : Int64?,  metadata : String? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
     
+    /**
+     * Execute a Lua function with an input payload on the server.
+     *
+     * @param session The session of the user.
+     * @param id The id of the function to execute on the server.
+     * @return A future to resolve an RPC response.
+     */
+    func rpc( session: Session, id: String ) -> EventLoopFuture<Nakama_Api_Rpc>
+
+    /**
+     * Execute a Lua function with an input payload on the server.
+     *
+     * @param session The session of the user.
+     * @param id The id of the function to execute on the server.
+     * @param payload The payload to send with the function call.
+     * @return A future to resolve an RPC response.
+     */
+    func rpc( session: Session, id: String, payload : String? ) -> EventLoopFuture<Nakama_Api_Rpc>
+    
+    
 }

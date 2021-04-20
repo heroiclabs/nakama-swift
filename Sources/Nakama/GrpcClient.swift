@@ -146,6 +146,13 @@ public class GrpcClient : Client {
         }
     }
     
+    func mapApiRpc() -> (Nakama_Api_Rpc) -> EventLoopFuture<Nakama_Api_Rpc>{
+        return { (api : Nakama_Api_Rpc) -> EventLoopFuture<Nakama_Api_Rpc> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_Rpc in 
+                return api
+            }
+        }
+    }
     
     /**
     A client to interact with Nakama server.
@@ -1008,5 +1015,17 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.writeTournamentRecord(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapLeaderBoardRecord() )
     }
+ 
+    public func rpc(session: Session, id: String) -> EventLoopFuture<Nakama_Api_Rpc> {
+        return self.rpc(session: session, id: id, payload: nil)
+    }
     
+    public func rpc(session: Session, id: String, payload: String?) -> EventLoopFuture<Nakama_Api_Rpc> {
+        var req = Nakama_Api_Rpc.init()
+        req.id = id
+        if payload != nil {
+            req.payload = payload!
+        }
+        return self.nakamaGrpcClient.rpcFunc(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapApiRpc() )
+    }
 }
