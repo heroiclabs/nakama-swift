@@ -979,4 +979,34 @@ public class GrpcClient : Client {
         
         return self.nakamaGrpcClient.writeStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjects() )
     }*/
+    
+    public func writeTournamentRecord(session: Session, tournamentId: String, score: Int64) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        return self.writeTournamentRecord(session: session, tournamentId: tournamentId, score: score, subscore: nil, metadata: nil)
+    }
+    
+    public func writeTournamentRecord(session: Session, tournamentId: String?, score: Int64?, subscore: Int64?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        return self.writeTournamentRecord(session: session, tournamentId: tournamentId, score: score, subscore: subscore, metadata: nil)
+    }
+    
+    public func writeTournamentRecord(session: Session, tournamentId: String?, score: Int64?, metadata: String?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        return self.writeTournamentRecord(session: session, tournamentId: tournamentId, score: score, subscore: nil, metadata: metadata)
+    }
+    
+    public func writeTournamentRecord(session: Session, tournamentId: String?, score: Int64?, subscore: Int64?, metadata: String?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        var req = Nakama_Api_WriteTournamentRecordRequest.init()
+        if tournamentId != nil {
+            req.tournamentID = tournamentId!
+        }
+        if score != nil {
+            req.record.score = score!
+        }
+        if subscore != nil {
+            req.record.subscore = subscore!
+        }
+        if metadata != nil {
+            req.record.metadata = metadata!
+        }
+        return self.nakamaGrpcClient.writeTournamentRecord(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapLeaderBoardRecord() )
+    }
+    
 }

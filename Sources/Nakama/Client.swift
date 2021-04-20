@@ -1154,5 +1154,48 @@ public protocol Client {
      */
     //func writeStorageObjects( session: Session, objects:  Nakama_Api_StorageObjectAck... ) -> EventLoopFuture<Nakama_Api_StorageObjectAcks>
     //
+    /**
+     * A request to submit a score to a tournament.
+     *
+     * @param session The session for the user.
+     * @param tournamentId The tournament ID to write the record for.
+     * @param score The score value to submit.
+     * @return A future to complete the tournament record write.
+     */
+    func writeTournamentRecord( session: Session, tournamentId : String , score : Int64 ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
+
+    /**
+     * A request to submit a score to a tournament.
+     *
+     * @param session The session for the user.
+     * @param tournamentId The tournament ID to write the record for.
+     * @param score The score value to submit.
+     * @param subscore An optional secondary value.
+     * @return A future to complete the tournament record write.
+     */
+    func writeTournamentRecord(session: Session, tournamentId : String? , score : Int64?, subscore : Int64?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
+
+    /**
+     * A request to submit a score to a tournament.
+     *
+     * @param session The session for the user.
+     * @param tournamentId The tournament ID to write the record for.
+     * @param score The score value to submit.
+     * @param metadata A JSON object of additional properties.
+     * @return A future to complete the tournament record write.
+     */
+    func writeTournamentRecord(session: Session, tournamentId : String? , score : Int64?, metadata : String?  ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
+
+    /**
+     * A request to submit a score to a tournament.
+     *
+     * @param session The session for the user.
+     * @param tournamentId The tournament ID to write the record for.
+     * @param score The score value to submit.
+     * @param subscore  An optional secondary value.
+     * @param metadata A JSON object of additional properties.
+     * @return A future to complete the tournament record write.
+     */
+    func writeTournamentRecord(session: Session, tournamentId : String? , score : Int64?, subscore : Int64?,  metadata : String? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
     
 }
