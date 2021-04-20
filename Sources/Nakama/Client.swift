@@ -1101,5 +1101,49 @@ public protocol Client {
      */
     func updateGroup( session : Session, groupId : String?, name : String?, description : String? , avatarUrl : String? , langTag : String? , open : Bool? ) -> EventLoopFuture<Void>
     
+    /**
+    * Write a record to a leaderboard.
+    *
+    * @param session The session for the user.
+    * @param leaderboardId The id of the leaderboard to write.
+    * @param score The score for the leaderboard record.
+    * @return A future to complete the leaderboard record write.
+    */
+    func writeLeaderboardRecord( session : Session,  leaderboardId : String , score : Int64 )  -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
 
+   /**
+    * Write a record to a leaderboard.
+    *
+    * @param session The session for the user.
+    * @param leaderboardId The id of the leaderboard to write.
+    * @param score The score for the leaderboard record.
+    * @param subscore The subscore for the leaderboard record.
+    * @return A future to complete the leaderboard record write.
+    */
+    func writeLeaderboardRecord( session : Session,  leaderboardId : String? , score : Int64? , subscore : Int64? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
+
+   /**
+    * Write a record to a leaderboard.
+    *
+    * @param session The session for the user.
+    * @param leaderboardId The id of the leaderboard to write.
+    * @param score The score for the leaderboard record.
+    * @param metadata The metadata for the leaderboard record.
+    * @return A future to complete the leaderboard record write.
+    */
+    func writeLeaderboardRecord(session : Session,  leaderboardId : String? , score : Int64? ,  metadata : String? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
+
+   /**
+    * Write a record to a leaderboard.
+    *
+    * @param session The session for the user.
+    * @param leaderboardId The id of the leaderboard to write.
+    * @param score The score for the leaderboard record.
+    * @param subscore The subscore for the leaderboard record.
+    * @param metadata The metadata for the leaderboard record.
+    * @return A future to complete the leaderboard record write.
+    */
+   func writeLeaderboardRecord( session : Session,  leaderboardId : String? , score : Int64? , subscore : Int64?,  metadata : String? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
+
+    
 }

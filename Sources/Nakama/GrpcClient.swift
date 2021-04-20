@@ -138,6 +138,15 @@ public class GrpcClient : Client {
         }
     }
     
+    func mapLeaderBoardRecord() -> (Nakama_Api_LeaderboardRecord) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>{
+        return { (api : Nakama_Api_LeaderboardRecord) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_LeaderboardRecord in
+                return api
+            }
+        }
+    }
+    
+    
     /**
     A client to interact with Nakama server.
     - Parameter serverKey: The key used to authenticate with the server without a session. Defaults to "defaultkey".
@@ -934,5 +943,34 @@ public class GrpcClient : Client {
             req.open.value = open!
         }
         return self.nakamaGrpcClient.updateGroup(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapEmptyVoid() )
+    }
+    
+    public func writeLeaderboardRecord(session: Session, leaderboardId: String, score: Int64) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        return self.writeLeaderboardRecord(session: session, leaderboardId: leaderboardId, score: score, subscore: nil, metadata: nil)
+    }
+    
+    public func writeLeaderboardRecord(session: Session, leaderboardId: String?, score: Int64?, subscore: Int64?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        return self.writeLeaderboardRecord(session: session, leaderboardId: leaderboardId, score: score, subscore: subscore, metadata: nil)
+    }
+    
+    public func writeLeaderboardRecord(session: Session, leaderboardId: String?, score: Int64?, metadata: String?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        return self.writeLeaderboardRecord(session: session, leaderboardId: leaderboardId, score: score, subscore: nil, metadata: metadata)
+    }
+    
+    public func writeLeaderboardRecord(session: Session, leaderboardId: String?, score: Int64?, subscore: Int64?, metadata: String?) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
+        var req = Nakama_Api_WriteLeaderboardRecordRequest.init()
+        if leaderboardId != nil {
+            req.leaderboardID = leaderboardId!
+        }
+        if score != nil {
+            req.record.score = score!
+        }
+        if subscore != nil {
+            req.record.subscore = subscore!
+        }
+        if metadata != nil {
+            req.record.metadata = metadata!
+        }
+        return self.nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapLeaderBoardRecord() )
     }
 }
