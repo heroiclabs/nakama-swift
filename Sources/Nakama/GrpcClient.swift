@@ -646,7 +646,7 @@ public class GrpcClient : Client {
     
     
     public func listGroups(session: Session, name: String) -> EventLoopFuture<Nakama_Api_GroupList> {
-        return self.listGroups(session: session, name: name)
+        return self.listGroups(session: session, name: name, limit: nil, cursor: nil)
     }
     
     public func listGroups(session: Session, name: String?, limit: Int32?) -> EventLoopFuture<Nakama_Api_GroupList> {
