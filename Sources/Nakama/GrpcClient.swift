@@ -609,4 +609,23 @@ public class GrpcClient : Client {
         //
     }
     
+    public func listFriends(session: Session) -> EventLoopFuture<Nakama_Api_FriendList> {
+        return self.listFriends(session: session, state: nil, limit: nil, cursor: nil)
+    }
+    
+    public func listFriends(session: Session, state: Int32?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_FriendList> {
+        var req = Nakama_Api_ListFriendsRequest.init()
+        req.state = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if state != nil {
+            req.state.value = state!
+        }
+        req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        return self.nakamaGrpcClient.listFriends(req, callOptions: sessionCallOption(session: session)).response
+    }
 }

@@ -736,5 +736,24 @@ public protocol Client {
     */
     func listGroups( session : Session , name : String? , limit: Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_GroupList>
 
+    /**
+     * List of friends of the current user.
+     *
+     * @param session The session of the user.
+     * @return A future to resolve friend objects.
+     */
+    func listFriends( session : Session ) -> EventLoopFuture<Nakama_Api_FriendList>
+
+    /**
+     * List of friends of the current user.
+     *
+     * @param session The session of the user.
+     * @param state The friend state to list.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @param cursor An optional next page cursor.
+     * @return A future to resolve friend objects.
+     */
+    func listFriends( session : Session, state : Int32?, limit : Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_FriendList>
     
+
 }
