@@ -66,7 +66,6 @@ public class GrpcClient : Client {
         }
     }
     
-    /*
      func mapGroupsList() -> (Nakama_Api_GroupList) -> EventLoopFuture<Nakama_Api_GroupList> {
         return { (groupsList : Nakama_Api_GroupList ) -> EventLoopFuture<Nakama_Api_GroupList> in
             return self.eventLoopGroup.next().submit{ () -> Nakama_Api_GroupList in
@@ -74,7 +73,6 @@ public class GrpcClient : Client {
             }
         }
     }
-     */
     
     func mapUsers() -> (Nakama_Api_Users) -> EventLoopFuture<Nakama_Api_Users>{
         return { (apiUsers : Nakama_Api_Users) -> EventLoopFuture<Nakama_Api_Users> in
@@ -83,6 +81,47 @@ public class GrpcClient : Client {
             }
         }
     }
+    
+    func mapFriendListUsers() -> (Nakama_Api_FriendList) -> EventLoopFuture<Nakama_Api_FriendList>{
+        return { (apiUsers : Nakama_Api_FriendList) -> EventLoopFuture<Nakama_Api_FriendList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_FriendList in
+                return apiUsers
+            }
+        }
+    }
+    
+    func mapMatchList() -> (Nakama_Api_MatchList) -> EventLoopFuture<Nakama_Api_MatchList>{
+        return { (apiMatches : Nakama_Api_MatchList) -> EventLoopFuture<Nakama_Api_MatchList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_MatchList in
+                return apiMatches
+            }
+        }
+    }
+    
+    func mapChannelMessageList() -> (Nakama_Api_ChannelMessageList) -> EventLoopFuture<Nakama_Api_ChannelMessageList>{
+        return { (apiChannelMessageList : Nakama_Api_ChannelMessageList) -> EventLoopFuture<Nakama_Api_ChannelMessageList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_ChannelMessageList in
+                return apiChannelMessageList
+            }
+        }
+    }
+    
+    func mapLeaderBoardList() -> (Nakama_Api_LeaderboardRecordList) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>{
+        return { (apiLeaderBoardList : Nakama_Api_LeaderboardRecordList) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_LeaderboardRecordList in
+                return apiLeaderBoardList
+            }
+        }
+    }
+    
+    func mapStorageObjectList() -> (Nakama_Api_StorageObjectList) -> EventLoopFuture<Nakama_Api_StorageObjectList>{
+        return { (apiLeaderBoardList : Nakama_Api_StorageObjectList) -> EventLoopFuture<Nakama_Api_StorageObjectList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_StorageObjectList in
+                return apiLeaderBoardList
+            }
+        }
+    }
+    
     
     /**
     A client to interact with Nakama server.
@@ -605,7 +644,7 @@ public class GrpcClient : Client {
             req.cursor = cursor!
         }
         //self.nakamaGrpcClient.listGroups()
-        return self.nakamaGrpcClient.listGroups( req , callOptions: sessionCallOption(session: session)).response
+        return self.nakamaGrpcClient.listGroups( req , callOptions: sessionCallOption(session: session) ).response.flatMap( mapGroupsList() )
         //
     }
     
@@ -626,7 +665,7 @@ public class GrpcClient : Client {
         if cursor != nil {
             req.cursor = cursor!
         }
-        return self.nakamaGrpcClient.listFriends(req, callOptions: sessionCallOption(session: session)).response
+        return self.nakamaGrpcClient.listFriends(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapFriendListUsers() )
     }
     
     public func listMatches(session: Session) -> EventLoopFuture<Nakama_Api_MatchList> {
@@ -672,7 +711,7 @@ public class GrpcClient : Client {
         if limit != nil {
             req.minSize.value = limit!
         }
-        return self.nakamaGrpcClient.listMatches(req , callOptions: sessionCallOption(session: session)).response
+        return self.nakamaGrpcClient.listMatches(req , callOptions: sessionCallOption(session: session)).response.flatMap( mapMatchList() )
     }
     
     
@@ -704,7 +743,7 @@ public class GrpcClient : Client {
         if forward != nil {
             req.forward.value = forward!
         }
-        return self.nakamaGrpcClient.listChannelMessages(req, callOptions: sessionCallOption(session: session)).response
+        return self.nakamaGrpcClient.listChannelMessages(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapChannelMessageList() )
     }
     
     public func listLeaderboardRecords(session: Session, leaderboardId: String) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> {
@@ -742,7 +781,7 @@ public class GrpcClient : Client {
         if cursor != nil {
             req.cursor = cursor!
         }
-        return self.nakamaGrpcClient.listLeaderboardRecords(req, callOptions: sessionCallOption(session: session)).response
+        return self.nakamaGrpcClient.listLeaderboardRecords(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapLeaderBoardList() )
     }
     
     public func listStorageObjects(session: Session, collection: String) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
@@ -765,7 +804,8 @@ public class GrpcClient : Client {
         if cursor != nil {
             req.cursor = cursor!
         }
-        return self.nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response
+        return self.nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjectList() )
     
     }
+
 }
