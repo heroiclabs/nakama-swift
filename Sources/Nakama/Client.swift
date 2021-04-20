@@ -944,4 +944,73 @@ public protocol Client {
     */
     func listStorageObjects( session : Session , collection : String?, limit : Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_StorageObjectList>
 
+    
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session : Session) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @param cursor A next page cursor for listings.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session : Session, limit : Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @param categoryStart The start of the categories to include. Defaults to 0.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session: Session, categoryStart : UInt32? ) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @param categoryStart The start of the categories to include. Defaults to 0.
+     * @param categoryEnd The end of the categories to include. Defaults to 128.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session: Session, categoryStart : UInt32?, categoryEnd : UInt32? ) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @param categoryStart The start of the categories to include. Defaults to 0.
+     * @param categoryEnd The end of the categories to include. Defaults to 128.
+     * @param startTime The start time for tournaments. Defaults to current Unix time.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session: Session, categoryStart : UInt32?, categoryEnd : UInt32?, startTime: UInt32?) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @param categoryStart The start of the categories to include. Defaults to 0.
+     * @param categoryEnd The end of the categories to include. Defaults to 128.
+     * @param startTime The start time for tournaments. Defaults to current Unix time.
+     * @param endTime The end time for tournaments. Defaults to +1 year from current Unix time.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session: Session, categoryStart : UInt32?, categoryEnd : UInt32?, startTime: UInt32?,  endTime : UInt32? ) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    /**
+     * List active/upcoming tournaments based on given filters.
+     * @param session The session of the user.
+     * @param categoryStart The start of the categories to include. Defaults to 0.
+     * @param categoryEnd The end of the categories to include. Defaults to 128.
+     * @param startTime The start time for tournaments. Defaults to current Unix time.
+     * @param endTime The end time for tournaments. Defaults to +1 year from current Unix time.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @param cursor A next page cursor for listings.
+     * @return a future which resolved to a tournament list.
+     */
+    func listTournaments( session: Session, categoryStart : UInt32?, categoryEnd : UInt32?, startTime: UInt32?,  endTime : UInt32?, cursor :String?) -> EventLoopFuture<Nakama_Api_TournamentList>
+
+    
 }

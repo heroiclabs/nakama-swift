@@ -115,9 +115,17 @@ public class GrpcClient : Client {
     }
     
     func mapStorageObjectList() -> (Nakama_Api_StorageObjectList) -> EventLoopFuture<Nakama_Api_StorageObjectList>{
-        return { (apiLeaderBoardList : Nakama_Api_StorageObjectList) -> EventLoopFuture<Nakama_Api_StorageObjectList> in
+        return { (apiStorageList : Nakama_Api_StorageObjectList) -> EventLoopFuture<Nakama_Api_StorageObjectList> in
             return self.eventLoopGroup.next().submit { () -> Nakama_Api_StorageObjectList in
-                return apiLeaderBoardList
+                return apiStorageList
+            }
+        }
+    }
+    
+    func mapListTournaments() -> (Nakama_Api_TournamentList) -> EventLoopFuture<Nakama_Api_TournamentList>{
+        return { (apiTournamentsList : Nakama_Api_TournamentList) -> EventLoopFuture<Nakama_Api_TournamentList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_TournamentList in
+                return apiTournamentsList
             }
         }
     }
@@ -805,7 +813,63 @@ public class GrpcClient : Client {
             req.cursor = cursor!
         }
         return self.nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjectList() )
-    
     }
 
+    public func listTournaments(session: Session) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        return self.listTournaments(session: session, limit: nil, cursor: nil)
+    }
+    
+    public func listTournaments(session: Session, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        var req = Nakama_Api_ListTournamentsRequest.init()
+        req.limit = Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        return self.nakamaGrpcClient.listTournaments(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapListTournaments() )
+    }
+    
+    public func listTournaments(session: Session, categoryStart: UInt32?) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        return self.listTournaments(session: session, categoryStart: categoryStart, categoryEnd: nil, startTime: nil, endTime: nil, cursor: nil)
+    }
+    
+    public func listTournaments(session: Session, categoryStart: UInt32?, categoryEnd: UInt32?) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        return self.listTournaments(session: session, categoryStart: categoryStart, categoryEnd: categoryEnd, startTime: nil, endTime: nil, cursor: nil)
+    }
+    
+    public func listTournaments(session: Session, categoryStart: UInt32?, categoryEnd: UInt32?, startTime: UInt32?) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        return self.listTournaments(session: session, categoryStart: categoryStart, categoryEnd: categoryEnd, startTime: startTime, endTime: nil, cursor: nil)
+    }
+    
+    public func listTournaments(session: Session, categoryStart: UInt32?, categoryEnd: UInt32?, startTime: UInt32?, endTime: UInt32?) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        return self.listTournaments(session: session, categoryStart: categoryStart, categoryEnd: categoryEnd, startTime: startTime, endTime: endTime, cursor: nil)
+    }
+    
+    public func listTournaments(session: Session, categoryStart: UInt32?, categoryEnd: UInt32?, startTime: UInt32?, endTime: UInt32?, cursor: String?) -> EventLoopFuture<Nakama_Api_TournamentList> {
+        var req = Nakama_Api_ListTournamentsRequest.init()
+        req.categoryStart = Google_Protobuf_UInt32Value()
+        if categoryStart != nil {
+            req.categoryStart.value = categoryStart!
+        }
+        req.categoryEnd = Google_Protobuf_UInt32Value()
+        if categoryEnd != nil {
+            req.categoryEnd.value = categoryEnd!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        req.startTime = Google_Protobuf_UInt32Value()
+        if startTime != nil {
+            req.startTime.value = startTime!
+        }
+        req.endTime = Google_Protobuf_UInt32Value()
+        if endTime != nil {
+            req.endTime.value = endTime!
+        }
+        //
+        return self.nakamaGrpcClient.listTournaments(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapListTournaments() )
+    }
+    
 }
