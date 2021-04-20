@@ -818,5 +818,130 @@ public protocol Client {
      */
     func listMatches( session : Session, min : Int32?, max : Int32?, limit : Int32?, label : String?, authoritative : Bool? ) -> EventLoopFuture<Nakama_Api_MatchList>
 
-    
+    /**
+     * List messages from a chat channel.
+     *
+     * @param session The session of the user.
+     * @param channelId A channel identifier.
+     * @return A future to resolve channel message objects.
+     */
+    func listChannelMessages( session : Session,  channelId : String ) -> EventLoopFuture<Nakama_Api_ChannelMessageList>
+    /**
+     * List messages from a chat channel.
+     *
+     * @param session The session of the user.
+     * @param channelId A channel identifier.
+     * @param limit The number of chat messages to list.
+     * @return A future to resolve channel message objects.
+     */
+    func listChannelMessages( session : Session,  channelId : String?, limit : Int32? ) -> EventLoopFuture<Nakama_Api_ChannelMessageList>
+
+    /**
+     * List messages from a chat channel.
+     *
+     * @param session The session of the user.
+     * @param channelId A channel identifier.
+     * @param limit The number of chat messages to list.
+     * @param cursor A cursor for the current position in the messages history to list.
+     * @return A future to resolve channel message objects.
+     */
+    func listChannelMessages( session : Session,  channelId : String?, limit : Int32?, cursor : String? )  -> EventLoopFuture<Nakama_Api_ChannelMessageList>
+
+    /**
+     * List messages from a chat channel.
+     *
+     * @param session The session of the user.
+     * @param channelId A channel identifier.
+     * @param limit The number of chat messages to list.
+     * @param forward Fetch messages forward from the current cursor (or the start).
+     * @param cursor A cursor for the current position in the messages history to list.
+     * @return A future to resolve channel message objects.
+     */
+    func listChannelMessages( session : Session,  channelId : String?, limit : Int32?, cursor : String?, forward : Bool?) -> EventLoopFuture<Nakama_Api_ChannelMessageList>
+
+    /**
+     * List records from a leaderboard.
+     *
+     * @param session The session of the user.
+     * @param leaderboardId The id of the leaderboard to list.
+     * @return A future to resolve leaderboard record objects.
+     */
+    func listLeaderboardRecords( session: Session, leaderboardId : String ) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
+
+    /**
+     * List records from a leaderboard.
+     *
+     * @param session The session of the user.
+     * @param leaderboardId The id of the leaderboard to list.
+     * @param ownerIds Record owners to fetch with the list of records.
+     * @return A future to resolve leaderboard record objects.
+     */
+    func listLeaderboardRecords( session : Session, leaderboardId : String?, ownerIds : [String]? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
+
+    /**
+     * List records from a leaderboard.
+     *
+     * @param session The session of the user.
+     * @param leaderboardId The id of the leaderboard to list.
+     * @param ownerIds Record owners to fetch with the list of records.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @return A future to resolve leaderboard record objects.
+     */
+    func listLeaderboardRecords( session : Session, leaderboardId : String?, ownerIds : [String]?, expiry : Int64?) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
+
+    /**
+     * List records from a leaderboard.
+     *
+     * @param session The session of the user.
+     * @param leaderboardId The id of the leaderboard to list.
+     * @param ownerIds Record owners to fetch with the list of records.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @param limit The number of records to list.
+     * @return A future to resolve leaderboard record objects.
+     */
+    func listLeaderboardRecords( session : Session, leaderboardId : String?, ownerIds : [String]?, expiry : Int64? , limit : Int32? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
+
+    /**
+     * List records from a leaderboard.
+     *
+     * @param session The session of the user.
+     * @param leaderboardId The id of the leaderboard to list.
+     * @param ownerIds Record owners to fetch with the list of records.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @param limit The number of records to list.
+     * @param cursor A cursor for the current position in the leaderboard records to list.
+     * @return A future to resolve leaderboard record objects.
+     */
+    func listLeaderboardRecords(session : Session, leaderboardId : String?, ownerIds : [String]?, expiry : Int64? , limit : Int32? , cursor : String? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList>
+
+    /**
+    * List storage objects in a collection which have public read access.
+    *
+    * @param session The session of the user.
+    * @param collection The collection to list over.
+    * @return A future which resolves to a storage object list.
+    */
+    func listStorageObjects( session : Session , collection : String ) -> EventLoopFuture<Nakama_Api_StorageObjectList>
+
+   /**
+    * List storage objects in a collection which have public read access.
+    *
+    * @param session The session of the user.
+    * @param collection The collection to list over.
+    * @param limit The number of objects to list.
+    * @return A future which resolves to a storage object list.
+    */
+    func listStorageObjects( session : Session , collection : String?, limit : Int32?) -> EventLoopFuture<Nakama_Api_StorageObjectList>
+
+   /**
+    * List storage objects in a collection which have public read access.
+    *
+    * @param session The session of the user.
+    * @param collection The collection to list over.
+    * @param limit The number of objects to list.
+    * @param cursor A cursor to paginate over the collection.
+    * @return A future which resolves to a storage object list.
+    */
+    func listStorageObjects( session : Session , collection : String?, limit : Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_StorageObjectList>
+
 }

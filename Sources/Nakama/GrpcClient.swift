@@ -468,7 +468,7 @@ public class GrpcClient : Client {
         if ids != nil{
             req.ids         = ids!
         }
-        if usernames != nil {
+        if usernames != nil {
             req.usernames = usernames!
         }
         return self.nakamaGrpcClient.deleteFriends( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
@@ -676,4 +676,96 @@ public class GrpcClient : Client {
     }
     
     
+    public func listChannelMessages(session: Session, channelId: String) -> EventLoopFuture<Nakama_Api_ChannelMessageList> {
+        return self.listChannelMessages(session: session, channelId: channelId, limit: nil, cursor: nil, forward: nil)
+    }
+    
+    public func listChannelMessages(session: Session, channelId: String?, limit: Int32?) -> EventLoopFuture<Nakama_Api_ChannelMessageList> {
+        return self.listChannelMessages(session: session, channelId: channelId, limit: limit, cursor: nil, forward: nil)
+    }
+    
+    public func listChannelMessages(session: Session, channelId: String?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_ChannelMessageList> {
+        return self.listChannelMessages(session: session, channelId: channelId, limit: limit, cursor: cursor,  forward: nil)
+    }
+    
+    public func listChannelMessages(session: Session, channelId: String?, limit: Int32?, cursor: String?, forward: Bool?) -> EventLoopFuture<Nakama_Api_ChannelMessageList> {
+        var req = Nakama_Api_ListChannelMessagesRequest.init()
+        if channelId != nil {
+            req.channelID = channelId!
+        }
+        req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        req.forward = SwiftProtobuf.Google_Protobuf_BoolValue()
+        if forward != nil {
+            req.forward.value = forward!
+        }
+        return self.nakamaGrpcClient.listChannelMessages(req, callOptions: sessionCallOption(session: session)).response
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> {
+        return self.listLeaderboardRecords(session: session, leaderboardId: leaderboardId, ownerIds: nil, expiry: nil, limit: nil, cursor: nil)
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String?, ownerIds: [String]?) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> {
+        return self.listLeaderboardRecords(session: session, leaderboardId: leaderboardId, ownerIds: ownerIds, expiry: nil, limit: nil, cursor: nil)
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String?, ownerIds: [String]?, expiry: Int64?) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> {
+        return self.listLeaderboardRecords(session: session, leaderboardId: leaderboardId, ownerIds: ownerIds, expiry: expiry, limit: nil, cursor: nil)
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String?, ownerIds: [String]?, expiry: Int64?, limit: Int32?) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> {
+        return self.listLeaderboardRecords(session: session, leaderboardId: leaderboardId, ownerIds: ownerIds, expiry: expiry, limit: limit, cursor: nil)
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String?, ownerIds: [String]?, expiry: Int64?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_LeaderboardRecordList> {
+        var req = Nakama_Api_ListLeaderboardRecordsRequest.init()
+        if leaderboardId != nil {
+            req.leaderboardID = leaderboardId!
+        }
+        if ownerIds != nil {
+            req.ownerIds = ownerIds!
+        }
+        req.expiry = SwiftProtobuf.Google_Protobuf_Int64Value()
+        if expiry != nil {
+            req.expiry.value = expiry!
+        }
+        req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        return self.nakamaGrpcClient.listLeaderboardRecords(req, callOptions: sessionCallOption(session: session)).response
+    }
+    
+    public func listStorageObjects(session: Session, collection: String) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
+        return self.listStorageObjects(session: session, collection: collection, limit: nil, cursor: nil)
+    }
+    
+    public func listStorageObjects(session: Session, collection: String?, limit: Int32?) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
+        return self.listStorageObjects(session: session, collection: collection, limit: limit, cursor: nil)
+    }
+    
+    public func listStorageObjects(session: Session, collection: String?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
+        var req = Nakama_Api_ListStorageObjectsRequest.init()
+        if collection != nil {
+            req.collection = collection!
+        }
+        req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        return self.nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response
+    
+    }
 }
