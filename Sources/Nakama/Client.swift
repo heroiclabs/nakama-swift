@@ -1145,5 +1145,14 @@ public protocol Client {
     */
    func writeLeaderboardRecord( session : Session,  leaderboardId : String? , score : Int64? , subscore : Int64?,  metadata : String? ) -> EventLoopFuture<Nakama_Api_LeaderboardRecord>
 
+    /**
+     * Write objects to the storage engine.
+     *
+     * @param session The session of the user.
+     * @param objects The objects to write.
+     * @return A future to resolve the acknowledgements with writes.
+     */
+    //func writeStorageObjects( session: Session, objects:  Nakama_Api_StorageObjectAck... ) -> EventLoopFuture<Nakama_Api_StorageObjectAcks>
+    //
     
 }

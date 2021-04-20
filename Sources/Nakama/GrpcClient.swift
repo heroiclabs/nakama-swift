@@ -973,4 +973,10 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapLeaderBoardRecord() )
     }
+    
+    /*public func writeStorageObjects(session: Session, objects: Nakama_Api_StorageObjectAck...) -> EventLoopFuture<Nakama_Api_StorageObjectAcks> {
+        var req = Nakama_Api_WriteStorageObjectsRequest.init()
+        
+        return self.nakamaGrpcClient.writeStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjects() )
+    }*/
 }
