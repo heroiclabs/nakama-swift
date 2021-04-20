@@ -1012,5 +1012,24 @@ public protocol Client {
      */
     func listTournaments( session: Session, categoryStart : UInt32?, categoryEnd : UInt32?, startTime: UInt32?,  endTime : UInt32?, cursor :String?) -> EventLoopFuture<Nakama_Api_TournamentList>
 
+    /**
+     * Promote one or more users in the group.
+     *
+     * @param session The session of the user.
+     * @param groupId The id of the group to promote users into.
+     * @param ids The ids of the users to promote.
+     * @return A future.
+     */
+    func promoteGroupUsers( session : Session, groupId : String , ids : String...) -> EventLoopFuture<Void>
     
+    /**
+     * Read one or more objects from the storage engine.
+     *
+     * @param session The session of the user.
+     * @param objectIds The objects to read.
+     * @return A future to resolve storage objects.
+     */
+    func readStorageObjects( session : Session, objectIds: Nakama_Api_ReadStorageObjectId... ) -> EventLoopFuture<Nakama_Api_StorageObjects>
+
+
 }

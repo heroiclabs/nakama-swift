@@ -130,6 +130,13 @@ public class GrpcClient : Client {
         }
     }
     
+    func mapStorageObjects() -> (Nakama_Api_StorageObjects) -> EventLoopFuture<Nakama_Api_StorageObjects>{
+        return { (apiStorageObjects : Nakama_Api_StorageObjects) -> EventLoopFuture<Nakama_Api_StorageObjects> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_StorageObjects in
+                return apiStorageObjects
+            }
+        }
+    }
     
     /**
     A client to interact with Nakama server.
@@ -871,5 +878,19 @@ public class GrpcClient : Client {
         //
         return self.nakamaGrpcClient.listTournaments(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapListTournaments() )
     }
+    
+    public func promoteGroupUsers(session: Session, groupId: String, ids: String...) -> EventLoopFuture<Void> {
+        var req     = Nakama_Api_PromoteGroupUsersRequest.init()
+        req.groupID = groupId
+        req.userIds = ids
+        return self.nakamaGrpcClient.promoteGroupUsers( req , callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
+    
+    public func readStorageObjects(session: Session, objectIds: Nakama_Api_ReadStorageObjectId...) -> EventLoopFuture<Nakama_Api_StorageObjects> {
+        var req = Nakama_Api_ReadStorageObjectsRequest.init()
+        req.objectIds = objectIds
+        return self.nakamaGrpcClient.readStorageObjects( req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjects() )
+    }
+    
     
 }
