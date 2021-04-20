@@ -706,6 +706,35 @@ public protocol Client {
      */
     //func linkDevice( session : Session, id : String ) -> EventLoopFuture<Void>
 
-    
+    /**
+    * List groups on the server.
+    *
+    * @param session The session of the user.
+    * @param name The name filter to apply to the group list.
+    * @return A future to resolve group objects.
+    */
+    func listGroups( session : Session , name : String ) -> EventLoopFuture<Nakama_Api_GroupList>
 
+   /**
+    * List groups on the server.
+    *
+    * @param session The session of the user.
+    * @param name The name filter to apply to the group list.
+    * @param limit The number of groups to list.
+    * @return A future to resolve group objects.
+    */
+    func listGroups( session : Session , name : String? , limit: Int32?) -> EventLoopFuture<Nakama_Api_GroupList>
+
+   /**
+    * List groups on the server.
+    *
+    * @param session The session of the user.
+    * @param name The name filter to apply to the group list.
+    * @param limit The number of groups to list.
+    * @param cursor A cursor for the current position in the groups to list.
+    * @return A future to resolve group objects.
+    */
+    func listGroups( session : Session , name : String? , limit: Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_GroupList>
+
+    
 }

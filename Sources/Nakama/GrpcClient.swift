@@ -66,6 +66,16 @@ public class GrpcClient : Client {
         }
     }
     
+    /*
+     func mapGroupsList() -> (Nakama_Api_GroupList) -> EventLoopFuture<Nakama_Api_GroupList> {
+        return { (groupsList : Nakama_Api_GroupList ) -> EventLoopFuture<Nakama_Api_GroupList> in
+            return self.eventLoopGroup.next().submit{ () -> Nakama_Api_GroupList in
+                return groupsList
+            }
+        }
+    }
+     */
+    
     func mapUsers() -> (Nakama_Api_Users) -> EventLoopFuture<Nakama_Api_Users>{
         return { (apiUsers : Nakama_Api_Users) -> EventLoopFuture<Nakama_Api_Users> in
             return self.eventLoopGroup.next().submit { () -> Nakama_Api_Users in
@@ -571,5 +581,32 @@ public class GrpcClient : Client {
         
     }*/
     
+    
+    public func listGroups(session: Session, name: String) -> EventLoopFuture<Nakama_Api_GroupList> {
+        return self.listGroups(session: session, name: name)
+    }
+    
+    public func listGroups(session: Session, name: String?, limit: Int32?) -> EventLoopFuture<Nakama_Api_GroupList> {
+        return self.listGroups(session: session, name: name, limit: limit)
+    }
+    
+    public func listGroups(session: Session, name: String?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_GroupList> {
+        var req = Nakama_Api_ListGroupsRequest.init()
+        if name != nil {
+            req.name = name!
+        }
+        //
+        req.limit       = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if limit != nil{
+            req.limit.value = limit!
+        }
+        //
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        //self.nakamaGrpcClient.listGroups()
+        return self.nakamaGrpcClient.listGroups( req , callOptions: sessionCallOption(session: session)).response
+        //
+    }
     
 }
