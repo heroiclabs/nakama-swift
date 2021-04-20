@@ -628,4 +628,52 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.listFriends(req, callOptions: sessionCallOption(session: session)).response
     }
+    
+    public func listMatches(session: Session) -> EventLoopFuture<Nakama_Api_MatchList> {
+        return self.listMatches(session: session, min: nil, max: nil, limit: nil, label: nil, authoritative: nil)
+    }
+    
+    public func listMatches(session: Session, min: Int32?) -> EventLoopFuture<Nakama_Api_MatchList> {
+        return self.listMatches(session: session, min: min, max: nil, limit: nil, label: nil, authoritative: nil)
+    }
+    
+    public func listMatches(session: Session, min: Int32?, max: Int32?) -> EventLoopFuture<Nakama_Api_MatchList> {
+        return self.listMatches(session: session, min: min, max: max, limit: nil, label: nil, authoritative: nil)
+    }
+    
+    public func listMatches(session: Session, min: Int32?, max: Int32?, limit: Int32?) -> EventLoopFuture<Nakama_Api_MatchList> {
+        return self.listMatches(session: session, min: min, max: max, limit: limit, label: nil, authoritative: nil)
+    }
+    
+    public func listMatches(session: Session, min: Int32?, max: Int32?, limit: Int32?, label: String?) -> EventLoopFuture<Nakama_Api_MatchList> {
+        return self.listMatches(session: session, min: min, max: max, limit: limit, label: label, authoritative: nil)
+    }
+    
+    public func listMatches(session: Session, min: Int32?, max: Int32?, limit: Int32?, label: String?, authoritative: Bool?) -> EventLoopFuture<Nakama_Api_MatchList> {
+        var req = Nakama_Api_ListMatchesRequest.init()
+        req.authoritative = SwiftProtobuf.Google_Protobuf_BoolValue()
+        if authoritative != nil {
+            req.authoritative.value = authoritative!
+        }
+        //
+        req.label = SwiftProtobuf.Google_Protobuf_StringValue()
+        if label != nil {
+            req.label.value = label!
+        }
+        req.maxSize = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if max != nil {
+            req.maxSize.value = max!
+        }
+        req.minSize = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if min != nil {
+            req.minSize.value = min!
+        }
+        req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.minSize.value = limit!
+        }
+        return self.nakamaGrpcClient.listMatches(req , callOptions: sessionCallOption(session: session)).response
+    }
+    
+    
 }

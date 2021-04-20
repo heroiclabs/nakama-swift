@@ -755,5 +755,68 @@ public protocol Client {
      */
     func listFriends( session : Session, state : Int32?, limit : Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_FriendList>
     
+    /**
+     * Fetch a list of matches active on the server.
+     *
+     * @param session The session of the user.
+     * @return A future to resolve match.
+     */
+    func listMatches( session : Session ) -> EventLoopFuture<Nakama_Api_MatchList>
 
+    /**
+     * Fetch a list of matches active on the server.
+     *
+     * @param session The session of the user.
+     * @param min The minimum number of match participants.
+     * @return A future to resolve match.
+     */
+    func listMatches( session : Session, min : Int32? ) -> EventLoopFuture<Nakama_Api_MatchList>
+
+    /**
+     * Fetch a list of matches active on the server.
+     *
+     * @param session The session of the user.
+     * @param min The minimum number of match participants.
+     * @param max The maximum number of match participants.
+     * @return A future to resolve match.
+     */
+    func listMatches( session : Session, min : Int32?, max : Int32? ) -> EventLoopFuture<Nakama_Api_MatchList>
+
+    /**
+     * Fetch a list of matches active on the server.
+     *
+     * @param session The session of the user.
+     * @param min The minimum number of match participants.
+     * @param max The maximum number of match participants.
+     * @param limit The number of matches to list.
+     * @return A future to resolve match.
+     */
+    func listMatches( session : Session, min : Int32?, max : Int32?, limit : Int32? ) -> EventLoopFuture<Nakama_Api_MatchList>
+
+    /**
+     * Fetch a list of matches active on the server.
+     *
+     * @param session The session of the user.
+     * @param min The minimum number of match participants.
+     * @param max The maximum number of match participants.
+     * @param limit The number of matches to list.
+     * @param label The label to filter the match list on.
+     * @return A future to resolve match.
+     */
+    func listMatches( session : Session, min : Int32?, max : Int32?, limit : Int32?, label : String? ) -> EventLoopFuture<Nakama_Api_MatchList>
+
+    /**
+     * Fetch a list of matches active on the server.
+     *
+     * @param session The session of the user.
+     * @param min The minimum number of match participants.
+     * @param max The maximum number of match participants.
+     * @param limit The number of matches to list.
+     * @param authoritative <c>True</c> to include authoritative matches.
+     * @param label The label to filter the match list on.
+     * @return A future to resolve match.
+     */
+    func listMatches( session : Session, min : Int32?, max : Int32?, limit : Int32?, label : String?, authoritative : Bool? ) -> EventLoopFuture<Nakama_Api_MatchList>
+
+    
 }
