@@ -154,6 +154,16 @@ public class GrpcClient : Client {
         }
     }
     
+    // map Nakama_Api_NotificationList
+    func mapApiNotificaionList() -> (Nakama_Api_NotificationList) -> EventLoopFuture<Nakama_Api_NotificationList>{
+        return { (api : Nakama_Api_NotificationList) -> EventLoopFuture<Nakama_Api_NotificationList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_NotificationList in
+                return api
+            }
+        }
+    }
+    
+    
     /**
     A client to interact with Nakama server.
     - Parameter serverKey: The key used to authenticate with the server without a session. Defaults to "defaultkey".
@@ -1035,4 +1045,25 @@ public class GrpcClient : Client {
         //
         return self.nakamaGrpcClient.deleteStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
     }
+    
+    public func listNotifications(session: Session) -> EventLoopFuture<Nakama_Api_NotificationList> {
+        return self.listNotifications(session: session, limit: nil, cacheableCursor: nil)
+    }
+    
+    public func listNotifications(session: Session, limit: Int32?) -> EventLoopFuture<Nakama_Api_NotificationList> {
+        return self.listNotifications(session: session, limit: limit, cacheableCursor: nil)
+    }
+    
+    public func listNotifications(session: Session, limit: Int32?, cacheableCursor: String?) -> EventLoopFuture<Nakama_Api_NotificationList> {
+        var req = Nakama_Api_ListNotificationsRequest.init()
+        req.limit = Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cacheableCursor != nil {
+            req.cacheableCursor = cacheableCursor!
+        }
+        return self.nakamaGrpcClient.listNotifications(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapApiNotificaionList() )
+    }
+    
 }

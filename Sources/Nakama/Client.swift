@@ -1217,5 +1217,32 @@ public protocol Client {
      */
     func rpc( session: Session, id: String, payload : String? ) -> EventLoopFuture<Nakama_Api_Rpc>
     
+    /**
+     * List notifications for the user with an optional cursor.
+     *
+     * @param session The session of the user.
+     * @return A future to resolve notifications objects.
+     */
+    func listNotifications( session : Session ) -> EventLoopFuture<Nakama_Api_NotificationList>
+
+    /**
+     * List notifications for the user with an optional cursor.
+     *
+     * @param session The session of the user.
+     * @param limit The number of notifications to list.
+     * @return A future to resolve notifications objects.
+     */
+    func listNotifications( session : Session, limit : Int32? ) -> EventLoopFuture<Nakama_Api_NotificationList>
+
+    /**
+     * List notifications for the user with an optional cursor.
+     *
+     * @param session The session of the user.
+     * @param limit The number of notifications to list.
+     * @param cacheableCursor A cursor for the current position in notifications to list.
+     * @return A future to resolve notifications objects.
+     */
+    func listNotifications( session : Session, limit : Int32?, cacheableCursor : String? ) -> EventLoopFuture<Nakama_Api_NotificationList>
+
     
 }
