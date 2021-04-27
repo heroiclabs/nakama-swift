@@ -558,7 +558,7 @@ public protocol Client {
      * @param objectIds The ids of the objects to delete.
      * @return A future.
      */
-    //func deleteStorageObjects( session : Session,  StorageObjectId... objectIds);
+    func deleteStorageObjects( session : Session,  objectIds: Nakama_Api_DeleteStorageObjectId... ) -> EventLoopFuture<Void>
 
     /**
      * Demote a set of users in a group to the next role down.

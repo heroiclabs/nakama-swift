@@ -1028,4 +1028,11 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.rpcFunc(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapApiRpc() )
     }
+    
+    public func deleteStorageObjects(session: Session, objectIds: Nakama_Api_DeleteStorageObjectId...) -> EventLoopFuture<Void> {
+        var req = Nakama_Api_DeleteStorageObjectsRequest.init()
+        req.objectIds = objectIds
+        //
+        return self.nakamaGrpcClient.deleteStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapEmptyVoid() )
+    }
 }
