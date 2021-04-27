@@ -172,6 +172,14 @@ public class GrpcClient : Client {
         }
     }
     
+    // map Nakama_Api_UserGroupList
+    func mapApiUserGroupList() -> (Nakama_Api_UserGroupList) -> EventLoopFuture<Nakama_Api_UserGroupList>{
+        return { (api : Nakama_Api_UserGroupList) -> EventLoopFuture<Nakama_Api_UserGroupList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_UserGroupList in
+                return api
+            }
+        }
+    }
     
     /**
     A client to interact with Nakama server.
@@ -1116,4 +1124,30 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.listTournamentRecords(req, callOptions: sessionCallOption(session: session)  ).response.flatMap( mapApiTournamentList() )
     }
     
+    public func listUserGroups(session: Session) -> EventLoopFuture<Nakama_Api_UserGroupList> {
+        return self.listUserGroups(session: session, userId: nil, state: nil, limit: nil, cursor: nil)
+    }
+    
+    public func listUserGroups(session: Session, userId: String?) -> EventLoopFuture<Nakama_Api_UserGroupList> {
+        return self.listUserGroups(session: session, userId: userId, state: nil, limit: nil, cursor: nil)
+    }
+    
+    public func listUserGroups(session: Session, userId: String?, state: Int32?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_UserGroupList> {
+        var req = Nakama_Api_ListUserGroupsRequest.init()
+        if userId != nil {
+            req.userID = userId!
+        }
+        req.state = Google_Protobuf_Int32Value()
+        if state != nil {
+            req.state.value = state!
+        }
+        req.limit = Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        return self.nakamaGrpcClient.listUserGroups(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapApiUserGroupList() )
+    }
 }

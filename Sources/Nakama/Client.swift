@@ -1303,5 +1303,35 @@ public protocol Client {
      */
     func listTournamentRecords( session : Session, tournamentId : String?, expiry: Int64?, limit: Int32? , cursor: String? , ownerIds: [String]? ) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
 
+    /**
+     * List of groups the current user is a member of.
+     *
+     * @param session The session of the user.
+     * @return A future which resolves to group objects.
+     */
+    func listUserGroups( session: Session ) -> EventLoopFuture<Nakama_Api_UserGroupList>
+
+    /**
+     * List groups a user is a member of.
+     *
+     * @param session The session of the user.
+     * @param userId The id of the user whose groups to list.
+     * @return A future which resolves to group objects.
+     */
+    func listUserGroups( session: Session, userId: String? )-> EventLoopFuture<Nakama_Api_UserGroupList>
+
+    /**
+     * List groups a user is a member of.
+     *
+     * @param session The session of the user.
+     * @param userId The id of the user whose groups to list.
+     * @param state The user group state to list.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @param cursor An optional next page cursor.
+     * @return A future which resolves to group objects.
+     */
+    func listUserGroups( session: Session, userId: String?, state : Int32? , limit: Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_UserGroupList>
+
+    //func listUserGroups
     
 }
