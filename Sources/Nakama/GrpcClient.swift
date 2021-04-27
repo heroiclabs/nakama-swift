@@ -163,6 +163,15 @@ public class GrpcClient : Client {
         }
     }
     
+    // map Nakama_Api_TournamentRecordList
+    func mapApiTournamentList() -> (Nakama_Api_TournamentRecordList) -> EventLoopFuture<Nakama_Api_TournamentRecordList>{
+        return { (api : Nakama_Api_TournamentRecordList) -> EventLoopFuture<Nakama_Api_TournamentRecordList> in
+            return self.eventLoopGroup.next().submit { () -> Nakama_Api_TournamentRecordList in
+                return api
+            }
+        }
+    }
+    
     
     /**
     A client to interact with Nakama server.
@@ -1064,6 +1073,47 @@ public class GrpcClient : Client {
             req.cacheableCursor = cacheableCursor!
         }
         return self.nakamaGrpcClient.listNotifications(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapApiNotificaionList() )
+    }
+    
+    public func listTournamentRecords(session: Session, tournamentId: String) -> EventLoopFuture<Nakama_Api_TournamentRecordList> {
+        return self.listTournamentRecords(session: session, tournamentId: tournamentId, expiry: nil, limit: nil, cursor: nil, ownerIds: nil)
+    }
+    
+    public func listTournamentRecords(session: Session, tournamentId: String?, expiry: Int64?) -> EventLoopFuture<Nakama_Api_TournamentRecordList> {
+        return self.listTournamentRecords(session: session, tournamentId: tournamentId, expiry: expiry, limit: nil, cursor: nil, ownerIds: nil)
+    }
+    
+    public func listTournamentRecords(session: Session, tournamentId: String?, expiry: Int64?, limit: Int32?) -> EventLoopFuture<Nakama_Api_TournamentRecordList> {
+        return self.listTournamentRecords(session: session, tournamentId: tournamentId, expiry: expiry, limit: limit, cursor: nil, ownerIds: nil)
+    }
+    
+    public func listTournamentRecords(session: Session, tournamentId: String?, expiry: Int64?, limit: Int32?,  cursor: String?) -> EventLoopFuture<Nakama_Api_TournamentRecordList> {
+        return self.listTournamentRecords(session: session, tournamentId: tournamentId, expiry: expiry, limit: limit, cursor: cursor, ownerIds: nil)
+    }
+    
+    public func listTournamentRecords(session: Session, tournamentId: String?, ownerIds: [String]?) -> EventLoopFuture<Nakama_Api_TournamentRecordList> {
+        return self.listTournamentRecords(session: session, tournamentId: tournamentId, expiry: nil, limit: nil, cursor: nil, ownerIds: ownerIds)
+    }
+    public func listTournamentRecords(session: Session, tournamentId: String?, expiry: Int64?, limit: Int32?, cursor: String?, ownerIds: [String]?) -> EventLoopFuture<Nakama_Api_TournamentRecordList> {
+        var req = Nakama_Api_ListTournamentRecordsRequest.init()
+        if tournamentId != nil {
+            req.tournamentID = tournamentId!
+        }
+        req.expiry = Google_Protobuf_Int64Value()
+        if expiry != nil {
+            req.expiry.value = expiry!
+        }
+        req.limit = Google_Protobuf_Int32Value()
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        if ownerIds != nil {
+            req.ownerIds = ownerIds!
+        }
+        return self.nakamaGrpcClient.listTournamentRecords(req, callOptions: sessionCallOption(session: session)  ).response.flatMap( mapApiTournamentList() )
     }
     
 }

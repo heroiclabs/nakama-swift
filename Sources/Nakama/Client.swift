@@ -1244,5 +1244,64 @@ public protocol Client {
      */
     func listNotifications( session : Session, limit : Int32?, cacheableCursor : String? ) -> EventLoopFuture<Nakama_Api_NotificationList>
 
+    /**
+     * List tournament records from a given tournament.
+     * @param session The session of the user.
+     * @param tournamentId The ID of the tournament to list for.
+     * @return a future which resolved to a tournament record list.
+     */
+    func listTournamentRecords( session : Session, tournamentId : String ) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
+
+    /**
+     * List tournament records from a given tournament.
+     * @param session The session of the user.
+     * @param tournamentId The ID of the tournament to list for.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @return a future which resolved to a tournament record list.
+     */
+    func  listTournamentRecords( session : Session, tournamentId : String?, expiry: Int64? )  -> EventLoopFuture<Nakama_Api_TournamentRecordList>
+
+    /**
+     * List tournament records from a given tournament.
+     * @param session The session of the user.
+     * @param tournamentId The ID of the tournament to list for.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @return a future which resolved to a tournament record list.
+     */
+    func listTournamentRecords( session : Session, tournamentId : String?, expiry: Int64?, limit: Int32? ) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
+
+    /**
+     * List tournament records from a given tournament.
+     * @param session The session of the user.
+     * @param tournamentId The ID of the tournament to list for.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @param cursor A next or previous page cursor.
+     * @return a future which resolved to a tournament record list.
+     */
+    func listTournamentRecords( session : Session, tournamentId : String?, expiry: Int64?, limit: Int32? , cursor: String? ) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
+
+    /**
+     * List tournament records from a given tournament.
+     * @param session The session of the user.
+     * @param tournamentId The ID of the tournament to list for.
+     * @param ownerIds One or more owners to retrieve records for.
+     * @return a future which resolved to a tournament record list.
+     */
+    func listTournamentRecords( session : Session, tournamentId : String?, ownerIds: [String]? ) ->EventLoopFuture<Nakama_Api_TournamentRecordList>
+
+    /**
+     * List tournament records from a given tournament.
+     * @param session The session of the user.
+     * @param tournamentId The ID of the tournament to list for.
+     * @param expiry Expiry in seconds (since epoch) to begin fetching records from.
+     * @param limit Max number of records to return. Between 1 and 100.
+     * @param cursor A next or previous page cursor.
+     * @param ownerIds One or more owners to retrieve records for.
+     * @return a future which resolved to a tournament record list.
+     */
+    func listTournamentRecords( session : Session, tournamentId : String?, expiry: Int64?, limit: Int32? , cursor: String? , ownerIds: [String]? ) -> EventLoopFuture<Nakama_Api_TournamentRecordList>
+
     
 }
