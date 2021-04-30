@@ -1008,11 +1008,11 @@ public class GrpcClient : Client {
         return self.nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapLeaderBoardRecord() )
     }
     
-    /*public func writeStorageObjects(session: Session, objects: Nakama_Api_StorageObjectAck...) -> EventLoopFuture<Nakama_Api_StorageObjectAcks> {
+    public func writeStorageObjects(session: Session, objects: Nakama_Api_StorageObjectAck...) -> EventLoopFuture<Nakama_Api_StorageObjectAcks> {
         var req = Nakama_Api_WriteStorageObjectsRequest.init()
         
         return self.nakamaGrpcClient.writeStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjects() )
-    }*/
+    }
     
     public func writeTournamentRecord(session: Session, tournamentId: String, score: Int64) -> EventLoopFuture<Nakama_Api_LeaderboardRecord> {
         return self.writeTournamentRecord(session: session, tournamentId: tournamentId, score: score, subscore: nil, metadata: nil)
