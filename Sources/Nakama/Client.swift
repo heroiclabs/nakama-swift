@@ -1152,8 +1152,8 @@ public protocol Client {
      * @param objects The objects to write.
      * @return A future to resolve the acknowledgements with writes.
      */
-    //func writeStorageObjects( session: Session, objects:  Nakama_Api_StorageObjectAck... ) -> EventLoopFuture<Nakama_Api_StorageObjectAcks>
-    //
+    func writeStorageObjects( session: Session, objects:  Nakama_Api_StorageObjectAck... ) -> EventLoopFuture<Nakama_Api_StorageObjectAcks>
+    
     /**
      * A request to submit a score to a tournament.
      *
