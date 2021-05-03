@@ -856,6 +856,7 @@ public class GrpcClient : Client {
             req.collection = collection!
         }
         req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        req.userID = session.userId
         if limit != nil {
             req.limit.value = limit!
         }
