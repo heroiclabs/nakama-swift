@@ -1151,4 +1151,33 @@ public class GrpcClient : Client {
         }
         return self.nakamaGrpcClient.listUserGroups(req, callOptions: sessionCallOption(session: session) ).response.flatMap( mapApiUserGroupList() )
     }
+    
+    public func listUsersStorageObjects(session: Session, collection: String?, userId: String?) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
+        return self.listUsersStorageObjects(session: session, collection: collection, userId: userId, limit: nil, cursor: nil)
+    }
+    
+    public func listUsersStorageObjects(session: Session, collection: String?, userId: String?, limit: Int32?) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
+        return self.listUsersStorageObjects(session: session, collection: collection, userId: userId, limit: limit, cursor: nil)
+    }
+    
+    public func listUsersStorageObjects(session: Session, collection: String?, userId: String?, limit: Int32?, cursor: String?) -> EventLoopFuture<Nakama_Api_StorageObjectList> {
+        var req = Nakama_Api_ListStorageObjectsRequest.init()
+        if collection != nil {
+            req.collection = collection!
+        }
+        req.limit = SwiftProtobuf.Google_Protobuf_Int32Value()
+        if userId != nil {
+            req.userID = userId!
+        }else{
+            req.userID = session.userId
+        }
+        if limit != nil {
+            req.limit.value = limit!
+        }
+        if cursor != nil {
+            req.cursor = cursor!
+        }
+        return self.nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response.flatMap( mapStorageObjectList() )
+    }
+    
 }

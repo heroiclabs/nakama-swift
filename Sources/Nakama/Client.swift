@@ -946,6 +946,40 @@ public protocol Client {
 
     
     /**
+     * List storage objects in a collection which belong to a specific user and have public read access.
+     *
+     * @param session The session of the user.
+     * @param collection The collection to list over.
+     * @param userId The user ID of the user to list objects for.
+     * @return A future which resolves to a storage object list.
+     */
+    func listUsersStorageObjects( session : Session , collection : String?, userId : String? ) -> EventLoopFuture<Nakama_Api_StorageObjectList>
+
+    /**
+     * List storage objects in a collection which belong to a specific user and have public read access.
+     *
+     * @param session The session of the user.
+     * @param collection The collection to list over.
+     * @param userId The user ID of the user to list objects for.
+     * @param limit The number of objects to list.
+     * @return A future which resolves to a storage object list.
+     */
+    func listUsersStorageObjects( session : Session , collection : String?, userId : String?, limit : Int32? ) -> EventLoopFuture<Nakama_Api_StorageObjectList>
+
+    /**
+     * List storage objects in a collection which belong to a specific user and have public read access.
+     *
+     * @param session The session of the user.
+     * @param collection The collection to list over.
+     * @param userId The user ID of the user to list objects for.
+     * @param limit The number of objects to list.
+     * @param cursor A cursor to paginate over the collection.
+     * @return A future which resolves to a storage object list.
+     */
+    func listUsersStorageObjects( session : Session , collection : String?, userId : String?, limit : Int32?, cursor : String? ) -> EventLoopFuture<Nakama_Api_StorageObjectList>
+
+    
+    /**
      * List active/upcoming tournaments based on given filters.
      * @param session The session of the user.
      * @return a future which resolved to a tournament list.
