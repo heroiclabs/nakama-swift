@@ -1,18 +1,10 @@
 # Nakama Swift
 
-**Nakama Swift is deprecated and unsupported**
-
-The latest major version of Nakama server is version 3 released January 2021. This Nakama Swift client was developed for Nakama server 1.
-
 [Swift Client SDK API Reference](https://heroiclabs.github.io/nakama-swift/)
 
-## Contribute
+**Nakama Swift is not complete - looking for community contributions.**
 
-We welcome pull requests which update the SDK for Nakama server 3. For examples of how other client SDKs generate the bulk of the API from swagger definitions see the `codegen` folder in:
-
-- https://github.com/heroiclabs/nakama-dotnet/
-- https://github.com/heroiclabs/nakama-godot
-- https://github.com/heroiclabs/nakama-defold
+The current version of the Nakama Swift SDK is not feature-complete to use with Nakama v2 or Nakama v3 released in January 2021. We are asking for community maintainers to open PR or alternatively send us an [email](support@heroiclabs.com) if interested in updating and maintaining the SDK on par with other official Nakama Client Libraries.
 
 ## License
 
