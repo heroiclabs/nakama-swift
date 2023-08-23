@@ -37,6 +37,171 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+/// Validation Provider,
+public enum Nakama_Api_StoreProvider: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+
+  /// Apple App Store
+  case appleAppStore // = 0
+
+  /// Google Play Store
+  case googlePlayStore // = 1
+
+  /// Huawei App Gallery
+  case huaweiAppGallery // = 2
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .appleAppStore
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .appleAppStore
+    case 1: self = .googlePlayStore
+    case 2: self = .huaweiAppGallery
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .appleAppStore: return 0
+    case .googlePlayStore: return 1
+    case .huaweiAppGallery: return 2
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Nakama_Api_StoreProvider: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Nakama_Api_StoreProvider] = [
+    .appleAppStore,
+    .googlePlayStore,
+    .huaweiAppGallery,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
+/// Environment where a purchase/subscription took place,
+public enum Nakama_Api_StoreEnvironment: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+
+  /// Unknown environment.
+  case unknown // = 0
+
+  /// Sandbox/test environment.
+  case sandbox // = 1
+
+  /// Production environment.
+  case production // = 2
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .unknown
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .unknown
+    case 1: self = .sandbox
+    case 2: self = .production
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .unknown: return 0
+    case .sandbox: return 1
+    case .production: return 2
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Nakama_Api_StoreEnvironment: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Nakama_Api_StoreEnvironment] = [
+    .unknown,
+    .sandbox,
+    .production,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
+/// Operator that can be used to override the one set in the leaderboard.
+public enum Nakama_Api_Operator: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+
+  /// Do not override the leaderboard operator.
+  case noOverride // = 0
+
+  /// Override the leaderboard operator with BEST.
+  case best // = 1
+
+  /// Override the leaderboard operator with SET.
+  case set // = 2
+
+  /// Override the leaderboard operator with INCREMENT.
+  case increment // = 3
+
+  /// Override the leaderboard operator with DECREMENT.
+  case decrement // = 4
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .noOverride
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .noOverride
+    case 1: self = .best
+    case 2: self = .set
+    case 3: self = .increment
+    case 4: self = .decrement
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .noOverride: return 0
+    case .best: return 1
+    case .set: return 2
+    case .increment: return 3
+    case .decrement: return 4
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Nakama_Api_Operator: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Nakama_Api_Operator] = [
+    .noOverride,
+    .best,
+    .set,
+    .increment,
+    .decrement,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 /// A user with additional account details. Always the current user.
 public struct Nakama_Api_Account {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -65,7 +230,7 @@ public struct Nakama_Api_Account {
   /// The custom id in the user's account.
   public var customID: String = String()
 
-  /// The UNIX time when the user's email was verified.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
   public var verifyTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _verifyTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_verifyTime = newValue}
@@ -75,7 +240,7 @@ public struct Nakama_Api_Account {
   /// Clears the value of `verifyTime`. Subsequent reads from it will return its default value.
   public mutating func clearVerifyTime() {self._verifyTime = nil}
 
-  /// The UNIX time when the user's account was disabled/banned.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned.
   public var disableTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _disableTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_disableTime = newValue}
@@ -92,6 +257,23 @@ public struct Nakama_Api_Account {
   fileprivate var _user: Nakama_Api_User? = nil
   fileprivate var _verifyTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
   fileprivate var _disableTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+/// Obtain a new authentication token using a refresh token.
+public struct Nakama_Api_AccountRefresh {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Refresh token.
+  public var token: String = String()
+
+  /// Extra information that will be bundled in the session token.
+  public var vars: Dictionary<String,String> = [:]
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
 }
 
 /// Send a Apple Sign In token to the server. Used with authenticate/link/unlink.
@@ -293,6 +475,40 @@ public struct Nakama_Api_AddGroupUsersRequest {
 
   /// The users to add.
   public var userIds: [String] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Authenticate against the server with a refresh token.
+public struct Nakama_Api_SessionRefreshRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Refresh token.
+  public var token: String = String()
+
+  /// Extra information that will be bundled in the session token.
+  public var vars: Dictionary<String,String> = [:]
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
+public struct Nakama_Api_SessionLogoutRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Session token to log out.
+  public var token: String = String()
+
+  /// Refresh token to invalidate.
+  public var refreshToken: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -635,12 +851,23 @@ public struct Nakama_Api_AuthenticateSteamRequest {
   /// Set the username on the account at register. Must be unique.
   public var username: String = String()
 
+  /// Import Steam friends for the user.
+  public var sync: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _sync ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_sync = newValue}
+  }
+  /// Returns true if `sync` has been explicitly set.
+  public var hasSync: Bool {return self._sync != nil}
+  /// Clears the value of `sync`. Subsequent reads from it will return its default value.
+  public mutating func clearSync() {self._sync = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
   fileprivate var _account: Nakama_Api_AccountSteam? = nil
   fileprivate var _create: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+  fileprivate var _sync: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 }
 
 /// Ban users from a group.
@@ -708,7 +935,7 @@ public struct Nakama_Api_ChannelMessage {
   /// The content payload.
   public var content: String = String()
 
-  /// The UNIX time when the message was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
@@ -718,7 +945,7 @@ public struct Nakama_Api_ChannelMessage {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {self._createTime = nil}
 
-  /// The UNIX time when the message was last updated.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_updateTime = newValue}
@@ -865,6 +1092,20 @@ public struct Nakama_Api_DeleteNotificationsRequest {
 
   /// The id of notifications.
   public var ids: [String] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Delete a leaderboard record.
+public struct Nakama_Api_DeleteTournamentRecordRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The tournament ID to delete from.
+  public var tournamentID: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1076,6 +1317,20 @@ public struct Nakama_Api_GetUsersRequest {
   public init() {}
 }
 
+/// Fetch a subscription by product id.
+public struct Nakama_Api_GetSubscriptionRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Product id of the subscription
+  public var productID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// A group in the server.
 public struct Nakama_Api_Group {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1119,7 +1374,7 @@ public struct Nakama_Api_Group {
   /// The maximum number of members allowed.
   public var maxCount: Int32 = 0
 
-  /// The UNIX time when the group was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
@@ -1129,7 +1384,7 @@ public struct Nakama_Api_Group {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {self._createTime = nil}
 
-  /// The UNIX time when the group was last updated.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was last updated.
   public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_updateTime = newValue}
@@ -1307,6 +1562,40 @@ public struct Nakama_Api_ImportFacebookFriendsRequest {
   fileprivate var _reset: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 }
 
+/// Import Facebook friends into the current user's account.
+public struct Nakama_Api_ImportSteamFriendsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The Facebook account details.
+  public var account: Nakama_Api_AccountSteam {
+    get {return _account ?? Nakama_Api_AccountSteam()}
+    set {_account = newValue}
+  }
+  /// Returns true if `account` has been explicitly set.
+  public var hasAccount: Bool {return self._account != nil}
+  /// Clears the value of `account`. Subsequent reads from it will return its default value.
+  public mutating func clearAccount() {self._account = nil}
+
+  /// Reset the current user's friends list.
+  public var reset: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _reset ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_reset = newValue}
+  }
+  /// Returns true if `reset` has been explicitly set.
+  public var hasReset: Bool {return self._reset != nil}
+  /// Clears the value of `reset`. Subsequent reads from it will return its default value.
+  public mutating func clearReset() {self._reset = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _account: Nakama_Api_AccountSteam? = nil
+  fileprivate var _reset: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
 /// Immediately join an open group, or request to join a closed one.
 public struct Nakama_Api_JoinGroupRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1352,6 +1641,67 @@ public struct Nakama_Api_KickGroupUsersRequest {
   public init() {}
 }
 
+/// A leaderboard on the server.
+public struct Nakama_Api_Leaderboard {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The ID of the leaderboard.
+  public var id: String = String()
+
+  /// ASC(0) or DESC(1) sort mode of scores in the leaderboard.
+  public var sortOrder: UInt32 = 0
+
+  /// BEST, SET, INCREMENT or DECREMENT operator mode of the leaderboard.
+  public var `operator`: Nakama_Api_Operator = .noOverride
+
+  /// The UNIX time when the leaderboard was previously reset. A computed value.
+  public var prevReset: UInt32 = 0
+
+  /// The UNIX time when the leaderboard is next playable. A computed value.
+  public var nextReset: UInt32 = 0
+
+  /// Additional information stored as a JSON object.
+  public var metadata: String = String()
+
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard was created.
+  public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createTime = newValue}
+  }
+  /// Returns true if `createTime` has been explicitly set.
+  public var hasCreateTime: Bool {return self._createTime != nil}
+  /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
+  public mutating func clearCreateTime() {self._createTime = nil}
+
+  /// Whether the leaderboard was created authoritatively or not.
+  public var authoritative: Bool = false
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _createTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+/// A list of leaderboards
+public struct Nakama_Api_LeaderboardList {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The list of leaderboards returned.
+  public var leaderboards: [Nakama_Api_Leaderboard] = []
+
+  /// A pagination cursor (optional).
+  public var cursor: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// Represents a complete leaderboard record with all scores and associated metadata.
 public struct Nakama_Api_LeaderboardRecord {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1386,7 +1736,7 @@ public struct Nakama_Api_LeaderboardRecord {
   /// Metadata.
   public var metadata: String = String()
 
-  /// The UNIX time when the leaderboard record was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
@@ -1396,7 +1746,7 @@ public struct Nakama_Api_LeaderboardRecord {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {self._createTime = nil}
 
-  /// The UNIX time when the leaderboard record was updated.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was updated.
   public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_updateTime = newValue}
@@ -1406,7 +1756,7 @@ public struct Nakama_Api_LeaderboardRecord {
   /// Clears the value of `updateTime`. Subsequent reads from it will return its default value.
   public mutating func clearUpdateTime() {self._updateTime = nil}
 
-  /// The UNIX time when the leaderboard record expires.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record expires.
   public var expiryTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _expiryTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_expiryTime = newValue}
@@ -1449,6 +1799,9 @@ public struct Nakama_Api_LeaderboardRecordList {
 
   /// The cursor to send when retrieving the previous page, if any.
   public var prevCursor: String = String()
+
+  /// The total number of ranks available.
+  public var rankCount: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1500,6 +1853,40 @@ public struct Nakama_Api_LinkFacebookRequest {
   public init() {}
 
   fileprivate var _account: Nakama_Api_AccountFacebook? = nil
+  fileprivate var _sync: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
+/// Link Steam to the current user's account.
+public struct Nakama_Api_LinkSteamRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The Facebook account details.
+  public var account: Nakama_Api_AccountSteam {
+    get {return _account ?? Nakama_Api_AccountSteam()}
+    set {_account = newValue}
+  }
+  /// Returns true if `account` has been explicitly set.
+  public var hasAccount: Bool {return self._account != nil}
+  /// Clears the value of `account`. Subsequent reads from it will return its default value.
+  public mutating func clearAccount() {self._account = nil}
+
+  /// Import Steam friends for the user.
+  public var sync: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _sync ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_sync = newValue}
+  }
+  /// Returns true if `sync` has been explicitly set.
+  public var hasSync: Bool {return self._sync != nil}
+  /// Clears the value of `sync`. Subsequent reads from it will return its default value.
+  public mutating func clearSync() {self._sync = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _account: Nakama_Api_AccountSteam? = nil
   fileprivate var _sync: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 }
 
@@ -1602,11 +1989,36 @@ public struct Nakama_Api_ListGroupsRequest {
   /// Clears the value of `limit`. Subsequent reads from it will return its default value.
   public mutating func clearLimit() {self._limit = nil}
 
+  /// Language tag filter
+  public var langTag: String = String()
+
+  /// Number of group members
+  public var members: SwiftProtobuf.Google_Protobuf_Int32Value {
+    get {return _members ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
+    set {_members = newValue}
+  }
+  /// Returns true if `members` has been explicitly set.
+  public var hasMembers: Bool {return self._members != nil}
+  /// Clears the value of `members`. Subsequent reads from it will return its default value.
+  public mutating func clearMembers() {self._members = nil}
+
+  /// Optional Open/Closed filter.
+  public var `open`: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _open ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_open = newValue}
+  }
+  /// Returns true if ``open`` has been explicitly set.
+  public var hasOpen: Bool {return self._open != nil}
+  /// Clears the value of ``open``. Subsequent reads from it will return its default value.
+  public mutating func clearOpen() {self._open = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
   fileprivate var _limit: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
+  fileprivate var _members: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
+  fileprivate var _open: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 }
 
 /// List all users that are part of a group.
@@ -1680,6 +2092,9 @@ public struct Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest {
   public var hasExpiry: Bool {return self._expiry != nil}
   /// Clears the value of `expiry`. Subsequent reads from it will return its default value.
   public mutating func clearExpiry() {self._expiry = nil}
+
+  /// A next or previous page cursor.
+  public var cursor: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1868,6 +2283,32 @@ public struct Nakama_Api_ListStorageObjectsRequest {
   fileprivate var _limit: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
 }
 
+/// List user subscriptions.
+public struct Nakama_Api_ListSubscriptionsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Max number of results per page
+  public var limit: SwiftProtobuf.Google_Protobuf_Int32Value {
+    get {return _limit ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
+    set {_limit = newValue}
+  }
+  /// Returns true if `limit` has been explicitly set.
+  public var hasLimit: Bool {return self._limit != nil}
+  /// Clears the value of `limit`. Subsequent reads from it will return its default value.
+  public mutating func clearLimit() {self._limit = nil}
+
+  /// Cursor to retrieve a page of records from
+  public var cursor: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _limit: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
+}
+
 /// List tournament records from a given tournament around the owner.
 public struct Nakama_Api_ListTournamentRecordsAroundOwnerRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1899,6 +2340,9 @@ public struct Nakama_Api_ListTournamentRecordsAroundOwnerRequest {
   public var hasExpiry: Bool {return self._expiry != nil}
   /// Clears the value of `expiry`. Subsequent reads from it will return its default value.
   public mutating func clearExpiry() {self._expiry = nil}
+
+  /// A next or previous page cursor.
+  public var cursor: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2086,6 +2530,12 @@ public struct Nakama_Api_Match {
   /// Current number of users in the match.
   public var size: Int32 = 0
 
+  /// Tick Rate
+  public var tickRate: Int32 = 0
+
+  /// Handler name
+  public var handlerName: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -2128,7 +2578,7 @@ public struct Nakama_Api_Notification {
   /// ID of the sender, if a user. Otherwise 'null'.
   public var senderID: String = String()
 
-  /// The UNIX time when the notification was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
@@ -2265,6 +2715,9 @@ public struct Nakama_Api_Session {
   /// Authentication credentials.
   public var token: String = String()
 
+  /// Refresh token that can be used for session token renewal.
+  public var refreshToken: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -2297,7 +2750,7 @@ public struct Nakama_Api_StorageObject {
   /// The write access permissions for the object.
   public var permissionWrite: Int32 = 0
 
-  /// The UNIX time when the object was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
@@ -2307,7 +2760,7 @@ public struct Nakama_Api_StorageObject {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {self._createTime = nil}
 
-  /// The UNIX time when the object was last updated.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated.
   public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_updateTime = newValue}
@@ -2423,7 +2876,7 @@ public struct Nakama_Api_Tournament {
     set {_uniqueStorage()._category = newValue}
   }
 
-  /// ASC or DESC sort mode of scores in the tournament.
+  /// ASC (0) or DESC (1) sort mode of scores in the tournament.
   public var sortOrder: UInt32 {
     get {return _storage._sortOrder}
     set {_uniqueStorage()._sortOrder = newValue}
@@ -2471,7 +2924,7 @@ public struct Nakama_Api_Tournament {
     set {_uniqueStorage()._metadata = newValue}
   }
 
-  /// The UNIX time when the tournament was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _storage._createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_uniqueStorage()._createTime = newValue}
@@ -2481,7 +2934,7 @@ public struct Nakama_Api_Tournament {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {_uniqueStorage()._createTime = nil}
 
-  /// The UNIX time when the tournament will start.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament will start.
   public var startTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _storage._startTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_uniqueStorage()._startTime = newValue}
@@ -2491,7 +2944,7 @@ public struct Nakama_Api_Tournament {
   /// Clears the value of `startTime`. Subsequent reads from it will return its default value.
   public mutating func clearStartTime() {_uniqueStorage()._startTime = nil}
 
-  /// The UNIX time when the tournament will be stopped.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament will be stopped.
   public var endTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _storage._endTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_uniqueStorage()._endTime = newValue}
@@ -2511,6 +2964,24 @@ public struct Nakama_Api_Tournament {
   public var startActive: UInt32 {
     get {return _storage._startActive}
     set {_uniqueStorage()._startActive = newValue}
+  }
+
+  /// The UNIX time when the tournament was last reset. A computed value.
+  public var prevReset: UInt32 {
+    get {return _storage._prevReset}
+    set {_uniqueStorage()._prevReset = newValue}
+  }
+
+  /// Operator.
+  public var `operator`: Nakama_Api_Operator {
+    get {return _storage._operator}
+    set {_uniqueStorage()._operator = newValue}
+  }
+
+  /// Whether the leaderboard was created authoritatively or not.
+  public var authoritative: Bool {
+    get {return _storage._authoritative}
+    set {_uniqueStorage()._authoritative = newValue}
   }
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -2554,6 +3025,9 @@ public struct Nakama_Api_TournamentRecordList {
 
   /// The cursor to send when retrieving the previous page (optional).
   public var prevCursor: String = String()
+
+  /// The total number of ranks available.
+  public var rankCount: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2798,7 +3272,7 @@ public struct Nakama_Api_User {
     set {_uniqueStorage()._edgeCount = newValue}
   }
 
-  /// The UNIX time when the user was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _storage._createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_uniqueStorage()._createTime = newValue}
@@ -2808,7 +3282,7 @@ public struct Nakama_Api_User {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {_uniqueStorage()._createTime = nil}
 
-  /// The UNIX time when the user was last updated.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated.
   public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _storage._updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_uniqueStorage()._updateTime = newValue}
@@ -2959,6 +3433,402 @@ public struct Nakama_Api_Users {
   public init() {}
 }
 
+/// Apple IAP Purchases validation request
+public struct Nakama_Api_ValidatePurchaseAppleRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Base64 encoded Apple receipt data payload.
+  public var receipt: String = String()
+
+  /// Persist the purchase
+  public var persist: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _persist ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_persist = newValue}
+  }
+  /// Returns true if `persist` has been explicitly set.
+  public var hasPersist: Bool {return self._persist != nil}
+  /// Clears the value of `persist`. Subsequent reads from it will return its default value.
+  public mutating func clearPersist() {self._persist = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _persist: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
+/// Apple Subscription validation request
+public struct Nakama_Api_ValidateSubscriptionAppleRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Base64 encoded Apple receipt data payload.
+  public var receipt: String = String()
+
+  /// Persist the subscription.
+  public var persist: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _persist ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_persist = newValue}
+  }
+  /// Returns true if `persist` has been explicitly set.
+  public var hasPersist: Bool {return self._persist != nil}
+  /// Clears the value of `persist`. Subsequent reads from it will return its default value.
+  public mutating func clearPersist() {self._persist = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _persist: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
+/// Google IAP Purchase validation request
+public struct Nakama_Api_ValidatePurchaseGoogleRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// JSON encoded Google purchase payload.
+  public var purchase: String = String()
+
+  /// Persist the purchase
+  public var persist: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _persist ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_persist = newValue}
+  }
+  /// Returns true if `persist` has been explicitly set.
+  public var hasPersist: Bool {return self._persist != nil}
+  /// Clears the value of `persist`. Subsequent reads from it will return its default value.
+  public mutating func clearPersist() {self._persist = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _persist: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
+/// Google Subscription validation request
+public struct Nakama_Api_ValidateSubscriptionGoogleRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// JSON encoded Google purchase payload.
+  public var receipt: String = String()
+
+  /// Persist the subscription.
+  public var persist: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _persist ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_persist = newValue}
+  }
+  /// Returns true if `persist` has been explicitly set.
+  public var hasPersist: Bool {return self._persist != nil}
+  /// Clears the value of `persist`. Subsequent reads from it will return its default value.
+  public mutating func clearPersist() {self._persist = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _persist: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
+/// Huawei IAP Purchase validation request
+public struct Nakama_Api_ValidatePurchaseHuaweiRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// JSON encoded Huawei InAppPurchaseData.
+  public var purchase: String = String()
+
+  /// InAppPurchaseData signature.
+  public var signature: String = String()
+
+  /// Persist the purchase
+  public var persist: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _persist ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_persist = newValue}
+  }
+  /// Returns true if `persist` has been explicitly set.
+  public var hasPersist: Bool {return self._persist != nil}
+  /// Clears the value of `persist`. Subsequent reads from it will return its default value.
+  public mutating func clearPersist() {self._persist = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _persist: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+}
+
+/// Validated Purchase stored by Nakama.
+public struct Nakama_Api_ValidatedPurchase {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Purchase User ID.
+  public var userID: String = String()
+
+  /// Purchase Product ID.
+  public var productID: String = String()
+
+  /// Purchase Transaction ID.
+  public var transactionID: String = String()
+
+  /// Store identifier
+  public var store: Nakama_Api_StoreProvider = .appleAppStore
+
+  /// Timestamp when the purchase was done.
+  public var purchaseTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _purchaseTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_purchaseTime = newValue}
+  }
+  /// Returns true if `purchaseTime` has been explicitly set.
+  public var hasPurchaseTime: Bool {return self._purchaseTime != nil}
+  /// Clears the value of `purchaseTime`. Subsequent reads from it will return its default value.
+  public mutating func clearPurchaseTime() {self._purchaseTime = nil}
+
+  /// Timestamp when the receipt validation was stored in DB.
+  public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createTime = newValue}
+  }
+  /// Returns true if `createTime` has been explicitly set.
+  public var hasCreateTime: Bool {return self._createTime != nil}
+  /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
+  public mutating func clearCreateTime() {self._createTime = nil}
+
+  /// Timestamp when the receipt validation was updated in DB.
+  public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_updateTime = newValue}
+  }
+  /// Returns true if `updateTime` has been explicitly set.
+  public var hasUpdateTime: Bool {return self._updateTime != nil}
+  /// Clears the value of `updateTime`. Subsequent reads from it will return its default value.
+  public mutating func clearUpdateTime() {self._updateTime = nil}
+
+  /// Timestamp when the purchase was refunded. Set to UNIX
+  public var refundTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _refundTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_refundTime = newValue}
+  }
+  /// Returns true if `refundTime` has been explicitly set.
+  public var hasRefundTime: Bool {return self._refundTime != nil}
+  /// Clears the value of `refundTime`. Subsequent reads from it will return its default value.
+  public mutating func clearRefundTime() {self._refundTime = nil}
+
+  /// Raw provider validation response.
+  public var providerResponse: String = String()
+
+  /// Whether the purchase was done in production or sandbox environment.
+  public var environment: Nakama_Api_StoreEnvironment = .unknown
+
+  /// Whether the purchase had already been validated by Nakama before.
+  public var seenBefore: Bool = false
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _purchaseTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _createTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _updateTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _refundTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+/// Validate IAP response.
+public struct Nakama_Api_ValidatePurchaseResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Newly seen validated purchases.
+  public var validatedPurchases: [Nakama_Api_ValidatedPurchase] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Validate Subscription response.
+public struct Nakama_Api_ValidateSubscriptionResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var validatedSubscription: Nakama_Api_ValidatedSubscription {
+    get {return _validatedSubscription ?? Nakama_Api_ValidatedSubscription()}
+    set {_validatedSubscription = newValue}
+  }
+  /// Returns true if `validatedSubscription` has been explicitly set.
+  public var hasValidatedSubscription: Bool {return self._validatedSubscription != nil}
+  /// Clears the value of `validatedSubscription`. Subsequent reads from it will return its default value.
+  public mutating func clearValidatedSubscription() {self._validatedSubscription = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _validatedSubscription: Nakama_Api_ValidatedSubscription? = nil
+}
+
+public struct Nakama_Api_ValidatedSubscription {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Subscription User ID.
+  public var userID: String {
+    get {return _storage._userID}
+    set {_uniqueStorage()._userID = newValue}
+  }
+
+  /// Purchase Product ID.
+  public var productID: String {
+    get {return _storage._productID}
+    set {_uniqueStorage()._productID = newValue}
+  }
+
+  /// Purchase Original transaction ID (we only keep track of the original subscription, not subsequent renewals).
+  public var originalTransactionID: String {
+    get {return _storage._originalTransactionID}
+    set {_uniqueStorage()._originalTransactionID = newValue}
+  }
+
+  /// Store identifier
+  public var store: Nakama_Api_StoreProvider {
+    get {return _storage._store}
+    set {_uniqueStorage()._store = newValue}
+  }
+
+  /// UNIX Timestamp when the purchase was done.
+  public var purchaseTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _storage._purchaseTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._purchaseTime = newValue}
+  }
+  /// Returns true if `purchaseTime` has been explicitly set.
+  public var hasPurchaseTime: Bool {return _storage._purchaseTime != nil}
+  /// Clears the value of `purchaseTime`. Subsequent reads from it will return its default value.
+  public mutating func clearPurchaseTime() {_uniqueStorage()._purchaseTime = nil}
+
+  /// UNIX Timestamp when the receipt validation was stored in DB.
+  public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _storage._createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._createTime = newValue}
+  }
+  /// Returns true if `createTime` has been explicitly set.
+  public var hasCreateTime: Bool {return _storage._createTime != nil}
+  /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
+  public mutating func clearCreateTime() {_uniqueStorage()._createTime = nil}
+
+  /// UNIX Timestamp when the receipt validation was updated in DB.
+  public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _storage._updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._updateTime = newValue}
+  }
+  /// Returns true if `updateTime` has been explicitly set.
+  public var hasUpdateTime: Bool {return _storage._updateTime != nil}
+  /// Clears the value of `updateTime`. Subsequent reads from it will return its default value.
+  public mutating func clearUpdateTime() {_uniqueStorage()._updateTime = nil}
+
+  /// Whether the purchase was done in production or sandbox environment.
+  public var environment: Nakama_Api_StoreEnvironment {
+    get {return _storage._environment}
+    set {_uniqueStorage()._environment = newValue}
+  }
+
+  /// Subscription expiration time. The subscription can still be auto-renewed to extend the expiration time further.
+  public var expiryTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _storage._expiryTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._expiryTime = newValue}
+  }
+  /// Returns true if `expiryTime` has been explicitly set.
+  public var hasExpiryTime: Bool {return _storage._expiryTime != nil}
+  /// Clears the value of `expiryTime`. Subsequent reads from it will return its default value.
+  public mutating func clearExpiryTime() {_uniqueStorage()._expiryTime = nil}
+
+  /// Subscription refund time. If this time is set, the subscription was refunded.
+  public var refundTime: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _storage._refundTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._refundTime = newValue}
+  }
+  /// Returns true if `refundTime` has been explicitly set.
+  public var hasRefundTime: Bool {return _storage._refundTime != nil}
+  /// Clears the value of `refundTime`. Subsequent reads from it will return its default value.
+  public mutating func clearRefundTime() {_uniqueStorage()._refundTime = nil}
+
+  /// Raw provider validation response body.
+  public var providerResponse: String {
+    get {return _storage._providerResponse}
+    set {_uniqueStorage()._providerResponse = newValue}
+  }
+
+  /// Raw provider notification body.
+  public var providerNotification: String {
+    get {return _storage._providerNotification}
+    set {_uniqueStorage()._providerNotification = newValue}
+  }
+
+  /// Whether the subscription is currently active or not.
+  public var active: Bool {
+    get {return _storage._active}
+    set {_uniqueStorage()._active = newValue}
+  }
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+/// A list of validated purchases stored by Nakama.
+public struct Nakama_Api_PurchaseList {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Stored validated purchases.
+  public var validatedPurchases: [Nakama_Api_ValidatedPurchase] = []
+
+  /// The cursor to send when retrieving the next page, if any.
+  public var cursor: String = String()
+
+  /// The cursor to send when retrieving the previous page, if any.
+  public var prevCursor: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// A list of validated subscriptions stored by Nakama.
+public struct Nakama_Api_SubscriptionList {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Stored validated subscriptions.
+  public var validatedSubscriptions: [Nakama_Api_ValidatedSubscription] = []
+
+  /// The cursor to send when retrieving the next page, if any.
+  public var cursor: String = String()
+
+  /// The cursor to send when retrieving the previous page, if any.
+  public var prevCursor: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// A request to submit a score to a leaderboard.
 public struct Nakama_Api_WriteLeaderboardRecordRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -2994,6 +3864,9 @@ public struct Nakama_Api_WriteLeaderboardRecordRequest {
 
     /// Optional record metadata.
     public var metadata: String = String()
+
+    /// Operator override.
+    public var `operator`: Nakama_Api_Operator = .noOverride
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -3101,6 +3974,9 @@ public struct Nakama_Api_WriteTournamentRecordRequest {
     /// A JSON object of additional properties (optional).
     public var metadata: String = String()
 
+    /// Operator override.
+    public var `operator`: Nakama_Api_Operator = .noOverride
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -3111,9 +3987,156 @@ public struct Nakama_Api_WriteTournamentRecordRequest {
   fileprivate var _record: Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite? = nil
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Nakama_Api_StoreProvider: @unchecked Sendable {}
+extension Nakama_Api_StoreEnvironment: @unchecked Sendable {}
+extension Nakama_Api_Operator: @unchecked Sendable {}
+extension Nakama_Api_Account: @unchecked Sendable {}
+extension Nakama_Api_AccountRefresh: @unchecked Sendable {}
+extension Nakama_Api_AccountApple: @unchecked Sendable {}
+extension Nakama_Api_AccountCustom: @unchecked Sendable {}
+extension Nakama_Api_AccountDevice: @unchecked Sendable {}
+extension Nakama_Api_AccountEmail: @unchecked Sendable {}
+extension Nakama_Api_AccountFacebook: @unchecked Sendable {}
+extension Nakama_Api_AccountFacebookInstantGame: @unchecked Sendable {}
+extension Nakama_Api_AccountGameCenter: @unchecked Sendable {}
+extension Nakama_Api_AccountGoogle: @unchecked Sendable {}
+extension Nakama_Api_AccountSteam: @unchecked Sendable {}
+extension Nakama_Api_AddFriendsRequest: @unchecked Sendable {}
+extension Nakama_Api_AddGroupUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_SessionRefreshRequest: @unchecked Sendable {}
+extension Nakama_Api_SessionLogoutRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateAppleRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateCustomRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateDeviceRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateEmailRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateFacebookRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateFacebookInstantGameRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateGameCenterRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateGoogleRequest: @unchecked Sendable {}
+extension Nakama_Api_AuthenticateSteamRequest: @unchecked Sendable {}
+extension Nakama_Api_BanGroupUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_BlockFriendsRequest: @unchecked Sendable {}
+extension Nakama_Api_ChannelMessage: @unchecked Sendable {}
+extension Nakama_Api_ChannelMessageList: @unchecked Sendable {}
+extension Nakama_Api_CreateGroupRequest: @unchecked Sendable {}
+extension Nakama_Api_DeleteFriendsRequest: @unchecked Sendable {}
+extension Nakama_Api_DeleteGroupRequest: @unchecked Sendable {}
+extension Nakama_Api_DeleteLeaderboardRecordRequest: @unchecked Sendable {}
+extension Nakama_Api_DeleteNotificationsRequest: @unchecked Sendable {}
+extension Nakama_Api_DeleteTournamentRecordRequest: @unchecked Sendable {}
+extension Nakama_Api_DeleteStorageObjectId: @unchecked Sendable {}
+extension Nakama_Api_DeleteStorageObjectsRequest: @unchecked Sendable {}
+extension Nakama_Api_Event: @unchecked Sendable {}
+extension Nakama_Api_Friend: @unchecked Sendable {}
+extension Nakama_Api_Friend.State: @unchecked Sendable {}
+extension Nakama_Api_FriendList: @unchecked Sendable {}
+extension Nakama_Api_GetUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_GetSubscriptionRequest: @unchecked Sendable {}
+extension Nakama_Api_Group: @unchecked Sendable {}
+extension Nakama_Api_GroupList: @unchecked Sendable {}
+extension Nakama_Api_GroupUserList: @unchecked Sendable {}
+extension Nakama_Api_GroupUserList.GroupUser: @unchecked Sendable {}
+extension Nakama_Api_GroupUserList.GroupUser.State: @unchecked Sendable {}
+extension Nakama_Api_ImportFacebookFriendsRequest: @unchecked Sendable {}
+extension Nakama_Api_ImportSteamFriendsRequest: @unchecked Sendable {}
+extension Nakama_Api_JoinGroupRequest: @unchecked Sendable {}
+extension Nakama_Api_JoinTournamentRequest: @unchecked Sendable {}
+extension Nakama_Api_KickGroupUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_Leaderboard: @unchecked Sendable {}
+extension Nakama_Api_LeaderboardList: @unchecked Sendable {}
+extension Nakama_Api_LeaderboardRecord: @unchecked Sendable {}
+extension Nakama_Api_LeaderboardRecordList: @unchecked Sendable {}
+extension Nakama_Api_LeaveGroupRequest: @unchecked Sendable {}
+extension Nakama_Api_LinkFacebookRequest: @unchecked Sendable {}
+extension Nakama_Api_LinkSteamRequest: @unchecked Sendable {}
+extension Nakama_Api_ListChannelMessagesRequest: @unchecked Sendable {}
+extension Nakama_Api_ListFriendsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListGroupsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListGroupUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest: @unchecked Sendable {}
+extension Nakama_Api_ListLeaderboardRecordsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListMatchesRequest: @unchecked Sendable {}
+extension Nakama_Api_ListNotificationsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListStorageObjectsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListSubscriptionsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListTournamentRecordsAroundOwnerRequest: @unchecked Sendable {}
+extension Nakama_Api_ListTournamentRecordsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListTournamentsRequest: @unchecked Sendable {}
+extension Nakama_Api_ListUserGroupsRequest: @unchecked Sendable {}
+extension Nakama_Api_Match: @unchecked Sendable {}
+extension Nakama_Api_MatchList: @unchecked Sendable {}
+extension Nakama_Api_Notification: @unchecked Sendable {}
+extension Nakama_Api_NotificationList: @unchecked Sendable {}
+extension Nakama_Api_PromoteGroupUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_DemoteGroupUsersRequest: @unchecked Sendable {}
+extension Nakama_Api_ReadStorageObjectId: @unchecked Sendable {}
+extension Nakama_Api_ReadStorageObjectsRequest: @unchecked Sendable {}
+extension Nakama_Api_Rpc: @unchecked Sendable {}
+extension Nakama_Api_Session: @unchecked Sendable {}
+extension Nakama_Api_StorageObject: @unchecked Sendable {}
+extension Nakama_Api_StorageObjectAck: @unchecked Sendable {}
+extension Nakama_Api_StorageObjectAcks: @unchecked Sendable {}
+extension Nakama_Api_StorageObjects: @unchecked Sendable {}
+extension Nakama_Api_StorageObjectList: @unchecked Sendable {}
+extension Nakama_Api_Tournament: @unchecked Sendable {}
+extension Nakama_Api_TournamentList: @unchecked Sendable {}
+extension Nakama_Api_TournamentRecordList: @unchecked Sendable {}
+extension Nakama_Api_UpdateAccountRequest: @unchecked Sendable {}
+extension Nakama_Api_UpdateGroupRequest: @unchecked Sendable {}
+extension Nakama_Api_User: @unchecked Sendable {}
+extension Nakama_Api_UserGroupList: @unchecked Sendable {}
+extension Nakama_Api_UserGroupList.UserGroup: @unchecked Sendable {}
+extension Nakama_Api_UserGroupList.UserGroup.State: @unchecked Sendable {}
+extension Nakama_Api_Users: @unchecked Sendable {}
+extension Nakama_Api_ValidatePurchaseAppleRequest: @unchecked Sendable {}
+extension Nakama_Api_ValidateSubscriptionAppleRequest: @unchecked Sendable {}
+extension Nakama_Api_ValidatePurchaseGoogleRequest: @unchecked Sendable {}
+extension Nakama_Api_ValidateSubscriptionGoogleRequest: @unchecked Sendable {}
+extension Nakama_Api_ValidatePurchaseHuaweiRequest: @unchecked Sendable {}
+extension Nakama_Api_ValidatedPurchase: @unchecked Sendable {}
+extension Nakama_Api_ValidatePurchaseResponse: @unchecked Sendable {}
+extension Nakama_Api_ValidateSubscriptionResponse: @unchecked Sendable {}
+extension Nakama_Api_ValidatedSubscription: @unchecked Sendable {}
+extension Nakama_Api_PurchaseList: @unchecked Sendable {}
+extension Nakama_Api_SubscriptionList: @unchecked Sendable {}
+extension Nakama_Api_WriteLeaderboardRecordRequest: @unchecked Sendable {}
+extension Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite: @unchecked Sendable {}
+extension Nakama_Api_WriteStorageObject: @unchecked Sendable {}
+extension Nakama_Api_WriteStorageObjectsRequest: @unchecked Sendable {}
+extension Nakama_Api_WriteTournamentRecordRequest: @unchecked Sendable {}
+extension Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "nakama.api"
+
+extension Nakama_Api_StoreProvider: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "APPLE_APP_STORE"),
+    1: .same(proto: "GOOGLE_PLAY_STORE"),
+    2: .same(proto: "HUAWEI_APP_GALLERY"),
+  ]
+}
+
+extension Nakama_Api_StoreEnvironment: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "UNKNOWN"),
+    1: .same(proto: "SANDBOX"),
+    2: .same(proto: "PRODUCTION"),
+  ]
+}
+
+extension Nakama_Api_Operator: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "NO_OVERRIDE"),
+    1: .same(proto: "BEST"),
+    2: .same(proto: "SET"),
+    3: .same(proto: "INCREMENT"),
+    4: .same(proto: "DECREMENT"),
+  ]
+}
 
 extension Nakama_Api_Account: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Account"
@@ -3146,9 +4169,13 @@ extension Nakama_Api_Account: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._user {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._user {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.wallet.isEmpty {
       try visitor.visitSingularStringField(value: self.wallet, fieldNumber: 2)
     }
@@ -3161,12 +4188,12 @@ extension Nakama_Api_Account: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     if !self.customID.isEmpty {
       try visitor.visitSingularStringField(value: self.customID, fieldNumber: 5)
     }
-    if let v = self._verifyTime {
+    try { if let v = self._verifyTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
-    if let v = self._disableTime {
+    } }()
+    try { if let v = self._disableTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3178,6 +4205,44 @@ extension Nakama_Api_Account: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     if lhs.customID != rhs.customID {return false}
     if lhs._verifyTime != rhs._verifyTime {return false}
     if lhs._disableTime != rhs._disableTime {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_AccountRefresh: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".AccountRefresh"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "token"),
+    2: .same(proto: "vars"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.token) }()
+      case 2: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.vars) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.token.isEmpty {
+      try visitor.visitSingularStringField(value: self.token, fieldNumber: 1)
+    }
+    if !self.vars.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.vars, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_AccountRefresh, rhs: Nakama_Api_AccountRefresh) -> Bool {
+    if lhs.token != rhs.token {return false}
+    if lhs.vars != rhs.vars {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -3637,6 +4702,82 @@ extension Nakama_Api_AddGroupUsersRequest: SwiftProtobuf.Message, SwiftProtobuf.
   }
 }
 
+extension Nakama_Api_SessionRefreshRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SessionRefreshRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "token"),
+    2: .same(proto: "vars"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.token) }()
+      case 2: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.vars) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.token.isEmpty {
+      try visitor.visitSingularStringField(value: self.token, fieldNumber: 1)
+    }
+    if !self.vars.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.vars, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_SessionRefreshRequest, rhs: Nakama_Api_SessionRefreshRequest) -> Bool {
+    if lhs.token != rhs.token {return false}
+    if lhs.vars != rhs.vars {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_SessionLogoutRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SessionLogoutRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "token"),
+    2: .standard(proto: "refresh_token"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.token) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.refreshToken) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.token.isEmpty {
+      try visitor.visitSingularStringField(value: self.token, fieldNumber: 1)
+    }
+    if !self.refreshToken.isEmpty {
+      try visitor.visitSingularStringField(value: self.refreshToken, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_SessionLogoutRequest, rhs: Nakama_Api_SessionLogoutRequest) -> Bool {
+    if lhs.token != rhs.token {return false}
+    if lhs.refreshToken != rhs.refreshToken {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Nakama_Api_AuthenticateAppleRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".AuthenticateAppleRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -3660,12 +4801,16 @@ extension Nakama_Api_AuthenticateAppleRequest: SwiftProtobuf.Message, SwiftProto
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -3704,12 +4849,16 @@ extension Nakama_Api_AuthenticateCustomRequest: SwiftProtobuf.Message, SwiftProt
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -3748,12 +4897,16 @@ extension Nakama_Api_AuthenticateDeviceRequest: SwiftProtobuf.Message, SwiftProt
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -3792,12 +4945,16 @@ extension Nakama_Api_AuthenticateEmailRequest: SwiftProtobuf.Message, SwiftProto
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -3838,18 +4995,22 @@ extension Nakama_Api_AuthenticateFacebookRequest: SwiftProtobuf.Message, SwiftPr
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
-    if let v = self._sync {
+    try { if let v = self._sync {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3886,12 +5047,16 @@ extension Nakama_Api_AuthenticateFacebookInstantGameRequest: SwiftProtobuf.Messa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -3930,12 +5095,16 @@ extension Nakama_Api_AuthenticateGameCenterRequest: SwiftProtobuf.Message, Swift
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -3974,12 +5143,16 @@ extension Nakama_Api_AuthenticateGoogleRequest: SwiftProtobuf.Message, SwiftProt
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
@@ -4001,6 +5174,7 @@ extension Nakama_Api_AuthenticateSteamRequest: SwiftProtobuf.Message, SwiftProto
     1: .same(proto: "account"),
     2: .same(proto: "create"),
     3: .same(proto: "username"),
+    4: .same(proto: "sync"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -4012,21 +5186,29 @@ extension Nakama_Api_AuthenticateSteamRequest: SwiftProtobuf.Message, SwiftProto
       case 1: try { try decoder.decodeSingularMessageField(value: &self._account) }()
       case 2: try { try decoder.decodeSingularMessageField(value: &self._create) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.username) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._sync) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._create {
+    } }()
+    try { if let v = self._create {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 3)
     }
+    try { if let v = self._sync {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -4034,6 +5216,7 @@ extension Nakama_Api_AuthenticateSteamRequest: SwiftProtobuf.Message, SwiftProto
     if lhs._account != rhs._account {return false}
     if lhs._create != rhs._create {return false}
     if lhs.username != rhs.username {return false}
+    if lhs._sync != rhs._sync {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4158,15 +5341,19 @@ extension Nakama_Api_ChannelMessage: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
     if !self.messageID.isEmpty {
       try visitor.visitSingularStringField(value: self.messageID, fieldNumber: 2)
     }
-    if let v = self._code {
+    try { if let v = self._code {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.senderID.isEmpty {
       try visitor.visitSingularStringField(value: self.senderID, fieldNumber: 4)
     }
@@ -4176,15 +5363,15 @@ extension Nakama_Api_ChannelMessage: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if !self.content.isEmpty {
       try visitor.visitSingularStringField(value: self.content, fieldNumber: 6)
     }
-    if let v = self._createTime {
+    try { if let v = self._createTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }
-    if let v = self._updateTime {
+    } }()
+    try { if let v = self._updateTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-    }
-    if let v = self._persistent {
+    } }()
+    try { if let v = self._persistent {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-    }
+    } }()
     if !self.roomName.isEmpty {
       try visitor.visitSingularStringField(value: self.roomName, fieldNumber: 10)
     }
@@ -4465,6 +5652,38 @@ extension Nakama_Api_DeleteNotificationsRequest: SwiftProtobuf.Message, SwiftPro
   }
 }
 
+extension Nakama_Api_DeleteTournamentRecordRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".DeleteTournamentRecordRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "tournament_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.tournamentID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.tournamentID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tournamentID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_DeleteTournamentRecordRequest, rhs: Nakama_Api_DeleteTournamentRecordRequest) -> Bool {
+    if lhs.tournamentID != rhs.tournamentID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Nakama_Api_DeleteStorageObjectId: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".DeleteStorageObjectId"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -4566,15 +5785,19 @@ extension Nakama_Api_Event: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
     }
     if !self.properties.isEmpty {
       try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.properties, fieldNumber: 2)
     }
-    if let v = self._timestamp {
+    try { if let v = self._timestamp {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if self.external != false {
       try visitor.visitSingularBoolField(value: self.external, fieldNumber: 4)
     }
@@ -4614,15 +5837,19 @@ extension Nakama_Api_Friend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._user {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._user {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._state {
+    } }()
+    try { if let v = self._state {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._updateTime {
+    } }()
+    try { if let v = self._updateTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -4726,6 +5953,38 @@ extension Nakama_Api_GetUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
   }
 }
 
+extension Nakama_Api_GetSubscriptionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GetSubscriptionRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "product_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.productID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.productID.isEmpty {
+      try visitor.visitSingularStringField(value: self.productID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_GetSubscriptionRequest, rhs: Nakama_Api_GetSubscriptionRequest) -> Bool {
+    if lhs.productID != rhs.productID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Nakama_Api_Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".Group"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -4767,6 +6026,10 @@ extension Nakama_Api_Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.id.isEmpty {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
@@ -4788,21 +6051,21 @@ extension Nakama_Api_Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if !self.avatarURL.isEmpty {
       try visitor.visitSingularStringField(value: self.avatarURL, fieldNumber: 7)
     }
-    if let v = self._open {
+    try { if let v = self._open {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-    }
+    } }()
     if self.edgeCount != 0 {
       try visitor.visitSingularInt32Field(value: self.edgeCount, fieldNumber: 9)
     }
     if self.maxCount != 0 {
       try visitor.visitSingularInt32Field(value: self.maxCount, fieldNumber: 10)
     }
-    if let v = self._createTime {
+    try { if let v = self._createTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
-    }
-    if let v = self._updateTime {
+    } }()
+    try { if let v = self._updateTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -4921,12 +6184,16 @@ extension Nakama_Api_GroupUserList.GroupUser: SwiftProtobuf.Message, SwiftProtob
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._user {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._user {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._state {
+    } }()
+    try { if let v = self._state {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -4968,16 +6235,62 @@ extension Nakama_Api_ImportFacebookFriendsRequest: SwiftProtobuf.Message, SwiftP
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._reset {
+    } }()
+    try { if let v = self._reset {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Nakama_Api_ImportFacebookFriendsRequest, rhs: Nakama_Api_ImportFacebookFriendsRequest) -> Bool {
+    if lhs._account != rhs._account {return false}
+    if lhs._reset != rhs._reset {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ImportSteamFriendsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ImportSteamFriendsRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "account"),
+    2: .same(proto: "reset"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._account) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._reset) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try { if let v = self._reset {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ImportSteamFriendsRequest, rhs: Nakama_Api_ImportSteamFriendsRequest) -> Bool {
     if lhs._account != rhs._account {return false}
     if lhs._reset != rhs._reset {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -5087,6 +6400,122 @@ extension Nakama_Api_KickGroupUsersRequest: SwiftProtobuf.Message, SwiftProtobuf
   }
 }
 
+extension Nakama_Api_Leaderboard: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".Leaderboard"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .standard(proto: "sort_order"),
+    3: .same(proto: "operator"),
+    4: .standard(proto: "prev_reset"),
+    5: .standard(proto: "next_reset"),
+    6: .same(proto: "metadata"),
+    7: .standard(proto: "create_time"),
+    8: .same(proto: "authoritative"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularUInt32Field(value: &self.sortOrder) }()
+      case 3: try { try decoder.decodeSingularEnumField(value: &self.`operator`) }()
+      case 4: try { try decoder.decodeSingularUInt32Field(value: &self.prevReset) }()
+      case 5: try { try decoder.decodeSingularUInt32Field(value: &self.nextReset) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.metadata) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._createTime) }()
+      case 8: try { try decoder.decodeSingularBoolField(value: &self.authoritative) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.id.isEmpty {
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
+    }
+    if self.sortOrder != 0 {
+      try visitor.visitSingularUInt32Field(value: self.sortOrder, fieldNumber: 2)
+    }
+    if self.`operator` != .noOverride {
+      try visitor.visitSingularEnumField(value: self.`operator`, fieldNumber: 3)
+    }
+    if self.prevReset != 0 {
+      try visitor.visitSingularUInt32Field(value: self.prevReset, fieldNumber: 4)
+    }
+    if self.nextReset != 0 {
+      try visitor.visitSingularUInt32Field(value: self.nextReset, fieldNumber: 5)
+    }
+    if !self.metadata.isEmpty {
+      try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 6)
+    }
+    try { if let v = self._createTime {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    } }()
+    if self.authoritative != false {
+      try visitor.visitSingularBoolField(value: self.authoritative, fieldNumber: 8)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_Leaderboard, rhs: Nakama_Api_Leaderboard) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.sortOrder != rhs.sortOrder {return false}
+    if lhs.`operator` != rhs.`operator` {return false}
+    if lhs.prevReset != rhs.prevReset {return false}
+    if lhs.nextReset != rhs.nextReset {return false}
+    if lhs.metadata != rhs.metadata {return false}
+    if lhs._createTime != rhs._createTime {return false}
+    if lhs.authoritative != rhs.authoritative {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_LeaderboardList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".LeaderboardList"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "leaderboards"),
+    2: .same(proto: "cursor"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.leaderboards) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.leaderboards.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.leaderboards, fieldNumber: 1)
+    }
+    if !self.cursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_LeaderboardList, rhs: Nakama_Api_LeaderboardList) -> Bool {
+    if lhs.leaderboards != rhs.leaderboards {return false}
+    if lhs.cursor != rhs.cursor {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Nakama_Api_LeaderboardRecord: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".LeaderboardRecord"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -5128,15 +6557,19 @@ extension Nakama_Api_LeaderboardRecord: SwiftProtobuf.Message, SwiftProtobuf._Me
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.leaderboardID.isEmpty {
       try visitor.visitSingularStringField(value: self.leaderboardID, fieldNumber: 1)
     }
     if !self.ownerID.isEmpty {
       try visitor.visitSingularStringField(value: self.ownerID, fieldNumber: 2)
     }
-    if let v = self._username {
+    try { if let v = self._username {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if self.score != 0 {
       try visitor.visitSingularInt64Field(value: self.score, fieldNumber: 4)
     }
@@ -5149,15 +6582,15 @@ extension Nakama_Api_LeaderboardRecord: SwiftProtobuf.Message, SwiftProtobuf._Me
     if !self.metadata.isEmpty {
       try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 7)
     }
-    if let v = self._createTime {
+    try { if let v = self._createTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-    }
-    if let v = self._updateTime {
+    } }()
+    try { if let v = self._updateTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-    }
-    if let v = self._expiryTime {
+    } }()
+    try { if let v = self._expiryTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }
+    } }()
     if self.rank != 0 {
       try visitor.visitSingularInt64Field(value: self.rank, fieldNumber: 11)
     }
@@ -5192,6 +6625,7 @@ extension Nakama_Api_LeaderboardRecordList: SwiftProtobuf.Message, SwiftProtobuf
     2: .standard(proto: "owner_records"),
     3: .standard(proto: "next_cursor"),
     4: .standard(proto: "prev_cursor"),
+    5: .standard(proto: "rank_count"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5204,6 +6638,7 @@ extension Nakama_Api_LeaderboardRecordList: SwiftProtobuf.Message, SwiftProtobuf
       case 2: try { try decoder.decodeRepeatedMessageField(value: &self.ownerRecords) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.nextCursor) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.prevCursor) }()
+      case 5: try { try decoder.decodeSingularInt64Field(value: &self.rankCount) }()
       default: break
       }
     }
@@ -5222,6 +6657,9 @@ extension Nakama_Api_LeaderboardRecordList: SwiftProtobuf.Message, SwiftProtobuf
     if !self.prevCursor.isEmpty {
       try visitor.visitSingularStringField(value: self.prevCursor, fieldNumber: 4)
     }
+    if self.rankCount != 0 {
+      try visitor.visitSingularInt64Field(value: self.rankCount, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -5230,6 +6668,7 @@ extension Nakama_Api_LeaderboardRecordList: SwiftProtobuf.Message, SwiftProtobuf
     if lhs.ownerRecords != rhs.ownerRecords {return false}
     if lhs.nextCursor != rhs.nextCursor {return false}
     if lhs.prevCursor != rhs.prevCursor {return false}
+    if lhs.rankCount != rhs.rankCount {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -5271,7 +6710,7 @@ extension Nakama_Api_LinkFacebookRequest: SwiftProtobuf.Message, SwiftProtobuf._
   public static let protoMessageName: String = _protobuf_package + ".LinkFacebookRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "account"),
-    4: .same(proto: "sync"),
+    2: .same(proto: "sync"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5281,23 +6720,69 @@ extension Nakama_Api_LinkFacebookRequest: SwiftProtobuf.Message, SwiftProtobuf._
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularMessageField(value: &self._account) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._sync) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._sync) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._account {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._sync {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
+    } }()
+    try { if let v = self._sync {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Nakama_Api_LinkFacebookRequest, rhs: Nakama_Api_LinkFacebookRequest) -> Bool {
+    if lhs._account != rhs._account {return false}
+    if lhs._sync != rhs._sync {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_LinkSteamRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".LinkSteamRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "account"),
+    2: .same(proto: "sync"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._account) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._sync) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._account {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try { if let v = self._sync {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_LinkSteamRequest, rhs: Nakama_Api_LinkSteamRequest) -> Bool {
     if lhs._account != rhs._account {return false}
     if lhs._sync != rhs._sync {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -5330,15 +6815,19 @@ extension Nakama_Api_ListChannelMessagesRequest: SwiftProtobuf.Message, SwiftPro
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._forward {
+    } }()
+    try { if let v = self._forward {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
@@ -5378,12 +6867,16 @@ extension Nakama_Api_ListFriendsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._limit {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._state {
+    } }()
+    try { if let v = self._state {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 3)
     }
@@ -5405,6 +6898,9 @@ extension Nakama_Api_ListGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
     1: .same(proto: "name"),
     2: .same(proto: "cursor"),
     3: .same(proto: "limit"),
+    4: .standard(proto: "lang_tag"),
+    5: .same(proto: "members"),
+    6: .same(proto: "open"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5416,21 +6912,37 @@ extension Nakama_Api_ListGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
       case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
       case 3: try { try decoder.decodeSingularMessageField(value: &self._limit) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.langTag) }()
+      case 5: try { try decoder.decodeSingularMessageField(value: &self._members) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._open) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
     }
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    if !self.langTag.isEmpty {
+      try visitor.visitSingularStringField(value: self.langTag, fieldNumber: 4)
     }
+    try { if let v = self._members {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    } }()
+    try { if let v = self._open {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -5438,6 +6950,9 @@ extension Nakama_Api_ListGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
     if lhs.name != rhs.name {return false}
     if lhs.cursor != rhs.cursor {return false}
     if lhs._limit != rhs._limit {return false}
+    if lhs.langTag != rhs.langTag {return false}
+    if lhs._members != rhs._members {return false}
+    if lhs._open != rhs._open {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -5468,15 +6983,19 @@ extension Nakama_Api_ListGroupUsersRequest: SwiftProtobuf.Message, SwiftProtobuf
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.groupID.isEmpty {
       try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._state {
+    } }()
+    try { if let v = self._state {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
@@ -5500,6 +7019,7 @@ extension Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest: SwiftProtobuf.Mes
     2: .same(proto: "limit"),
     3: .standard(proto: "owner_id"),
     4: .same(proto: "expiry"),
+    5: .same(proto: "cursor"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5512,23 +7032,31 @@ extension Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest: SwiftProtobuf.Mes
       case 2: try { try decoder.decodeSingularMessageField(value: &self._limit) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.ownerID) }()
       case 4: try { try decoder.decodeSingularMessageField(value: &self._expiry) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.leaderboardID.isEmpty {
       try visitor.visitSingularStringField(value: self.leaderboardID, fieldNumber: 1)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.ownerID.isEmpty {
       try visitor.visitSingularStringField(value: self.ownerID, fieldNumber: 3)
     }
-    if let v = self._expiry {
+    try { if let v = self._expiry {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
+    if !self.cursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 5)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -5538,6 +7066,7 @@ extension Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest: SwiftProtobuf.Mes
     if lhs._limit != rhs._limit {return false}
     if lhs.ownerID != rhs.ownerID {return false}
     if lhs._expiry != rhs._expiry {return false}
+    if lhs.cursor != rhs.cursor {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -5570,21 +7099,25 @@ extension Nakama_Api_ListLeaderboardRecordsRequest: SwiftProtobuf.Message, Swift
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.leaderboardID.isEmpty {
       try visitor.visitSingularStringField(value: self.leaderboardID, fieldNumber: 1)
     }
     if !self.ownerIds.isEmpty {
       try visitor.visitRepeatedStringField(value: self.ownerIds, fieldNumber: 2)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
-    if let v = self._expiry {
+    try { if let v = self._expiry {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -5628,24 +7161,28 @@ extension Nakama_Api_ListMatchesRequest: SwiftProtobuf.Message, SwiftProtobuf._M
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._limit {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._authoritative {
+    } }()
+    try { if let v = self._authoritative {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._label {
+    } }()
+    try { if let v = self._label {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._minSize {
+    } }()
+    try { if let v = self._minSize {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
-    if let v = self._maxSize {
+    } }()
+    try { if let v = self._maxSize {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if let v = self._query {
+    } }()
+    try { if let v = self._query {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -5682,9 +7219,13 @@ extension Nakama_Api_ListNotificationsRequest: SwiftProtobuf.Message, SwiftProto
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._limit {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.cacheableCursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cacheableCursor, fieldNumber: 2)
     }
@@ -5724,15 +7265,19 @@ extension Nakama_Api_ListStorageObjectsRequest: SwiftProtobuf.Message, SwiftProt
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
     if !self.collection.isEmpty {
       try visitor.visitSingularStringField(value: self.collection, fieldNumber: 2)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
@@ -5749,6 +7294,48 @@ extension Nakama_Api_ListStorageObjectsRequest: SwiftProtobuf.Message, SwiftProt
   }
 }
 
+extension Nakama_Api_ListSubscriptionsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ListSubscriptionsRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "limit"),
+    2: .same(proto: "cursor"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._limit) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._limit {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.cursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ListSubscriptionsRequest, rhs: Nakama_Api_ListSubscriptionsRequest) -> Bool {
+    if lhs._limit != rhs._limit {return false}
+    if lhs.cursor != rhs.cursor {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Nakama_Api_ListTournamentRecordsAroundOwnerRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".ListTournamentRecordsAroundOwnerRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -5756,6 +7343,7 @@ extension Nakama_Api_ListTournamentRecordsAroundOwnerRequest: SwiftProtobuf.Mess
     2: .same(proto: "limit"),
     3: .standard(proto: "owner_id"),
     4: .same(proto: "expiry"),
+    5: .same(proto: "cursor"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5768,23 +7356,31 @@ extension Nakama_Api_ListTournamentRecordsAroundOwnerRequest: SwiftProtobuf.Mess
       case 2: try { try decoder.decodeSingularMessageField(value: &self._limit) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.ownerID) }()
       case 4: try { try decoder.decodeSingularMessageField(value: &self._expiry) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.tournamentID.isEmpty {
       try visitor.visitSingularStringField(value: self.tournamentID, fieldNumber: 1)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.ownerID.isEmpty {
       try visitor.visitSingularStringField(value: self.ownerID, fieldNumber: 3)
     }
-    if let v = self._expiry {
+    try { if let v = self._expiry {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
+    if !self.cursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 5)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -5794,6 +7390,7 @@ extension Nakama_Api_ListTournamentRecordsAroundOwnerRequest: SwiftProtobuf.Mess
     if lhs._limit != rhs._limit {return false}
     if lhs.ownerID != rhs.ownerID {return false}
     if lhs._expiry != rhs._expiry {return false}
+    if lhs.cursor != rhs.cursor {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -5826,21 +7423,25 @@ extension Nakama_Api_ListTournamentRecordsRequest: SwiftProtobuf.Message, SwiftP
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.tournamentID.isEmpty {
       try visitor.visitSingularStringField(value: self.tournamentID, fieldNumber: 1)
     }
     if !self.ownerIds.isEmpty {
       try visitor.visitRepeatedStringField(value: self.ownerIds, fieldNumber: 2)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
-    if let v = self._expiry {
+    try { if let v = self._expiry {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -5884,21 +7485,25 @@ extension Nakama_Api_ListTournamentsRequest: SwiftProtobuf.Message, SwiftProtobu
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._categoryStart {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._categoryStart {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._categoryEnd {
+    } }()
+    try { if let v = self._categoryEnd {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._startTime {
+    } }()
+    try { if let v = self._startTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._endTime {
+    } }()
+    try { if let v = self._endTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
-    if let v = self._limit {
+    } }()
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 8)
     }
@@ -5942,15 +7547,19 @@ extension Nakama_Api_ListUserGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
-    if let v = self._limit {
+    try { if let v = self._limit {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._state {
+    } }()
+    try { if let v = self._state {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.cursor.isEmpty {
       try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 4)
     }
@@ -5974,6 +7583,8 @@ extension Nakama_Api_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     2: .same(proto: "authoritative"),
     3: .same(proto: "label"),
     4: .same(proto: "size"),
+    5: .standard(proto: "tick_rate"),
+    6: .standard(proto: "handler_name"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -5986,23 +7597,35 @@ extension Nakama_Api_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
       case 2: try { try decoder.decodeSingularBoolField(value: &self.authoritative) }()
       case 3: try { try decoder.decodeSingularMessageField(value: &self._label) }()
       case 4: try { try decoder.decodeSingularInt32Field(value: &self.size) }()
+      case 5: try { try decoder.decodeSingularInt32Field(value: &self.tickRate) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.handlerName) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
     if self.authoritative != false {
       try visitor.visitSingularBoolField(value: self.authoritative, fieldNumber: 2)
     }
-    if let v = self._label {
+    try { if let v = self._label {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if self.size != 0 {
       try visitor.visitSingularInt32Field(value: self.size, fieldNumber: 4)
+    }
+    if self.tickRate != 0 {
+      try visitor.visitSingularInt32Field(value: self.tickRate, fieldNumber: 5)
+    }
+    if !self.handlerName.isEmpty {
+      try visitor.visitSingularStringField(value: self.handlerName, fieldNumber: 6)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -6012,6 +7635,8 @@ extension Nakama_Api_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if lhs.authoritative != rhs.authoritative {return false}
     if lhs._label != rhs._label {return false}
     if lhs.size != rhs.size {return false}
+    if lhs.tickRate != rhs.tickRate {return false}
+    if lhs.handlerName != rhs.handlerName {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -6080,6 +7705,10 @@ extension Nakama_Api_Notification: SwiftProtobuf.Message, SwiftProtobuf._Message
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.id.isEmpty {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
@@ -6095,9 +7724,9 @@ extension Nakama_Api_Notification: SwiftProtobuf.Message, SwiftProtobuf._Message
     if !self.senderID.isEmpty {
       try visitor.visitSingularStringField(value: self.senderID, fieldNumber: 5)
     }
-    if let v = self._createTime {
+    try { if let v = self._createTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     if self.persistent != false {
       try visitor.visitSingularBoolField(value: self.persistent, fieldNumber: 7)
     }
@@ -6356,6 +7985,7 @@ extension Nakama_Api_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "created"),
     2: .same(proto: "token"),
+    3: .standard(proto: "refresh_token"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -6366,6 +7996,7 @@ extension Nakama_Api_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBoolField(value: &self.created) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.token) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.refreshToken) }()
       default: break
       }
     }
@@ -6378,12 +8009,16 @@ extension Nakama_Api_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     if !self.token.isEmpty {
       try visitor.visitSingularStringField(value: self.token, fieldNumber: 2)
     }
+    if !self.refreshToken.isEmpty {
+      try visitor.visitSingularStringField(value: self.refreshToken, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Nakama_Api_Session, rhs: Nakama_Api_Session) -> Bool {
     if lhs.created != rhs.created {return false}
     if lhs.token != rhs.token {return false}
+    if lhs.refreshToken != rhs.refreshToken {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -6424,6 +8059,10 @@ extension Nakama_Api_StorageObject: SwiftProtobuf.Message, SwiftProtobuf._Messag
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.collection.isEmpty {
       try visitor.visitSingularStringField(value: self.collection, fieldNumber: 1)
     }
@@ -6445,12 +8084,12 @@ extension Nakama_Api_StorageObject: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if self.permissionWrite != 0 {
       try visitor.visitSingularInt32Field(value: self.permissionWrite, fieldNumber: 7)
     }
-    if let v = self._createTime {
+    try { if let v = self._createTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-    }
-    if let v = self._updateTime {
+    } }()
+    try { if let v = self._updateTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -6641,6 +8280,9 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     15: .standard(proto: "end_time"),
     16: .same(proto: "duration"),
     17: .standard(proto: "start_active"),
+    18: .standard(proto: "prev_reset"),
+    19: .same(proto: "operator"),
+    20: .same(proto: "authoritative"),
   ]
 
   fileprivate class _StorageClass {
@@ -6661,6 +8303,9 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     var _endTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
     var _duration: UInt32 = 0
     var _startActive: UInt32 = 0
+    var _prevReset: UInt32 = 0
+    var _operator: Nakama_Api_Operator = .noOverride
+    var _authoritative: Bool = false
 
     static let defaultInstance = _StorageClass()
 
@@ -6684,6 +8329,9 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
       _endTime = source._endTime
       _duration = source._duration
       _startActive = source._startActive
+      _prevReset = source._prevReset
+      _operator = source._operator
+      _authoritative = source._authoritative
     }
   }
 
@@ -6719,6 +8367,9 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
         case 15: try { try decoder.decodeSingularMessageField(value: &_storage._endTime) }()
         case 16: try { try decoder.decodeSingularUInt32Field(value: &_storage._duration) }()
         case 17: try { try decoder.decodeSingularUInt32Field(value: &_storage._startActive) }()
+        case 18: try { try decoder.decodeSingularUInt32Field(value: &_storage._prevReset) }()
+        case 19: try { try decoder.decodeSingularEnumField(value: &_storage._operator) }()
+        case 20: try { try decoder.decodeSingularBoolField(value: &_storage._authoritative) }()
         default: break
         }
       }
@@ -6727,6 +8378,10 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
       if !_storage._id.isEmpty {
         try visitor.visitSingularStringField(value: _storage._id, fieldNumber: 1)
       }
@@ -6763,20 +8418,29 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
       if !_storage._metadata.isEmpty {
         try visitor.visitSingularStringField(value: _storage._metadata, fieldNumber: 12)
       }
-      if let v = _storage._createTime {
+      try { if let v = _storage._createTime {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
-      }
-      if let v = _storage._startTime {
+      } }()
+      try { if let v = _storage._startTime {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
-      }
-      if let v = _storage._endTime {
+      } }()
+      try { if let v = _storage._endTime {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
-      }
+      } }()
       if _storage._duration != 0 {
         try visitor.visitSingularUInt32Field(value: _storage._duration, fieldNumber: 16)
       }
       if _storage._startActive != 0 {
         try visitor.visitSingularUInt32Field(value: _storage._startActive, fieldNumber: 17)
+      }
+      if _storage._prevReset != 0 {
+        try visitor.visitSingularUInt32Field(value: _storage._prevReset, fieldNumber: 18)
+      }
+      if _storage._operator != .noOverride {
+        try visitor.visitSingularEnumField(value: _storage._operator, fieldNumber: 19)
+      }
+      if _storage._authoritative != false {
+        try visitor.visitSingularBoolField(value: _storage._authoritative, fieldNumber: 20)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -6804,6 +8468,9 @@ extension Nakama_Api_Tournament: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
         if _storage._endTime != rhs_storage._endTime {return false}
         if _storage._duration != rhs_storage._duration {return false}
         if _storage._startActive != rhs_storage._startActive {return false}
+        if _storage._prevReset != rhs_storage._prevReset {return false}
+        if _storage._operator != rhs_storage._operator {return false}
+        if _storage._authoritative != rhs_storage._authoritative {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -6858,6 +8525,7 @@ extension Nakama_Api_TournamentRecordList: SwiftProtobuf.Message, SwiftProtobuf.
     2: .standard(proto: "owner_records"),
     3: .standard(proto: "next_cursor"),
     4: .standard(proto: "prev_cursor"),
+    5: .standard(proto: "rank_count"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -6870,6 +8538,7 @@ extension Nakama_Api_TournamentRecordList: SwiftProtobuf.Message, SwiftProtobuf.
       case 2: try { try decoder.decodeRepeatedMessageField(value: &self.ownerRecords) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.nextCursor) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.prevCursor) }()
+      case 5: try { try decoder.decodeSingularInt64Field(value: &self.rankCount) }()
       default: break
       }
     }
@@ -6888,6 +8557,9 @@ extension Nakama_Api_TournamentRecordList: SwiftProtobuf.Message, SwiftProtobuf.
     if !self.prevCursor.isEmpty {
       try visitor.visitSingularStringField(value: self.prevCursor, fieldNumber: 4)
     }
+    if self.rankCount != 0 {
+      try visitor.visitSingularInt64Field(value: self.rankCount, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -6896,6 +8568,7 @@ extension Nakama_Api_TournamentRecordList: SwiftProtobuf.Message, SwiftProtobuf.
     if lhs.ownerRecords != rhs.ownerRecords {return false}
     if lhs.nextCursor != rhs.nextCursor {return false}
     if lhs.prevCursor != rhs.prevCursor {return false}
+    if lhs.rankCount != rhs.rankCount {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -6930,24 +8603,28 @@ extension Nakama_Api_UpdateAccountRequest: SwiftProtobuf.Message, SwiftProtobuf.
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._username {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._username {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._displayName {
+    } }()
+    try { if let v = self._displayName {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._avatarURL {
+    } }()
+    try { if let v = self._avatarURL {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._langTag {
+    } }()
+    try { if let v = self._langTag {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
-    if let v = self._location {
+    } }()
+    try { if let v = self._location {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if let v = self._timezone {
+    } }()
+    try { if let v = self._timezone {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -6992,24 +8669,28 @@ extension Nakama_Api_UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._M
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.groupID.isEmpty {
       try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
     }
-    if let v = self._name {
+    try { if let v = self._name {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._description_p {
+    } }()
+    try { if let v = self._description_p {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._langTag {
+    } }()
+    try { if let v = self._langTag {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
-    if let v = self._avatarURL {
+    } }()
+    try { if let v = self._avatarURL {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if let v = self._open {
+    } }()
+    try { if let v = self._open {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7135,6 +8816,10 @@ extension Nakama_Api_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
       if !_storage._id.isEmpty {
         try visitor.visitSingularStringField(value: _storage._id, fieldNumber: 1)
       }
@@ -7177,12 +8862,12 @@ extension Nakama_Api_User: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
       if _storage._edgeCount != 0 {
         try visitor.visitSingularInt32Field(value: _storage._edgeCount, fieldNumber: 14)
       }
-      if let v = _storage._createTime {
+      try { if let v = _storage._createTime {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
-      }
-      if let v = _storage._updateTime {
+      } }()
+      try { if let v = _storage._updateTime {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
-      }
+      } }()
       if !_storage._facebookInstantGameID.isEmpty {
         try visitor.visitSingularStringField(value: _storage._facebookInstantGameID, fieldNumber: 17)
       }
@@ -7284,12 +8969,16 @@ extension Nakama_Api_UserGroupList.UserGroup: SwiftProtobuf.Message, SwiftProtob
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._group {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._group {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._state {
+    } }()
+    try { if let v = self._state {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7342,6 +9031,638 @@ extension Nakama_Api_Users: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   }
 }
 
+extension Nakama_Api_ValidatePurchaseAppleRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatePurchaseAppleRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "receipt"),
+    2: .same(proto: "persist"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.receipt) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._persist) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.receipt.isEmpty {
+      try visitor.visitSingularStringField(value: self.receipt, fieldNumber: 1)
+    }
+    try { if let v = self._persist {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidatePurchaseAppleRequest, rhs: Nakama_Api_ValidatePurchaseAppleRequest) -> Bool {
+    if lhs.receipt != rhs.receipt {return false}
+    if lhs._persist != rhs._persist {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidateSubscriptionAppleRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidateSubscriptionAppleRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "receipt"),
+    2: .same(proto: "persist"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.receipt) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._persist) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.receipt.isEmpty {
+      try visitor.visitSingularStringField(value: self.receipt, fieldNumber: 1)
+    }
+    try { if let v = self._persist {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidateSubscriptionAppleRequest, rhs: Nakama_Api_ValidateSubscriptionAppleRequest) -> Bool {
+    if lhs.receipt != rhs.receipt {return false}
+    if lhs._persist != rhs._persist {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidatePurchaseGoogleRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatePurchaseGoogleRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "purchase"),
+    2: .same(proto: "persist"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.purchase) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._persist) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.purchase.isEmpty {
+      try visitor.visitSingularStringField(value: self.purchase, fieldNumber: 1)
+    }
+    try { if let v = self._persist {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidatePurchaseGoogleRequest, rhs: Nakama_Api_ValidatePurchaseGoogleRequest) -> Bool {
+    if lhs.purchase != rhs.purchase {return false}
+    if lhs._persist != rhs._persist {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidateSubscriptionGoogleRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidateSubscriptionGoogleRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "receipt"),
+    2: .same(proto: "persist"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.receipt) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._persist) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.receipt.isEmpty {
+      try visitor.visitSingularStringField(value: self.receipt, fieldNumber: 1)
+    }
+    try { if let v = self._persist {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidateSubscriptionGoogleRequest, rhs: Nakama_Api_ValidateSubscriptionGoogleRequest) -> Bool {
+    if lhs.receipt != rhs.receipt {return false}
+    if lhs._persist != rhs._persist {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidatePurchaseHuaweiRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatePurchaseHuaweiRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "purchase"),
+    2: .same(proto: "signature"),
+    3: .same(proto: "persist"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.purchase) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.signature) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._persist) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.purchase.isEmpty {
+      try visitor.visitSingularStringField(value: self.purchase, fieldNumber: 1)
+    }
+    if !self.signature.isEmpty {
+      try visitor.visitSingularStringField(value: self.signature, fieldNumber: 2)
+    }
+    try { if let v = self._persist {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidatePurchaseHuaweiRequest, rhs: Nakama_Api_ValidatePurchaseHuaweiRequest) -> Bool {
+    if lhs.purchase != rhs.purchase {return false}
+    if lhs.signature != rhs.signature {return false}
+    if lhs._persist != rhs._persist {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidatedPurchase: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatedPurchase"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "user_id"),
+    2: .standard(proto: "product_id"),
+    3: .standard(proto: "transaction_id"),
+    4: .same(proto: "store"),
+    5: .standard(proto: "purchase_time"),
+    6: .standard(proto: "create_time"),
+    7: .standard(proto: "update_time"),
+    8: .standard(proto: "refund_time"),
+    9: .standard(proto: "provider_response"),
+    10: .same(proto: "environment"),
+    11: .standard(proto: "seen_before"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.userID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.productID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.transactionID) }()
+      case 4: try { try decoder.decodeSingularEnumField(value: &self.store) }()
+      case 5: try { try decoder.decodeSingularMessageField(value: &self._purchaseTime) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._createTime) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._updateTime) }()
+      case 8: try { try decoder.decodeSingularMessageField(value: &self._refundTime) }()
+      case 9: try { try decoder.decodeSingularStringField(value: &self.providerResponse) }()
+      case 10: try { try decoder.decodeSingularEnumField(value: &self.environment) }()
+      case 11: try { try decoder.decodeSingularBoolField(value: &self.seenBefore) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.userID.isEmpty {
+      try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
+    }
+    if !self.productID.isEmpty {
+      try visitor.visitSingularStringField(value: self.productID, fieldNumber: 2)
+    }
+    if !self.transactionID.isEmpty {
+      try visitor.visitSingularStringField(value: self.transactionID, fieldNumber: 3)
+    }
+    if self.store != .appleAppStore {
+      try visitor.visitSingularEnumField(value: self.store, fieldNumber: 4)
+    }
+    try { if let v = self._purchaseTime {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    } }()
+    try { if let v = self._createTime {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
+    try { if let v = self._updateTime {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    } }()
+    try { if let v = self._refundTime {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+    } }()
+    if !self.providerResponse.isEmpty {
+      try visitor.visitSingularStringField(value: self.providerResponse, fieldNumber: 9)
+    }
+    if self.environment != .unknown {
+      try visitor.visitSingularEnumField(value: self.environment, fieldNumber: 10)
+    }
+    if self.seenBefore != false {
+      try visitor.visitSingularBoolField(value: self.seenBefore, fieldNumber: 11)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidatedPurchase, rhs: Nakama_Api_ValidatedPurchase) -> Bool {
+    if lhs.userID != rhs.userID {return false}
+    if lhs.productID != rhs.productID {return false}
+    if lhs.transactionID != rhs.transactionID {return false}
+    if lhs.store != rhs.store {return false}
+    if lhs._purchaseTime != rhs._purchaseTime {return false}
+    if lhs._createTime != rhs._createTime {return false}
+    if lhs._updateTime != rhs._updateTime {return false}
+    if lhs._refundTime != rhs._refundTime {return false}
+    if lhs.providerResponse != rhs.providerResponse {return false}
+    if lhs.environment != rhs.environment {return false}
+    if lhs.seenBefore != rhs.seenBefore {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidatePurchaseResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatePurchaseResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "validated_purchases"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.validatedPurchases) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.validatedPurchases.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.validatedPurchases, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidatePurchaseResponse, rhs: Nakama_Api_ValidatePurchaseResponse) -> Bool {
+    if lhs.validatedPurchases != rhs.validatedPurchases {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidateSubscriptionResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidateSubscriptionResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "validated_subscription"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._validatedSubscription) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._validatedSubscription {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidateSubscriptionResponse, rhs: Nakama_Api_ValidateSubscriptionResponse) -> Bool {
+    if lhs._validatedSubscription != rhs._validatedSubscription {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_ValidatedSubscription: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ValidatedSubscription"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "user_id"),
+    2: .standard(proto: "product_id"),
+    3: .standard(proto: "original_transaction_id"),
+    4: .same(proto: "store"),
+    5: .standard(proto: "purchase_time"),
+    6: .standard(proto: "create_time"),
+    7: .standard(proto: "update_time"),
+    8: .same(proto: "environment"),
+    9: .standard(proto: "expiry_time"),
+    10: .standard(proto: "refund_time"),
+    11: .standard(proto: "provider_response"),
+    12: .standard(proto: "provider_notification"),
+    13: .same(proto: "active"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _userID: String = String()
+    var _productID: String = String()
+    var _originalTransactionID: String = String()
+    var _store: Nakama_Api_StoreProvider = .appleAppStore
+    var _purchaseTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+    var _createTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+    var _updateTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+    var _environment: Nakama_Api_StoreEnvironment = .unknown
+    var _expiryTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+    var _refundTime: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+    var _providerResponse: String = String()
+    var _providerNotification: String = String()
+    var _active: Bool = false
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _userID = source._userID
+      _productID = source._productID
+      _originalTransactionID = source._originalTransactionID
+      _store = source._store
+      _purchaseTime = source._purchaseTime
+      _createTime = source._createTime
+      _updateTime = source._updateTime
+      _environment = source._environment
+      _expiryTime = source._expiryTime
+      _refundTime = source._refundTime
+      _providerResponse = source._providerResponse
+      _providerNotification = source._providerNotification
+      _active = source._active
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeSingularStringField(value: &_storage._userID) }()
+        case 2: try { try decoder.decodeSingularStringField(value: &_storage._productID) }()
+        case 3: try { try decoder.decodeSingularStringField(value: &_storage._originalTransactionID) }()
+        case 4: try { try decoder.decodeSingularEnumField(value: &_storage._store) }()
+        case 5: try { try decoder.decodeSingularMessageField(value: &_storage._purchaseTime) }()
+        case 6: try { try decoder.decodeSingularMessageField(value: &_storage._createTime) }()
+        case 7: try { try decoder.decodeSingularMessageField(value: &_storage._updateTime) }()
+        case 8: try { try decoder.decodeSingularEnumField(value: &_storage._environment) }()
+        case 9: try { try decoder.decodeSingularMessageField(value: &_storage._expiryTime) }()
+        case 10: try { try decoder.decodeSingularMessageField(value: &_storage._refundTime) }()
+        case 11: try { try decoder.decodeSingularStringField(value: &_storage._providerResponse) }()
+        case 12: try { try decoder.decodeSingularStringField(value: &_storage._providerNotification) }()
+        case 13: try { try decoder.decodeSingularBoolField(value: &_storage._active) }()
+        default: break
+        }
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      if !_storage._userID.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._userID, fieldNumber: 1)
+      }
+      if !_storage._productID.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._productID, fieldNumber: 2)
+      }
+      if !_storage._originalTransactionID.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._originalTransactionID, fieldNumber: 3)
+      }
+      if _storage._store != .appleAppStore {
+        try visitor.visitSingularEnumField(value: _storage._store, fieldNumber: 4)
+      }
+      try { if let v = _storage._purchaseTime {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+      } }()
+      try { if let v = _storage._createTime {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      } }()
+      try { if let v = _storage._updateTime {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+      } }()
+      if _storage._environment != .unknown {
+        try visitor.visitSingularEnumField(value: _storage._environment, fieldNumber: 8)
+      }
+      try { if let v = _storage._expiryTime {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
+      } }()
+      try { if let v = _storage._refundTime {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+      } }()
+      if !_storage._providerResponse.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._providerResponse, fieldNumber: 11)
+      }
+      if !_storage._providerNotification.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._providerNotification, fieldNumber: 12)
+      }
+      if _storage._active != false {
+        try visitor.visitSingularBoolField(value: _storage._active, fieldNumber: 13)
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_ValidatedSubscription, rhs: Nakama_Api_ValidatedSubscription) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._userID != rhs_storage._userID {return false}
+        if _storage._productID != rhs_storage._productID {return false}
+        if _storage._originalTransactionID != rhs_storage._originalTransactionID {return false}
+        if _storage._store != rhs_storage._store {return false}
+        if _storage._purchaseTime != rhs_storage._purchaseTime {return false}
+        if _storage._createTime != rhs_storage._createTime {return false}
+        if _storage._updateTime != rhs_storage._updateTime {return false}
+        if _storage._environment != rhs_storage._environment {return false}
+        if _storage._expiryTime != rhs_storage._expiryTime {return false}
+        if _storage._refundTime != rhs_storage._refundTime {return false}
+        if _storage._providerResponse != rhs_storage._providerResponse {return false}
+        if _storage._providerNotification != rhs_storage._providerNotification {return false}
+        if _storage._active != rhs_storage._active {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_PurchaseList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PurchaseList"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "validated_purchases"),
+    2: .same(proto: "cursor"),
+    3: .standard(proto: "prev_cursor"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.validatedPurchases) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.prevCursor) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.validatedPurchases.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.validatedPurchases, fieldNumber: 1)
+    }
+    if !self.cursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
+    }
+    if !self.prevCursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.prevCursor, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_PurchaseList, rhs: Nakama_Api_PurchaseList) -> Bool {
+    if lhs.validatedPurchases != rhs.validatedPurchases {return false}
+    if lhs.cursor != rhs.cursor {return false}
+    if lhs.prevCursor != rhs.prevCursor {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Api_SubscriptionList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SubscriptionList"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "validated_subscriptions"),
+    2: .same(proto: "cursor"),
+    3: .standard(proto: "prev_cursor"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.validatedSubscriptions) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.cursor) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.prevCursor) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.validatedSubscriptions.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.validatedSubscriptions, fieldNumber: 1)
+    }
+    if !self.cursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.cursor, fieldNumber: 2)
+    }
+    if !self.prevCursor.isEmpty {
+      try visitor.visitSingularStringField(value: self.prevCursor, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Api_SubscriptionList, rhs: Nakama_Api_SubscriptionList) -> Bool {
+    if lhs.validatedSubscriptions != rhs.validatedSubscriptions {return false}
+    if lhs.cursor != rhs.cursor {return false}
+    if lhs.prevCursor != rhs.prevCursor {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Nakama_Api_WriteLeaderboardRecordRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".WriteLeaderboardRecordRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -7363,12 +9684,16 @@ extension Nakama_Api_WriteLeaderboardRecordRequest: SwiftProtobuf.Message, Swift
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.leaderboardID.isEmpty {
       try visitor.visitSingularStringField(value: self.leaderboardID, fieldNumber: 1)
     }
-    if let v = self._record {
+    try { if let v = self._record {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7386,6 +9711,7 @@ extension Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite: Swift
     1: .same(proto: "score"),
     2: .same(proto: "subscore"),
     3: .same(proto: "metadata"),
+    4: .same(proto: "operator"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -7397,6 +9723,7 @@ extension Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite: Swift
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.score) }()
       case 2: try { try decoder.decodeSingularInt64Field(value: &self.subscore) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.metadata) }()
+      case 4: try { try decoder.decodeSingularEnumField(value: &self.`operator`) }()
       default: break
       }
     }
@@ -7412,6 +9739,9 @@ extension Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite: Swift
     if !self.metadata.isEmpty {
       try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 3)
     }
+    if self.`operator` != .noOverride {
+      try visitor.visitSingularEnumField(value: self.`operator`, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7419,6 +9749,7 @@ extension Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite: Swift
     if lhs.score != rhs.score {return false}
     if lhs.subscore != rhs.subscore {return false}
     if lhs.metadata != rhs.metadata {return false}
+    if lhs.`operator` != rhs.`operator` {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -7453,6 +9784,10 @@ extension Nakama_Api_WriteStorageObject: SwiftProtobuf.Message, SwiftProtobuf._M
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.collection.isEmpty {
       try visitor.visitSingularStringField(value: self.collection, fieldNumber: 1)
     }
@@ -7465,12 +9800,12 @@ extension Nakama_Api_WriteStorageObject: SwiftProtobuf.Message, SwiftProtobuf._M
     if !self.version.isEmpty {
       try visitor.visitSingularStringField(value: self.version, fieldNumber: 4)
     }
-    if let v = self._permissionRead {
+    try { if let v = self._permissionRead {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if let v = self._permissionWrite {
+    } }()
+    try { if let v = self._permissionWrite {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7539,12 +9874,16 @@ extension Nakama_Api_WriteTournamentRecordRequest: SwiftProtobuf.Message, SwiftP
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.tournamentID.isEmpty {
       try visitor.visitSingularStringField(value: self.tournamentID, fieldNumber: 1)
     }
-    if let v = self._record {
+    try { if let v = self._record {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7562,6 +9901,7 @@ extension Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite: SwiftPr
     1: .same(proto: "score"),
     2: .same(proto: "subscore"),
     3: .same(proto: "metadata"),
+    4: .same(proto: "operator"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -7573,6 +9913,7 @@ extension Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite: SwiftPr
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.score) }()
       case 2: try { try decoder.decodeSingularInt64Field(value: &self.subscore) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.metadata) }()
+      case 4: try { try decoder.decodeSingularEnumField(value: &self.`operator`) }()
       default: break
       }
     }
@@ -7588,6 +9929,9 @@ extension Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite: SwiftPr
     if !self.metadata.isEmpty {
       try visitor.visitSingularStringField(value: self.metadata, fieldNumber: 3)
     }
+    if self.`operator` != .noOverride {
+      try visitor.visitSingularEnumField(value: self.`operator`, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -7595,6 +9939,7 @@ extension Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite: SwiftPr
     if lhs.score != rhs.score {return false}
     if lhs.subscore != rhs.subscore {return false}
     if lhs.metadata != rhs.metadata {return false}
+    if lhs.`operator` != rhs.`operator` {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
