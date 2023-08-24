@@ -357,4 +357,12 @@ public class GrpcClient : Client {
         
         return try await self.nakamaGrpcClient.sessionRefresh(req, callOptions: nil).response.get().toSession()
     }
+    
+    public func sessionLogout(session: Session) async throws {
+        var req = Nakama_Api_SessionLogoutRequest()
+        req.token = session.token
+        req.refreshToken = session.refreshToken
+        
+        _ = try await self.nakamaGrpcClient.sessionLogout(req, callOptions: sessionCallOption(session: session)).response.get()
+    }
 }

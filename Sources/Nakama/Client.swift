@@ -419,4 +419,9 @@ public protocol Client {
      - Parameter vars: Extra information that will be bundled in the session token.
     */
     func refreshSession(session: Session, vars: [String:String]) async throws -> Session
+    
+    /**
+     Logout user session and invalidate refresh token.
+     */
+    func sessionLogout(session: Session) async throws -> Void
 }
