@@ -16,6 +16,6 @@
 
 extension Nakama_Api_Session {
     func toSession() async -> Session {
-        return DefaultSession(token: self.token, created: self.created)
+        return DefaultSession(token: self.token, refreshToken: self.refreshToken, created: self.created)
     }
 }

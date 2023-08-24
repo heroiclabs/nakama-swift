@@ -22,6 +22,11 @@ public protocol Session {
      */
     var token: String { get }
     
+    /**
+     Refresh token that can be used for session token renewal.
+     */
+    var refreshToken: String { get }
+    
     /*
      * True if the user account for this session was just created.
      */
@@ -65,6 +70,7 @@ public protocol Session {
 
 class DefaultSession: Session {
     var token: String
+    var refreshToken: String
     var created: Bool
     var createTime: Date
     var expiryTime: Date
@@ -72,8 +78,9 @@ class DefaultSession: Session {
     var userId: String
     var sessionVars: [String : String]
     
-    init(token: String, created: Bool) {
+    init(token: String, refreshToken: String, created: Bool) {
         self.token = token
+        self.refreshToken = refreshToken
         self.created = created
         self.createTime = Date()
         
@@ -86,7 +93,7 @@ class DefaultSession: Session {
         self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
         self.userId = jsonDict["uid"] as! String
         self.username = jsonDict["usn"] as! String
-        self.sessionVars = jsonDict["vrs"] as! [String:String]
+        self.sessionVars = jsonDict.keys.contains("vars") ? jsonDict["vrs"] as! [String : String] : [:]
     }
     
     var expired: Bool {
@@ -100,7 +107,7 @@ class DefaultSession: Session {
         return date > self.expiryTime
     }
     
-    public static func restore(token: String) -> Session {
-        return DefaultSession(token: token, created: false)
+    public static func restore(token: String, refreshToken: String) -> Session {
+        return DefaultSession(token: token, refreshToken: refreshToken, created: false)
     }
 }

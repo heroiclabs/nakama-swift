@@ -349,4 +349,12 @@ public class GrpcClient : Client {
         }
         return try await self.nakamaGrpcClient.authenticateGameCenter(req).response.get().toSession()
     }
+    
+    public func refreshSession(session: Session, vars: [String : String]) async throws -> Session {
+        var req = Nakama_Api_SessionRefreshRequest()
+        req.token = session.refreshToken
+        req.vars = vars
+        
+        return try await self.nakamaGrpcClient.sessionRefresh(req, callOptions: nil).response.get().toSession()
+    }
 }

@@ -413,4 +413,10 @@ public protocol Client {
      - Returns: A future to resolve a session object.
      */
     func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?, vars: [String:String]?) async throws -> Session
+    /**
+     Refresh a user session and return the new session.
+     - Parameter session: Current session.
+     - Parameter vars: Extra information that will be bundled in the session token.
+    */
+    func refreshSession(session: Session, vars: [String:String]) async throws -> Session
 }
