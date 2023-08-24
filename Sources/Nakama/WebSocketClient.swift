@@ -210,11 +210,11 @@ public class WebSocketClient : SocketClient {
         }
     }
     
-    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) -> EventLoopFuture<Nakama_Realtime_Channel> {
-        return self.joinChat(target: target, type: type, persistence: nil, hidden: nil)
+    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) async throws -> NakamaChannel {
+        return try await self.joinChat(target: target, type: type, persistence: nil, hidden: nil)
     }
     
-    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) -> EventLoopFuture<Nakama_Realtime_Channel> {
+    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) async throws -> NakamaChannel {
         var req = Nakama_Realtime_ChannelJoin()
         req.target = target
         req.type = Int32(type.rawValue)
@@ -226,18 +226,18 @@ public class WebSocketClient : SocketClient {
         var env = Nakama_Realtime_Envelope()
         env.channelJoin = req
         
-        return self.send(env: &env)
+        let resp = try await self.send(env: &env).get() as Nakama_Realtime_Channel
+        return NakamaChannel(from: resp)
     }
     
-    public func leaveChat(channelId: String) -> EventLoopFuture<Void> {
+    public func leaveChat(channelId: String) async throws -> Void {
         var req = Nakama_Realtime_ChannelLeave()
         req.channelID = channelId
         
         var env = Nakama_Realtime_Envelope()
         env.channelLeave = req
         
-        let resp: EventLoopFuture<SwiftProtobuf.Google_Protobuf_Empty> = self.send(env: &env)
-        return resp.flatMap(mapEmptyVoid())
+        _ = try await self.send(env: &env).get() as SwiftProtobuf.Google_Protobuf_Empty
     }
     
     public func removeChatMessage(channelId: String, messageId: String) -> EventLoopFuture<Nakama_Realtime_ChannelMessageAck> {

@@ -79,52 +79,52 @@ public protocol SocketClient {
     /**
      If set, will notify when socket was disconnected.
      */
-    var onError: ((Error) -> ())? {get set}
+    var onError: ((Error) -> ())? { get set }
     
     /**
      Called when a new topic message has been received.
      */
-    var onChannelMessage: ((Nakama_Api_ChannelMessage) -> ())? {get set}
+    var onChannelMessage: ((Nakama_Api_ChannelMessage) -> ())? { get set }
     
     /**
      Called when a new topic presence update has been received.
      */
-    var onChannelPresence: ((Nakama_Realtime_ChannelPresenceEvent) -> ())? {get set}
+    var onChannelPresence: ((Nakama_Realtime_ChannelPresenceEvent) -> ())? { get set }
     
     /**
      Called when a matchmaking has found a match.
      */
-    var onMatchmakerMatched: ((Nakama_Realtime_MatchmakerMatched) -> ())? {get set}
+    var onMatchmakerMatched: ((Nakama_Realtime_MatchmakerMatched) -> ())? { get set }
     
     /**
      Called when a new match data is received.
      */
-    var onMatchData: ((Nakama_Realtime_MatchData) -> ())? {get set}
+    var onMatchData: ((Nakama_Realtime_MatchData) -> ())? { get set }
     
     /**
      Called when a new match presence update is received.
      */
-    var onMatchPresence: ((Nakama_Realtime_MatchPresenceEvent) -> ())? {get set}
+    var onMatchPresence: ((Nakama_Realtime_MatchPresenceEvent) -> ())? { get set }
     
     /**
      Called when the client receives new notifications.
      */
-    var onNotifications: ((Nakama_Realtime_Notifications) -> ())? {get set}
+    var onNotifications: ((Nakama_Realtime_Notifications) -> ())? { get set }
     
     /**
      Called when the client receives status presence updates.
      */
-    var onStatusPresence: ((Nakama_Realtime_StatusPresenceEvent) -> ())? {get set}
+    var onStatusPresence: ((Nakama_Realtime_StatusPresenceEvent) -> ())? { get set }
     
     /**
      Called when the client receives stream presence updates.
      */
-    var onStreamPresence: ((Nakama_Realtime_StreamPresenceEvent) -> ())? {get set}
+    var onStreamPresence: ((Nakama_Realtime_StreamPresenceEvent) -> ())? { get set }
     
     /**
      Called when the client receives stream data.
      */
-    var onStreamData: ((Nakama_Realtime_StreamData) -> ())? {get set}
+    var onStreamData: ((Nakama_Realtime_StreamData) -> ())? { get set }
     
     /**
      Connect to the server.
@@ -151,9 +151,9 @@ public protocol SocketClient {
 
      - Parameter target: The target channel to join.
      - Parameter type: The type of channel to join.
-     - Returns: A EventLoopFuture which resolves to a Channel response.
+     - Returns: A nakama realtime channel.
     */
-    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) -> EventLoopFuture<Nakama_Realtime_Channel>
+    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) async throws -> NakamaChannel
     
     /**
      Join a chat channel on the server.
@@ -162,9 +162,9 @@ public protocol SocketClient {
      - Parameter type: The type of channel to join.
      - Parameter persistence: True if chat messages should be stored.
      - Parameter hidden: True if the user should be hidden on the channel.
-     - Returns: A EventLoopFuture which resolves to a Channel response.
+     - Returns: A nakama realtime channel.
     */
-    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) -> EventLoopFuture<Nakama_Realtime_Channel>
+    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) async throws -> NakamaChannel
 
     /**
      Leave a chat channel on the server.
@@ -172,7 +172,7 @@ public protocol SocketClient {
      - Parameter channelId: The channel to leave.
      - Returns: A EventLoopFuture.
     */
-    func leaveChat(channelId: String) -> EventLoopFuture<Void>
+    func leaveChat(channelId: String) async throws -> Void
 
     /**
      Remove a chat message from a channel on the server.

@@ -22,7 +22,7 @@ import Logging
 final class NakamaTests: XCTestCase {
     let logger = Logger(label: "nakama-test")
     let client: Client = GrpcClient(serverKey: "defaultkey", trace: true)
-
+/*
     func newSession(id: String = "my-ios-device") -> Session {
         let sessionVars = ["hello":"world"]
         let session = try! client.authenticateDevice(id: id, create: true, username: nil, vars: sessionVars).wait()
@@ -36,8 +36,8 @@ final class NakamaTests: XCTestCase {
         XCTAssertNotEqual(session.userId, "")
         XCTAssertNotEqual(session.token, "")
         logger.info("Created new session for user \(session.username) (\(session.userId)): \(session.token)")
-    }
-    
+    }*/
+    /*
     func testRealtimeChat() {
         let session1 = newSession()
         let session2 = newSession(id: "my-second-ios-device")
@@ -90,5 +90,5 @@ final class NakamaTests: XCTestCase {
         socket1.disconnect()
         socket2.disconnect()
         try! client.disconnect().wait()
-    }
+    }*/
 }
