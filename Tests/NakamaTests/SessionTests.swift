@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Nakama Authors
+ * Copyright 2023 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,45 @@
 
 import XCTest
 import Foundation
-import Nakama
 import Logging
+@testable import Nakama
 
-final class NakamaTests: XCTestCase {
+final class SessionTests: XCTestCase {
     let logger = Logger(label: "nakama-test")
     let client: Client = GrpcClient(serverKey: "defaultkey", trace: true)
-/*
-    func newSession(id: String = "my-ios-device") -> Session {
-        let sessionVars = ["hello":"world"]
-        let session = try! client.authenticateDevice(id: id, create: true, username: nil, vars: sessionVars).wait()
-        return session
+    
+    var session: Session!
+    
+    override func setUp() async throws {
+        session = try await client.authenticateDevice(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
     }
     
-    func testSession() {
-        let session = newSession()
+    override func tearDown() async throws {
+        try await client.disconnect()
+        session = nil
+    }
+    
+    func test01_AuthenticateDevice() {
+        XCTAssertNotNil(session)
         XCTAssertFalse(session.expired)
-        XCTAssertNotEqual(session.username, "")
-        XCTAssertNotEqual(session.userId, "")
-        XCTAssertNotEqual(session.token, "")
-        logger.info("Created new session for user \(session.username) (\(session.userId)): \(session.token)")
-    }*/
+    }
+    
+    func test02_RefreshToken() async throws {
+        let newSession = try await client.refreshSession(session: session, vars: [:])
+        XCTAssertNotNil(newSession)
+        XCTAssertEqual(newSession.expired, false)
+    }
+    
+    func test03_Logout() async throws {
+        try await client.sessionLogout(session: session)
+        do {
+            _ = try await client.refreshSession(session: session, vars: [:])
+            XCTFail("Session refresh from logged out session should not work!")
+        } catch {
+            XCTAssertNotNil(error)
+        }
+    }
+    
     /*
     func testRealtimeChat() {
         let session1 = newSession()

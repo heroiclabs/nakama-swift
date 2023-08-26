@@ -422,6 +422,7 @@ public protocol Client {
     
     /**
      Logout user session and invalidate refresh token.
+     - Parameter session: Current session.
      */
     func sessionLogout(session: Session) async throws -> Void
 }
