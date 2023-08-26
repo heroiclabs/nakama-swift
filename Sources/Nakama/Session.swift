@@ -93,7 +93,7 @@ class DefaultSession: Session {
         self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
         self.userId = jsonDict["uid"] as! String
         self.username = jsonDict["usn"] as! String
-        self.sessionVars = jsonDict.keys.contains("vars") ? jsonDict["vrs"] as! [String : String] : [:]
+        self.sessionVars = jsonDict.keys.contains("vrs") ? jsonDict["vrs"] as! [String : String] : [:]
     }
     
     var expired: Bool {

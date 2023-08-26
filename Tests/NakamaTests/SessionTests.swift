@@ -22,11 +22,12 @@ import Logging
 final class SessionTests: XCTestCase {
     let logger = Logger(label: "nakama-test")
     let client: Client = GrpcClient(serverKey: "defaultkey", trace: true)
+    let vars = ["platform":"ios"]
     
     var session: Session!
     
     override func setUp() async throws {
-        session = try await client.authenticateDevice(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
+        session = try await client.authenticateDevice(id: "285fb548-1c23-42c2-84b5-cd18c22d7053", create: nil, username: nil, vars: vars)
     }
     
     override func tearDown() async throws {
@@ -37,12 +38,15 @@ final class SessionTests: XCTestCase {
     func test01_AuthenticateDevice() {
         XCTAssertNotNil(session)
         XCTAssertFalse(session.expired)
+        XCTAssertEqual(session.sessionVars, vars)
     }
     
     func test02_RefreshToken() async throws {
-        let newSession = try await client.refreshSession(session: session, vars: [:])
+        let newVars = ["lang":"en"]
+        let newSession = try await client.refreshSession(session: session, vars: newVars)
         XCTAssertNotNil(newSession)
         XCTAssertEqual(newSession.expired, false)
+        XCTAssertEqual(newSession.sessionVars, newVars)
     }
     
     func test03_Logout() async throws {
