@@ -24,13 +24,13 @@ import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "github.com/heroiclabs/nakama-common/api/api.proto";
 
-option go_package = "github.com/heroiclabs/nakama/v2/apigrpc";
+option go_package = "github.com/heroiclabs/nakama/v3/apigrpc";
 
 option java_multiple_files = true;
 option java_outer_classname = "NakamaApiGrpc";
 option java_package = "com.heroiclabs.nakama.api";
 
-option csharp_namespace = "Nakama";
+option csharp_namespace = "Nakama.Protobuf";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -94,6 +94,30 @@ service Nakama {
   // Add users to a group.
   rpc AddGroupUsers (api.AddGroupUsersRequest) returns (google.protobuf.Empty) {
     option (google.api.http).post = "/v2/group/{group_id}/add";
+  }
+
+  // Refresh a user's session using a refresh token retrieved from a previous authentication request.
+  rpc SessionRefresh (api.SessionRefreshRequest) returns (api.Session) {
+    option (google.api.http) = {
+      post: "/v2/account/session/refresh",
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BasicAuth";
+          value: {};
+        }
+      }
+    };
+  }
+
+  // Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
+  rpc SessionLogout (api.SessionLogoutRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/session/logout",
+      body: "*"
+    };
   }
 
   // Authenticate a user with an Apple ID against the server.
@@ -260,6 +284,11 @@ service Nakama {
     };
   }
 
+  // Delete the current user's account.
+  rpc DeleteAccount (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/account";
+  }
+
   // Delete one or more users by ID or username.
   rpc DeleteFriends (api.DeleteFriendsRequest) returns (google.protobuf.Empty) {
     option (google.api.http).delete = "/v2/friend";
@@ -278,6 +307,11 @@ service Nakama {
   // Delete one or more notifications for the current user.
   rpc DeleteNotifications (api.DeleteNotificationsRequest) returns (google.protobuf.Empty) {
     option (google.api.http).delete = "/v2/notification";
+  }
+
+  // Delete a tournament record.
+  rpc DeleteTournamentRecord (api.DeleteTournamentRecordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http).delete = "/v2/tournament/{tournament_id}";
   }
 
   // Delete one or more objects by ID or username.
@@ -306,6 +340,11 @@ service Nakama {
     option (google.api.http).get = "/v2/user";
   }
 
+  // Get subscription by product id.
+  rpc GetSubscription (api.GetSubscriptionRequest) returns (api.ValidatedSubscription) {
+    option (google.api.http).get = "/v2/iap/subscription/{product_id}";
+  }
+
   // A healthcheck which load balancers can use to check the service.
   rpc Healthcheck (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http).get = "/healthcheck";
@@ -315,6 +354,14 @@ service Nakama {
   rpc ImportFacebookFriends (api.ImportFacebookFriendsRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/friend/facebook",
+      body: "account"
+    };
+  }
+
+  // Import Steam friends and add them to a user's account.
+  rpc ImportSteamFriends (api.ImportSteamFriendsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v2/friend/steam",
       body: "account"
     };
   }
@@ -404,7 +451,7 @@ service Nakama {
   }
 
   // Add Steam to the social profiles on the current user's account.
-  rpc LinkSteam (api.AccountSteam) returns (google.protobuf.Empty) {
+  rpc LinkSteam (api.LinkSteamRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v2/account/link/steam",
       body: "*"
@@ -458,6 +505,14 @@ service Nakama {
       additional_bindings {
         get: "/v2/storage/{collection}/{user_id}"
       }
+    };
+  }
+
+  // List user's subscriptions.
+  rpc ListSubscriptions (api.ListSubscriptionsRequest) returns (api.SubscriptionList) {
+    option (google.api.http) = {
+      post: "/v2/iap/subscription",
+      body: "*"
     };
   }
 
@@ -611,6 +666,46 @@ service Nakama {
     };
   }
 
+  // Validate Apple IAP Receipt
+  rpc ValidatePurchaseApple (api.ValidatePurchaseAppleRequest) returns (api.ValidatePurchaseResponse) {
+    option (google.api.http) = {
+      post: "/v2/iap/purchase/apple",
+      body: "*"
+    };
+  }
+
+  // Validate Apple Subscription Receipt
+  rpc ValidateSubscriptionApple (api.ValidateSubscriptionAppleRequest) returns (api.ValidateSubscriptionResponse) {
+    option (google.api.http) = {
+      post: "/v2/iap/subscription/apple",
+      body: "*"
+    };
+  }
+
+  // Validate Google IAP Receipt
+  rpc ValidatePurchaseGoogle (api.ValidatePurchaseGoogleRequest) returns (api.ValidatePurchaseResponse) {
+    option (google.api.http) = {
+      post: "/v2/iap/purchase/google",
+      body: "*"
+    };
+  }
+
+  // Validate Google Subscription Receipt
+  rpc ValidateSubscriptionGoogle (api.ValidateSubscriptionGoogleRequest) returns (api.ValidateSubscriptionResponse) {
+    option (google.api.http) = {
+      post: "/v2/iap/subscription/google",
+      body: "*"
+    };
+  }
+
+  // Validate Huawei IAP Receipt
+  rpc ValidatePurchaseHuawei (api.ValidatePurchaseHuaweiRequest) returns (api.ValidatePurchaseResponse) {
+    option (google.api.http) = {
+      post: "/v2/iap/purchase/huawei",
+      body: "*"
+    };
+  }
+
   // Write a record to a leaderboard.
   rpc WriteLeaderboardRecord (api.WriteLeaderboardRecordRequest) returns (api.LeaderboardRecord) {
     option (google.api.http) = {
@@ -631,7 +726,11 @@ service Nakama {
   rpc WriteTournamentRecord (api.WriteTournamentRecordRequest) returns (api.LeaderboardRecord) {
     option (google.api.http) = {
       put: "/v2/tournament/{tournament_id}",
-      body: "record"
+      body: "record",
+      additional_bindings {
+        post: "/v2/tournament/{tournament_id}",
+        body: "record",
+      }
     };
   }
 }

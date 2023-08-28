@@ -335,6 +335,159 @@ public struct Nakama_Realtime_Envelope {
     set {message = .pong(newValue)}
   }
 
+  /// Incoming information about a party.
+  public var party: Nakama_Realtime_Party {
+    get {
+      if case .party(let v)? = message {return v}
+      return Nakama_Realtime_Party()
+    }
+    set {message = .party(newValue)}
+  }
+
+  /// Create a party.
+  public var partyCreate: Nakama_Realtime_PartyCreate {
+    get {
+      if case .partyCreate(let v)? = message {return v}
+      return Nakama_Realtime_PartyCreate()
+    }
+    set {message = .partyCreate(newValue)}
+  }
+
+  /// Join a party, or request to join if the party is not open.
+  public var partyJoin: Nakama_Realtime_PartyJoin {
+    get {
+      if case .partyJoin(let v)? = message {return v}
+      return Nakama_Realtime_PartyJoin()
+    }
+    set {message = .partyJoin(newValue)}
+  }
+
+  /// Leave a party.
+  public var partyLeave: Nakama_Realtime_PartyLeave {
+    get {
+      if case .partyLeave(let v)? = message {return v}
+      return Nakama_Realtime_PartyLeave()
+    }
+    set {message = .partyLeave(newValue)}
+  }
+
+  /// Promote a new party leader.
+  public var partyPromote: Nakama_Realtime_PartyPromote {
+    get {
+      if case .partyPromote(let v)? = message {return v}
+      return Nakama_Realtime_PartyPromote()
+    }
+    set {message = .partyPromote(newValue)}
+  }
+
+  /// Announcement of a new party leader.
+  public var partyLeader: Nakama_Realtime_PartyLeader {
+    get {
+      if case .partyLeader(let v)? = message {return v}
+      return Nakama_Realtime_PartyLeader()
+    }
+    set {message = .partyLeader(newValue)}
+  }
+
+  /// Accept a request to join.
+  public var partyAccept: Nakama_Realtime_PartyAccept {
+    get {
+      if case .partyAccept(let v)? = message {return v}
+      return Nakama_Realtime_PartyAccept()
+    }
+    set {message = .partyAccept(newValue)}
+  }
+
+  /// Kick a party member, or decline a request to join.
+  public var partyRemove: Nakama_Realtime_PartyRemove {
+    get {
+      if case .partyRemove(let v)? = message {return v}
+      return Nakama_Realtime_PartyRemove()
+    }
+    set {message = .partyRemove(newValue)}
+  }
+
+  /// End a party, kicking all party members and closing it.
+  public var partyClose: Nakama_Realtime_PartyClose {
+    get {
+      if case .partyClose(let v)? = message {return v}
+      return Nakama_Realtime_PartyClose()
+    }
+    set {message = .partyClose(newValue)}
+  }
+
+  /// Request a list of pending join requests for a party.
+  public var partyJoinRequestList: Nakama_Realtime_PartyJoinRequestList {
+    get {
+      if case .partyJoinRequestList(let v)? = message {return v}
+      return Nakama_Realtime_PartyJoinRequestList()
+    }
+    set {message = .partyJoinRequestList(newValue)}
+  }
+
+  /// Incoming notification for one or more new presences attempting to join the party.
+  public var partyJoinRequest: Nakama_Realtime_PartyJoinRequest {
+    get {
+      if case .partyJoinRequest(let v)? = message {return v}
+      return Nakama_Realtime_PartyJoinRequest()
+    }
+    set {message = .partyJoinRequest(newValue)}
+  }
+
+  /// Begin matchmaking as a party.
+  public var partyMatchmakerAdd: Nakama_Realtime_PartyMatchmakerAdd {
+    get {
+      if case .partyMatchmakerAdd(let v)? = message {return v}
+      return Nakama_Realtime_PartyMatchmakerAdd()
+    }
+    set {message = .partyMatchmakerAdd(newValue)}
+  }
+
+  /// Cancel a party matchmaking process using a ticket.
+  public var partyMatchmakerRemove: Nakama_Realtime_PartyMatchmakerRemove {
+    get {
+      if case .partyMatchmakerRemove(let v)? = message {return v}
+      return Nakama_Realtime_PartyMatchmakerRemove()
+    }
+    set {message = .partyMatchmakerRemove(newValue)}
+  }
+
+  /// A response from starting a new party matchmaking process.
+  public var partyMatchmakerTicket: Nakama_Realtime_PartyMatchmakerTicket {
+    get {
+      if case .partyMatchmakerTicket(let v)? = message {return v}
+      return Nakama_Realtime_PartyMatchmakerTicket()
+    }
+    set {message = .partyMatchmakerTicket(newValue)}
+  }
+
+  /// Incoming party data delivered from the server.
+  public var partyData: Nakama_Realtime_PartyData {
+    get {
+      if case .partyData(let v)? = message {return v}
+      return Nakama_Realtime_PartyData()
+    }
+    set {message = .partyData(newValue)}
+  }
+
+  /// A client to server request to send data to a party.
+  public var partyDataSend: Nakama_Realtime_PartyDataSend {
+    get {
+      if case .partyDataSend(let v)? = message {return v}
+      return Nakama_Realtime_PartyDataSend()
+    }
+    set {message = .partyDataSend(newValue)}
+  }
+
+  /// Presence update for a particular party.
+  public var partyPresenceEvent: Nakama_Realtime_PartyPresenceEvent {
+    get {
+      if case .partyPresenceEvent(let v)? = message {return v}
+      return Nakama_Realtime_PartyPresenceEvent()
+    }
+    set {message = .partyPresenceEvent(newValue)}
+  }
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public enum OneOf_Message: Equatable {
@@ -402,6 +555,40 @@ public struct Nakama_Realtime_Envelope {
     case ping(Nakama_Realtime_Ping)
     /// Application-level heartbeat and connection check response.
     case pong(Nakama_Realtime_Pong)
+    /// Incoming information about a party.
+    case party(Nakama_Realtime_Party)
+    /// Create a party.
+    case partyCreate(Nakama_Realtime_PartyCreate)
+    /// Join a party, or request to join if the party is not open.
+    case partyJoin(Nakama_Realtime_PartyJoin)
+    /// Leave a party.
+    case partyLeave(Nakama_Realtime_PartyLeave)
+    /// Promote a new party leader.
+    case partyPromote(Nakama_Realtime_PartyPromote)
+    /// Announcement of a new party leader.
+    case partyLeader(Nakama_Realtime_PartyLeader)
+    /// Accept a request to join.
+    case partyAccept(Nakama_Realtime_PartyAccept)
+    /// Kick a party member, or decline a request to join.
+    case partyRemove(Nakama_Realtime_PartyRemove)
+    /// End a party, kicking all party members and closing it.
+    case partyClose(Nakama_Realtime_PartyClose)
+    /// Request a list of pending join requests for a party.
+    case partyJoinRequestList(Nakama_Realtime_PartyJoinRequestList)
+    /// Incoming notification for one or more new presences attempting to join the party.
+    case partyJoinRequest(Nakama_Realtime_PartyJoinRequest)
+    /// Begin matchmaking as a party.
+    case partyMatchmakerAdd(Nakama_Realtime_PartyMatchmakerAdd)
+    /// Cancel a party matchmaking process using a ticket.
+    case partyMatchmakerRemove(Nakama_Realtime_PartyMatchmakerRemove)
+    /// A response from starting a new party matchmaking process.
+    case partyMatchmakerTicket(Nakama_Realtime_PartyMatchmakerTicket)
+    /// Incoming party data delivered from the server.
+    case partyData(Nakama_Realtime_PartyData)
+    /// A client to server request to send data to a party.
+    case partyDataSend(Nakama_Realtime_PartyDataSend)
+    /// Presence update for a particular party.
+    case partyPresenceEvent(Nakama_Realtime_PartyPresenceEvent)
 
   #if !swift(>=4.1)
     public static func ==(lhs: Nakama_Realtime_Envelope.OneOf_Message, rhs: Nakama_Realtime_Envelope.OneOf_Message) -> Bool {
@@ -535,6 +722,74 @@ public struct Nakama_Realtime_Envelope {
       }()
       case (.pong, .pong): return {
         guard case .pong(let l) = lhs, case .pong(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.party, .party): return {
+        guard case .party(let l) = lhs, case .party(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyCreate, .partyCreate): return {
+        guard case .partyCreate(let l) = lhs, case .partyCreate(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyJoin, .partyJoin): return {
+        guard case .partyJoin(let l) = lhs, case .partyJoin(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyLeave, .partyLeave): return {
+        guard case .partyLeave(let l) = lhs, case .partyLeave(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyPromote, .partyPromote): return {
+        guard case .partyPromote(let l) = lhs, case .partyPromote(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyLeader, .partyLeader): return {
+        guard case .partyLeader(let l) = lhs, case .partyLeader(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyAccept, .partyAccept): return {
+        guard case .partyAccept(let l) = lhs, case .partyAccept(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyRemove, .partyRemove): return {
+        guard case .partyRemove(let l) = lhs, case .partyRemove(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyClose, .partyClose): return {
+        guard case .partyClose(let l) = lhs, case .partyClose(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyJoinRequestList, .partyJoinRequestList): return {
+        guard case .partyJoinRequestList(let l) = lhs, case .partyJoinRequestList(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyJoinRequest, .partyJoinRequest): return {
+        guard case .partyJoinRequest(let l) = lhs, case .partyJoinRequest(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyMatchmakerAdd, .partyMatchmakerAdd): return {
+        guard case .partyMatchmakerAdd(let l) = lhs, case .partyMatchmakerAdd(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyMatchmakerRemove, .partyMatchmakerRemove): return {
+        guard case .partyMatchmakerRemove(let l) = lhs, case .partyMatchmakerRemove(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyMatchmakerTicket, .partyMatchmakerTicket): return {
+        guard case .partyMatchmakerTicket(let l) = lhs, case .partyMatchmakerTicket(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyData, .partyData): return {
+        guard case .partyData(let l) = lhs, case .partyData(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyDataSend, .partyDataSend): return {
+        guard case .partyDataSend(let l) = lhs, case .partyDataSend(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.partyPresenceEvent, .partyPresenceEvent): return {
+        guard case .partyPresenceEvent(let l) = lhs, case .partyPresenceEvent(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       default: return false
@@ -723,7 +978,7 @@ public struct Nakama_Realtime_ChannelMessageAck {
   /// Username of the message sender.
   public var username: String = String()
 
-  /// The UNIX time when the message was created.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   public var createTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createTime = newValue}
@@ -733,7 +988,7 @@ public struct Nakama_Realtime_ChannelMessageAck {
   /// Clears the value of `createTime`. Subsequent reads from it will return its default value.
   public mutating func clearCreateTime() {self._createTime = nil}
 
-  /// The UNIX time when the message was last updated.
+  /// The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   public var updateTime: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _updateTime ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_updateTime = newValue}
@@ -1014,6 +1269,9 @@ public struct Nakama_Realtime_MatchCreate {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// Optional name to use when creating the match.
+  public var name: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1195,9 +1453,21 @@ public struct Nakama_Realtime_MatchmakerAdd {
   /// Numeric properties.
   public var numericProperties: Dictionary<String,Double> = [:]
 
+  /// Optional multiple of the count that must be satisfied.
+  public var countMultiple: SwiftProtobuf.Google_Protobuf_Int32Value {
+    get {return _countMultiple ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
+    set {_countMultiple = newValue}
+  }
+  /// Returns true if `countMultiple` has been explicitly set.
+  public var hasCountMultiple: Bool {return self._countMultiple != nil}
+  /// Clears the value of `countMultiple`. Subsequent reads from it will return its default value.
+  public mutating func clearCountMultiple() {self._countMultiple = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _countMultiple: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
 }
 
 /// A successful matchmaking result.
@@ -1287,6 +1557,9 @@ public struct Nakama_Realtime_MatchmakerMatched {
     /// Clears the value of `presence`. Subsequent reads from it will return its default value.
     public mutating func clearPresence() {self._presence = nil}
 
+    /// Party identifier, if this user was matched as a party member.
+    public var partyID: String = String()
+
     /// String properties.
     public var stringProperties: Dictionary<String,String> = [:]
 
@@ -1341,6 +1614,393 @@ public struct Nakama_Realtime_Notifications {
 
   /// Collection of notifications.
   public var notifications: [Nakama_Api_Notification] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Incoming information about a party.
+public struct Nakama_Realtime_Party {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Unique party identifier.
+  public var partyID: String = String()
+
+  /// Open flag.
+  public var `open`: Bool = false
+
+  /// Maximum number of party members.
+  public var maxSize: Int32 = 0
+
+  /// Self.
+  public var self_p: Nakama_Realtime_UserPresence {
+    get {return _self_p ?? Nakama_Realtime_UserPresence()}
+    set {_self_p = newValue}
+  }
+  /// Returns true if `self_p` has been explicitly set.
+  public var hasSelf_p: Bool {return self._self_p != nil}
+  /// Clears the value of `self_p`. Subsequent reads from it will return its default value.
+  public mutating func clearSelf_p() {self._self_p = nil}
+
+  /// Leader.
+  public var leader: Nakama_Realtime_UserPresence {
+    get {return _leader ?? Nakama_Realtime_UserPresence()}
+    set {_leader = newValue}
+  }
+  /// Returns true if `leader` has been explicitly set.
+  public var hasLeader: Bool {return self._leader != nil}
+  /// Clears the value of `leader`. Subsequent reads from it will return its default value.
+  public mutating func clearLeader() {self._leader = nil}
+
+  /// All current party members.
+  public var presences: [Nakama_Realtime_UserPresence] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _self_p: Nakama_Realtime_UserPresence? = nil
+  fileprivate var _leader: Nakama_Realtime_UserPresence? = nil
+}
+
+/// Create a party.
+public struct Nakama_Realtime_PartyCreate {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Whether or not the party will require join requests to be approved by the party leader.
+  public var `open`: Bool = false
+
+  /// Maximum number of party members.
+  public var maxSize: Int32 = 0
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Join a party, or request to join if the party is not open.
+public struct Nakama_Realtime_PartyJoin {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to join.
+  public var partyID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Leave a party.
+public struct Nakama_Realtime_PartyLeave {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to leave.
+  public var partyID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Promote a new party leader.
+public struct Nakama_Realtime_PartyPromote {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to promote a new leader for.
+  public var partyID: String = String()
+
+  /// The presence of an existing party member to promote as the new leader.
+  public var presence: Nakama_Realtime_UserPresence {
+    get {return _presence ?? Nakama_Realtime_UserPresence()}
+    set {_presence = newValue}
+  }
+  /// Returns true if `presence` has been explicitly set.
+  public var hasPresence: Bool {return self._presence != nil}
+  /// Clears the value of `presence`. Subsequent reads from it will return its default value.
+  public mutating func clearPresence() {self._presence = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
+}
+
+/// Announcement of a new party leader.
+public struct Nakama_Realtime_PartyLeader {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to announce the new leader for.
+  public var partyID: String = String()
+
+  /// The presence of the new party leader.
+  public var presence: Nakama_Realtime_UserPresence {
+    get {return _presence ?? Nakama_Realtime_UserPresence()}
+    set {_presence = newValue}
+  }
+  /// Returns true if `presence` has been explicitly set.
+  public var hasPresence: Bool {return self._presence != nil}
+  /// Clears the value of `presence`. Subsequent reads from it will return its default value.
+  public mutating func clearPresence() {self._presence = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
+}
+
+/// Accept a request to join.
+public struct Nakama_Realtime_PartyAccept {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to accept a join request for.
+  public var partyID: String = String()
+
+  /// The presence to accept as a party member.
+  public var presence: Nakama_Realtime_UserPresence {
+    get {return _presence ?? Nakama_Realtime_UserPresence()}
+    set {_presence = newValue}
+  }
+  /// Returns true if `presence` has been explicitly set.
+  public var hasPresence: Bool {return self._presence != nil}
+  /// Clears the value of `presence`. Subsequent reads from it will return its default value.
+  public mutating func clearPresence() {self._presence = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
+}
+
+/// Kick a party member, or decline a request to join.
+public struct Nakama_Realtime_PartyRemove {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to remove/reject from.
+  public var partyID: String = String()
+
+  /// The presence to remove or reject.
+  public var presence: Nakama_Realtime_UserPresence {
+    get {return _presence ?? Nakama_Realtime_UserPresence()}
+    set {_presence = newValue}
+  }
+  /// Returns true if `presence` has been explicitly set.
+  public var hasPresence: Bool {return self._presence != nil}
+  /// Clears the value of `presence`. Subsequent reads from it will return its default value.
+  public mutating func clearPresence() {self._presence = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
+}
+
+/// End a party, kicking all party members and closing it.
+public struct Nakama_Realtime_PartyClose {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to close.
+  public var partyID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Request a list of pending join requests for a party.
+public struct Nakama_Realtime_PartyJoinRequestList {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to get a list of join requests for.
+  public var partyID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Incoming notification for one or more new presences attempting to join the party.
+public struct Nakama_Realtime_PartyJoinRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID these presences are attempting to join.
+  public var partyID: String = String()
+
+  /// Presences attempting to join.
+  public var presences: [Nakama_Realtime_UserPresence] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Begin matchmaking as a party.
+public struct Nakama_Realtime_PartyMatchmakerAdd {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID.
+  public var partyID: String = String()
+
+  /// Minimum total user count to match together.
+  public var minCount: Int32 = 0
+
+  /// Maximum total user count to match together.
+  public var maxCount: Int32 = 0
+
+  /// Filter query used to identify suitable users.
+  public var query: String = String()
+
+  /// String properties.
+  public var stringProperties: Dictionary<String,String> = [:]
+
+  /// Numeric properties.
+  public var numericProperties: Dictionary<String,Double> = [:]
+
+  /// Optional multiple of the count that must be satisfied.
+  public var countMultiple: SwiftProtobuf.Google_Protobuf_Int32Value {
+    get {return _countMultiple ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
+    set {_countMultiple = newValue}
+  }
+  /// Returns true if `countMultiple` has been explicitly set.
+  public var hasCountMultiple: Bool {return self._countMultiple != nil}
+  /// Clears the value of `countMultiple`. Subsequent reads from it will return its default value.
+  public mutating func clearCountMultiple() {self._countMultiple = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _countMultiple: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
+}
+
+/// Cancel a party matchmaking process using a ticket.
+public struct Nakama_Realtime_PartyMatchmakerRemove {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID.
+  public var partyID: String = String()
+
+  /// The ticket to cancel.
+  public var ticket: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// A response from starting a new party matchmaking process.
+public struct Nakama_Realtime_PartyMatchmakerTicket {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID.
+  public var partyID: String = String()
+
+  /// The ticket that can be used to cancel matchmaking.
+  public var ticket: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Incoming party data delivered from the server.
+public struct Nakama_Realtime_PartyData {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The party ID.
+  public var partyID: String = String()
+
+  /// A reference to the user presence that sent this data, if any.
+  public var presence: Nakama_Realtime_UserPresence {
+    get {return _presence ?? Nakama_Realtime_UserPresence()}
+    set {_presence = newValue}
+  }
+  /// Returns true if `presence` has been explicitly set.
+  public var hasPresence: Bool {return self._presence != nil}
+  /// Clears the value of `presence`. Subsequent reads from it will return its default value.
+  public mutating func clearPresence() {self._presence = nil}
+
+  /// Op code value.
+  public var opCode: Int64 = 0
+
+  /// Data payload, if any.
+  public var data: Data = Data()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _presence: Nakama_Realtime_UserPresence? = nil
+}
+
+/// Send data to a party.
+public struct Nakama_Realtime_PartyDataSend {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID to send to.
+  public var partyID: String = String()
+
+  /// Op code value.
+  public var opCode: Int64 = 0
+
+  /// Data payload, if any.
+  public var data: Data = Data()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Presence update for a particular party.
+public struct Nakama_Realtime_PartyPresenceEvent {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The party ID.
+  public var partyID: String = String()
+
+  /// User presences that have just joined the party.
+  public var joins: [Nakama_Realtime_UserPresence] = []
+
+  /// User presences that have just left the party.
+  public var leaves: [Nakama_Realtime_UserPresence] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1581,6 +2241,65 @@ public struct Nakama_Realtime_UserPresence {
   fileprivate var _status: SwiftProtobuf.Google_Protobuf_StringValue? = nil
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Nakama_Realtime_Envelope: @unchecked Sendable {}
+extension Nakama_Realtime_Envelope.OneOf_Message: @unchecked Sendable {}
+extension Nakama_Realtime_Channel: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelJoin: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelJoin.TypeEnum: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelLeave: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelMessageAck: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelMessageSend: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelMessageUpdate: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelMessageRemove: @unchecked Sendable {}
+extension Nakama_Realtime_ChannelPresenceEvent: @unchecked Sendable {}
+extension Nakama_Realtime_Error: @unchecked Sendable {}
+extension Nakama_Realtime_Error.Code: @unchecked Sendable {}
+extension Nakama_Realtime_Match: @unchecked Sendable {}
+extension Nakama_Realtime_MatchCreate: @unchecked Sendable {}
+extension Nakama_Realtime_MatchData: @unchecked Sendable {}
+extension Nakama_Realtime_MatchDataSend: @unchecked Sendable {}
+extension Nakama_Realtime_MatchJoin: @unchecked Sendable {}
+extension Nakama_Realtime_MatchJoin.OneOf_ID: @unchecked Sendable {}
+extension Nakama_Realtime_MatchLeave: @unchecked Sendable {}
+extension Nakama_Realtime_MatchPresenceEvent: @unchecked Sendable {}
+extension Nakama_Realtime_MatchmakerAdd: @unchecked Sendable {}
+extension Nakama_Realtime_MatchmakerMatched: @unchecked Sendable {}
+extension Nakama_Realtime_MatchmakerMatched.OneOf_ID: @unchecked Sendable {}
+extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: @unchecked Sendable {}
+extension Nakama_Realtime_MatchmakerRemove: @unchecked Sendable {}
+extension Nakama_Realtime_MatchmakerTicket: @unchecked Sendable {}
+extension Nakama_Realtime_Notifications: @unchecked Sendable {}
+extension Nakama_Realtime_Party: @unchecked Sendable {}
+extension Nakama_Realtime_PartyCreate: @unchecked Sendable {}
+extension Nakama_Realtime_PartyJoin: @unchecked Sendable {}
+extension Nakama_Realtime_PartyLeave: @unchecked Sendable {}
+extension Nakama_Realtime_PartyPromote: @unchecked Sendable {}
+extension Nakama_Realtime_PartyLeader: @unchecked Sendable {}
+extension Nakama_Realtime_PartyAccept: @unchecked Sendable {}
+extension Nakama_Realtime_PartyRemove: @unchecked Sendable {}
+extension Nakama_Realtime_PartyClose: @unchecked Sendable {}
+extension Nakama_Realtime_PartyJoinRequestList: @unchecked Sendable {}
+extension Nakama_Realtime_PartyJoinRequest: @unchecked Sendable {}
+extension Nakama_Realtime_PartyMatchmakerAdd: @unchecked Sendable {}
+extension Nakama_Realtime_PartyMatchmakerRemove: @unchecked Sendable {}
+extension Nakama_Realtime_PartyMatchmakerTicket: @unchecked Sendable {}
+extension Nakama_Realtime_PartyData: @unchecked Sendable {}
+extension Nakama_Realtime_PartyDataSend: @unchecked Sendable {}
+extension Nakama_Realtime_PartyPresenceEvent: @unchecked Sendable {}
+extension Nakama_Realtime_Ping: @unchecked Sendable {}
+extension Nakama_Realtime_Pong: @unchecked Sendable {}
+extension Nakama_Realtime_Status: @unchecked Sendable {}
+extension Nakama_Realtime_StatusFollow: @unchecked Sendable {}
+extension Nakama_Realtime_StatusPresenceEvent: @unchecked Sendable {}
+extension Nakama_Realtime_StatusUnfollow: @unchecked Sendable {}
+extension Nakama_Realtime_StatusUpdate: @unchecked Sendable {}
+extension Nakama_Realtime_Stream: @unchecked Sendable {}
+extension Nakama_Realtime_StreamData: @unchecked Sendable {}
+extension Nakama_Realtime_StreamPresenceEvent: @unchecked Sendable {}
+extension Nakama_Realtime_UserPresence: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "nakama.realtime"
@@ -1621,6 +2340,23 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
     31: .standard(proto: "stream_presence_event"),
     32: .same(proto: "ping"),
     33: .same(proto: "pong"),
+    34: .same(proto: "party"),
+    35: .standard(proto: "party_create"),
+    36: .standard(proto: "party_join"),
+    37: .standard(proto: "party_leave"),
+    38: .standard(proto: "party_promote"),
+    39: .standard(proto: "party_leader"),
+    40: .standard(proto: "party_accept"),
+    41: .standard(proto: "party_remove"),
+    42: .standard(proto: "party_close"),
+    43: .standard(proto: "party_join_request_list"),
+    44: .standard(proto: "party_join_request"),
+    45: .standard(proto: "party_matchmaker_add"),
+    46: .standard(proto: "party_matchmaker_remove"),
+    47: .standard(proto: "party_matchmaker_ticket"),
+    48: .standard(proto: "party_data"),
+    49: .standard(proto: "party_data_send"),
+    50: .standard(proto: "party_presence_event"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1632,291 +2368,640 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
       case 1: try { try decoder.decodeSingularStringField(value: &self.cid) }()
       case 2: try {
         var v: Nakama_Realtime_Channel?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channel(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channel(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channel(v)
+        }
       }()
       case 3: try {
         var v: Nakama_Realtime_ChannelJoin?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelJoin(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelJoin(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelJoin(v)
+        }
       }()
       case 4: try {
         var v: Nakama_Realtime_ChannelLeave?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelLeave(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelLeave(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelLeave(v)
+        }
       }()
       case 5: try {
         var v: Nakama_Api_ChannelMessage?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelMessage(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelMessage(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelMessage(v)
+        }
       }()
       case 6: try {
         var v: Nakama_Realtime_ChannelMessageAck?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelMessageAck(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelMessageAck(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelMessageAck(v)
+        }
       }()
       case 7: try {
         var v: Nakama_Realtime_ChannelMessageSend?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelMessageSend(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelMessageSend(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelMessageSend(v)
+        }
       }()
       case 8: try {
         var v: Nakama_Realtime_ChannelMessageUpdate?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelMessageUpdate(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelMessageUpdate(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelMessageUpdate(v)
+        }
       }()
       case 9: try {
         var v: Nakama_Realtime_ChannelMessageRemove?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelMessageRemove(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelMessageRemove(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelMessageRemove(v)
+        }
       }()
       case 10: try {
         var v: Nakama_Realtime_ChannelPresenceEvent?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .channelPresenceEvent(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .channelPresenceEvent(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .channelPresenceEvent(v)
+        }
       }()
       case 11: try {
         var v: Nakama_Realtime_Error?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .error(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .error(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .error(v)
+        }
       }()
       case 12: try {
         var v: Nakama_Realtime_Match?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .match(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .match(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .match(v)
+        }
       }()
       case 13: try {
         var v: Nakama_Realtime_MatchCreate?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchCreate(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchCreate(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchCreate(v)
+        }
       }()
       case 14: try {
         var v: Nakama_Realtime_MatchData?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchData(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchData(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchData(v)
+        }
       }()
       case 15: try {
         var v: Nakama_Realtime_MatchDataSend?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchDataSend(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchDataSend(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchDataSend(v)
+        }
       }()
       case 16: try {
         var v: Nakama_Realtime_MatchJoin?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchJoin(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchJoin(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchJoin(v)
+        }
       }()
       case 17: try {
         var v: Nakama_Realtime_MatchLeave?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchLeave(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchLeave(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchLeave(v)
+        }
       }()
       case 18: try {
         var v: Nakama_Realtime_MatchPresenceEvent?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchPresenceEvent(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchPresenceEvent(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchPresenceEvent(v)
+        }
       }()
       case 19: try {
         var v: Nakama_Realtime_MatchmakerAdd?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchmakerAdd(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchmakerAdd(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchmakerAdd(v)
+        }
       }()
       case 20: try {
         var v: Nakama_Realtime_MatchmakerMatched?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchmakerMatched(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchmakerMatched(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchmakerMatched(v)
+        }
       }()
       case 21: try {
         var v: Nakama_Realtime_MatchmakerRemove?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchmakerRemove(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchmakerRemove(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchmakerRemove(v)
+        }
       }()
       case 22: try {
         var v: Nakama_Realtime_MatchmakerTicket?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .matchmakerTicket(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .matchmakerTicket(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .matchmakerTicket(v)
+        }
       }()
       case 23: try {
         var v: Nakama_Realtime_Notifications?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .notifications(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .notifications(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .notifications(v)
+        }
       }()
       case 24: try {
         var v: Nakama_Api_Rpc?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .rpc(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .rpc(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .rpc(v)
+        }
       }()
       case 25: try {
         var v: Nakama_Realtime_Status?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .status(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .status(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .status(v)
+        }
       }()
       case 26: try {
         var v: Nakama_Realtime_StatusFollow?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .statusFollow(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .statusFollow(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .statusFollow(v)
+        }
       }()
       case 27: try {
         var v: Nakama_Realtime_StatusPresenceEvent?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .statusPresenceEvent(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .statusPresenceEvent(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .statusPresenceEvent(v)
+        }
       }()
       case 28: try {
         var v: Nakama_Realtime_StatusUnfollow?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .statusUnfollow(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .statusUnfollow(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .statusUnfollow(v)
+        }
       }()
       case 29: try {
         var v: Nakama_Realtime_StatusUpdate?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .statusUpdate(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .statusUpdate(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .statusUpdate(v)
+        }
       }()
       case 30: try {
         var v: Nakama_Realtime_StreamData?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .streamData(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .streamData(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .streamData(v)
+        }
       }()
       case 31: try {
         var v: Nakama_Realtime_StreamPresenceEvent?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .streamPresenceEvent(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .streamPresenceEvent(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .streamPresenceEvent(v)
+        }
       }()
       case 32: try {
         var v: Nakama_Realtime_Ping?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .ping(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .ping(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .ping(v)
+        }
       }()
       case 33: try {
         var v: Nakama_Realtime_Pong?
+        var hadOneofValue = false
         if let current = self.message {
-          try decoder.handleConflictingOneOf()
+          hadOneofValue = true
           if case .pong(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {self.message = .pong(v)}
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .pong(v)
+        }
+      }()
+      case 34: try {
+        var v: Nakama_Realtime_Party?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .party(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .party(v)
+        }
+      }()
+      case 35: try {
+        var v: Nakama_Realtime_PartyCreate?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyCreate(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyCreate(v)
+        }
+      }()
+      case 36: try {
+        var v: Nakama_Realtime_PartyJoin?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyJoin(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyJoin(v)
+        }
+      }()
+      case 37: try {
+        var v: Nakama_Realtime_PartyLeave?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyLeave(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyLeave(v)
+        }
+      }()
+      case 38: try {
+        var v: Nakama_Realtime_PartyPromote?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyPromote(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyPromote(v)
+        }
+      }()
+      case 39: try {
+        var v: Nakama_Realtime_PartyLeader?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyLeader(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyLeader(v)
+        }
+      }()
+      case 40: try {
+        var v: Nakama_Realtime_PartyAccept?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyAccept(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyAccept(v)
+        }
+      }()
+      case 41: try {
+        var v: Nakama_Realtime_PartyRemove?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyRemove(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyRemove(v)
+        }
+      }()
+      case 42: try {
+        var v: Nakama_Realtime_PartyClose?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyClose(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyClose(v)
+        }
+      }()
+      case 43: try {
+        var v: Nakama_Realtime_PartyJoinRequestList?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyJoinRequestList(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyJoinRequestList(v)
+        }
+      }()
+      case 44: try {
+        var v: Nakama_Realtime_PartyJoinRequest?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyJoinRequest(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyJoinRequest(v)
+        }
+      }()
+      case 45: try {
+        var v: Nakama_Realtime_PartyMatchmakerAdd?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyMatchmakerAdd(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyMatchmakerAdd(v)
+        }
+      }()
+      case 46: try {
+        var v: Nakama_Realtime_PartyMatchmakerRemove?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyMatchmakerRemove(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyMatchmakerRemove(v)
+        }
+      }()
+      case 47: try {
+        var v: Nakama_Realtime_PartyMatchmakerTicket?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyMatchmakerTicket(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyMatchmakerTicket(v)
+        }
+      }()
+      case 48: try {
+        var v: Nakama_Realtime_PartyData?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyData(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyData(v)
+        }
+      }()
+      case 49: try {
+        var v: Nakama_Realtime_PartyDataSend?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyDataSend(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyDataSend(v)
+        }
+      }()
+      case 50: try {
+        var v: Nakama_Realtime_PartyPresenceEvent?
+        var hadOneofValue = false
+        if let current = self.message {
+          hadOneofValue = true
+          if case .partyPresenceEvent(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.message = .partyPresenceEvent(v)
+        }
       }()
       default: break
       }
@@ -1924,12 +3009,13 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.cid.isEmpty {
       try visitor.visitSingularStringField(value: self.cid, fieldNumber: 1)
     }
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.message {
     case .channel?: try {
       guard case .channel(let v)? = self.message else { preconditionFailure() }
@@ -2059,6 +3145,74 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
       guard case .pong(let v)? = self.message else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 33)
     }()
+    case .party?: try {
+      guard case .party(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 34)
+    }()
+    case .partyCreate?: try {
+      guard case .partyCreate(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 35)
+    }()
+    case .partyJoin?: try {
+      guard case .partyJoin(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 36)
+    }()
+    case .partyLeave?: try {
+      guard case .partyLeave(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 37)
+    }()
+    case .partyPromote?: try {
+      guard case .partyPromote(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 38)
+    }()
+    case .partyLeader?: try {
+      guard case .partyLeader(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 39)
+    }()
+    case .partyAccept?: try {
+      guard case .partyAccept(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 40)
+    }()
+    case .partyRemove?: try {
+      guard case .partyRemove(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 41)
+    }()
+    case .partyClose?: try {
+      guard case .partyClose(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 42)
+    }()
+    case .partyJoinRequestList?: try {
+      guard case .partyJoinRequestList(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 43)
+    }()
+    case .partyJoinRequest?: try {
+      guard case .partyJoinRequest(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 44)
+    }()
+    case .partyMatchmakerAdd?: try {
+      guard case .partyMatchmakerAdd(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 45)
+    }()
+    case .partyMatchmakerRemove?: try {
+      guard case .partyMatchmakerRemove(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 46)
+    }()
+    case .partyMatchmakerTicket?: try {
+      guard case .partyMatchmakerTicket(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 47)
+    }()
+    case .partyData?: try {
+      guard case .partyData(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 48)
+    }()
+    case .partyDataSend?: try {
+      guard case .partyDataSend(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 49)
+    }()
+    case .partyPresenceEvent?: try {
+      guard case .partyPresenceEvent(let v)? = self.message else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 50)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -2103,15 +3257,19 @@ extension Nakama_Realtime_Channel: SwiftProtobuf.Message, SwiftProtobuf._Message
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.id.isEmpty {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
     if !self.presences.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 2)
     }
-    if let v = self._self_p {
+    try { if let v = self._self_p {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.roomName.isEmpty {
       try visitor.visitSingularStringField(value: self.roomName, fieldNumber: 4)
     }
@@ -2165,18 +3323,22 @@ extension Nakama_Realtime_ChannelJoin: SwiftProtobuf.Message, SwiftProtobuf._Mes
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.target.isEmpty {
       try visitor.visitSingularStringField(value: self.target, fieldNumber: 1)
     }
     if self.type != 0 {
       try visitor.visitSingularInt32Field(value: self.type, fieldNumber: 2)
     }
-    if let v = self._persistence {
+    try { if let v = self._persistence {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
-    if let v = self._hidden {
+    } }()
+    try { if let v = self._hidden {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2270,27 +3432,31 @@ extension Nakama_Realtime_ChannelMessageAck: SwiftProtobuf.Message, SwiftProtobu
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.channelID.isEmpty {
       try visitor.visitSingularStringField(value: self.channelID, fieldNumber: 1)
     }
     if !self.messageID.isEmpty {
       try visitor.visitSingularStringField(value: self.messageID, fieldNumber: 2)
     }
-    if let v = self._code {
+    try { if let v = self._code {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.username.isEmpty {
       try visitor.visitSingularStringField(value: self.username, fieldNumber: 4)
     }
-    if let v = self._createTime {
+    try { if let v = self._createTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
-    if let v = self._updateTime {
+    } }()
+    try { if let v = self._updateTime {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
-    if let v = self._persistent {
+    } }()
+    try { if let v = self._persistent {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }
+    } }()
     if !self.roomName.isEmpty {
       try visitor.visitSingularStringField(value: self.roomName, fieldNumber: 8)
     }
@@ -2597,24 +3763,28 @@ extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
     if self.authoritative != false {
       try visitor.visitSingularBoolField(value: self.authoritative, fieldNumber: 2)
     }
-    if let v = self._label {
+    try { if let v = self._label {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if self.size != 0 {
       try visitor.visitSingularInt32Field(value: self.size, fieldNumber: 4)
     }
     if !self.presences.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 5)
     }
-    if let v = self._self_p {
+    try { if let v = self._self_p {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2632,18 +3802,31 @@ extension Nakama_Realtime_Match: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
 
 extension Nakama_Realtime_MatchCreate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".MatchCreate"
-  public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+  ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      default: break
+      }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Nakama_Realtime_MatchCreate, rhs: Nakama_Realtime_MatchCreate) -> Bool {
+    if lhs.name != rhs.name {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2676,12 +3859,16 @@ extension Nakama_Realtime_MatchData: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.matchID.isEmpty {
       try visitor.visitSingularStringField(value: self.matchID, fieldNumber: 1)
     }
-    if let v = self._presence {
+    try { if let v = self._presence {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if self.opCode != 0 {
       try visitor.visitSingularInt64Field(value: self.opCode, fieldNumber: 3)
     }
@@ -2776,16 +3963,20 @@ extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._Messa
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try {
-        if self.id != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
-        if let v = v {self.id = .matchID(v)}
+        if let v = v {
+          if self.id != nil {try decoder.handleConflictingOneOf()}
+          self.id = .matchID(v)
+        }
       }()
       case 2: try {
-        if self.id != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
-        if let v = v {self.id = .token(v)}
+        if let v = v {
+          if self.id != nil {try decoder.handleConflictingOneOf()}
+          self.id = .token(v)
+        }
       }()
       case 3: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.metadata) }()
       default: break
@@ -2795,8 +3986,9 @@ extension Nakama_Realtime_MatchJoin: SwiftProtobuf.Message, SwiftProtobuf._Messa
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.id {
     case .matchID?: try {
       guard case .matchID(let v)? = self.id else { preconditionFailure() }
@@ -2906,6 +4098,7 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
     3: .same(proto: "query"),
     4: .standard(proto: "string_properties"),
     5: .standard(proto: "numeric_properties"),
+    6: .standard(proto: "count_multiple"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2919,12 +4112,17 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
       case 3: try { try decoder.decodeSingularStringField(value: &self.query) }()
       case 4: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.stringProperties) }()
       case 5: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufDouble>.self, value: &self.numericProperties) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._countMultiple) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.minCount != 0 {
       try visitor.visitSingularInt32Field(value: self.minCount, fieldNumber: 1)
     }
@@ -2940,6 +4138,9 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
     if !self.numericProperties.isEmpty {
       try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufDouble>.self, value: self.numericProperties, fieldNumber: 5)
     }
+    try { if let v = self._countMultiple {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2949,6 +4150,7 @@ extension Nakama_Realtime_MatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._M
     if lhs.query != rhs.query {return false}
     if lhs.stringProperties != rhs.stringProperties {return false}
     if lhs.numericProperties != rhs.numericProperties {return false}
+    if lhs._countMultiple != rhs._countMultiple {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2972,16 +4174,20 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self.ticket) }()
       case 2: try {
-        if self.id != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
-        if let v = v {self.id = .matchID(v)}
+        if let v = v {
+          if self.id != nil {try decoder.handleConflictingOneOf()}
+          self.id = .matchID(v)
+        }
       }()
       case 3: try {
-        if self.id != nil {try decoder.handleConflictingOneOf()}
         var v: String?
         try decoder.decodeSingularStringField(value: &v)
-        if let v = v {self.id = .token(v)}
+        if let v = v {
+          if self.id != nil {try decoder.handleConflictingOneOf()}
+          self.id = .token(v)
+        }
       }()
       case 4: try { try decoder.decodeRepeatedMessageField(value: &self.users) }()
       case 5: try { try decoder.decodeSingularMessageField(value: &self._self_p) }()
@@ -2991,12 +4197,13 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.ticket.isEmpty {
       try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 1)
     }
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.id {
     case .matchID?: try {
       guard case .matchID(let v)? = self.id else { preconditionFailure() }
@@ -3011,9 +4218,9 @@ extension Nakama_Realtime_MatchmakerMatched: SwiftProtobuf.Message, SwiftProtobu
     if !self.users.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.users, fieldNumber: 4)
     }
-    if let v = self._self_p {
+    try { if let v = self._self_p {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3031,6 +4238,7 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
   public static let protoMessageName: String = Nakama_Realtime_MatchmakerMatched.protoMessageName + ".MatchmakerUser"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "presence"),
+    2: .standard(proto: "party_id"),
     5: .standard(proto: "string_properties"),
     6: .standard(proto: "numeric_properties"),
   ]
@@ -3042,6 +4250,7 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularMessageField(value: &self._presence) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
       case 5: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.stringProperties) }()
       case 6: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufDouble>.self, value: &self.numericProperties) }()
       default: break
@@ -3050,8 +4259,15 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._presence {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._presence {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 2)
     }
     if !self.stringProperties.isEmpty {
       try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.stringProperties, fieldNumber: 5)
@@ -3064,6 +4280,7 @@ extension Nakama_Realtime_MatchmakerMatched.MatchmakerUser: SwiftProtobuf.Messag
 
   public static func ==(lhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser, rhs: Nakama_Realtime_MatchmakerMatched.MatchmakerUser) -> Bool {
     if lhs._presence != rhs._presence {return false}
+    if lhs.partyID != rhs.partyID {return false}
     if lhs.stringProperties != rhs.stringProperties {return false}
     if lhs.numericProperties != rhs.numericProperties {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -3162,6 +4379,734 @@ extension Nakama_Realtime_Notifications: SwiftProtobuf.Message, SwiftProtobuf._M
 
   public static func ==(lhs: Nakama_Realtime_Notifications, rhs: Nakama_Realtime_Notifications) -> Bool {
     if lhs.notifications != rhs.notifications {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_Party: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".Party"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "open"),
+    3: .standard(proto: "max_size"),
+    4: .same(proto: "self"),
+    5: .same(proto: "leader"),
+    6: .same(proto: "presences"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.`open`) }()
+      case 3: try { try decoder.decodeSingularInt32Field(value: &self.maxSize) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._self_p) }()
+      case 5: try { try decoder.decodeSingularMessageField(value: &self._leader) }()
+      case 6: try { try decoder.decodeRepeatedMessageField(value: &self.presences) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if self.`open` != false {
+      try visitor.visitSingularBoolField(value: self.`open`, fieldNumber: 2)
+    }
+    if self.maxSize != 0 {
+      try visitor.visitSingularInt32Field(value: self.maxSize, fieldNumber: 3)
+    }
+    try { if let v = self._self_p {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
+    try { if let v = self._leader {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    } }()
+    if !self.presences.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 6)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_Party, rhs: Nakama_Realtime_Party) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.`open` != rhs.`open` {return false}
+    if lhs.maxSize != rhs.maxSize {return false}
+    if lhs._self_p != rhs._self_p {return false}
+    if lhs._leader != rhs._leader {return false}
+    if lhs.presences != rhs.presences {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyCreate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyCreate"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "open"),
+    2: .standard(proto: "max_size"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBoolField(value: &self.`open`) }()
+      case 2: try { try decoder.decodeSingularInt32Field(value: &self.maxSize) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.`open` != false {
+      try visitor.visitSingularBoolField(value: self.`open`, fieldNumber: 1)
+    }
+    if self.maxSize != 0 {
+      try visitor.visitSingularInt32Field(value: self.maxSize, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyCreate, rhs: Nakama_Realtime_PartyCreate) -> Bool {
+    if lhs.`open` != rhs.`open` {return false}
+    if lhs.maxSize != rhs.maxSize {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyJoin: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyJoin"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyJoin, rhs: Nakama_Realtime_PartyJoin) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyLeave: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyLeave"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyLeave, rhs: Nakama_Realtime_PartyLeave) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyPromote: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyPromote"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "presence"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._presence) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try { if let v = self._presence {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyPromote, rhs: Nakama_Realtime_PartyPromote) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs._presence != rhs._presence {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyLeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyLeader"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "presence"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._presence) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try { if let v = self._presence {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyLeader, rhs: Nakama_Realtime_PartyLeader) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs._presence != rhs._presence {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyAccept: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyAccept"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "presence"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._presence) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try { if let v = self._presence {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyAccept, rhs: Nakama_Realtime_PartyAccept) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs._presence != rhs._presence {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyRemove"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "presence"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._presence) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try { if let v = self._presence {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyRemove, rhs: Nakama_Realtime_PartyRemove) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs._presence != rhs._presence {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyClose: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyClose"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyClose, rhs: Nakama_Realtime_PartyClose) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyJoinRequestList: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyJoinRequestList"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyJoinRequestList, rhs: Nakama_Realtime_PartyJoinRequestList) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyJoinRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyJoinRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "presences"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.presences) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if !self.presences.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyJoinRequest, rhs: Nakama_Realtime_PartyJoinRequest) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.presences != rhs.presences {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyMatchmakerAdd: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyMatchmakerAdd"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .standard(proto: "min_count"),
+    3: .standard(proto: "max_count"),
+    4: .same(proto: "query"),
+    5: .standard(proto: "string_properties"),
+    6: .standard(proto: "numeric_properties"),
+    7: .standard(proto: "count_multiple"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularInt32Field(value: &self.minCount) }()
+      case 3: try { try decoder.decodeSingularInt32Field(value: &self.maxCount) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.query) }()
+      case 5: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.stringProperties) }()
+      case 6: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufDouble>.self, value: &self.numericProperties) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._countMultiple) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if self.minCount != 0 {
+      try visitor.visitSingularInt32Field(value: self.minCount, fieldNumber: 2)
+    }
+    if self.maxCount != 0 {
+      try visitor.visitSingularInt32Field(value: self.maxCount, fieldNumber: 3)
+    }
+    if !self.query.isEmpty {
+      try visitor.visitSingularStringField(value: self.query, fieldNumber: 4)
+    }
+    if !self.stringProperties.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.stringProperties, fieldNumber: 5)
+    }
+    if !self.numericProperties.isEmpty {
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufDouble>.self, value: self.numericProperties, fieldNumber: 6)
+    }
+    try { if let v = self._countMultiple {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyMatchmakerAdd, rhs: Nakama_Realtime_PartyMatchmakerAdd) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.minCount != rhs.minCount {return false}
+    if lhs.maxCount != rhs.maxCount {return false}
+    if lhs.query != rhs.query {return false}
+    if lhs.stringProperties != rhs.stringProperties {return false}
+    if lhs.numericProperties != rhs.numericProperties {return false}
+    if lhs._countMultiple != rhs._countMultiple {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyMatchmakerRemove: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyMatchmakerRemove"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "ticket"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.ticket) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if !self.ticket.isEmpty {
+      try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyMatchmakerRemove, rhs: Nakama_Realtime_PartyMatchmakerRemove) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.ticket != rhs.ticket {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyMatchmakerTicket: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyMatchmakerTicket"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "ticket"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.ticket) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if !self.ticket.isEmpty {
+      try visitor.visitSingularStringField(value: self.ticket, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyMatchmakerTicket, rhs: Nakama_Realtime_PartyMatchmakerTicket) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.ticket != rhs.ticket {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyData: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyData"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "presence"),
+    3: .standard(proto: "op_code"),
+    4: .same(proto: "data"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._presence) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.opCode) }()
+      case 4: try { try decoder.decodeSingularBytesField(value: &self.data) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    try { if let v = self._presence {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    if self.opCode != 0 {
+      try visitor.visitSingularInt64Field(value: self.opCode, fieldNumber: 3)
+    }
+    if !self.data.isEmpty {
+      try visitor.visitSingularBytesField(value: self.data, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyData, rhs: Nakama_Realtime_PartyData) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs._presence != rhs._presence {return false}
+    if lhs.opCode != rhs.opCode {return false}
+    if lhs.data != rhs.data {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyDataSend: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyDataSend"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .standard(proto: "op_code"),
+    3: .same(proto: "data"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.opCode) }()
+      case 3: try { try decoder.decodeSingularBytesField(value: &self.data) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if self.opCode != 0 {
+      try visitor.visitSingularInt64Field(value: self.opCode, fieldNumber: 2)
+    }
+    if !self.data.isEmpty {
+      try visitor.visitSingularBytesField(value: self.data, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyDataSend, rhs: Nakama_Realtime_PartyDataSend) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.opCode != rhs.opCode {return false}
+    if lhs.data != rhs.data {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyPresenceEvent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyPresenceEvent"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "joins"),
+    3: .same(proto: "leaves"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.joins) }()
+      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.leaves) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if !self.joins.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.joins, fieldNumber: 2)
+    }
+    if !self.leaves.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.leaves, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyPresenceEvent, rhs: Nakama_Realtime_PartyPresenceEvent) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.joins != rhs.joins {return false}
+    if lhs.leaves != rhs.leaves {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -3364,9 +5309,13 @@ extension Nakama_Realtime_StatusUpdate: SwiftProtobuf.Message, SwiftProtobuf._Me
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._status {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._status {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3452,12 +5401,16 @@ extension Nakama_Realtime_StreamData: SwiftProtobuf.Message, SwiftProtobuf._Mess
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._stream {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._stream {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._sender {
+    } }()
+    try { if let v = self._sender {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     if !self.data.isEmpty {
       try visitor.visitSingularStringField(value: self.data, fieldNumber: 3)
     }
@@ -3500,9 +5453,13 @@ extension Nakama_Realtime_StreamPresenceEvent: SwiftProtobuf.Message, SwiftProto
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._stream {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._stream {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.joins.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.joins, fieldNumber: 2)
     }
@@ -3548,6 +5505,10 @@ extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._Me
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
@@ -3560,9 +5521,9 @@ extension Nakama_Realtime_UserPresence: SwiftProtobuf.Message, SwiftProtobuf._Me
     if self.persistence != false {
       try visitor.visitSingularBoolField(value: self.persistence, fieldNumber: 4)
     }
-    if let v = self._status {
+    try { if let v = self._status {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

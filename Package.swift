@@ -1,6 +1,6 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 /*
- * Copyright 2021 Heroic Labs
+ * Copyright 2023 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ let package = Package(
     .library(name: "Nakama", targets: ["Nakama"])
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-nio.git", from: "2.25.0"),
+    .package(url: "https://github.com/apple/swift-nio.git", from: "2.51.0"),
     .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "2.10.1"),
     .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.9.1"),
-    .package(name: "SwiftProtobuf", url: "https://github.com/apple/swift-protobuf.git", from: "1.9.0"),
-    .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0-alpha.22"),
-    .package(url: "https://github.com/apple/swift-atomics.git", from: "0.0.2")
+    .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.9.0"),
+    .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.16.0"),
+    .package(url: "https://github.com/apple/swift-atomics.git", from: "1.1.0")
   ],
   targets: [
     // The main GRPC module.
@@ -44,7 +44,7 @@ let package = Package(
         .product(name: "NIOSSL", package: "swift-nio-ssl"),
         .product(name: "GRPC", package: "grpc-swift"),
         .product(name: "Atomics", package: "swift-atomics"),
-        "SwiftProtobuf",
+        .product(name: "SwiftProtobuf", package: "swift-protobuf"),
       ]
     ), // and its tests.
     .testTarget(
