@@ -211,17 +211,17 @@ public class WebSocketClient : SocketClient {
     }
     
     public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) async throws -> NakamaChannel {
-        return try await self.joinChat(target: target, type: type, persistence: nil, hidden: nil)
+        return try await self.joinChat(target: target, type: type, persistence: false, hidden: false)
     }
     
-    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) async throws -> NakamaChannel {
+    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool, hidden: Bool) async throws -> NakamaChannel {
         var req = Nakama_Realtime_ChannelJoin()
         req.target = target
         req.type = Int32(type.rawValue)
         req.hidden = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.hidden.value = hidden ?? hidden!
+        req.hidden.value = hidden
         req.persistence = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.persistence.value = persistence ?? persistence!
+        req.persistence.value = persistence
         
         var env = Nakama_Realtime_Envelope()
         env.channelJoin = req

@@ -151,7 +151,7 @@ public protocol SocketClient {
 
      - Parameter target: The target channel to join.
      - Parameter type: The type of channel to join.
-     - Returns: A nakama realtime channel.
+     - Returns: A Nakama realtime channel.
     */
     func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) async throws -> NakamaChannel
     
@@ -162,9 +162,9 @@ public protocol SocketClient {
      - Parameter type: The type of channel to join.
      - Parameter persistence: True if chat messages should be stored.
      - Parameter hidden: True if the user should be hidden on the channel.
-     - Returns: A nakama realtime channel.
+     - Returns: A Nakama realtime channel.
     */
-    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) async throws -> NakamaChannel
+    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool, hidden: Bool) async throws -> NakamaChannel
 
     /**
      Leave a chat channel on the server.
