@@ -425,4 +425,42 @@ public protocol Client {
      - Parameter session: Current session.
      */
     func sessionLogout(session: Session) async throws -> Void
+    
+    /**
+     Write objects to the storage engine.
+     - Parameter session: Current session.
+     - Parameter objects: The objects to write.
+     */
+    func writeStorageObjects(session: Session, objects: [WriteStorageObject]) async throws -> StorageObjectAcks
+    
+    /**
+     Read one or more objects from the storage engine.
+     - Parameter session: Current session.
+     - Parameter ids: The ids of the objects to read.
+     */
+    func readStorageObjects(session: Session, ids: [StorageObjectId]) async throws -> [StorageObject]
+    
+    /**
+     Delete one or more storage objects.
+     - Parameter session: Current session.
+     - Parameter ids: The ids of the objects to delete.
+     */
+    func deleteStorageObjects(session: Session, ids: [StorageObjectId]) async throws -> Void
+    
+    /**
+     List storage objects in a collection which have public read access.
+     - Parameter session: Current session.
+     - Parameter collection: The collection to list over.
+     */
+    func listStorageObjects(session: Session, collection: String) async throws -> StorageObjectList
+    
+    /**
+     List storage objects in a collection which have public read access.
+     - Parameter session: Current session.
+     - Parameter collection: The collection to list over.
+     - Parameter limit: The number of objects to list. Maximum is 100.
+     - Parameter cursor: A cursor to paginate over the collection. Can be nil.
+     */
+    func listStorageObjects(session: Session, collection: String, limit: Int, cursor: String?) async throws -> StorageObjectList
+    
 }

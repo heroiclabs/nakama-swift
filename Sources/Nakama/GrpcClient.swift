@@ -365,4 +365,70 @@ public class GrpcClient : Client {
         
         _ = try await self.nakamaGrpcClient.sessionLogout(req, callOptions: sessionCallOption(session: session)).response.get()
     }
+    
+    public func writeStorageObjects(session: Session, objects: [WriteStorageObject]) async throws -> StorageObjectAcks {
+        var writes = [Nakama_Api_WriteStorageObject]()
+        
+        for item in objects {
+            var object = Nakama_Api_WriteStorageObject()
+            object.collection = item.collection
+            object.key = item.key
+            object.value = item.value
+            object.version = item.version
+            object.permissionRead = item.readPermission.rawValue.pbInt32Value
+            object.permissionWrite = item.writePermission.rawValue.pbInt32Value
+            writes.append(object)
+        }
+        
+        var req = Nakama_Api_WriteStorageObjectsRequest()
+        req.objects = writes
+        return try await self.nakamaGrpcClient.writeStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().toStorageObjectAcks()
+    }
+    
+    public func readStorageObjects(session: Session, ids: [StorageObjectId]) async throws -> [StorageObject] {
+        var objectIds = [Nakama_Api_ReadStorageObjectId]()
+        
+        for id in ids {
+            var readObject = Nakama_Api_ReadStorageObjectId()
+            readObject.collection = id.collection
+            readObject.key = id.key
+            readObject.userID = id.userId
+            objectIds.append(readObject)
+        }
+        
+        var req = Nakama_Api_ReadStorageObjectsRequest()
+        req.objectIds = objectIds
+        return try await self.nakamaGrpcClient.readStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().objects.map { $0.toStorageObject()}
+    }
+    
+    public func deleteStorageObjects(session: Session, ids: [StorageObjectId]) async throws -> Void {
+        var objectIds = [Nakama_Api_DeleteStorageObjectId]()
+        
+        for id in ids {
+            var deleteObject = Nakama_Api_DeleteStorageObjectId()
+            deleteObject.collection = id.collection
+            deleteObject.key = id.key
+            deleteObject.version = id.version
+            objectIds.append(deleteObject)
+        }
+        
+        var req = Nakama_Api_DeleteStorageObjectsRequest()
+        req.objectIds = objectIds
+        _ = try await self.nakamaGrpcClient.deleteStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get()
+    }
+    
+    public func listStorageObjects(session: Session, collection: String) async throws -> StorageObjectList {
+        return try await self.listStorageObjects(session: session, collection: collection, cursor: nil)
+    }
+    
+    public func listStorageObjects(session: Session, collection: String, limit: Int = 1, cursor: String?) async throws -> StorageObjectList {
+        var req = Nakama_Api_ListStorageObjectsRequest()
+        req.collection = collection
+        req.userID = session.userId
+        req.limit = limit.pbInt32Value
+        req.cursor = cursor ?? ""
+        
+        return try await nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().toStorageObjectList()
+    }
+    
 }
