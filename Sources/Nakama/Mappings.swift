@@ -19,3 +19,43 @@ extension Nakama_Api_Session {
         return DefaultSession(token: self.token, refreshToken: self.refreshToken, created: self.created)
     }
 }
+
+extension Nakama_Api_StorageObject {
+    func toStorageObject() -> StorageObject {
+        return StorageObject(
+            collection: self.collection,
+            userID: self.userID,
+            key: self.key,
+            value: self.value,
+            version: self.version,
+            permissionRead: StorageReadPermission(rawValue: Int(self.permissionRead))!,
+            permissionWrite: StorageWritePermission(rawValue: Int(self.permissionWrite))!
+        )
+    }
+}
+
+extension Nakama_Api_StorageObjectList {
+    func toStorageObjectList() -> StorageObjectList {
+        return StorageObjectList(
+            cursor: self.cursor,
+            objects: self.objects.map { $0.toStorageObject() }
+        )
+    }
+}
+
+extension Nakama_Api_StorageObjectAck {
+    func toStorageObjectAck() -> StorageObjectAck {
+        return StorageObjectAck(
+            collection: self.collection,
+            key: self.key,
+            userId: self.userID,
+            version: self.version
+        )
+    }
+}
+
+extension Nakama_Api_StorageObjectAcks {
+    func toStorageObjectAcks() -> StorageObjectAcks {
+        return StorageObjectAcks(acks: self.acks.map { $0.toStorageObjectAck() })
+    }
+}
