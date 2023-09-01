@@ -431,4 +431,18 @@ public class GrpcClient : Client {
         return try await nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().toStorageObjectList()
     }
     
+    public func rpc(session: Session, id: String) async throws -> ApiRpc? {
+        return try await rpc(session: session, id: id, payload: nil)
+    }
+    
+    public func rpc(session: Session, id: String, payload: String?) async throws -> ApiRpc? {
+        var req = Nakama_Api_Rpc()
+        req.id = id
+        if let payload {
+            req.payload = payload
+        }
+        
+        return try await nakamaGrpcClient.rpcFunc(req, callOptions: sessionCallOption(session: session)).response.get().toApiRpc()
+    }
+    
 }

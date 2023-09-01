@@ -59,3 +59,13 @@ extension Nakama_Api_StorageObjectAcks {
         return StorageObjectAcks(acks: self.acks.map { $0.toStorageObjectAck() })
     }
 }
+
+extension Nakama_Api_Rpc {
+    func toApiRpc() -> ApiRpc {
+        return ApiRpc(
+            id: self.id,
+            payload: self.payload,
+            httpKey: self.httpKey
+        )
+    }
+}

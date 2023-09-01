@@ -463,4 +463,21 @@ public protocol Client {
      */
     func listStorageObjects(session: Session, collection: String, limit: Int, cursor: String?) async throws -> StorageObjectList
     
+    /**
+     Execute an RPC function on the server.
+     - Parameter session: Current session.
+     - Parameter id: The ID of the function to execute on the server.
+     - Returns: The RPC response.
+     */
+    func rpc(session: Session, id: String) async throws -> ApiRpc?
+    
+    /**
+     Execute an RPC function on the server.
+     - Parameter session: Current session.
+     - Parameter id: The ID of the function to execute.
+     - Parameter payload: The payload to send with the function call.
+     - Returns: The RPC response.
+     */
+    func rpc(session: Session, id: String, payload: String?) async throws -> ApiRpc?
+    
 }
