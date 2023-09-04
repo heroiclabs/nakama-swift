@@ -480,4 +480,58 @@ public protocol Client {
      */
     func rpc(session: Session, id: String, payload: String?) async throws -> ApiRpc?
     
+    /**
+     Write a record to a leaderboard.
+     - Parameter session: Current session.
+     - Parameter leaderboardId: The ID of the leaderboard to write.
+     - Parameter score: The score for the leaderboard record.
+     - Parameter subScore: The sub score for the leaderboard record.
+     - Parameter operator: The operator for the record that can be used to override the one set in the leaderboard.
+     */
+    func writeLeaderboardRecord(session: Session, leaderboardId: String, score: Int, subScore: Int, metadata: String, leaderboardOperator: LeaderboardOperator) async throws -> LeaderboardRecord
+    
+    /**
+     List records from a leaderboard.
+     - Parameter session: Current session.
+     - Parameter leaderboardId: The ID of the leaderboard to list.
+     - Parameter ownerIds: Record owners to fetch with the list of records. Only owners in this list will be retrieved in `records` list.
+     */
+    func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String]) async throws -> LeaderboardRecordList
+    
+    /**
+     List records from a leaderboard.
+     - Parameter session: Current session.
+     - Parameter leaderboardId: The ID of the leaderboard to list.
+     - Parameter ownerIds: Record owners to fetch with the list of records. Only owners in this list will be retrieved in `ownerRecords` list.
+     - Parameter expiry: Expiry in seconds (since epoch) to begin fetching records from. 0 means from current time.
+     - Parameter limit: The number of records to list.
+     - Parameter cursor: A cursor for the current position in the leaderboard records to list.
+     */
+    func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String], expiry: Int?, limit: Int, cursor: String?) async throws -> LeaderboardRecordList
+    
+    /**
+     List leaderboard records that belong to a user. Owner records will be returned in `records` field of `LeaderboardRecordList`.
+     - Parameter session: Current session.
+     - Parameter leaderboardId: The ID of the leaderboard to list.
+     - Parameter ownerId: The ID of the user to list around.
+     */
+    func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String) async throws -> LeaderboardRecordList
+    
+    /**
+     List leaderboard records that belong to a user.
+     - Parameter session: Current session.
+     - Parameter leaderboardId: The ID of the leaderboard to list.
+     - Parameter ownerId: The ID of the user to list around.
+     - Parameter expiry: Expiry in seconds (since epoch) to begin fetching records from. 0 means from current time.
+     - Parameter limit: The number of records to list.
+     */
+    func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String, expiry: Int?, limit: Int, cursor: String?) async throws -> LeaderboardRecordList
+    
+    /**
+     Remove an owner's record from a leaderboard, if one exists.
+     - Parameter session: Current session.
+     - Parameter leaderboardId: The id of the leaderboard with the record to be deleted.
+     */
+    func deleteLeaderboardRecord(session: Session, leaderboardId: String) async throws -> Void
+    
 }
