@@ -486,6 +486,7 @@ public protocol Client {
      - Parameter leaderboardId: The ID of the leaderboard to write.
      - Parameter score: The score for the leaderboard record.
      - Parameter subScore: The sub score for the leaderboard record.
+     - Parameter metadata: The metadata for the leaderboard record.
      - Parameter operator: The operator for the record that can be used to override the one set in the leaderboard.
      */
     func writeLeaderboardRecord(session: Session, leaderboardId: String, score: Int, subScore: Int, metadata: String, leaderboardOperator: LeaderboardOperator) async throws -> LeaderboardRecord
