@@ -69,3 +69,32 @@ extension Nakama_Api_Rpc {
         )
     }
 }
+
+extension Nakama_Api_LeaderboardRecord {
+    func toLeaderboardRecord() -> LeaderboardRecord {
+        return LeaderboardRecord(
+            createTime: self.createTime.date,
+            expiryTime: self.expiryTime.date,
+            updateTime: self.updateTime.date,
+            leaderboardId: self.leaderboardID,
+            username: self.username.value,
+            ownerId: self.ownerID,
+            score: Int(self.score),
+            subScore: Int(self.subscore),
+            metadata: self.metadata,
+            numScore: Int(self.numScore),
+            maxNumScore: Int(self.maxNumScore)
+        )
+    }
+}
+
+extension Nakama_Api_LeaderboardRecordList {
+    func toLeaderboardRecordList() -> LeaderboardRecordList {
+        return LeaderboardRecordList(
+            nextCursor: self.nextCursor,
+            prevCursor: self.prevCursor,
+            ownerRecords: self.ownerRecords.map { $0.toLeaderboardRecord() },
+            records: self.records.map { $0.toLeaderboardRecord() }
+        )
+    }
+}

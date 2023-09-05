@@ -445,4 +445,60 @@ public class GrpcClient : Client {
         return try await nakamaGrpcClient.rpcFunc(req, callOptions: sessionCallOption(session: session)).response.get().toApiRpc()
     }
     
+    public func writeLeaderboardRecord(session: Session, leaderboardId: String, score: Int, subScore: Int, metadata: String, leaderboardOperator: LeaderboardOperator) async throws -> LeaderboardRecord {
+        var req = Nakama_Api_WriteLeaderboardRecordRequest()
+        
+        var record = Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite()
+        record.operator = Nakama_Api_Operator(rawValue: leaderboardOperator.rawValue) ?? .noOverride
+        record.metadata = metadata
+        record.score = Int64(score)
+        record.subscore = Int64(subScore)
+        
+        req.leaderboardID = leaderboardId
+        req.record = record
+        
+        return try await nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.get().toLeaderboardRecord()
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String]) async throws -> LeaderboardRecordList {
+        return try await self.listLeaderboardRecords(session: session, leaderboardId: leaderboardId, ownerIds: ownerIds, expiry: nil, limit: 1, cursor: nil)
+    }
+    
+    public func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String], expiry: Int? = nil, limit: Int = 1, cursor: String? = nil) async throws -> LeaderboardRecordList {
+        var req = Nakama_Api_ListLeaderboardRecordsRequest()
+        req.leaderboardID = leaderboardId
+        req.ownerIds = ownerIds
+        if let expiry {
+            req.expiry = (expiry).pbInt64Value
+        }
+        req.limit = limit.pbInt32Value
+        req.cursor = cursor ?? ""
+        
+        return try await nakamaGrpcClient.listLeaderboardRecords(req, callOptions: sessionCallOption(session: session)).response.get().toLeaderboardRecordList()
+    }
+    
+    public func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String) async throws -> LeaderboardRecordList {
+        return try await self.listLeaderboardRecordsAroundOwner(session: session, leaderboardId: leaderboardId, ownerId: ownerId, expiry: nil, limit: 1, cursor: nil)
+    }
+    
+    public func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String, expiry: Int?, limit: Int = 1, cursor: String? = nil) async throws -> LeaderboardRecordList {
+        var req = Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest()
+        req.leaderboardID = leaderboardId
+        req.ownerID = ownerId
+        if let expiry {
+            req.expiry = expiry.pbInt64Value
+        }
+        req.limit = limit.pbUint32Value
+        req.cursor = cursor ?? ""
+        
+        return try await nakamaGrpcClient.listLeaderboardRecordsAroundOwner(req, callOptions: sessionCallOption(session: session)).response.get().toLeaderboardRecordList()
+    }
+    
+    public func deleteLeaderboardRecord(session: Session, leaderboardId: String) async throws {
+        var req = Nakama_Api_DeleteLeaderboardRecordRequest()
+        req.leaderboardID = leaderboardId
+        
+        _ = try await nakamaGrpcClient.deleteLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.get()
+    }
+    
 }
