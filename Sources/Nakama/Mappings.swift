@@ -98,3 +98,42 @@ extension Nakama_Api_LeaderboardRecordList {
         )
     }
 }
+
+extension Nakama_Api_Tournament {
+    func toTournament() -> Tournament {
+        return Tournament(
+            id: self.id,
+            title: self.title,
+            description: self.description_p,
+            category: Int(self.category),
+            sortOrder: Int(self.sortOrder),
+            size: Int(self.size),
+            maxSize: Int(self.maxSize),
+            maxNumScore: Int(self.maxNumScore),
+            canEnter: self.canEnter,
+            endActive: Int(self.endActive),
+            nextReset: Int(self.nextReset),
+            metadata: self.metadata
+        )
+    }
+}
+
+extension Nakama_Api_TournamentList {
+    func toTournamentList() -> TournamentList {
+        return TournamentList(
+            tournaments: self.tournaments.map { $0.toTournament() },
+            cursor: self.cursor
+        )
+    }
+}
+
+extension Nakama_Api_TournamentRecordList {
+    func toTournamentRecordList() -> TournamentRecordList {
+        return TournamentRecordList(
+            nextCursor: self.nextCursor,
+            prevCursor: self.prevCursor,
+            ownerRecords: self.ownerRecords.map { $0.toLeaderboardRecord() },
+            records: self.records.map { $0.toLeaderboardRecord() }
+        )
+    }
+}

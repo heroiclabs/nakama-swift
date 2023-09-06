@@ -535,4 +535,56 @@ public protocol Client {
      */
     func deleteLeaderboardRecord(session: Session, leaderboardId: String) async throws -> Void
     
+    /**
+     Join a tournament by ID.
+     - Parameter session: Current session.
+     - Parameter tournamentId: The ID of the tournament to join.
+     */
+    func joinTournament(session: Session, tournamentId: String) async throws -> Void
+    
+    /**
+     List current or upcoming tournaments.
+     - Parameter session: Current session.
+     - Parameter categoryStart: The start of the category of tournaments to include.
+     - Parameter categoryEnd: The end of the category of tournaments to include.
+     - Parameter startTime: The start time of the tournaments. If nil, tournaments will not be filtered by start time.
+     - Parameter endTime: The end time of the tournaments. If nil, tournaments will not be filtered by end time.
+     - Parameter limit: The number of tournaments to list.
+     - Parameter cursor: An optional cursor for the next page of tournaments.
+     */
+    func listTournaments(session: Session, categoryStart: Int, categoryEnd: Int, startTime: Int?, endTime: Int?, limit: Int, cursor: String?) async throws -> TournamentList
+    
+    /**
+     Write a record to a tournament.
+     - Parameter session: Current session.
+     - Parameter tournamentId: The ID of the tournament to write.
+     - Parameter score: The score of the tournament record.
+     - Parameter subScore: The sub score for the tournament record.
+     - Parameter metadata: The metadata for the tournament record.
+     - Parameter apiOperator: The operator for the record that can be used to override the one set in the tournament.
+     */
+    func writeTournamentRecord(session: Session, tournamentId: String, score: Int, subScore: Int, metadata: String, apiOperator: TournamentOperator) async throws -> LeaderboardRecord
+    
+    /**
+     List records from a tournament.
+     - Parameter session: Current session.
+     - Parameter tournamentId: The ID of the tournament.
+     - Parameter ownerIds: Record owners to fetch with the list of records. Only owners in this list will be retrieved in `ownerRecords` list.
+     - Parameter expiry: Expiry in seconds (since epoch) to begin fetching records from.
+     - Parameter limit: The number of records to list.
+     - Parameter cursor: An optional cursor for the next page of tournament records.
+     */
+    func listTournamentRecords(session: Session, tournamentId: String, ownerIds: [String], expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList
+    
+    /**
+     List tournament records around the owner.
+     - Parameter session: Current session.
+     - Parameter tournamentId: The ID of the tournament.
+     - Parameter ownerId: The ID of the owner to pivot around.
+     - Parameter expiry: Expiry in seconds (since epoch) to begin fetching records from.
+     - Parameter limit: The number of records to list.
+     - Parameter cursor: An optional cursor for the next page of tournament records.
+     */
+    func listTournamentRecordsAroundOwner(session: Session, tournamentId: String, ownerId: String, expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList
+    
 }
