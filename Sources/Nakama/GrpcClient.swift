@@ -501,4 +501,67 @@ public class GrpcClient : Client {
         _ = try await nakamaGrpcClient.deleteLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.get()
     }
     
+    public func joinTournament(session: Session, tournamentId: String) async throws -> Void {
+        var req = Nakama_Api_JoinTournamentRequest()
+        req.tournamentID = tournamentId
+        
+        _ = try await nakamaGrpcClient.joinTournament(req, callOptions: sessionCallOption(session: session)).response.get()
+    }
+    
+    public func listTournaments(session: Session, categoryStart: Int, categoryEnd: Int, startTime: Int?, endTime: Int? = nil, limit: Int = 1, cursor: String? = nil) async throws -> TournamentList {
+        var req = Nakama_Api_ListTournamentsRequest()
+        req.categoryStart = categoryStart.pbUint32Value
+        req.categoryEnd = categoryEnd.pbUint32Value
+        if let startTime {
+            req.startTime = startTime.pbUint32Value
+        }
+        if let endTime {
+            req.endTime = endTime.pbUint32Value
+        }
+        req.limit = limit.pbInt32Value
+        req.cursor = cursor ?? ""
+        
+        return try await nakamaGrpcClient.listTournaments(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentList()
+    }
+    
+    public func writeTournamentRecord(session: Session, tournamentId: String, score: Int, subScore: Int, metadata: String, apiOperator: TournamentOperator) async throws -> LeaderboardRecord {
+        var req = Nakama_Api_WriteTournamentRecordRequest()
+        req.tournamentID = tournamentId
+        
+        var record = Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite()
+        record.operator = Nakama_Api_Operator(rawValue: apiOperator.rawValue) ?? .noOverride
+        record.score = Int64(score)
+        record.subscore = Int64(subScore)
+        record.metadata = metadata
+        
+        let result = try await nakamaGrpcClient.writeTournamentRecord(req, callOptions: sessionCallOption(session: session)).response.get()
+        return result.toLeaderboardRecord()
+    }
+    
+    public func listTournamentRecords(session: Session, tournamentId: String, ownerIds: [String], expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList {
+        var req =  Nakama_Api_ListTournamentRecordsRequest()
+        req.tournamentID = tournamentId
+        req.ownerIds = ownerIds
+        if let expiry {
+            req.expiry = expiry.pbInt64Value
+        }
+        req.limit = limit.pbInt32Value
+        req.cursor = cursor ?? ""
+        
+        return try await nakamaGrpcClient.listTournamentRecords(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentRecordList()
+    }
+    
+    public func listTournamentRecordsAroundOwner(session: Session, tournamentId: String, ownerId: String, expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList {
+        var req = Nakama_Api_ListTournamentRecordsAroundOwnerRequest()
+        req.tournamentID = tournamentId
+        req.ownerID = ownerId
+        if let expiry {
+            req.expiry = expiry.pbInt64Value
+        }
+        req.limit = limit.pbUint32Value
+        req.cursor = cursor ?? ""
+        
+        return try await nakamaGrpcClient.listTournamentRecordsAroundOwner(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentRecordList()
+    }
+    
 }
