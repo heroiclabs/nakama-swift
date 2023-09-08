@@ -31,6 +31,12 @@ extension BinaryInteger {
     }
 }
 
+extension Bool {
+    var pbBoolValue: Google_Protobuf_BoolValue {
+        return Google_Protobuf_BoolValue.with { $0.value = self }
+    }
+}
+
 extension String {
     var jsonDictionary: [String: Any]? {
         guard let data = self.data(using: .utf8) else { return nil }

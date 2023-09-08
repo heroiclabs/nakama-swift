@@ -587,4 +587,48 @@ public protocol Client {
      */
     func listTournamentRecordsAroundOwner(session: Session, tournamentId: String, ownerId: String, expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList
     
+    /**
+     Create a group.
+     - Parameter session: Current session.
+     - Parameter name: The name for the group.
+     - Parameter description: A description for the group.
+     - Parameter avatarUrl: An avatar url for the group.
+     - Parameter langTag: A language tag in BCP-47 format for the group.
+     - Parameter open: If the group should have open membership. Defaults to false (private).
+     - Parameter maxCount: The maximum number of members allowed.
+     */
+    func createGroup(session: Session, name: String, description: String?, avatarUrl: String?, langTag: String?, open: Bool?, maxCount: Int?) async throws -> Group
+    
+    /**
+     Join a group if it has open membership or request to join it.
+     - Parameter session: Current session.
+     - Parameter groupId: The ID of the group to join.
+     */
+    func joinGroup(session: Session, groupId: String) async throws -> Void
+    
+    /**
+     Leave a group by ID.
+     - Parameter session: Current session.
+     - Parameter groupId: The ID of the group to leave.
+     */
+    func leaveGroup(session: Session, groupId: String) async throws -> Void
+    
+    /**
+     Delete a group by id.
+     - Parameter session: Current session.
+     - Parameter groupId: The group id to to remove.
+    */
+    func deleteGroup(session: Session, groupId: String) async throws -> Void
+    
+    /**
+     List groups on the server.
+     - Parameter session: Current session.
+     - Parameter name: The name filter to apply to the group list.
+     - Parameter limit: The number of groups to list.
+     - Parameter cursor: A cursor for the current position in the groups to list.
+     - Parameter langTag: The language tag filter to apply to the group list.
+     - Parameter members: The number of group members filter to apply to the group list.
+     - Parameter open: The open/closed filter to apply to the group list.
+     */
+    func listGroups(session: Session, name: String?, limit: Int, cursor: String?, langTag: String?, members: Int?, open: Bool?) async throws -> GroupList
 }

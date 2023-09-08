@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import GRPC
 
 public protocol Session {
     /*
@@ -109,5 +110,13 @@ class DefaultSession: Session {
     
     public static func restore(token: String, refreshToken: String) -> Session {
         return DefaultSession(token: token, refreshToken: refreshToken, created: false)
+    }
+}
+
+extension Session {
+    var callOptions: CallOptions {
+        var options = CallOptions()
+        options.customMetadata.add(name: "authorization", value: "Bearer \(self.token)")
+        return options
     }
 }
