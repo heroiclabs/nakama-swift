@@ -137,3 +137,31 @@ extension Nakama_Api_TournamentRecordList {
         )
     }
 }
+
+extension Nakama_Api_Group {
+    func toGroup() -> Group {
+        return Group(
+            id: self.id,
+            creatorId: self.creatorID,
+            name: self.name,
+            description: self.description_p,
+            langTag: self.langTag,
+            metadata: self.metadata,
+            avatarUrl: self.avatarURL,
+            open: self.open.value,
+            edgeCount: Int(self.edgeCount),
+            maxCount: Int(self.maxCount),
+            createTime: self.createTime.date,
+            updateTime: self.updateTime.date
+        )
+    }
+}
+
+extension Nakama_Api_GroupList {
+    func toGroupList() -> GroupList {
+        return GroupList(
+            groups: self.groups.map { $0.toGroup() },
+            cursor: self.cursor
+        )
+    }
+}

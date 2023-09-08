@@ -564,4 +564,63 @@ public class GrpcClient : Client {
         return try await nakamaGrpcClient.listTournamentRecordsAroundOwner(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentRecordList()
     }
     
+    public func createGroup(session: Session, name: String, description: String? = nil, avatarUrl: String? = nil, langTag: String? = nil, open: Bool? = nil, maxCount: Int? = 100) async throws -> Group {
+        var req = Nakama_Api_CreateGroupRequest()
+        req.name = name
+        req.description_p = description ?? ""
+        req.avatarURL = avatarUrl ?? ""
+        req.langTag = langTag ?? ""
+        if let open {
+            req.open = open
+        }
+        if let maxCount {
+            req.maxCount = Int32(maxCount)
+        }
+        
+        return try await nakamaGrpcClient.createGroup(req, callOptions: session.callOptions).response.get().toGroup()
+    }
+    
+    public func joinGroup(session: Session, groupId: String) async throws {
+        var req = Nakama_Api_JoinGroupRequest()
+        req.groupID = groupId
+        
+        _ = try await nakamaGrpcClient.joinGroup(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func leaveGroup(session: Session, groupId: String) async throws {
+        var req = Nakama_Api_LeaveGroupRequest()
+        req.groupID = groupId
+        
+        _ = try await nakamaGrpcClient.leaveGroup(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func deleteGroup(session: Session, groupId: String) async throws {
+        var req = Nakama_Api_DeleteGroupRequest()
+        req.groupID = groupId
+        
+        _ = try await nakamaGrpcClient.deleteGroup(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func listGroups(session: Session, name: String? = nil, limit: Int = 1, cursor: String? = nil, langTag: String? = nil, members: Int? = nil, open: Bool? = nil) async throws -> GroupList {
+        var req = Nakama_Api_ListGroupsRequest()
+        if let name {
+            req.name = name
+        }
+        req.limit = limit.pbInt32Value
+        if let cursor {
+            req.cursor = cursor
+        }
+        if let langTag {
+            req.langTag = langTag
+        }
+        if let members {
+            req.members = members.pbInt32Value
+        }
+        if let open {
+            req.open = open.pbBoolValue
+        }
+        
+        return try await nakamaGrpcClient.listGroups(req, callOptions: session.callOptions).response.get().toGroupList()
+    }
+    
 }
