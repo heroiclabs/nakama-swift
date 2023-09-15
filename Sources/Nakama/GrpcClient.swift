@@ -622,5 +622,24 @@ public class GrpcClient : Client {
         
         return try await nakamaGrpcClient.listGroups(req, callOptions: session.callOptions).response.get().toGroupList()
     }
+
+    public func updateGroup(session: Session, groupId: String, name: String?, open: Bool, description: String? = nil, avatarUrl: String? = nil, langTag: String? = nil) async throws {
+        var req = Nakama_Api_UpdateGroupRequest()
+        req.groupID = groupId
+        req.open = open.pbBoolValue
+        if let name {
+            req.name = name.pbStringValue
+        }
+        if let description {
+            req.description_p = description.pbStringValue
+        }
+        if let avatarUrl {
+            req.avatarURL = avatarUrl.pbStringValue
+        }
+        if let langTag {
+            req.langTag = langTag.pbStringValue
+        }
+        _ = try await nakamaGrpcClient.updateGroup(req, callOptions: session.callOptions).response.get()
+    }
     
 }

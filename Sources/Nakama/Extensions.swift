@@ -47,4 +47,8 @@ extension String {
             return nil
         }
     }
+    
+    var pbStringValue: Google_Protobuf_StringValue {
+        return Google_Protobuf_StringValue.with { $0.value = self }
+    }
 }
