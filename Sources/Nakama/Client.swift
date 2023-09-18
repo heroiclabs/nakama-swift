@@ -631,4 +631,16 @@ public protocol Client {
      - Parameter open: The open/closed filter to apply to the group list.
      */
     func listGroups(session: Session, name: String?, limit: Int, cursor: String?, langTag: String?, members: Int?, open: Bool?) async throws -> GroupList
+    
+    /**
+     Update a group. The user must have the correct access permissions for the group.
+    - Parameter session: Current session.
+    - Parameter groupId: The ID of the group to update.
+    - Parameter name: A new name for the group.
+    - Parameter open: If the group should have open membership.
+    - Parameter description: A new description for the group.
+    - Parameter avatarUrl: A new avatar url for the group.
+    - Parameter langTag: A new language tag in BCP-47 format for the group.
+     */
+    func updateGroup(session: Session, groupId: String, name: String?, open: Bool, description: String?, avatarUrl: String?, langTag: String?) async throws -> Void
 }

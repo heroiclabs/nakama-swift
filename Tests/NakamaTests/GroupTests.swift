@@ -146,4 +146,19 @@ final class GroupTests: XCTestCase {
         try await client.deleteGroup(session: session, groupId: firstGroup.id)
         try await client.deleteGroup(session: session, groupId: secondGroup.id)
     }
+    
+    func test08_updateGroupNameAndVisibility() async throws {
+        let group = try await client.createGroup(session: session, name: UUID().uuidString)
+        XCTAssertNotNil(group)
+        
+        let newName = UUID().uuidString
+        try await client.updateGroup(session: session, groupId: group.id, name: newName, open: true)
+        let groups = try await client.listGroups(session: session, name: newName)
+        XCTAssertNotNil(groups)
+        let retrievedGroup = groups.groups.first!
+        XCTAssertEqual(groups.groups.count, 1)
+        XCTAssertEqual(retrievedGroup.id, group.id)
+        XCTAssertEqual(retrievedGroup.name, newName)
+        XCTAssertEqual(retrievedGroup.open, true)
+    }
 }
