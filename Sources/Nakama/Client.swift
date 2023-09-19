@@ -680,4 +680,27 @@ public protocol Client {
      */
     func listUserGroups(session: Session, userId: String?, state: Int?, limit: Int?, cursor: String?) async throws -> ListUserGroup
     
+    /**
+     Promote one or more users in a group.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The ID of the group to promote users into.
+     - Parameter ids: The IDs of the users to promote.
+     */
+    func promoteGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
+    
+    /**
+     Demote a set of users in a group to the next role down.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The group to demote users in.
+     - Parameter ids: The IDs of the users to demote.
+     */
+    func demoteGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
+    
+    /**
+     Ban a set of users from a group.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The group to ban the users from.
+     - Parameter ids: The IDs of the users to ban.
+     */
+    func banGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
 }

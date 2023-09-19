@@ -686,4 +686,25 @@ public class GrpcClient : Client {
         return try await nakamaGrpcClient.listUserGroups(req, callOptions: session.callOptions).response.get().toUserGroupList()
     }
     
+    public func promoteGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+        var req = Nakama_Api_PromoteGroupUsersRequest()
+        req.groupID = groupId
+        req.userIds = ids
+        _ = try await nakamaGrpcClient.promoteGroupUsers(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func demoteGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+        var req = Nakama_Api_DemoteGroupUsersRequest()
+        req.groupID = groupId
+        req.userIds = ids
+        _ = try await nakamaGrpcClient.demoteGroupUsers(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func banGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+        var req = Nakama_Api_BanGroupUsersRequest()
+        req.groupID = groupId
+        req.userIds = ids
+        _ = try await nakamaGrpcClient.banGroupUsers(req, callOptions: session.callOptions).response.get()
+    }
+    
 }

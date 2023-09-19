@@ -191,4 +191,38 @@ final class GroupTests: XCTestCase {
         XCTAssertNotNil(groups)
         XCTAssertEqual(groups.userGroups.count, 2)
     }
+    
+    func test11_promoteDemoteBanGroupUsers() async throws {
+        let group = try await client.createGroup(session: session, name: UUID().uuidString)
+        XCTAssertNotNil(group)
+        let user1 = try await client.authenticateDevice(id: UUID().uuidString)
+        let user2 = try await client.authenticateDevice(id: UUID().uuidString)
+        XCTAssertNotNil(user1)
+        XCTAssertNotNil(user2)
+        try await client.addGroupUsers(session: session, groupId: group.id, ids: [user1.userId, user2.userId])
+        
+        // Promote
+        try await client.promoteGroupUsers(session: session, groupId: group.id, ids: [user1.userId, user2.userId])
+        let admins = try await client.listGroupUsers(session: session, groupId: group.id, state: 1, limit: 3)
+        XCTAssertNotNil(admins)
+        XCTAssertEqual(admins.groupUsers.count, 2)
+        
+        // Demote
+        try await client.demoteGroupUsers(session: session, groupId: group.id, ids: [user1.userId, user2.userId])
+        var members = try await client.listGroupUsers(session: session, groupId: group.id, state: 2, limit: 3)
+        XCTAssertNotNil(members)
+        XCTAssertEqual(members.groupUsers.count, 2)
+        
+        // Ban
+        try await client.banGroupUsers(session: session, groupId: group.id, ids: [user1.userId, user2.userId])
+        members = try await client.listGroupUsers(session: session, groupId: group.id, limit: 3)
+        XCTAssertNotNil(members)
+        XCTAssertEqual(members.groupUsers.count, 1) // Only superadmin left
+        
+        try await client.joinGroup(session: user1, groupId: group.id)
+        members = try await client.listGroupUsers(session: session, groupId: group.id, limit: 2)
+        XCTAssertNotNil(members)
+        XCTAssertEqual(members.groupUsers.count, 1)
+        XCTAssertEqual(group.creatorId, members.groupUsers.first?.user.id) // Should only be superadmin
+    }
 }
