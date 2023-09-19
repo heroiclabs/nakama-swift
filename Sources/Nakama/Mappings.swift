@@ -165,3 +165,63 @@ extension Nakama_Api_GroupList {
         )
     }
 }
+
+extension Nakama_Api_GroupUserList {
+    func toGroupUserList() -> GroupUserList {
+        return GroupUserList(
+            cursor: self.cursor,
+            groupUsers: self.groupUsers.map { $0.toGroupUser() }
+        )
+    }
+}
+
+extension Nakama_Api_GroupUserList.GroupUser {
+    func toGroupUser() -> GroupUser {
+        return GroupUser(
+            state: Int(self.state.value),
+            user: self.user.toApiUser()
+        )
+    }
+}
+
+extension Nakama_Api_UserGroupList.UserGroup {
+    func toUserGroup() -> UserGroup {
+        return UserGroup(
+            state: Int(self.state.value),
+            group: self.group.toGroup()
+        )
+    }
+}
+
+extension Nakama_Api_UserGroupList {
+    func toUserGroupList() -> ListUserGroup {
+        return ListUserGroup(
+            cursor: self.cursor,
+            userGroups: self.userGroups.map { $0.toUserGroup() })
+    }
+}
+
+extension Nakama_Api_User {
+    func toApiUser() -> ApiUser {
+        return ApiUser(
+            id: self.id,
+            appleId: self.appleID,
+            avatarUrl: self.avatarURL,
+            createTime: self.createTime.date,
+            displayName: self.displayName,
+            edgeCount: Int(self.edgeCount),
+            facebookId: self.facebookID,
+            facebookInstantGameId: self.facebookInstantGameID,
+            gamecenterId: self.gamecenterID,
+            googleId: self.googleID,
+            langTag: self.langTag,
+            location: self.location,
+            metadata: self.metadata,
+            online: self.online,
+            steamId: self.steamID,
+            timezone: self.timezone,
+            updateTime: self.updateTime.date,
+            username: self.username
+        )
+    }
+}

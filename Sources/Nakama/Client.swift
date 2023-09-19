@@ -643,4 +643,41 @@ public protocol Client {
     - Parameter langTag: A new language tag in BCP-47 format for the group.
      */
     func updateGroup(session: Session, groupId: String, name: String?, open: Bool, description: String?, avatarUrl: String?, langTag: String?) async throws -> Void
+    
+    /**
+     Add one or more users to the group.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The id of the group to add users into.
+     - Parameter ids: The ids of the users to add or invite to the group.
+     */
+    func addGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
+    
+    /**
+     Kick one or more users from the group.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The ID of the group.
+     - Parameter ids: The IDs of the users to kick.
+     */
+    func kickGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
+    
+    /**
+     List all users part of the group.
+     - Parameter session: The session of the user.
+     - Parameter groupId: The ID of the group.
+     - Parameter state: Filter by group membership state.
+     - Parameter limit: The number of groups to list.
+     - Parameter cursor: A cursor for the current position in the group listing.
+     */
+    func listGroupUsers(session: Session, groupId: String, state: Int?, limit: Int?, cursor: String?) async throws -> GroupUserList
+    
+    /**
+     List of groups the current user is a member of.
+     - Parameter session: The session of the user.
+     - Parameter userId: The ID of the user whose groups to list. If `nil` it will be session userId.
+     - Parameter state: Filter by group membership state.
+     - Parameter limit: The number of records to list.
+     - Parameter cursor: A cursor for the current position in the listing.
+     */
+    func listUserGroups(session: Session, userId: String?, state: Int?, limit: Int?, cursor: String?) async throws -> ListUserGroup
+    
 }

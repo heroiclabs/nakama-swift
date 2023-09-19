@@ -642,4 +642,48 @@ public class GrpcClient : Client {
         _ = try await nakamaGrpcClient.updateGroup(req, callOptions: session.callOptions).response.get()
     }
     
+    public func addGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+        var req = Nakama_Api_AddGroupUsersRequest()
+        req.groupID = groupId
+        req.userIds = ids
+        _ = try await nakamaGrpcClient.addGroupUsers(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func kickGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+        var req = Nakama_Api_KickGroupUsersRequest()
+        req.groupID = groupId
+        req.userIds = ids
+        _ = try await nakamaGrpcClient.kickGroupUsers(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func listGroupUsers(session: Session, groupId: String, state: Int? = nil, limit: Int? = 1, cursor: String? = nil) async throws -> GroupUserList {
+        var req = Nakama_Api_ListGroupUsersRequest()
+        req.groupID = groupId
+        if let state {
+            req.state = state.pbInt32Value
+        }
+        if let limit {
+            req.limit = limit.pbInt32Value
+        }
+        if let cursor {
+            req.cursor = cursor
+        }
+        return try await nakamaGrpcClient.listGroupUsers(req, callOptions: session.callOptions).response.get().toGroupUserList()
+    }
+    
+    public func listUserGroups(session: Session, userId: String? = nil, state: Int? = nil, limit: Int? = 1, cursor: String? = nil) async throws -> ListUserGroup {
+        var req = Nakama_Api_ListUserGroupsRequest()
+        req.userID = userId ?? session.userId
+        if let state {
+            req.state = state.pbInt32Value
+        }
+        if let limit {
+            req.limit = limit.pbInt32Value
+        }
+        if let cursor {
+            req.cursor = cursor
+        }
+        return try await nakamaGrpcClient.listUserGroups(req, callOptions: session.callOptions).response.get().toUserGroupList()
+    }
+    
 }

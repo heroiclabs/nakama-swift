@@ -63,3 +63,38 @@ public struct GroupList {
     /// A cursor used to get the next page.
     let cursor: String
 }
+
+/// A single user-role pair.
+public struct GroupUser {
+    /// Their relationship to the group.
+    let state: Int
+    
+    /// User.
+    let user: ApiUser
+}
+
+public struct UserGroup {
+    /// The user's relationship to the group.
+    let state: Int
+    
+    /// Group.
+    let group: Group
+}
+
+/// A list of users belonging to a group, along with their role.
+public struct GroupUserList {
+    /// Cursor for the next page of results, if any.
+    let cursor: String
+    
+    /// User-role pairs for a group.
+    let groupUsers: [GroupUser]
+}
+
+/// A list of groups belonging to a user, along with the user's role in each group.
+public struct ListUserGroup {
+    /// Cursor for the next page of results, if any.
+    let cursor: String
+    
+    /// Group-role pairs for a user.
+    let userGroups: [UserGroup]
+}

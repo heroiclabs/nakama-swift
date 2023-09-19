@@ -161,4 +161,34 @@ final class GroupTests: XCTestCase {
         XCTAssertEqual(retrievedGroup.name, newName)
         XCTAssertEqual(retrievedGroup.open, true)
     }
+    
+    func test09_addKickListGroupUsers() async throws {
+        let group = try await client.createGroup(session: session, name: UUID().uuidString)
+        XCTAssertNotNil(group)
+        
+        let newUser = try await client.authenticateDevice(id: UUID().uuidString)
+        XCTAssertNotNil(newUser)
+        
+        // Add
+        try await client.addGroupUsers(session: session, groupId: group.id, ids: [session.userId, newUser.userId])
+        let groupUsersList = try await client.listGroupUsers(session: session, groupId: group.id, limit: 2)
+        XCTAssertNotNil(groupUsersList)
+        XCTAssertEqual(groupUsersList.groupUsers.count, 2)
+        
+        // Kick
+        try await client.kickGroupUsers(session: session, groupId: group.id, ids: [newUser.userId])
+        let groupUsersUpdatedList = try await client.listGroupUsers(session: session, groupId: group.id)
+        XCTAssertEqual(groupUsersUpdatedList.groupUsers.count, 1)
+    }
+    
+    func test10_listUserGroups() async throws {
+        let group1 = try await client.createGroup(session: session, name: UUID().uuidString)
+        XCTAssertNotNil(group1)
+        let group2 = try await client.createGroup(session: session, name: UUID().uuidString)
+        XCTAssertNotNil(group2)
+        
+        let groups = try await client.listUserGroups(session: session, limit: 2)
+        XCTAssertNotNil(groups)
+        XCTAssertEqual(groups.userGroups.count, 2)
+    }
 }
