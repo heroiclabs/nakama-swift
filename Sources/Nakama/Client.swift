@@ -703,4 +703,29 @@ public protocol Client {
      - Parameter ids: The IDs of the users to ban.
      */
     func banGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
+    
+    /**
+     Validate a purchase receipt against the Apple App Store.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The purchase receipt to be validated.
+     - Parameter persist: Whether or not to track the receipt in the Nakama database.
+     */
+    func validatePurchaseApple(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
+    
+    /**
+     Validate a purchase receipt against the Google Play Store.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The purchase receipt to be validated.
+     - Parameter persist: Whether or not to track the receipt in the Nakama database.
+     */
+    func validatePurchaseGoogle(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
+    
+    /**
+     Validate a purchase receipt against the Huawei AppGallery.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The purchase receipt to be validated.
+     - Parameter persist: Whether or not to track the receipt in the Nakama database.
+     */
+    func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
+    
 }

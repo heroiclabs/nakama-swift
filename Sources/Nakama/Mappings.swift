@@ -225,3 +225,28 @@ extension Nakama_Api_User {
         )
     }
 }
+
+extension Nakama_Api_ValidatePurchaseResponse {
+    func toValidatePurchaseResponse() -> ValidatePurchaseResponse {
+        return ValidatePurchaseResponse(validatedPurchases: self.validatedPurchases.map { $0.toValidatedPurchase() })
+    }
+}
+
+extension Nakama_Api_ValidatedPurchase {
+    func toValidatedPurchase() -> ValidatedPurchase {
+        return ValidatedPurchase(
+            createTime: self.createTime.date,
+            environment: self.environment,
+            productId: self.productID,
+            providerResponse: self.providerResponse,
+            purchaseTime: self.purchaseTime.date,
+            refundTime: self.refundTime.date,
+            seenBefore: self.seenBefore,
+            store: self.store,
+            transactionId: self.transactionID,
+            updateTime: self.updateTime.date,
+            userId: self.userID
+        )
+    }
+}
+

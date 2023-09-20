@@ -707,4 +707,25 @@ public class GrpcClient : Client {
         _ = try await nakamaGrpcClient.banGroupUsers(req, callOptions: session.callOptions).response.get()
     }
     
+    public func validatePurchaseApple(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+        var req = Nakama_Api_ValidatePurchaseAppleRequest()
+        req.receipt = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validatePurchaseApple(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+    }
+    
+    public func validatePurchaseGoogle(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+        var req = Nakama_Api_ValidatePurchaseGoogleRequest()
+        req.purchase = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validatePurchaseGoogle(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+    }
+    
+    public func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+        var req = Nakama_Api_ValidatePurchaseHuaweiRequest()
+        req.purchase = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validatePurchaseHuawei(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+    }
+    
 }
