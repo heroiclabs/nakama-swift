@@ -728,4 +728,27 @@ public protocol Client {
      */
     func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
     
+    /**
+     Get the subscription represented by the provided product id.
+     - Parameter session: The session of the user.
+     - Parameter productId: The product id.
+     */
+    func getSubscription(session: Session, productId: String) async throws -> ValidatedSubscription
+    
+    /**
+     Validate an Apple subscription receipt.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The receipt to validate.
+     - Parameter persist: Whether or not to persist the receipt to Nakama's database.
+     */
+    func validateSubscriptionApple(session: Session, receipt: String, persist: Bool?) async throws -> ValidateSubscriptionResponse
+    
+    /**
+     Validate a Google subscription receipt.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The receipt to validate.
+     - Parameter persist: Whether or not to persist the receipt to Nakama's database.
+     */
+    func validateSubscriptionGoogle(session: Session, receipt: String, persist: Bool?) async throws -> ValidateSubscriptionResponse
+    
 }

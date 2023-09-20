@@ -250,3 +250,29 @@ extension Nakama_Api_ValidatedPurchase {
     }
 }
 
+extension Nakama_Api_ValidatedSubscription {
+    func toValidatedSubscription() -> ValidatedSubscription {
+        return ValidatedSubscription(
+            active: self.active,
+            createTime: self.createTime.date,
+            environment: self.environment,
+            expiryTime: self.expiryTime.date,
+            originalTransactionId: self.originalTransactionID,
+            productId: self.productID,
+            providerNotification: self.providerNotification,
+            providerResponse: self.providerResponse,
+            purchaseTime: self.purchaseTime.date,
+            refundTime: self.refundTime.date,
+            store: self.store,
+            updateTime: self.updateTime.date,
+            userId: self.userID
+        )
+    }
+}
+
+extension Nakama_Api_ValidateSubscriptionResponse {
+    func toValidatedSubscriptionResponse() -> ValidateSubscriptionResponse {
+        return ValidateSubscriptionResponse(validatedSubscription: self.validatedSubscription.toValidatedSubscription())
+    }
+}
+
