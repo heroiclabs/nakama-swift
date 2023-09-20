@@ -276,3 +276,12 @@ extension Nakama_Api_ValidateSubscriptionResponse {
     }
 }
 
+extension Nakama_Api_SubscriptionList {
+    func toSubscriptionList() -> SubscriptionList {
+        return SubscriptionList(
+            Cursor: self.cursor,
+            PrevCursor: self.prevCursor,
+            validatedSubscriptions: self.validatedSubscriptions.map { $0.toValidatedSubscription() }
+        )
+    }
+}

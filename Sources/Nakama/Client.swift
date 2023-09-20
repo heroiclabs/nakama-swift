@@ -751,4 +751,11 @@ public protocol Client {
      */
     func validateSubscriptionGoogle(session: Session, receipt: String, persist: Bool?) async throws -> ValidateSubscriptionResponse
     
+    /**
+     List the user's subscriptions.
+     - Parameter session: The session of the user.
+     - Parameter limit: The number of subscriptions to list.
+     - Parameter cursor: An optional cursor for the next page of subscriptions.
+     */
+    func listSubscriptions(session: Session, limit: Int, cursor: String?) async throws -> SubscriptionList
 }

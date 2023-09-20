@@ -748,4 +748,12 @@ public class GrpcClient : Client {
         return try await nakamaGrpcClient.validateSubscriptionGoogle(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
     }
     
+    public func listSubscriptions(session: Session, limit: Int, cursor: String? = nil) async throws -> SubscriptionList {
+        var req = Nakama_Api_ListSubscriptionsRequest()
+        req.limit = limit.pbInt32Value
+        if let cursor {
+            req.cursor = cursor
+        }
+        return try await nakamaGrpcClient.listSubscriptions(req, callOptions: session.callOptions).response.get().toSubscriptionList()
+    }
 }
