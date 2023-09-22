@@ -703,4 +703,59 @@ public protocol Client {
      - Parameter ids: The IDs of the users to ban.
      */
     func banGroupUsers(session: Session, groupId: String, ids: [String]) async throws -> Void
+    
+    /**
+     Validate a purchase receipt against the Apple App Store.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The purchase receipt to be validated.
+     - Parameter persist: Whether or not to track the receipt in the Nakama database.
+     */
+    func validatePurchaseApple(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
+    
+    /**
+     Validate a purchase receipt against the Google Play Store.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The purchase receipt to be validated.
+     - Parameter persist: Whether or not to track the receipt in the Nakama database.
+     */
+    func validatePurchaseGoogle(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
+    
+    /**
+     Validate a purchase receipt against the Huawei AppGallery.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The purchase receipt to be validated.
+     - Parameter persist: Whether or not to track the receipt in the Nakama database.
+     */
+    func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool?) async throws -> ValidatePurchaseResponse
+    
+    /**
+     Get the subscription represented by the provided product id.
+     - Parameter session: The session of the user.
+     - Parameter productId: The product id.
+     */
+    func getSubscription(session: Session, productId: String) async throws -> ValidatedSubscription
+    
+    /**
+     Validate an Apple subscription receipt.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The receipt to validate.
+     - Parameter persist: Whether or not to persist the receipt to Nakama's database.
+     */
+    func validateSubscriptionApple(session: Session, receipt: String, persist: Bool?) async throws -> ValidateSubscriptionResponse
+    
+    /**
+     Validate a Google subscription receipt.
+     - Parameter session: The session of the user.
+     - Parameter receipt: The receipt to validate.
+     - Parameter persist: Whether or not to persist the receipt to Nakama's database.
+     */
+    func validateSubscriptionGoogle(session: Session, receipt: String, persist: Bool?) async throws -> ValidateSubscriptionResponse
+    
+    /**
+     List the user's subscriptions.
+     - Parameter session: The session of the user.
+     - Parameter limit: The number of subscriptions to list.
+     - Parameter cursor: An optional cursor for the next page of subscriptions.
+     */
+    func listSubscriptions(session: Session, limit: Int, cursor: String?) async throws -> SubscriptionList
 }

@@ -707,4 +707,53 @@ public class GrpcClient : Client {
         _ = try await nakamaGrpcClient.banGroupUsers(req, callOptions: session.callOptions).response.get()
     }
     
+    public func validatePurchaseApple(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+        var req = Nakama_Api_ValidatePurchaseAppleRequest()
+        req.receipt = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validatePurchaseApple(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+    }
+    
+    public func validatePurchaseGoogle(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+        var req = Nakama_Api_ValidatePurchaseGoogleRequest()
+        req.purchase = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validatePurchaseGoogle(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+    }
+    
+    public func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+        var req = Nakama_Api_ValidatePurchaseHuaweiRequest()
+        req.purchase = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validatePurchaseHuawei(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+    }
+    
+    public func getSubscription(session: Session, productId: String) async throws -> ValidatedSubscription {
+        var req = Nakama_Api_GetSubscriptionRequest()
+        req.productID = productId
+        return try await nakamaGrpcClient.getSubscription(req, callOptions: session.callOptions).response.get().toValidatedSubscription()
+    }
+    
+    public func validateSubscriptionApple(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidateSubscriptionResponse {
+        var req = Nakama_Api_ValidateSubscriptionAppleRequest()
+        req.receipt = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validateSubscriptionApple(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
+    }
+    
+    public func validateSubscriptionGoogle(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidateSubscriptionResponse {
+        var req = Nakama_Api_ValidateSubscriptionGoogleRequest()
+        req.receipt = receipt
+        req.persist = persist!.pbBoolValue
+        return try await nakamaGrpcClient.validateSubscriptionGoogle(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
+    }
+    
+    public func listSubscriptions(session: Session, limit: Int, cursor: String? = nil) async throws -> SubscriptionList {
+        var req = Nakama_Api_ListSubscriptionsRequest()
+        req.limit = limit.pbInt32Value
+        if let cursor {
+            req.cursor = cursor
+        }
+        return try await nakamaGrpcClient.listSubscriptions(req, callOptions: session.callOptions).response.get().toSubscriptionList()
+    }
 }
