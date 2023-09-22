@@ -756,4 +756,19 @@ public class GrpcClient : Client {
         }
         return try await nakamaGrpcClient.listSubscriptions(req, callOptions: session.callOptions).response.get().toSubscriptionList()
     }
+    
+    public func listNotifications(session: Session, limit: Int? = 1, cacheableCursor: String? = nil) async throws -> NotificationList {
+        var req = Nakama_Api_ListNotificationsRequest()
+        if let cacheableCursor {
+            req.cacheableCursor = cacheableCursor
+        }
+        req.limit = limit!.pbInt32Value
+        return try await nakamaGrpcClient.listNotifications(req, callOptions: session.callOptions).response.get().toNotificationList()
+    }
+    
+    public func deleteNotifications(session: Session, ids: [String]) async throws {
+        var req = Nakama_Api_DeleteNotificationsRequest()
+        req.ids = ids
+        _ = try await nakamaGrpcClient.deleteNotifications(req, callOptions: session.callOptions).response.get()
+    }
 }
