@@ -758,4 +758,19 @@ public protocol Client {
      - Parameter cursor: An optional cursor for the next page of subscriptions.
      */
     func listSubscriptions(session: Session, limit: Int, cursor: String?) async throws -> SubscriptionList
+    
+    /**
+     List notifications for the user with an optional cursor.
+     - Parameter session: The session of the user.
+     - Parameter limit: The number of notifications to list.
+     - Parameter cacheableCursor: A cursor for the current position in notifications to list.
+     */
+    func listNotifications(session: Session, limit: Int?, cacheableCursor: String?) async throws -> NotificationList
+    
+    /**
+     Delete one or more notifications by id.
+     - Parameter session: The session of the user.
+     - Parameter ids: The notification ids to remove.
+     */
+    func deleteNotifications(session: Session, ids: [String]) async throws -> Void
 }

@@ -285,3 +285,26 @@ extension Nakama_Api_SubscriptionList {
         )
     }
 }
+
+extension Nakama_Api_NotificationList {
+    func toNotificationList() -> NotificationList {
+        return NotificationList(
+            cacheableCursor: self.cacheableCursor,
+            notifications: self.notifications.map { $0.toNotification() }
+        )
+    }
+}
+
+extension Nakama_Api_Notification {
+    func toNotification() -> ApiNotification {
+        return ApiNotification(
+            code: Int(self.code),
+            content: self.content,
+            createTime: self.createTime.date,
+            id: self.id,
+            persistent: self.persistent,
+            senderId: self.senderID,
+            subject: self.subject
+        )
+    }
+}
