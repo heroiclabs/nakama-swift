@@ -20,6 +20,20 @@ extension Nakama_Api_Session {
     }
 }
 
+extension Nakama_Api_Account {
+    func toApiAccount() -> ApiAccount {
+        return ApiAccount(
+            user: self.user.toApiUser(),
+            customId: self.customID,
+            devices: self.devices,
+            disableTime: self.disableTime.date,
+            email: self.email,
+            VerifyTime: self.verifyTime.date,
+            wallet: self.wallet
+        )
+    }
+}
+
 extension Nakama_Api_StorageObject {
     func toStorageObject() -> StorageObject {
         return StorageObject(

@@ -350,6 +350,10 @@ public class GrpcClient : Client {
         return try await self.nakamaGrpcClient.authenticateGameCenter(req).response.get().toSession()
     }
     
+    public func getAccount(session: Session) async throws -> ApiAccount {
+        return try await nakamaGrpcClient.getAccount(Google_Protobuf_Empty(), callOptions: session.callOptions).response.get().toApiAccount()
+    }
+    
     public func refreshSession(session: Session, vars: [String : String]) async throws -> Session {
         var req = Nakama_Api_SessionRefreshRequest()
         req.token = session.refreshToken
