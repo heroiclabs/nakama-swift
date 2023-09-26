@@ -906,4 +906,23 @@ public protocol Client {
      - Parameter timestamp: The date and time that the signature was created.
      */
     func unlinkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws -> Void
+    
+    /**
+     Import Facebook friends and add them to the user's account.
+     The server will import friends when the user authenticates with Facebook. This function can be used to be explicit with the import operation.
+     - Parameter session: The session of the user.
+     - Parameter token: An OAuth access token from the Facebook SDK.
+     - Parameter reset: If the Facebook friend import for the user should be reset.
+     */
+    func importFacebookFriends(session: Session, token: String, reset: Bool?) async throws -> Void
+    
+    /**
+     Import Steam friends and add them to the user's account.
+     The server will import friends when the user authenticates with Steam. This function can be used to be
+     explicit with the import operation.
+     - Parameter session: The session of the user.
+     - Parameter token: An access token from Steam.
+     - Parameter reset: If the Steam friend import for the user should be reset.
+     */
+    func importSteamFriends(session: Session, token: String, reset: Bool?) async throws -> Void
 }
