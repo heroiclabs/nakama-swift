@@ -885,4 +885,22 @@ public class GrpcClient : Client {
         req.timestampSeconds = Int64(timestamp)
         _ = try await nakamaGrpcClient.unlinkGameCenter(req, callOptions: session.callOptions).response.get()
     }
+    
+    public func importFacebookFriends(session: Session, token: String, reset: Bool? = nil) async throws {
+        var req = Nakama_Api_ImportFacebookFriendsRequest()
+        req.account.token = token
+        if let reset {
+            req.reset = reset.pbBoolValue
+        }
+        _ = try await nakamaGrpcClient.importFacebookFriends(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func importSteamFriends(session: Session, token: String, reset: Bool? = nil) async throws {
+        var req = Nakama_Api_ImportSteamFriendsRequest()
+        req.account.token = token
+        if let reset {
+            req.reset = reset.pbBoolValue
+        }
+        _ = try await nakamaGrpcClient.importSteamFriends(req, callOptions: session.callOptions).response.get()
+    }
 }
