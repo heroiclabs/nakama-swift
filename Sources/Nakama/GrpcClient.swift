@@ -350,6 +350,10 @@ public class GrpcClient : Client {
         return try await self.nakamaGrpcClient.authenticateGameCenter(req).response.get().toSession()
     }
     
+    public func getAccount(session: Session) async throws -> ApiAccount {
+        return try await nakamaGrpcClient.getAccount(Google_Protobuf_Empty(), callOptions: session.callOptions).response.get().toApiAccount()
+    }
+    
     public func refreshSession(session: Session, vars: [String : String]) async throws -> Session {
         var req = Nakama_Api_SessionRefreshRequest()
         req.token = session.refreshToken
@@ -770,5 +774,115 @@ public class GrpcClient : Client {
         var req = Nakama_Api_DeleteNotificationsRequest()
         req.ids = ids
         _ = try await nakamaGrpcClient.deleteNotifications(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkApple(session: Session, token: String) async throws {
+        var req = Nakama_Api_AccountApple()
+        req.token = token
+        _ = try await nakamaGrpcClient.linkApple(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkEmail(session: Session, email: String, password: String) async throws {
+        var req = Nakama_Api_AccountEmail()
+        req.email = email
+        req.password = password
+        _ = try await nakamaGrpcClient.linkEmail(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkSteam(session: Session, token: String, import: Bool? = true) async throws {
+        var req = Nakama_Api_LinkSteamRequest()
+        req.account.token = token
+        req.sync = `import`!.pbBoolValue
+        _ = try await nakamaGrpcClient.linkSteam(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkDevice(session: Session, id: String) async throws {
+        var req = Nakama_Api_AccountDevice()
+        req.id = id
+        _ = try await nakamaGrpcClient.linkDevice(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkCustom(session: Session, id: String) async throws {
+        var req = Nakama_Api_AccountCustom()
+        req.id = id
+        _ = try await nakamaGrpcClient.linkCustom(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkGoogle(session: Session, token: String) async throws {
+        var req = Nakama_Api_AccountGoogle()
+        req.token = token
+        _ = try await nakamaGrpcClient.linkGoogle(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkFacebook(session: Session, token: String, import: Bool? = true) async throws {
+        var req = Nakama_Api_LinkFacebookRequest()
+        req.account.token = token
+        req.sync = `import`!.pbBoolValue
+        _ = try await nakamaGrpcClient.linkFacebook(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func linkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws {
+        var req = Nakama_Api_AccountGameCenter()
+        req.bundleID = bundleId
+        req.playerID = playerId
+        req.publicKeyURL = publicKeyUrl
+        req.salt = salt
+        req.signature = signature
+        req.timestampSeconds = Int64(timestamp)
+        _ = try await nakamaGrpcClient.linkGameCenter(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkApple(session: Session, token: String) async throws {
+        var req = Nakama_Api_AccountApple()
+        req.token = token
+        _ = try await nakamaGrpcClient.unlinkApple(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkEmail(session: Session, email: String, password: String) async throws {
+        var req = Nakama_Api_AccountEmail()
+        req.email = email
+        req.password = password
+        _ = try await nakamaGrpcClient.unlinkEmail(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkSteam(session: Session, token: String) async throws {
+        var req = Nakama_Api_AccountSteam()
+        req.token = token
+        _ = try await nakamaGrpcClient.unlinkSteam(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkDevice(session: Session, id: String) async throws {
+        var req = Nakama_Api_AccountDevice()
+        req.id = id
+        _ = try await nakamaGrpcClient.unlinkDevice(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkCustom(session: Session, id: String) async throws {
+        var req = Nakama_Api_AccountCustom()
+        req.id = id
+        _ = try await nakamaGrpcClient.unlinkCustom(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkGoogle(session: Session, token: String) async throws {
+        var req = Nakama_Api_AccountGoogle()
+        req.token = token
+        _ = try await nakamaGrpcClient.unlinkGoogle(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkFacebook(session: Session, token: String) async throws {
+        var req = Nakama_Api_AccountFacebook()
+        req.token = token
+        _ = try await nakamaGrpcClient.unlinkFacebook(req, callOptions: session.callOptions).response.get()
+    }
+    
+    public func unlinkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws {
+        var req = Nakama_Api_AccountGameCenter()
+        req.bundleID = bundleId
+        req.playerID = playerId
+        req.publicKeyURL = publicKeyUrl
+        req.salt = salt
+        req.signature = signature
+        req.timestampSeconds = Int64(timestamp)
+        _ = try await nakamaGrpcClient.unlinkGameCenter(req, callOptions: session.callOptions).response.get()
     }
 }

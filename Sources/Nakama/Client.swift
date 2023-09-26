@@ -413,6 +413,13 @@ public protocol Client {
      - Returns: A future to resolve a session object.
      */
     func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?, vars: [String:String]?) async throws -> Session
+    
+    /**
+     Fetch the user account owned by the `session`.
+     - Parameter session: Current session.
+     */
+    func getAccount(session: Session) async throws -> ApiAccount
+    
     /**
      Refresh a user session and return the new session.
      - Parameter session: Current session.
@@ -773,4 +780,130 @@ public protocol Client {
      - Parameter ids: The notification ids to remove.
      */
     func deleteNotifications(session: Session, ids: [String]) async throws -> Void
+    
+    /**
+     Link an Apple ID to the social profiles on the current user's account.
+     - Parameter session: The session of the user.
+     - Parameter token: The ID token received from Apple to validate.
+     */
+    func linkApple(session: Session, token: String) async throws -> Void
+    
+    /**
+     Link an email with password to the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter email: The email address of the user.
+     - Parameter password: The password for the user.
+     */
+    func linkEmail(session: Session, email: String, password: String) async throws -> Void
+    
+    /**
+     Link a Steam profile to a user account.
+     - Parameter session: The session of the user.
+     - Parameter token: An authentication token from the Steam network.
+     - Parameter import: If the Steam friends should be imported.
+     */
+    func linkSteam(session: Session, token: String, import: Bool?) async throws -> Void
+    
+    /**
+     Link a device ID to the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter id: A device identifier usually obtained from a platform API.
+     */
+    func linkDevice(session: Session, id: String) async throws -> Void
+
+    /**
+     Link a custom ID to the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter id: A custom identifier usually obtained from an external authentication service.
+     */
+    func linkCustom(session: Session, id: String) async throws -> Void
+    
+    /**
+     Link a Google profile to a user account.
+     - Parameter session: The session of the user.
+     - Parameter token: An OAuth access token from the Google SDK.
+     */
+    func linkGoogle(session: Session, token: String) async throws -> Void
+    
+    /**
+     Link a Facebook profile to a user account.
+     - Parameter session: The session of the user.
+     - Parameter token: An OAuth access token from the Facebook SDK.
+     - Parameter import: If the Facebook friends should be imported.
+     */
+    func linkFacebook(session: Session, token: String, import: Bool?) async throws -> Void
+    
+    /**
+     Link a Game Center profile to a user account.
+     - Parameter session: The session of the user.
+     - Parameter bundleId: The bundle ID of the Game Center application.
+     - Parameter playerId: The player ID of the user in Game Center.
+     - Parameter publicKeyUrl: The URL for the public encryption key.
+     - Parameter salt: A random `String` used to compute the hash and keep it randomized.
+     - Parameter signature: The verification signature data generated.
+     - Parameter timestamp: The date and time that the signature was created.
+     */
+    func linkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws -> Void
+    
+    /**
+     Remove the Apple ID from the social profiles on the current user's account.
+     - Parameter session: The session of the user.
+     - Parameter token: The ID token received from Apple to validate.
+     */
+    func unlinkApple(session: Session, token: String) async throws -> Void
+    
+    /**
+     Unlink an email with password from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter email: The email address of the user.
+     - Parameter password: The password for the user.
+     */
+    func unlinkEmail(session: Session, email: String, password: String) async throws -> Void
+    
+    /**
+     Unlink a Steam profile from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter token: An authentication token from the Steam network.
+     */
+    func unlinkSteam(session: Session, token: String) async throws -> Void
+    
+    /**
+     Unlink a device ID from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter id: A device identifier usually obtained from a platform API.
+     */
+    func unlinkDevice(session: Session, id: String) async throws -> Void
+    
+    /**
+     Unlink a custom ID from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter id: A custom identifier usually obtained from an external authentication service.
+     */
+    func unlinkCustom(session: Session, id: String) async throws -> Void
+    
+    /**
+     Unlink a Google profile from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter token: An OAuth access token from the Google SDK.
+     */
+    func unlinkGoogle(session: Session, token: String) async throws -> Void
+    
+    /**
+     Unlink a Facebook profile from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter token: An OAuth access token from the Facebook SDK.
+     */
+    func unlinkFacebook(session: Session, token: String) async throws -> Void
+    
+    /**
+     Unlink a Game Center profile from the user account owned by the session.
+     - Parameter session: The session of the user.
+     - Parameter bundleId: The bundle ID of the Game Center application.
+     - Parameter playerId: The player ID of the user in Game Center.
+     - Parameter publicKeyUrl: The URL for the public encryption key.
+     - Parameter salt: A random `String` used to compute the hash and keep it randomized.
+     - Parameter signature: The verification signature data generated.
+     - Parameter timestamp: The date and time that the signature was created.
+     */
+    func unlinkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws -> Void
 }

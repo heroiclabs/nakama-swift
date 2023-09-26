@@ -59,6 +59,14 @@ final class SessionTests: XCTestCase {
         }
     }
     
+    func test04_getAccount() async throws {
+        let account = try await client.getAccount(session: session)
+        XCTAssertNotNil(account)
+        XCTAssertNotNil(account.user)
+        XCTAssertNotNil(account.user.username)
+        XCTAssertNotNil(account.user.createTime)
+    }
+    
     /*
     func testRealtimeChat() {
         let session1 = newSession()
