@@ -20,14 +20,19 @@ import NIO
 import Logging
 import SwiftProtobuf
 
-public class GrpcClient : Client {
+public final class GrpcClient : Client {
     
     public var eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     public var retriesLimit = 5
+    public var globalRetryConfiguration: RetryConfiguration
     
     public let host: String
     public let port: Int
     public let ssl: Bool
+    public let transientErrorAdapter: TransientErrorAdapter?
+    
+    private let retryInvoker: RetryInvoker
+    
     let serverKey: String
     let grpcConnection: ClientConnection
     let nakamaGrpcClient: Nakama_Api_NakamaClientProtocol
@@ -52,7 +57,7 @@ public class GrpcClient : Client {
     small value might be increased. Defaults to 20 seconds.
     - Parameter trace: Trace all actions performed by the client. Defaults to false.
     */
-    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false) {
+    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil) {
         
         let base64Auth = "\(serverKey):".data(using: String.Encoding.utf8)!.base64EncodedString()
         let basicAuth = "Basic \(base64Auth)"
@@ -85,6 +90,11 @@ public class GrpcClient : Client {
         self.host = host
         self.port = port
         self.ssl = ssl
+        self.transientErrorAdapter = transientErrorAdapter ?? TransientErrorAdapter()
+        
+        retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
+        globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
+        
         self.nakamaGrpcClient = Nakama_Api_NakamaClient(channel: grpcConnection, defaultCallOptions: callOptions)
     }
     

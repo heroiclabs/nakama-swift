@@ -21,6 +21,8 @@ public protocol Client {
     var host: String { get }
     var port: Int { get }
     var ssl: Bool { get }
+    var transientErrorAdapter: TransientErrorAdapter? { get }
+    var globalRetryConfiguration: RetryConfiguration { get set }
     
     /**
      Disconnects the client. This function kills all outgoing exchanges immediately without waiting.
