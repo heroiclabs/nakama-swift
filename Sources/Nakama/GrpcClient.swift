@@ -134,16 +134,7 @@ public final class GrpcClient : Client {
         _ = try await self.nakamaGrpcClient.addGroupUsers(req, callOptions: sessionCallOption(session: session)).response.get()
     }
     
-    public func authenticateCustom(id: String) async throws -> Session {
-        return try await self.authenticateCustom(id: id, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateCustom(id: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateCustom(id: id, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateCustom(id: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateCustom(id: id, create: nil, username: username, vars: nil)
-    }
-    public func authenticateCustom(id: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateCustom(id: String, create: Bool? = nil, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateCustomRequest()
         req.account = Nakama_Api_AccountCustom()
         req.account.id = id
@@ -155,7 +146,9 @@ public final class GrpcClient : Client {
         if vars != nil {
             req.account.vars = vars!
         }
-        return try await self.nakamaGrpcClient.authenticateCustom(req).response.get().toSession()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateCustom(req).response.get()
+        }, history: RetryHistory(token: id, configuration: retryConfig ?? globalRetryConfiguration)).toSession()
     }
     
     public func authenticateDevice(id: String) async throws -> Session {

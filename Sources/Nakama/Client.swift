@@ -77,36 +77,12 @@ public protocol Client {
     /**
      Authenticate a user with a custom id.
      - Parameter id: A custom identifier usually obtained from an external authentication service.
-     - Returns: A future to resolve a session object.
-     */
-    func authenticateCustom(id: String) async throws -> Session
-    
-    /**
-     Authenticate a user with a custom id.
-     - Parameter id: A custom identifier usually obtained from an external authentication service.
-     - Parameter create: True if the user should be created when authenticated.
-     - Returns: A future to resolve a session object.
-     */
-    func authenticateCustom(id: String, create: Bool?) async throws -> Session
-    
-    /**
-     Authenticate a user with a custom id.
-     - Parameter id: A custom identifier usually obtained from an external authentication service.
-     - Parameter create: True if the user should be created when authenticated.
-     - Parameter username: A username used to create the user.
-     - Returns: A future to resolve a session object.
-     */
-    func authenticateCustom(id: String, create: Bool?, username: String?) async throws -> Session
-    
-    /**
-     Authenticate a user with a custom id.
-     - Parameter id: A custom identifier usually obtained from an external authentication service.
      - Parameter create: True if the user should be created when authenticated.
      - Parameter username: A username used to create the user.
      - Parameter vars: Extra information that will be bundled in the session token.
      - Returns: A future to resolve a session object.
      */
-    func authenticateCustom(id: String, create: Bool?, username: String?, vars: [String:String]?) async throws -> Session
+    func authenticateCustom(id: String, create: Bool?, username: String?, vars: [String:String]?, retryConfig: RetryConfiguration?) async throws -> Session
 
     /**
      Authenticate a user with a device id.
