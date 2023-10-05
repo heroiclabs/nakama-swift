@@ -211,7 +211,7 @@ final class RetryTests: XCTestCase {
         let client = GrpcClient(serverKey: "defaultkey", transientErrorAdapter: mockAdapter)
         let jitter: Jitter = { history, delay, random in
             let delayCap = 20000
-            return min(delayCap, Int(random.next(in: Double(delay)..<Double((history.last?.jitterBackoff ?? delay)) * 3)))
+            return min(delayCap, Int(random.next(in: Double(delay)..<Double(history.last?.jitterBackoff ?? delay) * 3)))
         }
         client.globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 3, jitter: jitter)
         

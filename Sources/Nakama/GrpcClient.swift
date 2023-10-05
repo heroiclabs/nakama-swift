@@ -21,7 +21,6 @@ import Logging
 import SwiftProtobuf
 
 public final class GrpcClient : Client {
-    
     public var eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     public var retriesLimit = 5
     public var globalRetryConfiguration: RetryConfiguration
@@ -38,25 +37,19 @@ public final class GrpcClient : Client {
     let nakamaGrpcClient: Nakama_Api_NakamaClientProtocol
     var logger : Logger?
     
-    func sessionCallOption(session: Session) -> CallOptions {
-        var callOptions = CallOptions(cacheable: false)
-        callOptions.customMetadata.add(name: "authorization", value: "Bearer " + session.token)
-        return callOptions
-    }
-    
     /**
-    A client to interact with Nakama server.
-    - Parameter serverKey: The key used to authenticate with the server without a session. Defaults to "defaultkey".
-    - Parameter host: The host address of the server. Defaults to "127.0.0.1".
-    - Parameter port: The port number of the server. Defaults to 7349.
-    - Parameter ssl Set connection strings to use the secure mode with the server. Defaults to false. The server must be configured to make use of this option. With HTTP, GRPC, and WebSockets the server must
-    be configured with an SSL certificate or use a load balancer which performs SSL termination.
-    - Parameter deadlineAfter: Timeout for the gRPC messages in seconds.
-    - Parameter keepAliveTimeout: Sets the time waiting for read activity after sending a keepalive ping. If the time expires
-    without any read activity on the connection, the connection is considered dead. An unreasonably
-    small value might be increased. Defaults to 20 seconds.
-    - Parameter trace: Trace all actions performed by the client. Defaults to false.
-    */
+     A client to interact with Nakama server.
+     - Parameter serverKey: The key used to authenticate with the server without a session. Defaults to "defaultkey".
+     - Parameter host: The host address of the server. Defaults to "127.0.0.1".
+     - Parameter port: The port number of the server. Defaults to 7349.
+     - Parameter ssl Set connection strings to use the secure mode with the server. Defaults to false. The server must be configured to make use of this option. With HTTP, GRPC, and WebSockets the server must
+     be configured with an SSL certificate or use a load balancer which performs SSL termination.
+     - Parameter deadlineAfter: Timeout for the gRPC messages in seconds.
+     - Parameter keepAliveTimeout: Sets the time waiting for read activity after sending a keepalive ping. If the time expires
+     without any read activity on the connection, the connection is considered dead. An unreasonably
+     small value might be increased. Defaults to 20 seconds.
+     - Parameter trace: Trace all actions performed by the client. Defaults to false.
+     */
     public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil) {
         
         let base64Auth = "\(serverKey):".data(using: String.Encoding.utf8)!.base64EncodedString()
@@ -64,16 +57,13 @@ public final class GrpcClient : Client {
         var callOptions = CallOptions(cacheable: false)
         callOptions.customMetadata.add(name: "authorization", value: basicAuth)
         
-        var configuration = ClientConnection.Configuration(
-            target: .hostAndPort(host, port),
-            eventLoopGroup: self.eventLoopGroup,
-            connectionBackoff: ConnectionBackoff(minimumConnectionTimeout: deadlineAfter, retries: .upTo(retriesLimit)),
-            connectionKeepalive: ClientConnectionKeepalive(timeout: keepAliveTimeout, permitWithoutCalls: true),
-            callStartBehavior: .fastFailure
-        )
+        var configuration = ClientConnection.Configuration.default(target: .hostAndPort(host, port), eventLoopGroup: self.eventLoopGroup)
+        configuration.connectionBackoff = ConnectionBackoff(minimumConnectionTimeout: deadlineAfter, retries: .upTo(retriesLimit))
+        configuration.connectionKeepalive = ClientConnectionKeepalive(timeout: keepAliveTimeout, permitWithoutCalls: true)
+        configuration.callStartBehavior = .fastFailure
         
         if ssl {
-            configuration.tls = .init()
+            configuration.tlsConfiguration = .init(GRPCTLSConfiguration.makeClientDefault(compatibleWith: eventLoopGroup))
         }
         
         if trace {
@@ -95,7 +85,7 @@ public final class GrpcClient : Client {
         retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
         globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
         
-        self.nakamaGrpcClient = Nakama_Api_NakamaClient(channel: grpcConnection, defaultCallOptions: callOptions)
+        self.nakamaGrpcClient = Nakama_Api_NakamaNIOClient(channel: grpcConnection, defaultCallOptions: callOptions)
     }
     
     public func disconnect() async throws -> Void {
@@ -110,230 +100,157 @@ public final class GrpcClient : Client {
         return WebSocketClient(host: host ?? self.host, port: port ?? 7350, ssl: ssl ?? self.ssl, eventLoopGroup: self.eventLoopGroup, socketAdapter: socketAdapter, logger: self.logger)
     }
     
-    public func addFriends(session: Session, ids: String...) async throws -> Void {
-        return try await self.addFriends(session: session, ids: ids, usernames: nil)
-    }
-    
-    public func addFriends(session: Session, ids: [String]? = [], usernames: [String]? = []) async throws -> Void {
+    public func addFriends(session: Session, ids: [String], usernames: [String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Nakama_Api_AddFriendsRequest()
-        if ids != nil {
-            req.ids = ids!
-        }
-        if usernames != nil {
-            req.usernames = usernames!
+        req.ids = ids
+        if let usernames {
+            req.usernames = usernames
         }
         
-        _ = try await self.nakamaGrpcClient.addFriends(req, callOptions: sessionCallOption(session: session)).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.addFriends(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func addGroupUsers(session: Session, groupId: String, ids: String...) async throws -> Void {
-        var req = Nakama_Api_AddGroupUsersRequest()
-        req.groupID = groupId
-        req.userIds = ids
-        
-        _ = try await self.nakamaGrpcClient.addGroupUsers(req, callOptions: sessionCallOption(session: session)).response.get()
-    }
-    
-    public func authenticateCustom(id: String, create: Bool? = nil, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
+    public func authenticateCustom(id: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateCustomRequest()
         req.account = Nakama_Api_AccountCustom()
         req.account.id = id
         req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
         req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.authenticateCustom(req).response.get()
         }, history: RetryHistory(token: id, configuration: retryConfig ?? globalRetryConfiguration)).toSession()
     }
     
-    public func authenticateDevice(id: String) async throws -> Session {
-        return try await self.authenticateDevice(id: id, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateDevice(id: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateDevice(id: id, create: create, username: nil, vars: nil)
-    }
-    public func authenticateDevice(id: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateDevice(id: id, create: nil, username: username, vars: nil)
-    }
-    public func authenticateDevice(id: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateDevice(id: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateDeviceRequest()
         req.account = Nakama_Api_AccountDevice()
         req.account.id = id
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateDevice(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateDevice(req).response.get().toSession()
+        }, history: RetryHistory(token: id, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateEmail(email: String, password: String) async throws -> Session {
-        return try await self.authenticateEmail(email: email, password: password, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateEmail(email: String, password: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateEmail(email: email, password: password, create: create, username: nil, vars: nil)
-    }
-    public func authenticateEmail(email: String, password: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateEmail(email: email, password: password, create: create, username: username, vars: nil)
-    }
-    public func authenticateEmail(email: String, password: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateEmail(email: String, password: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateEmailRequest()
         req.account = Nakama_Api_AccountEmail()
         req.account.email = email
         req.account.password = password
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateEmail(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateEmail(req).response.get().toSession()
+        }, history: RetryHistory(token: email, configuration: retryConfig ?? globalRetryConfiguration))
     }
-
     
-    public func authenticateFacebook(accessToken: String) async throws -> Session {
-        return try await self.authenticateFacebook(accessToken: accessToken, create: nil, username: nil, importFriends: nil, vars: nil)
-    }
-    public func authenticateFacebook(accessToken: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateFacebook(accessToken: accessToken, create: create, username: nil, importFriends: nil, vars: nil)
-    }
-    public func authenticateFacebook(accessToken: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateFacebook(accessToken: accessToken, create: create, username: username, importFriends: nil, vars: nil)
-    }
-    public func authenticateFacebook(accessToken: String, create: Bool?, username: String?, importFriends: Bool?) async throws -> Session {
-        return try await self.authenticateFacebook(accessToken: accessToken, create: create, username: username, importFriends: importFriends, vars: nil)
-    }
-    public func authenticateFacebook(accessToken: String, create: Bool?, username: String?, importFriends: Bool?, vars: [String : String]?) async throws -> Session {
+    public func authenticateFacebook(accessToken: String, create: Bool? = true, username: String? = nil, importFriends: Bool? = true, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateFacebookRequest()
         req.account = Nakama_Api_AccountFacebook()
         req.account.token = accessToken
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateFacebook(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateFacebook(req).response.get().toSession()
+        }, history: RetryHistory(token: accessToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateGoogle(accessToken: String) async throws -> Session {
-        return try await self.authenticateGoogle(accessToken: accessToken, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateGoogle(accessToken: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateGoogle(accessToken: accessToken, create: create, username: nil, vars: nil)
-    }
-    public func authenticateGoogle(accessToken: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateGoogle(accessToken: accessToken, create: create, username: username, vars: nil)
-    }
-    public func authenticateGoogle(accessToken: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateGoogle(accessToken: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateGoogleRequest()
         req.account = Nakama_Api_AccountGoogle()
         req.account.token = accessToken
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateGoogle(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateGoogle(req).response.get().toSession()
+        }, history: RetryHistory(token: accessToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateSteam(token: String) async throws -> Session {
-        return try await self.authenticateSteam(token: token, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateSteam(token: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateSteam(token: token, create: create, username: nil, vars: nil)
-    }
-    public func authenticateSteam(token: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateSteam(token: token, create: create, username: username, vars: nil)
-    }
-    public func authenticateSteam(token: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateSteam(token: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateSteamRequest()
         req.account = Nakama_Api_AccountSteam()
         req.account.token = token
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateSteam(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateSteam(req).response.get().toSession()
+        }, history: RetryHistory(token: token, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateApple(token: String) async throws -> Session {
-        return try await self.authenticateApple(token: token, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateApple(token: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateApple(token: token, create: create, username: nil, vars: nil)
-    }
-    public func authenticateApple(token: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateApple(token: token, create: create, username: username, vars: nil)
-    }
-    public func authenticateApple(token: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateApple(token: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateAppleRequest()
         req.account = Nakama_Api_AccountApple()
         req.account.token = token
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateApple(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateApple(req).response.get().toSession()
+        }, history: RetryHistory(token: token, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateFacebookInstantGame(signedPlayerInfo: String) async throws -> Session {
-        return try await self.authenticateFacebookInstantGame(signedPlayerInfo: signedPlayerInfo, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateFacebookInstantGame(signedPlayerInfo: signedPlayerInfo, create: create, username: nil, vars: nil)
-    }
-    public func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateFacebookInstantGame(signedPlayerInfo: signedPlayerInfo, create: nil, username: username, vars: nil)
-    }
-    public func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateFacebookInstantGame(signedPlayerInfo: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateFacebookInstantGameRequest()
         req.account = Nakama_Api_AccountFacebookInstantGame()
         req.account.signedPlayerInfo = signedPlayerInfo
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateFacebookInstantGame(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateFacebookInstantGame(req).response.get().toSession()
+        }, history: RetryHistory(token: signedPlayerInfo, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String) async throws -> Session {
-        return try await self.authenticateGameCenter(playerId: playerId, bundleId: bundleId, timestampSeconds: timestampSeconds, salt: salt, signature: signature, publicKeyUrl: publicKeyUrl, create: nil, username: nil, vars: nil)
-    }
-    public func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?) async throws -> Session {
-        return try await self.authenticateGameCenter(playerId: playerId, bundleId: bundleId, timestampSeconds: timestampSeconds, salt: salt, signature: signature, publicKeyUrl: publicKeyUrl, create: create, username: nil, vars: nil)
-    }
-    public func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?) async throws -> Session {
-        return try await self.authenticateGameCenter(playerId: playerId, bundleId: bundleId, timestampSeconds: timestampSeconds, salt: salt, signature: signature, publicKeyUrl: publicKeyUrl, create: nil, username: username, vars: nil)
-    }
-    public func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool?, username: String?, vars: [String : String]?) async throws -> Session {
+    public func authenticateGameCenter(playerId: String, bundleId: String, timestampSeconds: Int64, salt: String, signature: String, publicKeyUrl: String, create: Bool? = true, username: String? = nil, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_AuthenticateGameCenterRequest()
         req.account = Nakama_Api_AccountGameCenter()
         req.account.playerID = playerId
@@ -342,38 +259,48 @@ public final class GrpcClient : Client {
         req.account.salt = salt
         req.account.signature = signature
         req.account.publicKeyURL = publicKeyUrl
-        req.create = SwiftProtobuf.Google_Protobuf_BoolValue()
-        req.create.value = create ?? true
-        if username != nil {
-            req.username = username!
+        req.create = (create ?? true).pbBoolValue
+        if let username {
+            req.username = username
         }
-        if vars != nil {
-            req.account.vars = vars!
+        if let vars {
+            req.account.vars = vars
         }
-        return try await self.nakamaGrpcClient.authenticateGameCenter(req).response.get().toSession()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.authenticateGameCenter(req).response.get().toSession()
+        }, history: RetryHistory(token: bundleId, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func getAccount(session: Session) async throws -> ApiAccount {
-        return try await nakamaGrpcClient.getAccount(Google_Protobuf_Empty(), callOptions: session.callOptions).response.get().toApiAccount()
+    public func getAccount(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> ApiAccount {
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.getAccount(Google_Protobuf_Empty(), callOptions: session.callOptions).response.get().toApiAccount()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func refreshSession(session: Session, vars: [String : String]) async throws -> Session {
+    public func refreshSession(session: Session, vars: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Nakama_Api_SessionRefreshRequest()
         req.token = session.refreshToken
-        req.vars = vars
+        if let vars {
+            req.vars = vars
+        }
         
-        return try await self.nakamaGrpcClient.sessionRefresh(req, callOptions: nil).response.get().toSession()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.sessionRefresh(req, callOptions: nil).response.get().toSession()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func sessionLogout(session: Session) async throws {
+    public func sessionLogout(session: Session, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_SessionLogoutRequest()
         req.token = session.token
         req.refreshToken = session.refreshToken
         
-        _ = try await self.nakamaGrpcClient.sessionLogout(req, callOptions: sessionCallOption(session: session)).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.sessionLogout(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func writeStorageObjects(session: Session, objects: [WriteStorageObject]) async throws -> StorageObjectAcks {
+    public func writeStorageObjects(session: Session, objects: [WriteStorageObject], retryConfig: RetryConfiguration? = nil) async throws -> StorageObjectAcks {
         var writes = [Nakama_Api_WriteStorageObject]()
         
         for item in objects {
@@ -389,10 +316,13 @@ public final class GrpcClient : Client {
         
         var req = Nakama_Api_WriteStorageObjectsRequest()
         req.objects = writes
-        return try await self.nakamaGrpcClient.writeStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().toStorageObjectAcks()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.writeStorageObjects(req, callOptions: session.callOptions).response.get().toStorageObjectAcks()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func readStorageObjects(session: Session, ids: [StorageObjectId]) async throws -> [StorageObject] {
+    public func readStorageObjects(session: Session, ids: [StorageObjectId], retryConfig: RetryConfiguration? = nil) async throws -> [StorageObject] {
         var objectIds = [Nakama_Api_ReadStorageObjectId]()
         
         for id in ids {
@@ -405,10 +335,13 @@ public final class GrpcClient : Client {
         
         var req = Nakama_Api_ReadStorageObjectsRequest()
         req.objectIds = objectIds
-        return try await self.nakamaGrpcClient.readStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().objects.map { $0.toStorageObject()}
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.readStorageObjects(req, callOptions: session.callOptions).response.get().objects.map { $0.toStorageObject()}
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func deleteStorageObjects(session: Session, ids: [StorageObjectId]) async throws -> Void {
+    public func deleteStorageObjects(session: Session, ids: [StorageObjectId], retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var objectIds = [Nakama_Api_DeleteStorageObjectId]()
         
         for id in ids {
@@ -421,74 +354,76 @@ public final class GrpcClient : Client {
         
         var req = Nakama_Api_DeleteStorageObjectsRequest()
         req.objectIds = objectIds
-        _ = try await self.nakamaGrpcClient.deleteStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.deleteStorageObjects(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listStorageObjects(session: Session, collection: String) async throws -> StorageObjectList {
-        return try await self.listStorageObjects(session: session, collection: collection, cursor: nil)
-    }
-    
-    public func listStorageObjects(session: Session, collection: String, limit: Int = 1, cursor: String?) async throws -> StorageObjectList {
+    public func listStorageObjects(session: Session, collection: String, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> StorageObjectList {
         var req = Nakama_Api_ListStorageObjectsRequest()
         req.collection = collection
         req.userID = session.userId
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
-        return try await nakamaGrpcClient.listStorageObjects(req, callOptions: sessionCallOption(session: session)).response.get().toStorageObjectList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listStorageObjects(req, callOptions: session.callOptions).response.get().toStorageObjectList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func rpc(session: Session, id: String) async throws -> ApiRpc? {
-        return try await rpc(session: session, id: id, payload: nil)
-    }
-    
-    public func rpc(session: Session, id: String, payload: String?) async throws -> ApiRpc? {
+    public func rpc(session: Session, id: String, payload: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> ApiRpc? {
         var req = Nakama_Api_Rpc()
         req.id = id
         if let payload {
             req.payload = payload
         }
         
-        return try await nakamaGrpcClient.rpcFunc(req, callOptions: sessionCallOption(session: session)).response.get().toApiRpc()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.rpcFunc(req, callOptions: session.callOptions).response.get().toApiRpc()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func writeLeaderboardRecord(session: Session, leaderboardId: String, score: Int, subScore: Int, metadata: String, leaderboardOperator: LeaderboardOperator) async throws -> LeaderboardRecord {
+    public func writeLeaderboardRecord(session: Session, leaderboardId: String, score: Int, subScore: Int? = 0, metadata: String? = nil, leaderboardOperator: LeaderboardOperator? = .noOverride, retryConfig: RetryConfiguration? = nil) async throws -> LeaderboardRecord {
         var req = Nakama_Api_WriteLeaderboardRecordRequest()
         
         var record = Nakama_Api_WriteLeaderboardRecordRequest.LeaderboardRecordWrite()
-        record.operator = Nakama_Api_Operator(rawValue: leaderboardOperator.rawValue) ?? .noOverride
-        record.metadata = metadata
+        if let leaderboardOperator {
+            record.operator = Nakama_Api_Operator(rawValue: leaderboardOperator.rawValue) ?? .noOverride
+        }
+        if let metadata {
+            record.metadata = metadata
+        }
         record.score = Int64(score)
-        record.subscore = Int64(subScore)
-        
+        if let subScore {
+            record.subscore = Int64(subScore)
+        }
         req.leaderboardID = leaderboardId
         req.record = record
         
-        return try await nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.get().toLeaderboardRecord()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: session.callOptions).response.get().toLeaderboardRecord()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String]) async throws -> LeaderboardRecordList {
-        return try await self.listLeaderboardRecords(session: session, leaderboardId: leaderboardId, ownerIds: ownerIds, expiry: nil, limit: 1, cursor: nil)
-    }
-    
-    public func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String], expiry: Int? = nil, limit: Int = 1, cursor: String? = nil) async throws -> LeaderboardRecordList {
+    public func listLeaderboardRecords(session: Session, leaderboardId: String, ownerIds: [String]? = nil, expiry: Int? = nil, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> LeaderboardRecordList {
         var req = Nakama_Api_ListLeaderboardRecordsRequest()
         req.leaderboardID = leaderboardId
-        req.ownerIds = ownerIds
+        if let ownerIds {
+            req.ownerIds = ownerIds
+        }
         if let expiry {
             req.expiry = (expiry).pbInt64Value
         }
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
-        return try await nakamaGrpcClient.listLeaderboardRecords(req, callOptions: sessionCallOption(session: session)).response.get().toLeaderboardRecordList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listLeaderboardRecords(req, callOptions: session.callOptions).response.get().toLeaderboardRecordList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String) async throws -> LeaderboardRecordList {
-        return try await self.listLeaderboardRecordsAroundOwner(session: session, leaderboardId: leaderboardId, ownerId: ownerId, expiry: nil, limit: 1, cursor: nil)
-    }
-    
-    public func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String, expiry: Int?, limit: Int = 1, cursor: String? = nil) async throws -> LeaderboardRecordList {
+    public func listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: String, ownerId: String, expiry: Int? = nil, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> LeaderboardRecordList {
         var req = Nakama_Api_ListLeaderboardRecordsAroundOwnerRequest()
         req.leaderboardID = leaderboardId
         req.ownerID = ownerId
@@ -498,24 +433,30 @@ public final class GrpcClient : Client {
         req.limit = limit.pbUint32Value
         req.cursor = cursor ?? ""
         
-        return try await nakamaGrpcClient.listLeaderboardRecordsAroundOwner(req, callOptions: sessionCallOption(session: session)).response.get().toLeaderboardRecordList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listLeaderboardRecordsAroundOwner(req, callOptions: session.callOptions).response.get().toLeaderboardRecordList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func deleteLeaderboardRecord(session: Session, leaderboardId: String) async throws {
+    public func deleteLeaderboardRecord(session: Session, leaderboardId: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_DeleteLeaderboardRecordRequest()
         req.leaderboardID = leaderboardId
         
-        _ = try await nakamaGrpcClient.deleteLeaderboardRecord(req, callOptions: sessionCallOption(session: session)).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.deleteLeaderboardRecord(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func joinTournament(session: Session, tournamentId: String) async throws -> Void {
+    public func joinTournament(session: Session, tournamentId: String, retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Nakama_Api_JoinTournamentRequest()
         req.tournamentID = tournamentId
         
-        _ = try await nakamaGrpcClient.joinTournament(req, callOptions: sessionCallOption(session: session)).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.joinTournament(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listTournaments(session: Session, categoryStart: Int, categoryEnd: Int, startTime: Int?, endTime: Int? = nil, limit: Int = 1, cursor: String? = nil) async throws -> TournamentList {
+    public func listTournaments(session: Session, categoryStart: Int, categoryEnd: Int, startTime: Int? = nil, endTime: Int? = nil, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> TournamentList {
         var req = Nakama_Api_ListTournamentsRequest()
         req.categoryStart = categoryStart.pbUint32Value
         req.categoryEnd = categoryEnd.pbUint32Value
@@ -528,37 +469,50 @@ public final class GrpcClient : Client {
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
-        return try await nakamaGrpcClient.listTournaments(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listTournaments(req, callOptions: session.callOptions).response.get().toTournamentList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func writeTournamentRecord(session: Session, tournamentId: String, score: Int, subScore: Int, metadata: String, apiOperator: TournamentOperator) async throws -> LeaderboardRecord {
+    public func writeTournamentRecord(session: Session, tournamentId: String, score: Int, subScore: Int? = 0, metadata: String? = nil, apiOperator: TournamentOperator? = .noOverride, retryConfig: RetryConfiguration? = nil) async throws -> LeaderboardRecord {
         var req = Nakama_Api_WriteTournamentRecordRequest()
         req.tournamentID = tournamentId
         
         var record = Nakama_Api_WriteTournamentRecordRequest.TournamentRecordWrite()
-        record.operator = Nakama_Api_Operator(rawValue: apiOperator.rawValue) ?? .noOverride
+        if let apiOperator {
+            record.operator = Nakama_Api_Operator(rawValue: apiOperator.rawValue) ?? .noOverride
+        }
         record.score = Int64(score)
-        record.subscore = Int64(subScore)
-        record.metadata = metadata
+        if let subScore {
+            record.subscore = Int64(subScore)
+        }
+        if let metadata {
+            record.metadata = metadata
+        }
         
-        let result = try await nakamaGrpcClient.writeTournamentRecord(req, callOptions: sessionCallOption(session: session)).response.get()
-        return result.toLeaderboardRecord()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.writeTournamentRecord(req, callOptions: session.callOptions).response.get().toLeaderboardRecord()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listTournamentRecords(session: Session, tournamentId: String, ownerIds: [String], expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList {
+    public func listTournamentRecords(session: Session, tournamentId: String, ownerIds: [String]? = nil, expiry: Int? = nil, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> TournamentRecordList {
         var req =  Nakama_Api_ListTournamentRecordsRequest()
         req.tournamentID = tournamentId
-        req.ownerIds = ownerIds
+        if let ownerIds {
+            req.ownerIds = ownerIds
+        }
         if let expiry {
             req.expiry = expiry.pbInt64Value
         }
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
-        return try await nakamaGrpcClient.listTournamentRecords(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentRecordList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listTournamentRecords(req, callOptions: session.callOptions).response.get().toTournamentRecordList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listTournamentRecordsAroundOwner(session: Session, tournamentId: String, ownerId: String, expiry: Int?, limit: Int, cursor: String?) async throws -> TournamentRecordList {
+    public func listTournamentRecordsAroundOwner(session: Session, tournamentId: String, ownerId: String, expiry: Int? = nil, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> TournamentRecordList {
         var req = Nakama_Api_ListTournamentRecordsAroundOwnerRequest()
         req.tournamentID = tournamentId
         req.ownerID = ownerId
@@ -568,47 +522,59 @@ public final class GrpcClient : Client {
         req.limit = limit.pbUint32Value
         req.cursor = cursor ?? ""
         
-        return try await nakamaGrpcClient.listTournamentRecordsAroundOwner(req, callOptions: sessionCallOption(session: session)).response.get().toTournamentRecordList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listTournamentRecordsAroundOwner(req, callOptions: session.callOptions).response.get().toTournamentRecordList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func createGroup(session: Session, name: String, description: String? = nil, avatarUrl: String? = nil, langTag: String? = nil, open: Bool? = nil, maxCount: Int? = 100) async throws -> Group {
+    public func createGroup(session: Session, name: String, description: String? = nil, avatarUrl: String? = nil, langTag: String? = nil, open: Bool? = true, maxCount: Int? = 100, retryConfig: RetryConfiguration? = nil) async throws -> Group {
         var req = Nakama_Api_CreateGroupRequest()
         req.name = name
-        req.description_p = description ?? ""
-        req.avatarURL = avatarUrl ?? ""
-        req.langTag = langTag ?? ""
-        if let open {
-            req.open = open
+        if let description {
+            req.description_p = description
         }
-        if let maxCount {
-            req.maxCount = Int32(maxCount)
+        if let avatarUrl {
+            req.avatarURL = avatarUrl
         }
+        if let langTag {
+            req.langTag = langTag
+        }
+        req.open = open ?? true
+        req.maxCount = Int32(maxCount ?? 100)
         
-        return try await nakamaGrpcClient.createGroup(req, callOptions: session.callOptions).response.get().toGroup()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.createGroup(req, callOptions: session.callOptions).response.get().toGroup()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func joinGroup(session: Session, groupId: String) async throws {
+    public func joinGroup(session: Session, groupId: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_JoinGroupRequest()
         req.groupID = groupId
         
-        _ = try await nakamaGrpcClient.joinGroup(req, callOptions: session.callOptions).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.joinGroup(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func leaveGroup(session: Session, groupId: String) async throws {
+    public func leaveGroup(session: Session, groupId: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_LeaveGroupRequest()
         req.groupID = groupId
         
-        _ = try await nakamaGrpcClient.leaveGroup(req, callOptions: session.callOptions).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.leaveGroup(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func deleteGroup(session: Session, groupId: String) async throws {
+    public func deleteGroup(session: Session, groupId: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_DeleteGroupRequest()
         req.groupID = groupId
         
-        _ = try await nakamaGrpcClient.deleteGroup(req, callOptions: session.callOptions).response.get()
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.deleteGroup(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listGroups(session: Session, name: String? = nil, limit: Int = 1, cursor: String? = nil, langTag: String? = nil, members: Int? = nil, open: Bool? = nil) async throws -> GroupList {
+    public func listGroups(session: Session, name: String? = nil, limit: Int = 1, cursor: String? = nil, langTag: String? = nil, members: Int? = nil, open: Bool? = nil, retryConfig: RetryConfiguration? = nil) async throws -> GroupList {
         var req = Nakama_Api_ListGroupsRequest()
         if let name {
             req.name = name
@@ -627,10 +593,12 @@ public final class GrpcClient : Client {
             req.open = open.pbBoolValue
         }
         
-        return try await nakamaGrpcClient.listGroups(req, callOptions: session.callOptions).response.get().toGroupList()
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listGroups(req, callOptions: session.callOptions).response.get().toGroupList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
-
-    public func updateGroup(session: Session, groupId: String, name: String?, open: Bool, description: String? = nil, avatarUrl: String? = nil, langTag: String? = nil) async throws {
+    
+    public func updateGroup(session: Session, groupId: String, name: String? = nil, open: Bool, description: String? = nil, avatarUrl: String? = nil, langTag: String? = nil, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_UpdateGroupRequest()
         req.groupID = groupId
         req.open = open.pbBoolValue
@@ -646,185 +614,248 @@ public final class GrpcClient : Client {
         if let langTag {
             req.langTag = langTag.pbStringValue
         }
-        _ = try await nakamaGrpcClient.updateGroup(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.updateGroup(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func addGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+    public func addGroupUsers(session: Session, groupId: String, ids: [String], retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AddGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
-        _ = try await nakamaGrpcClient.addGroupUsers(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.addGroupUsers(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func kickGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+    public func kickGroupUsers(session: Session, groupId: String, ids: [String], retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_KickGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
-        _ = try await nakamaGrpcClient.kickGroupUsers(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.kickGroupUsers(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listGroupUsers(session: Session, groupId: String, state: Int? = nil, limit: Int? = 1, cursor: String? = nil) async throws -> GroupUserList {
+    public func listGroupUsers(session: Session, groupId: String, state: Int? = nil, limit: Int, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> GroupUserList {
         var req = Nakama_Api_ListGroupUsersRequest()
         req.groupID = groupId
         if let state {
             req.state = state.pbInt32Value
         }
-        if let limit {
-            req.limit = limit.pbInt32Value
-        }
+        req.limit = limit.pbInt32Value
         if let cursor {
             req.cursor = cursor
         }
-        return try await nakamaGrpcClient.listGroupUsers(req, callOptions: session.callOptions).response.get().toGroupUserList()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listGroupUsers(req, callOptions: session.callOptions).response.get().toGroupUserList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listUserGroups(session: Session, userId: String? = nil, state: Int? = nil, limit: Int? = 1, cursor: String? = nil) async throws -> ListUserGroup {
+    public func listUserGroups(session: Session, userId: String? = nil, state: Int? = nil, limit: Int = 1, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> ListUserGroup {
         var req = Nakama_Api_ListUserGroupsRequest()
         req.userID = userId ?? session.userId
         if let state {
             req.state = state.pbInt32Value
         }
-        if let limit {
-            req.limit = limit.pbInt32Value
-        }
+        req.limit = limit.pbInt32Value
         if let cursor {
             req.cursor = cursor
         }
-        return try await nakamaGrpcClient.listUserGroups(req, callOptions: session.callOptions).response.get().toUserGroupList()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listUserGroups(req, callOptions: session.callOptions).response.get().toUserGroupList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func promoteGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+    public func promoteGroupUsers(session: Session, groupId: String, ids: [String], retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_PromoteGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
-        _ = try await nakamaGrpcClient.promoteGroupUsers(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.promoteGroupUsers(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func demoteGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+    public func demoteGroupUsers(session: Session, groupId: String, ids: [String], retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_DemoteGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
         _ = try await nakamaGrpcClient.demoteGroupUsers(req, callOptions: session.callOptions).response.get()
     }
     
-    public func banGroupUsers(session: Session, groupId: String, ids: [String]) async throws {
+    public func banGroupUsers(session: Session, groupId: String, ids: [String], retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_BanGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
-        _ = try await nakamaGrpcClient.banGroupUsers(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.banGroupUsers(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func validatePurchaseApple(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+    public func validatePurchaseApple(session: Session, receipt: String, persist: Bool? = true, retryConfig: RetryConfiguration? = nil) async throws -> ValidatePurchaseResponse {
         var req = Nakama_Api_ValidatePurchaseAppleRequest()
         req.receipt = receipt
-        req.persist = persist!.pbBoolValue
-        return try await nakamaGrpcClient.validatePurchaseApple(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+        req.persist = (persist ?? true).pbBoolValue
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.validatePurchaseApple(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func validatePurchaseGoogle(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+    public func validatePurchaseGoogle(session: Session, receipt: String, persist: Bool? = true, retryConfig: RetryConfiguration? = nil) async throws -> ValidatePurchaseResponse {
         var req = Nakama_Api_ValidatePurchaseGoogleRequest()
         req.purchase = receipt
-        req.persist = persist!.pbBoolValue
+        req.persist = (persist ?? true).pbBoolValue
+        
         return try await nakamaGrpcClient.validatePurchaseGoogle(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
     }
     
-    public func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidatePurchaseResponse {
+    public func validatePurchaseHuawei(session: Session, receipt: String, persist: Bool? = true, retryConfig: RetryConfiguration? = nil) async throws -> ValidatePurchaseResponse {
         var req = Nakama_Api_ValidatePurchaseHuaweiRequest()
         req.purchase = receipt
-        req.persist = persist!.pbBoolValue
-        return try await nakamaGrpcClient.validatePurchaseHuawei(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+        req.persist = (persist ?? true).pbBoolValue
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.validatePurchaseHuawei(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func getSubscription(session: Session, productId: String) async throws -> ValidatedSubscription {
+    public func getSubscription(session: Session, productId: String, retryConfig: RetryConfiguration? = nil) async throws -> ValidatedSubscription {
         var req = Nakama_Api_GetSubscriptionRequest()
         req.productID = productId
-        return try await nakamaGrpcClient.getSubscription(req, callOptions: session.callOptions).response.get().toValidatedSubscription()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.getSubscription(req, callOptions: session.callOptions).response.get().toValidatedSubscription()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func validateSubscriptionApple(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidateSubscriptionResponse {
+    public func validateSubscriptionApple(session: Session, receipt: String, persist: Bool? = true, retryConfig: RetryConfiguration? = nil) async throws -> ValidateSubscriptionResponse {
         var req = Nakama_Api_ValidateSubscriptionAppleRequest()
         req.receipt = receipt
-        req.persist = persist!.pbBoolValue
-        return try await nakamaGrpcClient.validateSubscriptionApple(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
+        req.persist = (persist ?? true).pbBoolValue
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.validateSubscriptionApple(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func validateSubscriptionGoogle(session: Session, receipt: String, persist: Bool? = true) async throws -> ValidateSubscriptionResponse {
+    public func validateSubscriptionGoogle(session: Session, receipt: String, persist: Bool? = true, retryConfig: RetryConfiguration? = nil) async throws -> ValidateSubscriptionResponse {
         var req = Nakama_Api_ValidateSubscriptionGoogleRequest()
         req.receipt = receipt
-        req.persist = persist!.pbBoolValue
-        return try await nakamaGrpcClient.validateSubscriptionGoogle(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
+        req.persist = (persist ?? true).pbBoolValue
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.validateSubscriptionGoogle(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listSubscriptions(session: Session, limit: Int, cursor: String? = nil) async throws -> SubscriptionList {
+    public func listSubscriptions(session: Session, limit: Int, cursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> SubscriptionList {
         var req = Nakama_Api_ListSubscriptionsRequest()
         req.limit = limit.pbInt32Value
         if let cursor {
             req.cursor = cursor
         }
-        return try await nakamaGrpcClient.listSubscriptions(req, callOptions: session.callOptions).response.get().toSubscriptionList()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listSubscriptions(req, callOptions: session.callOptions).response.get().toSubscriptionList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func listNotifications(session: Session, limit: Int? = 1, cacheableCursor: String? = nil) async throws -> NotificationList {
+    public func listNotifications(session: Session, limit: Int = 1, cacheableCursor: String? = nil, retryConfig: RetryConfiguration? = nil) async throws -> NotificationList {
         var req = Nakama_Api_ListNotificationsRequest()
         if let cacheableCursor {
             req.cacheableCursor = cacheableCursor
         }
-        req.limit = limit!.pbInt32Value
-        return try await nakamaGrpcClient.listNotifications(req, callOptions: session.callOptions).response.get().toNotificationList()
+        req.limit = limit.pbInt32Value
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            return try await self.nakamaGrpcClient.listNotifications(req, callOptions: session.callOptions).response.get().toNotificationList()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func deleteNotifications(session: Session, ids: [String]) async throws {
+    public func deleteNotifications(session: Session, ids: [String], retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_DeleteNotificationsRequest()
         req.ids = ids
-        _ = try await nakamaGrpcClient.deleteNotifications(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.deleteNotifications(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkApple(session: Session, token: String) async throws {
+    public func linkApple(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountApple()
         req.token = token
-        _ = try await nakamaGrpcClient.linkApple(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkApple(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkEmail(session: Session, email: String, password: String) async throws {
+    public func linkEmail(session: Session, email: String, password: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountEmail()
         req.email = email
         req.password = password
-        _ = try await nakamaGrpcClient.linkEmail(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkEmail(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkSteam(session: Session, token: String, import: Bool? = true) async throws {
+    public func linkSteam(session: Session, token: String, import: Bool, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_LinkSteamRequest()
         req.account.token = token
-        req.sync = `import`!.pbBoolValue
-        _ = try await nakamaGrpcClient.linkSteam(req, callOptions: session.callOptions).response.get()
+        req.sync = `import`.pbBoolValue
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkSteam(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkDevice(session: Session, id: String) async throws {
+    public func linkDevice(session: Session, id: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountDevice()
         req.id = id
-        _ = try await nakamaGrpcClient.linkDevice(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkDevice(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkCustom(session: Session, id: String) async throws {
+    public func linkCustom(session: Session, id: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountCustom()
         req.id = id
-        _ = try await nakamaGrpcClient.linkCustom(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkCustom(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkGoogle(session: Session, token: String) async throws {
+    public func linkGoogle(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountGoogle()
         req.token = token
-        _ = try await nakamaGrpcClient.linkGoogle(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkGoogle(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkFacebook(session: Session, token: String, import: Bool? = true) async throws {
+    public func linkFacebook(session: Session, token: String, import: Bool? = true, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_LinkFacebookRequest()
         req.account.token = token
-        req.sync = `import`!.pbBoolValue
-        _ = try await nakamaGrpcClient.linkFacebook(req, callOptions: session.callOptions).response.get()
+        req.sync = (`import` ?? true).pbBoolValue
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkFacebook(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func linkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws {
+    public func linkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountGameCenter()
         req.bundleID = bundleId
         req.playerID = playerId
@@ -832,53 +863,77 @@ public final class GrpcClient : Client {
         req.salt = salt
         req.signature = signature
         req.timestampSeconds = Int64(timestamp)
-        _ = try await nakamaGrpcClient.linkGameCenter(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.linkGameCenter(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkApple(session: Session, token: String) async throws {
+    public func unlinkApple(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountApple()
         req.token = token
-        _ = try await nakamaGrpcClient.unlinkApple(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkApple(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkEmail(session: Session, email: String, password: String) async throws {
+    public func unlinkEmail(session: Session, email: String, password: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountEmail()
         req.email = email
         req.password = password
-        _ = try await nakamaGrpcClient.unlinkEmail(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkEmail(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkSteam(session: Session, token: String) async throws {
+    public func unlinkSteam(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountSteam()
         req.token = token
-        _ = try await nakamaGrpcClient.unlinkSteam(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkSteam(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkDevice(session: Session, id: String) async throws {
+    public func unlinkDevice(session: Session, id: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountDevice()
         req.id = id
-        _ = try await nakamaGrpcClient.unlinkDevice(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkDevice(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkCustom(session: Session, id: String) async throws {
+    public func unlinkCustom(session: Session, id: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountCustom()
         req.id = id
-        _ = try await nakamaGrpcClient.unlinkCustom(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkCustom(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkGoogle(session: Session, token: String) async throws {
+    public func unlinkGoogle(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountGoogle()
         req.token = token
-        _ = try await nakamaGrpcClient.unlinkGoogle(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkGoogle(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkFacebook(session: Session, token: String) async throws {
+    public func unlinkFacebook(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountFacebook()
         req.token = token
-        _ = try await nakamaGrpcClient.unlinkFacebook(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkFacebook(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func unlinkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int) async throws {
+    public func unlinkGameCenter(session: Session, bundleId: String, playerId: String, publicKeyUrl: String, salt: String, signature: String, timestamp: Int, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountGameCenter()
         req.bundleID = bundleId
         req.playerID = playerId
@@ -886,24 +941,33 @@ public final class GrpcClient : Client {
         req.salt = salt
         req.signature = signature
         req.timestampSeconds = Int64(timestamp)
-        _ = try await nakamaGrpcClient.unlinkGameCenter(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.unlinkGameCenter(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func importFacebookFriends(session: Session, token: String, reset: Bool? = nil) async throws {
+    public func importFacebookFriends(session: Session, token: String, reset: Bool? = nil, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_ImportFacebookFriendsRequest()
         req.account.token = token
         if let reset {
             req.reset = reset.pbBoolValue
         }
-        _ = try await nakamaGrpcClient.importFacebookFriends(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.importFacebookFriends(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func importSteamFriends(session: Session, token: String, reset: Bool? = nil) async throws {
+    public func importSteamFriends(session: Session, token: String, reset: Bool? = nil, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_ImportSteamFriendsRequest()
         req.account.token = token
         if let reset {
             req.reset = reset.pbBoolValue
         }
-        _ = try await nakamaGrpcClient.importSteamFriends(req, callOptions: session.callOptions).response.get()
+        
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.importSteamFriends(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
 }

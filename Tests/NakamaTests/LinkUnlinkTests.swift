@@ -64,7 +64,7 @@ class LinkUnlinkTests: XCTestCase {
     func test_linkUnlinkEmail() async throws {
         // Link
         let session = try await client.authenticateCustom(id: UUID().uuidString)
-        let email = "example@email.com"
+        let email = "\(UUID().uuidString)@email.com"
         let password = "examplepassword"
         try await client.linkEmail(session: session, email: email, password: password)
         let linked = try await client.authenticateEmail(email: email, password: password)
@@ -163,7 +163,7 @@ class LinkUnlinkTests: XCTestCase {
         let session = try await client.authenticateCustom(id: UUID().uuidString)
         // Link
         do {
-            try await client.linkSteam(session: session, token: "token")
+            try await client.linkSteam(session: session, token: "token", import: false)
         } catch {
             XCTAssertEqual((error as! GRPCStatus).code, .failedPrecondition)
         }
