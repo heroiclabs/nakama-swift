@@ -21,7 +21,6 @@ import Logging
 import SwiftProtobuf
 
 public final class GrpcClient : Client {
-    
     public var eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     public var retriesLimit = 5
     public var globalRetryConfiguration: RetryConfiguration
@@ -58,16 +57,13 @@ public final class GrpcClient : Client {
         var callOptions = CallOptions(cacheable: false)
         callOptions.customMetadata.add(name: "authorization", value: basicAuth)
         
-        var configuration = ClientConnection.Configuration(
-            target: .hostAndPort(host, port),
-            eventLoopGroup: self.eventLoopGroup,
-            connectionBackoff: ConnectionBackoff(minimumConnectionTimeout: deadlineAfter, retries: .upTo(retriesLimit)),
-            connectionKeepalive: ClientConnectionKeepalive(timeout: keepAliveTimeout, permitWithoutCalls: true),
-            callStartBehavior: .fastFailure
-        )
+        var configuration = ClientConnection.Configuration.default(target: .hostAndPort(host, port), eventLoopGroup: self.eventLoopGroup)
+        configuration.connectionBackoff = ConnectionBackoff(minimumConnectionTimeout: deadlineAfter, retries: .upTo(retriesLimit))
+        configuration.connectionKeepalive = ClientConnectionKeepalive(timeout: keepAliveTimeout, permitWithoutCalls: true)
+        configuration.callStartBehavior = .fastFailure
         
         if ssl {
-            configuration.tls = .init()
+            configuration.tlsConfiguration = .init(GRPCTLSConfiguration.makeClientDefault(compatibleWith: eventLoopGroup))
         }
         
         if trace {
@@ -89,7 +85,7 @@ public final class GrpcClient : Client {
         retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
         globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
         
-        self.nakamaGrpcClient = Nakama_Api_NakamaClient(channel: grpcConnection, defaultCallOptions: callOptions)
+        self.nakamaGrpcClient = Nakama_Api_NakamaNIOClient(channel: grpcConnection, defaultCallOptions: callOptions)
     }
     
     public func disconnect() async throws -> Void {
