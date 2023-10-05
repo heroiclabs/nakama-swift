@@ -21,7 +21,7 @@ import Logging
 
 final class SessionTests: XCTestCase {
     let logger = Logger(label: "nakama-test")
-    let client: Client = GrpcClient(serverKey: "defaultkey", trace: true)
+    let client = GrpcClient(serverKey: "defaultkey", trace: true)
     let vars = ["platform":"ios"]
     
     var session: Session!

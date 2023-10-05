@@ -21,7 +21,7 @@ import XCTest
 final class LeaderboardTests: XCTestCase {
     static var leaderboardId = ""
     
-    let client: Client = GrpcClient(serverKey: "defaultkey", trace: true)
+    let client = GrpcClient(serverKey: "defaultkey", trace: true)
     
     var session: Session!
     

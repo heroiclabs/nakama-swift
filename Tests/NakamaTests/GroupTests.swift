@@ -98,7 +98,7 @@ final class GroupTests: XCTestCase {
     
     func test05_listGroups() async throws {
         _ = try await client.createGroup(session: session, name: UUID().uuidString)
-        let groups = try await client.listGroups(session: session, name: nil, cursor: nil, langTag: nil, members: nil, open: nil)
+        let groups = try await client.listGroups(session: session, open: true)
         XCTAssertNotNil(groups)
         XCTAssertEqual(groups.groups.count, 1)
         XCTAssertNotNil(groups.groups[0].createTime)
@@ -109,7 +109,7 @@ final class GroupTests: XCTestCase {
         for _ in 1...10 {
             _ = try await client.createGroup(session: session, name: UUID().uuidString)
         }
-        let groups = try await client.listGroups(session: session, limit: 9)
+        let groups = try await client.listGroups(session: session, limit: 9, open: true)
         XCTAssertNotNil(groups)
         XCTAssertEqual(groups.groups.count, 9)
         XCTAssertNotEqual(groups.cursor, "")
@@ -177,7 +177,7 @@ final class GroupTests: XCTestCase {
         
         // Kick
         try await client.kickGroupUsers(session: session, groupId: group.id, ids: [newUser.userId])
-        let groupUsersUpdatedList = try await client.listGroupUsers(session: session, groupId: group.id)
+        let groupUsersUpdatedList = try await client.listGroupUsers(session: session, groupId: group.id, limit: 1)
         XCTAssertEqual(groupUsersUpdatedList.groupUsers.count, 1)
     }
     

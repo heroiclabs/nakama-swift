@@ -19,7 +19,7 @@ import XCTest
 @testable import Nakama
 
 final class StorageTests: XCTestCase {
-    let client: Client = GrpcClient(serverKey: "defaultkey", trace: true)
+    let client = GrpcClient(serverKey: "defaultkey", trace: true)
     
     var session: Session!
     
