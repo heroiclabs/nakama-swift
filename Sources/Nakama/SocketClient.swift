@@ -23,10 +23,10 @@ public struct NakamaRealtimeError: LocalizedError {
     
     /// The error code which should be one of "Error.Code" enums.
     public let code: Nakama_Realtime_Error.Code?
-
+    
     /// A message in English to help developers debug the response.
     public let message: String?
-
+    
     /// Additional error details which may be different for each response.
     public let context: Dictionary<String,String>?
     
@@ -129,216 +129,131 @@ public protocol SocketClient {
     /**
      Connect to the server.
      - Parameter session: The session of the user.
-    */
-    func connect(session: Session)
-    
-    /**
-     Connect to the server.
-     - Parameter session: The session of the user.
-     - Parameter createStatus: True if the socket should show the user as online to others.
-    */
+     - Parameter createStatus: If the socket should show the user as online to others.
+     */
     func connect(session: Session, createStatus: Bool?)
-
-    /**
-     Close the connection with the server.
-
-     - Returns: A sealed EventLoopFuture.
-    */
+    
+    
+    /// Close the connection with the server.
     func disconnect()
-
-    /**
-     Join a chat channel on the server.
-
-     - Parameter target: The target channel to join.
-     - Parameter type: The type of channel to join.
-     - Returns: A Nakama realtime channel.
-    */
-    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum) async throws -> NakamaChannel
     
     /**
      Join a chat channel on the server.
-
      - Parameter target: The target channel to join.
      - Parameter type: The type of channel to join.
      - Parameter persistence: True if chat messages should be stored.
      - Parameter hidden: True if the user should be hidden on the channel.
      - Returns: A Nakama realtime channel.
-    */
-    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool, hidden: Bool) async throws -> NakamaChannel
-
+     */
+    func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool?, hidden: Bool?) async throws -> NakamaChannel
+    
     /**
      Leave a chat channel on the server.
-
      - Parameter channelId: The channel to leave.
-     - Returns: A EventLoopFuture.
-    */
+     */
     func leaveChat(channelId: String) async throws -> Void
-
+    
     /**
      Remove a chat message from a channel on the server.
-
      - Parameter channelId: The chat channel with the message.
      - Parameter messageId: The ID of a chat message to update.
-     - Returns: A EventLoopFuture.
-    */
-    func removeChatMessage(channelId: String, messageId: String) -> EventLoopFuture<Nakama_Realtime_ChannelMessageAck>
-
+     */
+    func removeChatMessage(channelId: String, messageId: String) async throws -> Nakama_Realtime_ChannelMessageAck
+    
     /**
      Send a chat message to a channel on the server.
-
      - Parameter channelId: The channel to send on.
      - Parameter content: The content of the chat message.
-     - Returns: A EventLoopFuture which resolves to a Channel Ack response.
-    */
-    func writeChatMessage(channelId: String, content: String) -> EventLoopFuture<Nakama_Realtime_ChannelMessageAck>
-
+     */
+    func writeChatMessage(channelId: String, content: String) async throws -> Nakama_Realtime_ChannelMessageAck
+    
     /**
      Update a chat message to a channel on the server.
-
      - Parameter channelId: The ID of the chat channel with the message.
      - Parameter messageId: The ID of the message to update.
      - Parameter content: The content update for the message.
-     - Returns: A EventLoopFuture.
-    */
-    func updateChatMessage(channelId: String, messageId: String, content: String) -> EventLoopFuture<Nakama_Realtime_ChannelMessageAck>
-
-    /**
-     Create a multiplayer match on the server.
-
-     - Returns: A EventLoopFuture.
-    */
-    func createMatch() -> EventLoopFuture<Nakama_Realtime_Match>
-
-    /**
-     Join a multiplayer match by ID.
-
-     - Parameter matchId: A match ID.
-     - Returns: A EventLoopFuture which resolves to the match joined.
-    */
-    func joinMatch(matchId: String) -> EventLoopFuture<Nakama_Realtime_Match>
+     */
+    func updateChatMessage(channelId: String, messageId: String, content: String) async throws -> Nakama_Realtime_ChannelMessageAck
+    
+    /// Create a multiplayer match on the server.
+    func createMatch() async throws -> Nakama_Realtime_Match
     
     /**
      Join a multiplayer match by ID.
-
      - Parameter matchId: A match ID.
      - Parameter metadata: An optional set of key-value metadata pairs to be passed to the match handler, if any.
-     - Returns: A EventLoopFuture which resolves to the match joined.
-    */
-    func joinMatch(matchId: String, metadata: [String:String]?) -> EventLoopFuture<Nakama_Realtime_Match>
-
+     - Returns: The match joined.
+     */
+    func joinMatch(matchId: String, metadata: [String:String]?) async throws -> Nakama_Realtime_Match
+    
     /**
      Join a multiplayer match with a matchmaker.
-
      - Parameter token: A matchmaker ticket result object.
-     - Returns: A EventLoopFuture which resolves to the match joined.
-    */
-    func joinMatchToken(token: String) -> EventLoopFuture<Nakama_Realtime_Match>
-
+     */
+    func joinMatchToken(token: String) async throws -> Nakama_Realtime_Match
+    
     /**
      Leave a match on the server.
-
      - Parameter matchId: The match to leave.
-     - Returns: A EventLoopFuture.
-    */
-    func leaveMatch(matchId: String) -> EventLoopFuture<Void>
-
-    /**
-     Join the matchmaker pool and search for opponents on the server.
-
-     - Parameter minCount: The minimum number of players to compete against.
-     - Returns: A EventLoopFuture which resolves to a matchmaker ticket object.
-    */
-    func addMatchmaker(minCount: Int32) -> EventLoopFuture<Nakama_Realtime_MatchmakerTicket>
+     */
+    func leaveMatch(matchId: String) async throws -> Void
     
     /**
      Join the matchmaker pool and search for opponents on the server.
-
-     - Parameter minCount: The minimum number of players to compete against.
-     - Parameter maxCount: The maximum number of players to compete against.
-     - Returns: A EventLoopFuture which resolves to a matchmaker ticket object.
-    */
-    func addMatchmaker(minCount: Int32, maxCount: Int32?) -> EventLoopFuture<Nakama_Realtime_MatchmakerTicket>
-    
-    /**
-     Join the matchmaker pool and search for opponents on the server.
-
-     - Parameter minCount: The minimum number of players to compete against.
-     - Parameter maxCount: The maximum number of players to compete against.
-     - Parameter query: A matchmaker query to search for opponents.
-     - Returns: A EventLoopFuture which resolves to a matchmaker ticket object.
-    */
-    func addMatchmaker(minCount: Int32, maxCount: Int32?, query: String?) -> EventLoopFuture<Nakama_Realtime_MatchmakerTicket>
-    
-    /**
-     Join the matchmaker pool and search for opponents on the server.
-
      - Parameter minCount: The minimum number of players to compete against.
      - Parameter maxCount: The maximum number of players to compete against.
      - Parameter query: A matchmaker query to search for opponents.
      - Parameter stringProperties: A set of k/v properties to provide in searches.
      - Parameter numericProperties: A set of k/v numeric properties to provide in searches.
-     - Returns: A EventLoopFuture which resolves to a matchmaker ticket object.
-    */
-    func addMatchmaker(minCount: Int32, maxCount: Int32?, query: String?, stringProperties: [String:String]?, numericProperties: [String:Double]?) -> EventLoopFuture<Nakama_Realtime_MatchmakerTicket>
-
+     */
+    func addMatchmaker(minCount: Int32, maxCount: Int32?, query: String?, stringProperties: [String:String]?, numericProperties: [String:Double]?) async throws -> Nakama_Realtime_MatchmakerTicket
+    
     /**
      Leave the matchmaker pool by ticket.
-
-     - Parameter ticket: The ticket returned by the matchmaker on join. See <c>IMatchmakerTicket.Ticket</c>.
-     - Returns: A EventLoopFuture.
-    */
-    func removeMatchmaker(ticket: String) -> EventLoopFuture<Void>
-
+     - Parameter ticket: The ticket returned by the matchmaker on join.
+     */
+    func removeMatchmaker(ticket: String) async throws -> Void
+    
     /**
      Send a state change to a match on the server.
-
+     
      When no presences are supplied the new match state will be sent to all presences.
-
      - Parameter matchId: The Id of the match.
      - Parameter opCode: An operation code for the match state.
      - Parameter data: The new state to send to the match.
      - Parameter presences: The presences in the match to send the state.
-    */
+     */
     func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]?)
-
+    
     /**
      Send an RPC message to the server.
      - Parameter id The ID of the function to execute.
      - Parameter payload The content: String to send to the server.
-     - Returns: A EventLoopFuture which resolves to an RPC response.
-    */
-    func rpc(id: String, payload: String?) -> EventLoopFuture<Nakama_Api_Rpc>
-
-    /**
-     Follow one or more users for status updates.
-
-     - Parameter userIds: The user Ids to follow.
-     - Returns: A EventLoopFuture.
-    */
-    func followUsers(userIds: String...) -> EventLoopFuture<Nakama_Realtime_Status>
+     */
+    func rpc(id: String, payload: String?) async throws -> Nakama_Api_Rpc
     
     /**
      Follow one or more users for status updates.
-
+     - Parameter userIds: The user Ids to follow.
+     */
+    func followUsers(userIds: String...) async throws -> Nakama_Realtime_Status
+    
+    /**
+     Follow one or more users for status updates.
      - Parameter userIds: The user Ids to follow.
      - Parameter usernames: Usernames to follow.
-     - Returns: A EventLoopFuture.
-    */
-    func followUsers(userIds: [String]?, usernames: [String]?) -> EventLoopFuture<Nakama_Realtime_Status>
-
+     */
+    func followUsers(userIds: [String]?, usernames: [String]?) async throws -> Nakama_Realtime_Status
+    
     /**
      Unfollow status updates for one or more users.
-
      - Parameter userIds: The ids of users to unfollow.
-     - Returns: A EventLoopFuture.
-    */
-    func unfollowUsers(userIds: String...) -> EventLoopFuture<Void>
-
+     */
+    func unfollowUsers(userIds: String...) async throws -> Void
+    
     /**
      Update the user's status online.
-
      - Parameter status: The new status of the user.
-     - Returns: A EventLoopFuture.
-    */
-    func updateStatus(status: String?) -> EventLoopFuture<Void>
+     */
+    func updateStatus(status: String) async throws -> Void
 }

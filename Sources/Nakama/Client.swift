@@ -34,15 +34,6 @@ public protocol Client {
      - Parameter host: The host URL of the server.
      - Parameter port: The port number of the server. Default should be 7350.
      - Parameter ssl: Whether to use SSL to connect to the server.
-     - Returns: A new SocketClient instance.
-     */
-    func createSocket(host: String?, port: Int?, ssl: Bool?) -> SocketClient
-    
-    /**
-     Create a new socket from the client.
-     - Parameter host: The host URL of the server.
-     - Parameter port: The port number of the server. Default should be 7350.
-     - Parameter ssl: Whether to use SSL to connect to the server.
      - Parameter socketAdapter: The socketAdapter to use to create socket. If set to nil, WebSocketAdapter is used.
      - Returns: A new SocketClient instance.
      */
