@@ -21,30 +21,38 @@ import Logging
 import SwiftProtobuf
 import Atomics
 
-    public var onConnect: (() -> ())?
 public final class WebSocketClient : SocketClient {
+    public var isConnected: Bool {
+        return socketAdapter.isConnected
+    }
     
-    public var onDisconnect: (() -> ())?
+    public var isConnecting: Bool {
+        return socketAdapter.isConnecting
+    }
     
-    public var onError: ((Error) -> ())?
+    public var onConnect: ConnectHandler?
     
-    public var onChannelMessage: ((Nakama_Api_ChannelMessage) -> ())?
+    public var onDisconnect: DisconnectHandler?
     
-    public var onChannelPresence: ((Nakama_Realtime_ChannelPresenceEvent) -> ())?
+    public var onError: SocketErrorHandler?
     
-    public var onMatchmakerMatched: ((Nakama_Realtime_MatchmakerMatched) -> ())?
+    public var onChannelMessage: ChannelMessageHandler?
     
-    public var onMatchData: ((Nakama_Realtime_MatchData) -> ())?
+    public var onChannelPresence: ChannelPresenceHandler?
     
-    public var onMatchPresence: ((Nakama_Realtime_MatchPresenceEvent) -> ())?
+    public var onMatchmakerMatched: MatchmakerMatchedHandler?
     
-    public var onNotifications: ((Nakama_Realtime_Notifications) -> ())?
+    public var onMatchData: MatchDataHandler?
     
-    public var onStatusPresence: ((Nakama_Realtime_StatusPresenceEvent) -> ())?
+    public var onMatchPresence: MatchPresenceHandler?
     
-    public var onStreamPresence: ((Nakama_Realtime_StreamPresenceEvent) -> ())?
+    public var onNotifications: NotificationsHandler?
     
-    public var onStreamData: ((Nakama_Realtime_StreamData) -> ())?
+    public var onStatusPresence: StatusPresenceHandler?
+    
+    public var onStreamPresence: StreamPresenceHandler?
+    
+    public var onStreamData: StreamDataHandler?
     
     let collationCounter = ManagedAtomic<Int>(0)
     let eventLoopGroup: EventLoopGroup
@@ -56,7 +64,7 @@ public final class WebSocketClient : SocketClient {
     
     var socketAdapter: SocketAdapter
     var collatedPromises = [String:Any]()
-        
+    
     init(host: String, port: Int, ssl: Bool, eventLoopGroup: EventLoopGroup, socketAdapter: SocketAdapter?, logger: Logger?) {
         self.host = host
         self.port = port
@@ -64,8 +72,8 @@ public final class WebSocketClient : SocketClient {
         self.eventLoopGroup = eventLoopGroup
         self.logger = logger
         
-        if socketAdapter != nil {
-            self.socketAdapter = socketAdapter!
+        if let socketAdapter {
+            self.socketAdapter = socketAdapter
         } else {
             self.socketAdapter = WebSocketAdapter(logger: logger)
         }
@@ -87,7 +95,7 @@ public final class WebSocketClient : SocketClient {
         }
     }
     
-    public func connect(session: Session, createStatus: Bool? = nil) {
+    public func connect(session: Session, appearOnline: Bool? = nil) {
         var components = URLComponents()
         components.scheme = self.ssl ? "wss" : "ws"
         components.host = self.host
@@ -98,8 +106,8 @@ public final class WebSocketClient : SocketClient {
             URLQueryItem(name: "format", value: "protobuf"),
         ]
         
-        if let createStatus {
-            components.queryItems!.append(URLQueryItem(name: "status", value: createStatus ? "true" : "false"))
+        if let appearOnline {
+            components.queryItems!.append(URLQueryItem(name: "status", value: appearOnline ? "true" : "false"))
         }
         
         self.socketAdapter.connect(url: components.url!)

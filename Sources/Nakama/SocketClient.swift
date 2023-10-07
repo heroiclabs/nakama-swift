@@ -15,7 +15,28 @@
  */
 
 import Foundation
-import NIO
+
+public typealias ConnectHandler = (() -> Void)
+public typealias DisconnectHandler = (() -> Void)
+public typealias SocketErrorHandler = ((Error) -> ())
+public typealias ChannelMessageHandler = ((Nakama_Api_ChannelMessage) -> ())
+public typealias ChannelPresenceHandler = ((Nakama_Realtime_ChannelPresenceEvent) -> ())
+public typealias MatchmakerMatchedHandler = ((Nakama_Realtime_MatchmakerMatched) -> ())
+public typealias MatchDataHandler = ((Nakama_Realtime_MatchData) -> ())
+public typealias MatchPresenceHandler = ((Nakama_Realtime_MatchPresenceEvent) -> ())
+public typealias NotificationsHandler = ((Nakama_Realtime_Notifications) -> ())
+public typealias StatusPresenceHandler = ((Nakama_Realtime_StatusPresenceEvent) -> ())
+public typealias StreamPresenceHandler = ((Nakama_Realtime_StreamPresenceEvent) -> ())
+public typealias StreamDataHandler = ((Nakama_Realtime_StreamData) -> ())
+
+enum SocketError: Error {
+    case timeout
+    case invalidDataFormat(String)
+    
+    init(_ message: String) {
+        self = .invalidDataFormat(message)
+    }
+}
 
 public struct NakamaRealtimeError: LocalizedError {
     /// Human-readable error
@@ -69,70 +90,75 @@ public protocol SocketClient {
     /**
      If set, will notify when connection was established.
      */
-    var onConnect: (()->())? { get set }
+    var onConnect: ConnectHandler? { get set }
     
     /**
      If set, will notify when socket was disconnected.
      */
-    var onDisconnect: (()->())? { get set }
+    var onDisconnect: DisconnectHandler? { get set }
     
     /**
      If set, will notify when socket was disconnected.
      */
-    var onError: ((Error) -> ())? { get set }
+    var onError: SocketErrorHandler? { get set }
     
     /**
      Called when a new topic message has been received.
      */
-    var onChannelMessage: ((Nakama_Api_ChannelMessage) -> ())? { get set }
+    var onChannelMessage: ChannelMessageHandler? { get set }
     
     /**
      Called when a new topic presence update has been received.
      */
-    var onChannelPresence: ((Nakama_Realtime_ChannelPresenceEvent) -> ())? { get set }
+    var onChannelPresence: ChannelPresenceHandler? { get set }
     
     /**
      Called when a matchmaking has found a match.
      */
-    var onMatchmakerMatched: ((Nakama_Realtime_MatchmakerMatched) -> ())? { get set }
+    var onMatchmakerMatched: MatchmakerMatchedHandler? { get set }
     
     /**
      Called when a new match data is received.
      */
-    var onMatchData: ((Nakama_Realtime_MatchData) -> ())? { get set }
+    var onMatchData: MatchDataHandler? { get set }
     
     /**
      Called when a new match presence update is received.
      */
-    var onMatchPresence: ((Nakama_Realtime_MatchPresenceEvent) -> ())? { get set }
+    var onMatchPresence: MatchPresenceHandler? { get set }
     
     /**
      Called when the client receives new notifications.
      */
-    var onNotifications: ((Nakama_Realtime_Notifications) -> ())? { get set }
+    var onNotifications: NotificationsHandler? { get set }
     
     /**
      Called when the client receives status presence updates.
      */
-    var onStatusPresence: ((Nakama_Realtime_StatusPresenceEvent) -> ())? { get set }
+    var onStatusPresence: StatusPresenceHandler? { get set }
     
     /**
      Called when the client receives stream presence updates.
      */
-    var onStreamPresence: ((Nakama_Realtime_StreamPresenceEvent) -> ())? { get set }
+    var onStreamPresence: StreamPresenceHandler? { get set }
     
     /**
      Called when the client receives stream data.
      */
-    var onStreamData: ((Nakama_Realtime_StreamData) -> ())? { get set }
+    var onStreamData: StreamDataHandler? { get set }
+    
+    /// If the socket is connected.
+    var isConnected: Bool { get }
+    
+    /// If the socket is connecting.
+    var isConnecting: Bool { get }
     
     /**
      Connect to the server.
      - Parameter session: The session of the user.
-     - Parameter createStatus: If the socket should show the user as online to others.
+     - Parameter appearOnline: If the user should appear online to other users.
      */
-    func connect(session: Session, createStatus: Bool?)
-    
+    func connect(session: Session, appearOnline: Bool?)
     
     /// Close the connection with the server.
     func disconnect()
