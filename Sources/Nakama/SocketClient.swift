@@ -226,13 +226,14 @@ public protocol SocketClient {
     
     /**
      Join the matchmaker pool and search for opponents on the server.
+     - Parameter query: A matchmaker query to search for opponents.
      - Parameter minCount: The minimum number of players to compete against.
      - Parameter maxCount: The maximum number of players to compete against.
-     - Parameter query: A matchmaker query to search for opponents.
      - Parameter stringProperties: A set of k/v properties to provide in searches.
      - Parameter numericProperties: A set of k/v numeric properties to provide in searches.
+     - Parameter countMultiple: An optional integer to force the matchmaker to match in multiples of.
      */
-    func addMatchmaker(minCount: Int32, maxCount: Int32?, query: String?, stringProperties: [String:String]?, numericProperties: [String:Double]?) async throws -> Nakama_Realtime_MatchmakerTicket
+    func addMatchmaker(query: String?, minCount: Int32?, maxCount: Int32?, stringProperties: [String:String]?, numericProperties: [String:Double]?, countMultiple: Int?) async throws -> Nakama_Realtime_MatchmakerTicket
     
     /**
      Leave the matchmaker pool by ticket.

@@ -304,21 +304,21 @@ public final class WebSocketClient : SocketClient {
         let _: Google_Protobuf_Empty = try await self.send(env: &env)
     }
     
-    public func addMatchmaker(minCount: Int32, maxCount: Int32? = nil, query: String? = nil, stringProperties: [String : String]? = nil, numericProperties: [String : Double]? = nil) async throws -> Nakama_Realtime_MatchmakerTicket {
+    public func addMatchmaker(query: String? = "*", minCount: Int32? = 2, maxCount: Int32? = 8, stringProperties: [String : String]? = nil, numericProperties: [String : Double]? = nil, countMultiple: Int? = nil) async throws -> Nakama_Realtime_MatchmakerTicket {
         var req = Nakama_Realtime_MatchmakerAdd()
-        req.minCount = minCount
-        if let maxCount {
-            req.maxCount = maxCount
-        }
-        if let query {
-            req.query = query
-        }
+        req.query = query ?? "*"
+        req.minCount = minCount ?? 2
+        req.maxCount = maxCount ?? 8
         if let stringProperties {
             req.stringProperties = stringProperties
         }
         if let numericProperties {
             req.numericProperties = numericProperties
         }
+        if let countMultiple {
+            req.countMultiple = countMultiple.pbInt32Value
+        }
+        
         var env = Nakama_Realtime_Envelope()
         env.matchmakerAdd = req
         
