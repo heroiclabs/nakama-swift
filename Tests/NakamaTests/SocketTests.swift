@@ -81,4 +81,13 @@ final class SocketTests: XCTestCase {
         XCTAssertTrue(socket.isConnected)
         socket.disconnect()
     }
+    
+    func test_rpc() async throws {
+        socket.connect(session: session)
+        
+        let response = try await socket.rpc(id: "clientrpc.rpc", payload: "{\"hello\":\"world\"}")
+        XCTAssertNotNil(response)
+        XCTAssertEqual(response.id, "clientrpc.rpc")
+        XCTAssertEqual(response.payload, "{\"hello\":\"world\"}")
+    }
 }
