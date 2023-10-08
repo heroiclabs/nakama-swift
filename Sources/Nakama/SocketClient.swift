@@ -274,7 +274,7 @@ public protocol SocketClient {
      Follow one or more users for status updates.
      - Parameter userIds: The user Ids to follow.
      */
-    func followUsers(userIds: String...) async throws -> Nakama_Realtime_Status
+    func followUsers(userIds: [String]) async throws -> Nakama_Realtime_Status
     
     /**
      Follow one or more users for status updates.
@@ -287,7 +287,7 @@ public protocol SocketClient {
      Unfollow status updates for one or more users.
      - Parameter userIds: The ids of users to unfollow.
      */
-    func unfollowUsers(userIds: String...) async throws -> Void
+    func unfollowUsers(userIds: [String]) async throws -> Void
     
     /**
      Update the user's status online.

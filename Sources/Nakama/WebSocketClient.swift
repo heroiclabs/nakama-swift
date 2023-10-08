@@ -388,7 +388,7 @@ public final class WebSocketClient : SocketClient {
         return try await send(env: &env)
     }
     
-    public func followUsers(userIds: String...) async throws -> Nakama_Realtime_Status {
+    public func followUsers(userIds: [String]) async throws -> Nakama_Realtime_Status {
         return try await self.followUsers(userIds: userIds, usernames: nil)
     }
     
@@ -407,7 +407,7 @@ public final class WebSocketClient : SocketClient {
         return try await send(env: &env)
     }
     
-    public func unfollowUsers(userIds: String...) async throws -> Void {
+    public func unfollowUsers(userIds: [String]) async throws -> Void {
         var req = Nakama_Realtime_StatusUnfollow()
         req.userIds = userIds
         
