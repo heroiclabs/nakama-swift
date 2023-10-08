@@ -128,11 +128,11 @@ public final class WebSocketClient : SocketClient {
         return try await promise.futureResult.get()
     }
     
-    func onReceivedData(data: Data) {
+    private func onReceivedData(data: Data) {
         let response: Nakama_Realtime_Envelope
         do {
             response = try Nakama_Realtime_Envelope(serializedData: data)
-            if (response.cid == "") {
+            if (response.cid.isEmpty) {
                 switch response.message {
                 case .error(let error):
                     self.onError?(NakamaRealtimeError(error: error))
@@ -194,6 +194,10 @@ public final class WebSocketClient : SocketClient {
                         promise.succeed(status)
                     default:
                         self.logger?.error("Unrecognised incoming collated message from server: \(try! response.jsonString())")
+                        // Handle empty or nil response from server
+                        if let promise = collatedPromise as? EventLoopPromise<SwiftProtobuf.Google_Protobuf_Empty> {
+                            promise.succeed(SwiftProtobuf.Google_Protobuf_Empty())
+                        }
                     }
                 } else {
                     self.logger?.error("No matching promise for incoming collation ID: \(response.cid)")
