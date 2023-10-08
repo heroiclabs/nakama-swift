@@ -322,3 +322,14 @@ extension Nakama_Api_Notification {
         )
     }
 }
+
+extension Nakama_Realtime_UserPresence {
+    func toUserPresence() -> UserPresence {
+        return UserPresence(
+            userId: self.userID,
+            sessionId: self.sessionID,
+            username: self.username,
+            persistence: self.persistence
+        )
+    }
+}
