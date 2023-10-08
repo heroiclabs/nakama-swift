@@ -266,9 +266,13 @@ public final class WebSocketClient : SocketClient {
         return try await self.send(env: &env)
     }
     
-    public func createMatch() async throws -> Nakama_Realtime_Match {
+    public func createMatch(name: String? = nil) async throws -> Nakama_Realtime_Match {
+        var req = Nakama_Realtime_MatchCreate()
+        if let name {
+            req.name = name
+        }
         var env = Nakama_Realtime_Envelope()
-        env.matchCreate = Nakama_Realtime_MatchCreate()
+        env.matchCreate = req
         
         return try await self.send(env: &env)
     }
@@ -335,19 +339,39 @@ public final class WebSocketClient : SocketClient {
         let _: Google_Protobuf_Empty = try await self.send(env: &env)
     }
     
-    public func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]?) {
+    public func sendMatchData(matchId: String, opCode: Int64, data: String, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
+        guard let data = data.data(using: .utf8) else {
+            throw SocketError("Unable to convert string to Data")
+        }
+        
         var req = Nakama_Realtime_MatchDataSend()
         req.matchID = matchId
         req.opCode = opCode
         req.data = data
-        if presences != nil {
-            req.presences = presences!
+        if let presences {
+            req.presences = presences
         }
         
         var env = Nakama_Realtime_Envelope()
         env.matchDataSend = req
         
-        let binaryData: Data = try! env.serializedData()
+        let binaryData = try! env.serializedData()
+        self.socketAdapter.send(data: binaryData)
+    }
+    
+    public func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
+        var req = Nakama_Realtime_MatchDataSend()
+        req.matchID = matchId
+        req.opCode = opCode
+        req.data = data
+        if let presences {
+            req.presences = presences
+        }
+        
+        var env = Nakama_Realtime_Envelope()
+        env.matchDataSend = req
+        
+        let binaryData = try! env.serializedData()
         self.socketAdapter.send(data: binaryData)
     }
     

@@ -202,7 +202,7 @@ public protocol SocketClient {
     func updateChatMessage(channelId: String, messageId: String, content: String) async throws -> Nakama_Realtime_ChannelMessageAck
     
     /// Create a multiplayer match on the server.
-    func createMatch() async throws -> Nakama_Realtime_Match
+    func createMatch(name: String?) async throws -> Nakama_Realtime_Match
     
     /**
      Join a multiplayer match by ID.
@@ -250,7 +250,18 @@ public protocol SocketClient {
      - Parameter data: The new state to send to the match.
      - Parameter presences: The presences in the match to send the state.
      */
-    func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]?)
+    func sendMatchData(matchId: String, opCode: Int64, data: String, presences: [Nakama_Realtime_UserPresence]?) async throws -> Void
+    
+    /**
+     Send a state change to a match on the server.
+     
+     When no presences are supplied the new match state will be sent to all presences.
+     - Parameter matchId: The Id of the match.
+     - Parameter opCode: An operation code for the match state.
+     - Parameter data: The new state to send to the match.
+     - Parameter presences: The presences in the match to send the state.
+     */
+    func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]?) async throws -> Void
     
     /**
      Send an RPC message to the server.
