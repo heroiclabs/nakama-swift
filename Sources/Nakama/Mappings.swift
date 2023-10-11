@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import SwiftProtobuf
+
+// MARK: - API
+
 extension Nakama_Api_Session {
     func toSession() async -> Session {
         return DefaultSession(token: self.token, refreshToken: self.refreshToken, created: self.created)
@@ -323,6 +327,21 @@ extension Nakama_Api_Notification {
     }
 }
 
+// MARK: - Socket
+
+extension UserPresence {
+    func toApiUserPresence() -> Nakama_Realtime_UserPresence {
+        var presence = Nakama_Realtime_UserPresence()
+        presence.userID = self.userId
+        presence.sessionID = self.sessionId
+        presence.username = self.username
+        presence.persistence = self.persistence
+        presence.status = Google_Protobuf_StringValue(self.status ?? "")
+        
+        return presence
+    }
+}
+
 extension Nakama_Realtime_UserPresence {
     func toUserPresence() -> UserPresence {
         return UserPresence(
@@ -330,6 +349,19 @@ extension Nakama_Realtime_UserPresence {
             sessionId: self.sessionID,
             username: self.username,
             persistence: self.persistence
+        )
+    }
+}
+
+extension Nakama_Realtime_Party {
+    func toParty() -> Party {
+        return Party(
+            id: self.partyID,
+            open: self.open,
+            maxSize: Int(self.maxSize),
+            self_p: self.self_p.toUserPresence(),
+            Leader: self.leader.toUserPresence(),
+            presences: self.presences.map { $0.toUserPresence() }
         )
     }
 }

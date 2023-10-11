@@ -28,15 +28,13 @@ public typealias NotificationsHandler = ((Nakama_Realtime_Notifications) -> ())
 public typealias StatusPresenceHandler = ((Nakama_Realtime_StatusPresenceEvent) -> ())
 public typealias StreamPresenceHandler = ((Nakama_Realtime_StreamPresenceEvent) -> ())
 public typealias StreamDataHandler = ((Nakama_Realtime_StreamData) -> ())
-
-enum SocketError: Error {
-    case timeout
-    case invalidDataFormat(String)
-    
-    init(_ message: String) {
-        self = .invalidDataFormat(message)
-    }
-}
+public typealias PartyReceivedHandler = ((Party) -> ())
+public typealias PartyCloseHandler = ((Nakama_Realtime_PartyClose) -> ())
+public typealias PartyDataHandler = ((Nakama_Realtime_PartyData) -> ())
+public typealias PartyJoinRequestHandler = ((Nakama_Realtime_PartyJoinRequest) -> ())
+public typealias PartyLeaderHandler = ((Nakama_Realtime_PartyLeader) -> ())
+public typealias PartyMatchmakerTicketHandler = ((Nakama_Realtime_PartyMatchmakerTicket) -> ())
+public typealias PartyPresenceHandler = ((Nakama_Realtime_PartyPresenceEvent) -> ())
 
 public struct NakamaRealtimeError: LocalizedError {
     /// Human-readable error
@@ -146,6 +144,41 @@ public protocol SocketProtocol {
      Called when the client receives stream data.
      */
     var onStreamData: StreamDataHandler? { get set }
+    
+    /**
+     Received a party event. This will occur when the current user's invitation request is accepted by the party leader of a closed party.
+     */
+    var onPartyReceived: PartyReceivedHandler? { get set }
+    
+    /**
+     Received a party close event.
+     */
+    var onPartyClosed: PartyCloseHandler? { get set }
+    
+    /**
+     Received a custom party data.
+     */
+    var onPartyData: PartyDataHandler? { get set }
+    
+    /**
+     Received a request to join the party.
+     */
+    var onPartyJoin: PartyJoinRequestHandler? { get set }
+    
+    /**
+     Received a new presence event in the party.
+     */
+    var onPartyPresence: PartyPresenceHandler? { get set }
+    
+    /**
+     Received a change in the party leader.
+     */
+    var onPartyLeader: PartyLeaderHandler? { get set }
+
+    /**
+     Received a new matchmaker ticket for the party.
+     */
+    var onPartyMatchmakerTicket: PartyMatchmakerTicketHandler? { get set }
     
     /// If the socket is connected.
     var isConnected: Bool { get }
@@ -294,4 +327,88 @@ public protocol SocketProtocol {
      - Parameter status: The new status of the user.
      */
     func updateStatus(status: String) async throws -> Void
+    
+    /// Create a party.
+    ///
+    /// - Parameters:
+    ///   - open: Whether or not the party will require join requests to be approved by the party leader.
+    ///   - maxSize: Maximum number of party members.
+    func createParty(open: Bool, maxSize: Int) async throws -> Nakama_Realtime_Party
+    
+    /// Join a party.
+    ///
+    /// - Parameter partyId: The ID of the party.
+    func joinParty(partyId: String) async throws -> Void
+    
+    /// Leave the party.
+    ///
+    /// - Parameter partyId: The ID of the party.
+    func leaveParty(partyId: String) async throws -> Void
+    
+    /// End a party, kicking all party members and closing it.
+    ///
+    /// - Parameter partyId: The ID of the party.
+    func closeParty(partyId: String) async throws -> Void
+    
+    /// Send data to a party.
+    ///
+    ///- Parameters:
+    ///  - partyId Party ID to send to.
+    ///  - opCode Op code value.
+    ///  - data The input data to send from the byte buffer, if any.
+    func sendPartyData(partyId: String, opCode: Int, data: Data) async throws -> Void
+    
+    /// Send data to a party.
+    ///
+    /// - Parameters:
+    ///   - partyId: Party ID to send to.
+    ///   - opCode: Op code value.
+    ///   - data: Data payload, if any.
+    func sendPartyData(partyId: String, opCode: Int, data: String) async throws -> Void
+    
+    /// Accept a party member's request to join the party.
+    ///
+    /// - Parameters:
+    ///   - partyId: The party ID to accept the join request for.
+    ///   - presence: The presence to accept as a party member.
+    ///
+    func acceptPartyMember(partyId: String, presence: UserPresence) async throws -> Void
+    
+    /// Kick a party member, or decline a request to join.
+    ///
+    /// - Parameters:
+    ///   - partyId: Party ID to remove/reject from.
+    ///   - presence: The presence to remove or reject.
+    func removePartyMember(partyId: String, presence: UserPresence) async throws -> Void
+    
+    /// Begin matchmaking as a party.
+    ///
+    /// - Parameters:
+    ///   - partyId: The ID of the Party.
+    ///   - query: Filter query used to identify suitable users.
+    ///   - minCount: Minimum total user count to match together.
+    ///   - maxCount: Maximum total user count to match together.
+    ///   - stringProperties: String properties.
+    ///   - numericProperties: Numeric properties.
+    ///   - countMultiple: An optional integer to force the matchmaker to match in multiples of.
+    func addMatchmakerParty(partyId: String, query: String, minCount: Int, maxCount: Int, stringProperties: [String:String]?, numericProperties: [String:Double]?, countMultiple: Int?) async throws -> Nakama_Realtime_PartyMatchmakerTicket
+    
+    /// Cancel a party matchmaking process using a ticket.
+    ///
+    /// - Parameters:
+    ///   - partyId: The ID of the Party.
+    ///   - ticket: The ticket to cancel.
+    func removeMatchmakerParty(partyId: String, ticket: String) async throws -> Void
+    
+    /// Request a list of pending join requests for a party.
+    ///
+    /// - Parameter partyId: The ID of the party.
+    func listPartyJoinRequests(partyId: String) async throws -> Nakama_Realtime_PartyJoinRequest
+    
+    /// Promote a new party leader.
+    ///
+    /// - Parameters:
+    ///   - partyId: The ID of the Party.
+    ///   - partyMember: The presence of an existing party member to promote as the new leader.
+    func promotePartyMember(partyId: String, partyMember: UserPresence) async throws -> Void
 }
