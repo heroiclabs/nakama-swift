@@ -19,12 +19,12 @@ import XCTest
 
 final class SocketStatusTests: XCTestCase {
     let client = GrpcClient(serverKey: "defaultkey")
-    var socket: WebSocketClient!
+    var socket: Socket!
     var session: Session!
     
     override func setUp() async throws {
         session = try await client.authenticateCustom(id: UUID().uuidString)
-        socket = client.createSocket() as? WebSocketClient
+        socket = client.createSocket() as? Socket
     }
     
     override func tearDown() async throws {
@@ -34,7 +34,7 @@ final class SocketStatusTests: XCTestCase {
     
     func test_followUnfollowStopUpdates() async throws {
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2 = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
         
         var update: Nakama_Realtime_StatusPresenceEvent!
         
@@ -71,7 +71,7 @@ final class SocketStatusTests: XCTestCase {
     
     func test_followTwiceUpdatesOnce() async throws {
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2 = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
         
         var updateCount = 0
         

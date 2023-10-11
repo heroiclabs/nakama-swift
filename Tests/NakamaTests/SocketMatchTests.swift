@@ -19,12 +19,12 @@ import XCTest
 
 final class SocketMatchTests: XCTestCase {
     let client = GrpcClient(serverKey: "defaultkey")
-    var socket: WebSocketClient!
+    var socket: Socket!
     var session: Session!
     
     override func setUp() async throws {
         session = try await client.authenticateCustom(id: UUID().uuidString)
-        socket = client.createSocket() as? WebSocketClient
+        socket = client.createSocket() as? Socket
     }
     
     override func tearDown() async throws {
@@ -57,7 +57,7 @@ final class SocketMatchTests: XCTestCase {
     
     func test_AnotherUserJoinMatch() async throws {
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2: WebSocketClient = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
         
         socket.connect(session: session)
         socket2.connect(session: session2)
@@ -75,7 +75,7 @@ final class SocketMatchTests: XCTestCase {
     
     func test_sendMatchState() async throws {
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2 = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
         
         let dataToSend = "{\"hello\":\"world\"}"
 
@@ -98,7 +98,7 @@ final class SocketMatchTests: XCTestCase {
     
     func test_twoPresencesReceivedForTwoUsers() async throws {
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2 = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
         
         socket.connect(session: session)
         socket2.connect(session: session2)

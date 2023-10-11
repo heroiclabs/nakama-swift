@@ -19,7 +19,7 @@ import Foundation
 import NIO
 import Logging
 
-public protocol SocketAdapter {
+public protocol SocketAdapterProtocol {
     /**
      If set, notifies when the socket was connected.
      */
@@ -63,7 +63,7 @@ public protocol SocketAdapter {
     func send(data: Data)
 }
 
-public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdapter {
+public final class SocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdapterProtocol {
     public var onConnect: (() -> ())?
     public var onDisconnect: (() -> ())?
     public var onReceiveText: ((String) -> ())?
@@ -129,7 +129,7 @@ public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdap
           }
         case .failure(let error):
             self.onError?(error)
-            self.logger?.error("WebSocketClient logger received error: \(error)")
+            self.logger?.error("Socket logger received error: \(error)")
         }
         
         self.receive()

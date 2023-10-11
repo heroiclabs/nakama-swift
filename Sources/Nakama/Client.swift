@@ -37,7 +37,7 @@ public protocol Client {
      - Parameter socketAdapter: The socketAdapter to use to create socket. If set to nil, WebSocketAdapter is used.
      - Returns: A new SocketClient instance.
      */
-    func createSocket(host: String?, port: Int?, ssl: Bool?, socketAdapter: SocketAdapter?) -> SocketClient
+    func createSocket(host: String?, port: Int?, ssl: Bool?, socketAdapter: SocketAdapter?) -> SocketProtocol
     
     /**
      Add one or more friends by id or username.

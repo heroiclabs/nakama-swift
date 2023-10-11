@@ -19,12 +19,12 @@ import XCTest
 
 final class SocketMatchmakerTests: XCTestCase {
     let client = GrpcClient(serverKey: "defaultkey")
-    var socket: WebSocketClient!
+    var socket: Socket!
     var session: Session!
     
     override func setUp() async throws {
         session = try await client.authenticateCustom(id: UUID().uuidString)
-        socket = client.createSocket() as? WebSocketClient
+        socket = client.createSocket() as? Socket
     }
     
     override func tearDown() async throws {
@@ -54,8 +54,8 @@ final class SocketMatchmakerTests: XCTestCase {
     func test_symmetricMatchmakerQueryAndSize() async throws {
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
         let session3 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2: WebSocketClient = client.createSocket() as! WebSocketClient
-        let socket3: WebSocketClient = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
+        let socket3 = client.createSocket() as! Socket
         
         var matched1: Nakama_Realtime_MatchmakerMatched!
         socket.onMatchmakerMatched = { matched in

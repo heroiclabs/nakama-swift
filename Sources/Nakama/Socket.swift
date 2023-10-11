@@ -21,7 +21,7 @@ import Logging
 import SwiftProtobuf
 import Atomics
 
-public final class WebSocketClient : SocketClient {
+public final class Socket : SocketProtocol {
     public var isConnected: Bool {
         return socketAdapter.isConnected
     }
@@ -75,7 +75,7 @@ public final class WebSocketClient : SocketClient {
         if let socketAdapter {
             self.socketAdapter = socketAdapter
         } else {
-            self.socketAdapter = WebSocketAdapter(logger: logger)
+            self.socketAdapter = SocketAdapter(logger: logger)
         }
         
         self.socketAdapter.onConnect = {

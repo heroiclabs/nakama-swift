@@ -73,7 +73,7 @@ public struct NakamaRealtimeError: LocalizedError {
     }
 }
 
-public protocol SocketClient {
+public protocol SocketProtocol {
     /**
      Host to connect to.
      */

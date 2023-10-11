@@ -19,12 +19,12 @@ import XCTest
 
 final class SocketChannelTests: XCTestCase {
     let client = GrpcClient(serverKey: "defaultkey")
-    var socket: WebSocketClient!
+    var socket: Socket!
     var session: Session!
     
     override func setUp() async throws {
         session = try await client.authenticateCustom(id: UUID().uuidString)
-        socket = client.createSocket() as? WebSocketClient
+        socket = client.createSocket() as? Socket
     }
     
     override func tearDown() async throws {
@@ -69,7 +69,7 @@ final class SocketChannelTests: XCTestCase {
         }
         
         let session2 = try await client.authenticateCustom(id: UUID().uuidString)
-        let socket2 = client.createSocket() as! WebSocketClient
+        let socket2 = client.createSocket() as! Socket
         
         // Add as friends
         try await client.addFriends(session: session, ids: [session2.userId])

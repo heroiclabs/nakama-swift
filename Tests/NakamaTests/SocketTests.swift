@@ -19,12 +19,12 @@ import XCTest
 
 final class SocketTests: XCTestCase {
     let client = GrpcClient(serverKey: "defaultkey")
-    var socket: WebSocketClient!
+    var socket: Socket!
     var session: Session!
     
     override func setUp() async throws {
         session = try await client.authenticateCustom(id: UUID().uuidString)
-        socket = client.createSocket() as? WebSocketClient
+        socket = client.createSocket() as? Socket
     }
     
     override func tearDown() async throws {
