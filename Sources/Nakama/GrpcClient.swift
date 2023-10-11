@@ -92,12 +92,8 @@ public final class GrpcClient : Client {
         return try await self.grpcConnection.close().get()
     }
     
-    public func createSocket(host: String?, port: Int?, ssl: Bool?) -> SocketClient {
-        return self.createSocket(host: host, port: port, ssl: ssl, socketAdapter: nil)
-    }
-    
-    public func createSocket(host: String?, port: Int?, ssl: Bool?, socketAdapter: SocketAdapter?) -> SocketClient {
-        return WebSocketClient(host: host ?? self.host, port: port ?? 7350, ssl: ssl ?? self.ssl, eventLoopGroup: self.eventLoopGroup, socketAdapter: socketAdapter, logger: self.logger)
+    public func createSocket(host: String? = nil, port: Int? = nil, ssl: Bool? = nil, socketAdapter: SocketAdapter? = nil) -> SocketProtocol {
+        return Socket(host: host ?? self.host, port: port ?? 7350, ssl: ssl ?? self.ssl, eventLoopGroup: self.eventLoopGroup, socketAdapter: socketAdapter, logger: self.logger)
     }
     
     public func addFriends(session: Session, ids: [String], usernames: [String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Void {

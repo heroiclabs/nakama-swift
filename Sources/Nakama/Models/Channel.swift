@@ -21,14 +21,16 @@ public class NakamaChannel {
     let groupId: String
     let userIdOne: String
     let userIdTwo: String
+    let selfPresence: UserPresence
     
-    init(id: String, presences: [UserPresence], roomName: String, groupId: String, userIdOne: String, userIdTwo: String) {
+    init(id: String, presences: [UserPresence], roomName: String, groupId: String, userIdOne: String, userIdTwo: String, selfPresence: UserPresence) {
         self.id = id
         self.presences = presences
         self.roomName = roomName
         self.groupId = groupId
         self.userIdOne = userIdOne
         self.userIdTwo = userIdTwo
+        self.selfPresence = selfPresence
     }
     
     convenience init(from rtChannel: Nakama_Realtime_Channel) {
@@ -38,7 +40,8 @@ public class NakamaChannel {
             roomName: rtChannel.roomName,
             groupId: rtChannel.groupID,
             userIdOne: rtChannel.userIDOne,
-            userIdTwo: rtChannel.userIDTwo
+            userIdTwo: rtChannel.userIDTwo,
+            selfPresence: rtChannel.self_p.toUserPresence()
         )
     }
 }

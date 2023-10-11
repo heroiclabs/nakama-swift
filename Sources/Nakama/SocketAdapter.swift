@@ -19,7 +19,7 @@ import Foundation
 import NIO
 import Logging
 
-public protocol SocketAdapter {
+public protocol SocketAdapterProtocol {
     /**
      If set, notifies when the socket was connected.
      */
@@ -41,6 +41,12 @@ public protocol SocketAdapter {
      */
     var onError: ((Error) -> ())? {get set}
     
+    /// If the socket is connected.
+    var isConnected: Bool { get }
+    
+    /// If the socket is connecting.
+    var isConnecting: Bool { get }
+    
     /**
      Connect to the given URL.
      - Parameter url: The URL to connect to.
@@ -57,7 +63,7 @@ public protocol SocketAdapter {
     func send(data: Data)
 }
 
-public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdapter {
+public final class SocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdapterProtocol {
     public var onConnect: (() -> ())?
     public var onDisconnect: (() -> ())?
     public var onReceiveText: ((String) -> ())?
@@ -67,13 +73,19 @@ public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdap
     let logger : Logger?
     var wsTask: URLSessionWebSocketTask?
     
+    public var isConnected: Bool
+    public var isConnecting: Bool
+    
     init(logger: Logger?) {
         self.logger = logger
+        self.isConnected = false
+        self.isConnecting = false
     }
     
     public func connect(url: URL) {
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
         self.wsTask = session.webSocketTask(with: url)
+        self.isConnecting = true
         self.wsTask!.resume()
     }
     
@@ -117,7 +129,7 @@ public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdap
           }
         case .failure(let error):
             self.onError?(error)
-            self.logger?.error("WebSocketClient logger received error: \(error)")
+            self.logger?.error("Socket logger received error: \(error)")
         }
         
         self.receive()
@@ -135,6 +147,8 @@ public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdap
     
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         logger?.debug("Socket connection opened successfully.")
+        self.isConnected = true
+        self.isConnecting = false
         self.onConnect?()
         self.receive()
         self.ping()
@@ -142,6 +156,8 @@ public class WebSocketAdapter: NSObject, URLSessionWebSocketDelegate, SocketAdap
     
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.logger?.debug("Socket connection closed - code: \(closeCode) - reason: \(String(describing: reason))")
+        self.isConnected = false
+        self.isConnecting = false
         self.onDisconnect?()
     }
 }
