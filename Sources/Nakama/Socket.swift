@@ -54,6 +54,20 @@ public final class Socket : SocketProtocol {
     
     public var onStreamData: StreamDataHandler?
     
+    public var onPartyReceived: PartyReceivedHandler?
+    
+    public var onPartyClosed: PartyCloseHandler?
+    
+    public var onPartyData: PartyDataHandler?
+    
+    public var onPartyJoin: PartyJoinRequestHandler?
+    
+    public var onPartyPresence: PartyPresenceHandler?
+    
+    public var onPartyMatchmakerTicket: PartyMatchmakerTicketHandler?
+    
+    public var onPartyLeader: PartyLeaderHandler?
+    
     let collationCounter = ManagedAtomic<Int>(0)
     let eventLoopGroup: EventLoopGroup
     let logger: Logger?
@@ -154,6 +168,20 @@ public final class Socket : SocketProtocol {
                     self.onStreamData?(streamData)
                 case .streamPresenceEvent(let streamPresenceEvent):
                     self.onStreamPresence?(streamPresenceEvent)
+                case .party(let party):
+                    self.onPartyReceived?(party.toParty())
+                case .partyJoinRequest(let joinRequest):
+                    self.onPartyJoin?(joinRequest)
+                case .partyData(let data):
+                    self.onPartyData?(data)
+                case .partyPresenceEvent(let partyPresenceEvent):
+                    self.onPartyPresence?(partyPresenceEvent)
+                case .partyMatchmakerTicket(let ticket):
+                    self.onPartyMatchmakerTicket?(ticket)
+                case .partyClose(let close):
+                    self.onPartyClosed?(close)
+                case .partyLeader(let leader):
+                    self.onPartyLeader?(leader)
                 default:
                     self.logger?.error("Unrecognised incoming uncollated message from server: \(try! response.jsonString())")
                 }
@@ -161,17 +189,9 @@ public final class Socket : SocketProtocol {
                 if let collatedPromise = self.collatedPromises[response.cid] {
                     switch response.message {
                     case .error(let error):
-                        if let promise = collatedPromise as? EventLoopPromise<Nakama_Api_Rpc> {
+                        if let promise = collatedPromise as? EventLoopPromise<Any> {
                             promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Channel> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_ChannelMessageAck> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Match> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_MatchmakerTicket> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Status> {
+                        } else if let promise = collatedPromise as? EventLoopPromise<Google_Protobuf_Empty> {
                             promise.fail(NakamaRealtimeError(error: error))
                         }
                     case .rpc(let rpc):
@@ -192,6 +212,12 @@ public final class Socket : SocketProtocol {
                     case .status(let status):
                         let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_Status>
                         promise.succeed(status)
+                    case .party(let party):
+                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_Party>
+                        promise.succeed(party)
+                    case .partyMatchmakerTicket(let ticket):
+                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_PartyMatchmakerTicket>
+                        promise.succeed(ticket)
                     default:
                         self.logger?.error("Unrecognised incoming collated message from server: \(try! response.jsonString())")
                         // Handle empty or nil response from server
@@ -341,7 +367,7 @@ public final class Socket : SocketProtocol {
     
     public func sendMatchData(matchId: String, opCode: Int64, data: String, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
         guard let data = data.data(using: .utf8) else {
-            throw SocketError("Unable to convert string to Data")
+            throw NakamaRealtimeError(text: "Unable to convert string to Data")
         }
         
         var req = Nakama_Realtime_MatchDataSend()
@@ -423,6 +449,118 @@ public final class Socket : SocketProtocol {
             
         var env = Nakama_Realtime_Envelope()
         env.statusUpdate = req
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func createParty(open: Bool, maxSize: Int) async throws -> Nakama_Realtime_Party {
+        var env = Nakama_Realtime_Envelope()
+        env.partyCreate.open = open
+        env.partyCreate.maxSize = Int32(maxSize)
+        
+        return try await self.send(env: &env)
+    }
+    
+    public func joinParty(partyId: String) async throws {
+        var env = Nakama_Realtime_Envelope()
+        env.partyJoin.partyID = partyId
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func leaveParty(partyId: String) async throws {
+        var env = Nakama_Realtime_Envelope()
+        env.partyLeave.partyID = partyId
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func closeParty(partyId: String) async throws {
+        var env = Nakama_Realtime_Envelope()
+        env.partyClose.partyID = partyId
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func sendPartyData(partyId: String, opCode: Int, data: Data) async throws {
+        var env = Nakama_Realtime_Envelope()
+        env.partyDataSend.partyID = partyId
+        env.partyDataSend.opCode = Int64(opCode)
+        env.partyDataSend.data = data
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func sendPartyData(partyId: String, opCode: Int, data: String) async throws {
+        guard let data = data.data(using: .utf8) else {
+            throw NakamaRealtimeError(text: "Unable to convert string to Data")
+        }
+        
+        var env = Nakama_Realtime_Envelope()
+        env.partyDataSend.partyID = partyId
+        env.partyDataSend.opCode = Int64(opCode)
+        env.partyDataSend.data = data
+    }
+    
+    public func acceptPartyMember(partyId: String, presence: UserPresence) async throws {
+        var req = Nakama_Realtime_PartyAccept()
+        req.partyID = partyId
+        req.presence = presence.toApiUserPresence()
+        var env = Nakama_Realtime_Envelope()
+        env.partyAccept = req
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func removePartyMember(partyId: String, presence: UserPresence) async throws {
+        var env = Nakama_Realtime_Envelope()
+        env.partyRemove.partyID = partyId
+        env.partyRemove.presence = presence.toApiUserPresence()
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func addMatchmakerParty(partyId: String, query: String, minCount: Int, maxCount: Int, stringProperties: [String:String]? = nil, numericProperties: [String:Double]? = nil, countMultiple: Int? = nil) async throws -> Nakama_Realtime_PartyMatchmakerTicket {
+        var env = Nakama_Realtime_Envelope()
+        var add = Nakama_Realtime_PartyMatchmakerAdd()
+        add.partyID = partyId
+        add.query = query
+        add.minCount = Int32(minCount)
+        add.maxCount = Int32(maxCount)
+        if let stringProperties {
+            add.stringProperties = stringProperties
+        }
+        if let numericProperties {
+            add.numericProperties = numericProperties
+        }
+        if let countMultiple {
+            add.countMultiple = countMultiple.pbInt32Value
+        }
+        
+        env.partyMatchmakerAdd = add
+        
+        return try await self.send(env: &env)
+    }
+    
+    public func removeMatchmakerParty(partyId: String, ticket: String) async throws -> Void {
+        var env = Nakama_Realtime_Envelope()
+        env.partyMatchmakerRemove.partyID = partyId
+        env.partyMatchmakerRemove.ticket = ticket
+        
+        let _: Google_Protobuf_Empty = try await self.send(env: &env)
+    }
+    
+    public func listPartyJoinRequests(partyId: String) async throws -> Nakama_Realtime_PartyJoinRequest {
+        var env = Nakama_Realtime_Envelope()
+        env.partyJoinRequestList.partyID = partyId
+        
+        return try await self.send(env: &env)
+    }
+    
+    public func promotePartyMember(partyId: String, partyMember: UserPresence) async throws -> Void {
+        var env = Nakama_Realtime_Envelope()
+        env.partyPromote.partyID = partyId
+        env.partyPromote.presence = partyMember.toApiUserPresence()
         
         let _: Google_Protobuf_Empty = try await self.send(env: &env)
     }

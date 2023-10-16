@@ -16,7 +16,7 @@
 
 import Foundation
 
-class UserPresence {
+public final class UserPresence: Hashable {
     let userId: String
     let sessionId: String
     let username: String
@@ -39,5 +39,21 @@ class UserPresence {
             persistence: rtUserPresence.persistence,
             status: rtUserPresence.status.value.isEmpty ? nil : rtUserPresence.status.value
         )
+    }
+    
+    public static func == (lhs: UserPresence, rhs: UserPresence) -> Bool {
+        return lhs.userId == rhs.userId
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.userId)
+    }
+}
+
+extension [UserPresence] {
+    func copyJoinsAndLeaves(joins: [UserPresence], leaves: [UserPresence]) {
+        var newPresences = Set(self)
+        newPresences.formUnion(joins)
+        newPresences.formUnion(leaves)
     }
 }
