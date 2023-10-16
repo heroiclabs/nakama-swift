@@ -31,7 +31,7 @@ public struct Party {
     let self_p: UserPresence
     
     /// The current party leader.
-    let Leader: UserPresence
+    let leader: UserPresence
     
     /// All members currently in the party.
     var presences: [UserPresence]

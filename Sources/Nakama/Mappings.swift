@@ -360,7 +360,7 @@ extension Nakama_Realtime_Party {
             open: self.open,
             maxSize: Int(self.maxSize),
             self_p: self.self_p.toUserPresence(),
-            Leader: self.leader.toUserPresence(),
+            leader: self.leader.toUserPresence(),
             presences: self.presences.map { $0.toUserPresence() }
         )
     }
