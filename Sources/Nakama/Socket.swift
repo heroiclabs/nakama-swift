@@ -189,21 +189,9 @@ public final class Socket : SocketProtocol {
                 if let collatedPromise = self.collatedPromises[response.cid] {
                     switch response.message {
                     case .error(let error):
-                        if let promise = collatedPromise as? EventLoopPromise<Nakama_Api_Rpc> {
+                        if let promise = collatedPromise as? EventLoopPromise<Any> {
                             promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Channel> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_ChannelMessageAck> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Match> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_MatchmakerTicket> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Status> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Party> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<SwiftProtobuf.Google_Protobuf_Empty> {
+                        } else if let promise = collatedPromise as? EventLoopPromise<Google_Protobuf_Empty> {
                             promise.fail(NakamaRealtimeError(error: error))
                         }
                     case .rpc(let rpc):
