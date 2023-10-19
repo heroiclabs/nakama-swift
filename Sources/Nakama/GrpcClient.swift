@@ -24,11 +24,13 @@ public final class GrpcClient : Client {
     public var eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     public var retriesLimit = 5
     public var globalRetryConfiguration: RetryConfiguration
+    public var autoRefreshSession: Bool
     
     public let host: String
     public let port: Int
     public let ssl: Bool
     public let transientErrorAdapter: TransientErrorAdapter?
+    public let defaultExpiredTimeSpan: TimeInterval = 5 * 60
     
     private let retryInvoker: RetryInvoker
     
@@ -50,8 +52,7 @@ public final class GrpcClient : Client {
      small value might be increased. Defaults to 20 seconds.
      - Parameter trace: Trace all actions performed by the client. Defaults to false.
      */
-    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil) {
-        
+    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil, autoRefreshSession: Bool = true) {
         let base64Auth = "\(serverKey):".data(using: String.Encoding.utf8)!.base64EncodedString()
         let basicAuth = "Basic \(base64Auth)"
         var callOptions = CallOptions(cacheable: false)
@@ -81,6 +82,7 @@ public final class GrpcClient : Client {
         self.port = port
         self.ssl = ssl
         self.transientErrorAdapter = transientErrorAdapter ?? TransientErrorAdapter()
+        self.autoRefreshSession = autoRefreshSession
         
         retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
         globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
@@ -281,9 +283,16 @@ public final class GrpcClient : Client {
             req.vars = vars
         }
         
-        return try await retryInvoker.invokeWithRetry(request: {
+        let refreshed = try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.sessionRefresh(req, callOptions: nil).response.get().toSession()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
+        
+        if let updatedSession = session as? DefaultSession {
+            updatedSession.update(authToken: refreshed.token, refreshToken: refreshed.refreshToken)
+            return updatedSession
+        }
+        
+        return DefaultSession(token: refreshed.token, refreshToken: refreshed.refreshToken, created: refreshed.created)
     }
     
     public func sessionLogout(session: Session, retryConfig: RetryConfiguration? = nil) async throws {

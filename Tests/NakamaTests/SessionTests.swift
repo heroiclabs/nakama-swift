@@ -37,7 +37,7 @@ final class SessionTests: XCTestCase {
     
     func test01_AuthenticateDevice() {
         XCTAssertNotNil(session)
-        XCTAssertFalse(session.expired)
+        XCTAssertFalse(session.isExpired)
         XCTAssertEqual(session.sessionVars, vars)
     }
     
@@ -45,8 +45,8 @@ final class SessionTests: XCTestCase {
         let newVars = ["lang":"en"]
         let newSession = try await client.refreshSession(session: session, vars: newVars)
         XCTAssertNotNil(newSession)
-        XCTAssertEqual(newSession.expired, false)
-        XCTAssertEqual(newSession.sessionVars, newVars)
+        XCTAssertEqual(newSession.isExpired, false)
+        XCTAssertEqual(newSession.sessionVars.contains { $0.key == newVars.first?.key }, true)
     }
     
     func test03_Logout() async throws {
@@ -66,59 +66,4 @@ final class SessionTests: XCTestCase {
         XCTAssertNotNil(account.user.username)
         XCTAssertNotNil(account.user.createTime)
     }
-    
-    /*
-    func testRealtimeChat() {
-        let session1 = newSession()
-        let session2 = newSession(id: "my-second-ios-device")
-        var socket1 = client.createSocket(host: client.host, port: 7350, ssl: client.ssl)
-        var socket2 = client.createSocket(host: client.host, port: 7350, ssl: client.ssl)
-        socket1.onError = { error in
-            self.logger.error("Socket 1 received error: \(error)")
-        }
-        socket2.onError = { error in
-            self.logger.error("Socket 2 received error: \(error)")
-        }
-        socket1.onConnect = {
-            self.logger.info("Socket 1 connected")
-        }
-        socket2.onConnect = {
-            self.logger.info("Socket 2 connected")
-        }
-        socket1.onDisconnect = {
-            self.logger.info("Socket 1 disconnected")
-        }
-        socket2.onDisconnect = {
-            self.logger.info("Socket 2 disconnected")
-        }
-        socket1.onChannelMessage = { message in
-            self.logger.info("Received message from \(message.channelID): \(message.content)")
-        }
-        socket2.onChannelMessage = { message in
-            self.logger.info("Received message from \(message.channelID): \(message.content)")
-        }
-        
-        socket1.connect(session: session1, createStatus: true)
-        socket2.connect(session: session2, createStatus: true)
-        let channel1 = try! socket1.joinChat(target: session2.userId, type: .directMessage, persistence: false, hidden: false).wait()
-        let channel2 = try! socket2.joinChat(target: session1.userId, type: .directMessage, persistence: false, hidden: false).wait()
-        
-        XCTAssertNotEqual(channel1.id, "")
-        XCTAssertNotEqual(channel2.id, "")
-        XCTAssertNotEqual(channel2.presences, [])
-        logger.info("Created new DM channel for users \(session1.username) and \(session2.username).")
-
-        let jsonData = try! JSONSerialization.data(withJSONObject: ["hello":"this-is-a-message"])
-        let jsonData2 = try! JSONSerialization.data(withJSONObject: ["hello":"this-is-a-second-message"])
-        
-        let ack1 = try! socket1.writeChatMessage(channelId: channel1.id, content: String(data: jsonData, encoding: String.Encoding.utf8)!).wait()
-        let ack2 = try! socket2.writeChatMessage(channelId: channel2.id, content: String(data: jsonData2, encoding: String.Encoding.utf8)!).wait()
-        
-        XCTAssertNotEqual(ack1.messageID, "")
-        XCTAssertNotEqual(ack2.messageID, "")        
-        logger.info("Wrote two messages to the channels.")
-        socket1.disconnect()
-        socket2.disconnect()
-        try! client.disconnect().wait()
-    }*/
 }

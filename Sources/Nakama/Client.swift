@@ -24,6 +24,9 @@ public protocol Client {
     var transientErrorAdapter: TransientErrorAdapter? { get }
     var globalRetryConfiguration: RetryConfiguration { get set }
     
+    /// True if the session should be refreshed with an active refresh token.
+    var autoRefreshSession: Bool { get }
+    
     /**
      Disconnects the client. This function kills all outgoing exchanges immediately without waiting.
      */
