@@ -24,11 +24,13 @@ public final class GrpcClient : Client {
     public var eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     public var retriesLimit = 5
     public var globalRetryConfiguration: RetryConfiguration
+    public var autoRefreshSession: Bool
     
     public let host: String
     public let port: Int
     public let ssl: Bool
     public let transientErrorAdapter: TransientErrorAdapter?
+    public let defaultExpiredTimeSpan: TimeInterval = 5 * 60
     
     private let retryInvoker: RetryInvoker
     
@@ -50,8 +52,7 @@ public final class GrpcClient : Client {
      small value might be increased. Defaults to 20 seconds.
      - Parameter trace: Trace all actions performed by the client. Defaults to false.
      */
-    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil) {
-        
+    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil, autoRefreshSession: Bool = true) {
         let base64Auth = "\(serverKey):".data(using: String.Encoding.utf8)!.base64EncodedString()
         let basicAuth = "Basic \(base64Auth)"
         var callOptions = CallOptions(cacheable: false)
@@ -81,6 +82,7 @@ public final class GrpcClient : Client {
         self.port = port
         self.ssl = ssl
         self.transientErrorAdapter = transientErrorAdapter ?? TransientErrorAdapter()
+        self.autoRefreshSession = autoRefreshSession
         
         retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
         globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
@@ -102,6 +104,8 @@ public final class GrpcClient : Client {
         if let usernames {
             req.usernames = usernames
         }
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.addFriends(req, callOptions: session.callOptions).response.get()
@@ -269,6 +273,8 @@ public final class GrpcClient : Client {
     }
     
     public func getAccount(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> ApiAccount {
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.getAccount(Google_Protobuf_Empty(), callOptions: session.callOptions).response.get().toApiAccount()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -281,9 +287,16 @@ public final class GrpcClient : Client {
             req.vars = vars
         }
         
-        return try await retryInvoker.invokeWithRetry(request: {
+        let refreshed = try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.sessionRefresh(req, callOptions: nil).response.get().toSession()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
+        
+        if let updatedSession = session as? DefaultSession {
+            updatedSession.update(authToken: refreshed.token, refreshToken: refreshed.refreshToken)
+            return updatedSession
+        }
+        
+        return DefaultSession(token: refreshed.token, refreshToken: refreshed.refreshToken, created: refreshed.created)
     }
     
     public func sessionLogout(session: Session, retryConfig: RetryConfiguration? = nil) async throws {
@@ -313,6 +326,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_WriteStorageObjectsRequest()
         req.objects = writes
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.writeStorageObjects(req, callOptions: session.callOptions).response.get().toStorageObjectAcks()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -331,6 +346,8 @@ public final class GrpcClient : Client {
         
         var req = Nakama_Api_ReadStorageObjectsRequest()
         req.objectIds = objectIds
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.readStorageObjects(req, callOptions: session.callOptions).response.get().objects.map { $0.toStorageObject()}
@@ -351,6 +368,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_DeleteStorageObjectsRequest()
         req.objectIds = objectIds
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.deleteStorageObjects(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -363,6 +382,8 @@ public final class GrpcClient : Client {
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listStorageObjects(req, callOptions: session.callOptions).response.get().toStorageObjectList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -374,6 +395,8 @@ public final class GrpcClient : Client {
         if let payload {
             req.payload = payload
         }
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.rpcFunc(req, callOptions: session.callOptions).response.get().toApiRpc()
@@ -397,6 +420,8 @@ public final class GrpcClient : Client {
         req.leaderboardID = leaderboardId
         req.record = record
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.writeLeaderboardRecord(req, callOptions: session.callOptions).response.get().toLeaderboardRecord()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -414,6 +439,8 @@ public final class GrpcClient : Client {
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listLeaderboardRecords(req, callOptions: session.callOptions).response.get().toLeaderboardRecordList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -429,6 +456,8 @@ public final class GrpcClient : Client {
         req.limit = limit.pbUint32Value
         req.cursor = cursor ?? ""
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listLeaderboardRecordsAroundOwner(req, callOptions: session.callOptions).response.get().toLeaderboardRecordList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -438,6 +467,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_DeleteLeaderboardRecordRequest()
         req.leaderboardID = leaderboardId
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.deleteLeaderboardRecord(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -446,6 +477,8 @@ public final class GrpcClient : Client {
     public func joinTournament(session: Session, tournamentId: String, retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Nakama_Api_JoinTournamentRequest()
         req.tournamentID = tournamentId
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.joinTournament(req, callOptions: session.callOptions).response.get()
@@ -464,6 +497,8 @@ public final class GrpcClient : Client {
         }
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listTournaments(req, callOptions: session.callOptions).response.get().toTournamentList()
@@ -486,6 +521,8 @@ public final class GrpcClient : Client {
             record.metadata = metadata
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.writeTournamentRecord(req, callOptions: session.callOptions).response.get().toLeaderboardRecord()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -503,6 +540,8 @@ public final class GrpcClient : Client {
         req.limit = limit.pbInt32Value
         req.cursor = cursor ?? ""
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listTournamentRecords(req, callOptions: session.callOptions).response.get().toTournamentRecordList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -517,6 +556,8 @@ public final class GrpcClient : Client {
         }
         req.limit = limit.pbUint32Value
         req.cursor = cursor ?? ""
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listTournamentRecordsAroundOwner(req, callOptions: session.callOptions).response.get().toTournamentRecordList()
@@ -538,6 +579,8 @@ public final class GrpcClient : Client {
         req.open = open ?? true
         req.maxCount = Int32(maxCount ?? 100)
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.createGroup(req, callOptions: session.callOptions).response.get().toGroup()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -546,6 +589,8 @@ public final class GrpcClient : Client {
     public func joinGroup(session: Session, groupId: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_JoinGroupRequest()
         req.groupID = groupId
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.joinGroup(req, callOptions: session.callOptions).response.get()
@@ -556,6 +601,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_LeaveGroupRequest()
         req.groupID = groupId
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.leaveGroup(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -564,6 +611,8 @@ public final class GrpcClient : Client {
     public func deleteGroup(session: Session, groupId: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_DeleteGroupRequest()
         req.groupID = groupId
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.deleteGroup(req, callOptions: session.callOptions).response.get()
@@ -589,6 +638,8 @@ public final class GrpcClient : Client {
             req.open = open.pbBoolValue
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listGroups(req, callOptions: session.callOptions).response.get().toGroupList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -611,6 +662,8 @@ public final class GrpcClient : Client {
             req.langTag = langTag.pbStringValue
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.updateGroup(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -621,6 +674,8 @@ public final class GrpcClient : Client {
         req.groupID = groupId
         req.userIds = ids
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.addGroupUsers(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -630,6 +685,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_KickGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.kickGroupUsers(req, callOptions: session.callOptions).response.get()
@@ -647,6 +704,8 @@ public final class GrpcClient : Client {
             req.cursor = cursor
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listGroupUsers(req, callOptions: session.callOptions).response.get().toGroupUserList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -663,6 +722,8 @@ public final class GrpcClient : Client {
             req.cursor = cursor
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listUserGroups(req, callOptions: session.callOptions).response.get().toUserGroupList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -673,6 +734,8 @@ public final class GrpcClient : Client {
         req.groupID = groupId
         req.userIds = ids
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.promoteGroupUsers(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -682,6 +745,9 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_DemoteGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         _ = try await nakamaGrpcClient.demoteGroupUsers(req, callOptions: session.callOptions).response.get()
     }
     
@@ -689,6 +755,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_BanGroupUsersRequest()
         req.groupID = groupId
         req.userIds = ids
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.banGroupUsers(req, callOptions: session.callOptions).response.get()
@@ -700,6 +768,8 @@ public final class GrpcClient : Client {
         req.receipt = receipt
         req.persist = (persist ?? true).pbBoolValue
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.validatePurchaseApple(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -710,6 +780,8 @@ public final class GrpcClient : Client {
         req.purchase = receipt
         req.persist = (persist ?? true).pbBoolValue
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await nakamaGrpcClient.validatePurchaseGoogle(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
     }
     
@@ -717,6 +789,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_ValidatePurchaseHuaweiRequest()
         req.purchase = receipt
         req.persist = (persist ?? true).pbBoolValue
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.validatePurchaseHuawei(req, callOptions: session.callOptions).response.get().toValidatePurchaseResponse()
@@ -726,6 +800,8 @@ public final class GrpcClient : Client {
     public func getSubscription(session: Session, productId: String, retryConfig: RetryConfiguration? = nil) async throws -> ValidatedSubscription {
         var req = Nakama_Api_GetSubscriptionRequest()
         req.productID = productId
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.getSubscription(req, callOptions: session.callOptions).response.get().toValidatedSubscription()
@@ -737,6 +813,8 @@ public final class GrpcClient : Client {
         req.receipt = receipt
         req.persist = (persist ?? true).pbBoolValue
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.validateSubscriptionApple(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -746,6 +824,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_ValidateSubscriptionGoogleRequest()
         req.receipt = receipt
         req.persist = (persist ?? true).pbBoolValue
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.validateSubscriptionGoogle(req, callOptions: session.callOptions).response.get().toValidatedSubscriptionResponse()
@@ -759,6 +839,8 @@ public final class GrpcClient : Client {
             req.cursor = cursor
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listSubscriptions(req, callOptions: session.callOptions).response.get().toSubscriptionList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -771,6 +853,8 @@ public final class GrpcClient : Client {
         }
         req.limit = limit.pbInt32Value
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             return try await self.nakamaGrpcClient.listNotifications(req, callOptions: session.callOptions).response.get().toNotificationList()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -780,6 +864,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_DeleteNotificationsRequest()
         req.ids = ids
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.deleteNotifications(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -788,6 +874,8 @@ public final class GrpcClient : Client {
     public func linkApple(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountApple()
         req.token = token
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkApple(req, callOptions: session.callOptions).response.get()
@@ -799,6 +887,8 @@ public final class GrpcClient : Client {
         req.email = email
         req.password = password
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkEmail(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -809,6 +899,8 @@ public final class GrpcClient : Client {
         req.account.token = token
         req.sync = `import`.pbBoolValue
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkSteam(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -817,6 +909,8 @@ public final class GrpcClient : Client {
     public func linkDevice(session: Session, id: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountDevice()
         req.id = id
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkDevice(req, callOptions: session.callOptions).response.get()
@@ -827,6 +921,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_AccountCustom()
         req.id = id
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkCustom(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -835,6 +931,8 @@ public final class GrpcClient : Client {
     public func linkGoogle(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountGoogle()
         req.token = token
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkGoogle(req, callOptions: session.callOptions).response.get()
@@ -845,6 +943,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_LinkFacebookRequest()
         req.account.token = token
         req.sync = (`import` ?? true).pbBoolValue
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkFacebook(req, callOptions: session.callOptions).response.get()
@@ -860,6 +960,8 @@ public final class GrpcClient : Client {
         req.signature = signature
         req.timestampSeconds = Int64(timestamp)
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.linkGameCenter(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -868,6 +970,8 @@ public final class GrpcClient : Client {
     public func unlinkApple(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountApple()
         req.token = token
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkApple(req, callOptions: session.callOptions).response.get()
@@ -879,6 +983,8 @@ public final class GrpcClient : Client {
         req.email = email
         req.password = password
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkEmail(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -887,6 +993,8 @@ public final class GrpcClient : Client {
     public func unlinkSteam(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountSteam()
         req.token = token
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkSteam(req, callOptions: session.callOptions).response.get()
@@ -897,6 +1005,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_AccountDevice()
         req.id = id
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkDevice(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -905,6 +1015,8 @@ public final class GrpcClient : Client {
     public func unlinkCustom(session: Session, id: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountCustom()
         req.id = id
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkCustom(req, callOptions: session.callOptions).response.get()
@@ -915,6 +1027,8 @@ public final class GrpcClient : Client {
         var req = Nakama_Api_AccountGoogle()
         req.token = token
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkGoogle(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -923,6 +1037,8 @@ public final class GrpcClient : Client {
     public func unlinkFacebook(session: Session, token: String, retryConfig: RetryConfiguration? = nil) async throws {
         var req = Nakama_Api_AccountFacebook()
         req.token = token
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkFacebook(req, callOptions: session.callOptions).response.get()
@@ -938,6 +1054,8 @@ public final class GrpcClient : Client {
         req.signature = signature
         req.timestampSeconds = Int64(timestamp)
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.unlinkGameCenter(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
@@ -949,6 +1067,8 @@ public final class GrpcClient : Client {
         if let reset {
             req.reset = reset.pbBoolValue
         }
+        
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
         
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.importFacebookFriends(req, callOptions: session.callOptions).response.get()
@@ -962,8 +1082,18 @@ public final class GrpcClient : Client {
             req.reset = reset.pbBoolValue
         }
         
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+        
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.importSteamFriends(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
+    }
+}
+
+extension GrpcClient {
+    func refreshIfExpired(session: Session, retryConfig: RetryConfiguration) async throws {
+        if autoRefreshSession && !session.refreshToken.isEmpty && session.hasExpired(offset: Date().addingTimeInterval(defaultExpiredTimeSpan)) {
+            _ = try await refreshSession(session: session, retryConfig: retryConfig)
+        }
     }
 }

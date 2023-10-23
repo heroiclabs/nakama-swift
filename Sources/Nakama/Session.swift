@@ -18,66 +18,66 @@ import Foundation
 import GRPC
 
 public protocol Session {
-    /*
-     * The authentication token used to construct this session.
-     */
+    /// The authentication token used to construct this session.
     var token: String { get }
     
-    /**
-     Refresh token that can be used for session token renewal.
-     */
+    /// Refresh token that can be used for session token renewal.
     var refreshToken: String { get }
     
-    /*
-     * True if the user account for this session was just created.
-     */
+    /// If the user account for this session was just created.
     var created: Bool { get }
     
-    /*
-     * The timestamp in seconds when this session object was created.
-     */
+    /// The UNIX timestamp when this session was created.
     var createTime: Date { get }
     
-    /*
-     * True if the session has expired against the current time.
-     */
-    var expired: Bool { get }
-    
-    /*
-     * True if the session has expired against the current time.
-     */
-    func expired(date: Date) -> Bool
-    
-    /*
-     * The timestamp in seconds when this session will expire.
-     */
+    /// If the session has expired against the current time.
+    var isExpired: Bool { get }
+        
+    /// The UNIX timestamp when this session will expire.
     var expiryTime: Date { get }
     
-    /*
-     * The username of the user who owns this session.
-     */
+    /// If the refresh token has expired against current time.
+    var isRefreshExpired: Bool { get }
+    
+    /// The UNIX timestamp when the refresh token will expire.
+    var refreshExpiryTime: Date { get }
+    
+    /// The username of the user who owns this session.
     var username: String { get }
     
-    /*
-     * The ID of the user who owns this session.
-     */
+    /// The ID of the user who owns this session.
     var userId: String { get }
     
-    /*
-     * Get session vars.
-     */
+    /// Any custom properties associated with this session.
     var sessionVars: [String:String] { get }
+    
+    /// Update the current session token with a new authorization token and refresh token.
+    ///
+    /// - Parameter authToken: The authorization token to update into the session.
+    /// - Parameter refreshToken: The refresh token to update into the session.
+    func update(authToken: String, refreshToken: String)
+    
+    /// Check if the session has expired against the offset time.
+    ///
+    /// - Parameter offset: The time to compare against this session.
+    func hasExpired(offset: Date) -> Bool
+    
+    /// Check if the refresh token has expired against the offset time.
+    ///
+    /// - Parameter offset: The time to compare against this refresh token.
+    func hasRefreshExpired(offset: Date) -> Bool
 }
 
-class DefaultSession: Session {
-    var token: String
-    var refreshToken: String
-    var created: Bool
-    var createTime: Date
-    var expiryTime: Date
-    var username: String
-    var userId: String
-    var sessionVars: [String : String]
+public final class DefaultSession: Session {
+    public var token: String
+    public var refreshToken: String
+    public var created: Bool
+    public var createTime: Date
+    public var expiryTime: Date
+    public var refreshExpiryTime: Date
+    public var username: String
+    public var userId: String
+    public var sessionVars: [String : String]
     
     init(token: String, refreshToken: String, created: Bool) {
         self.token = token
@@ -91,25 +91,70 @@ class DefaultSession: Session {
         
         let jsonData = Data(base64Encoded: claims)!
         let jsonDict =  try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String:AnyObject]
+        
         self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
+        self.refreshExpiryTime = Date()
         self.userId = jsonDict["uid"] as! String
         self.username = jsonDict["usn"] as! String
         self.sessionVars = jsonDict.keys.contains("vrs") ? jsonDict["vrs"] as! [String : String] : [:]
+        
+        self.update(authToken: token, refreshToken: refreshToken)
     }
     
-    var expired: Bool {
+    public var isExpired: Bool {
         get {
-            let now = Date()
-            return now > self.expiryTime
+            return hasExpired(offset: Date())
         }
     }
     
-    func expired(date: Date) -> Bool {
-        return date > self.expiryTime
+    public var isRefreshExpired: Bool {
+        get {
+            return hasRefreshExpired(offset: Date())
+        }
     }
     
     public static func restore(token: String, refreshToken: String) -> Session {
         return DefaultSession(token: token, refreshToken: refreshToken, created: false)
+    }
+    
+    public func hasExpired(offset: Date) -> Bool {
+        let epoch = Date(timeIntervalSince1970: 0)
+        return offset > epoch.addingTimeInterval(expiryTime.timeIntervalSince1970)
+    }
+    
+    public func hasRefreshExpired(offset: Date) -> Bool {
+        let epoch = Date(timeIntervalSince1970: 0)
+        return offset > epoch.addingTimeInterval(refreshExpiryTime.timeIntervalSince1970)
+    }
+    
+    public func update(authToken: String, refreshToken: String) {
+        self.token = authToken
+        self.refreshToken = refreshToken
+        
+        guard let decoded = authToken.decodedJWT() else { return }
+        
+        // Update
+        if let uid = decoded["uid"] as? String { // User Id
+            self.userId = uid
+        }
+        if let username = decoded["usn"] as? String { // Username
+            self.username = username
+        }
+        if let expiry = decoded["exp"] as? Double {
+            self.expiryTime = Date(timeIntervalSince1970: expiry)
+        }
+        if let vars = decoded["vrs"] as? [String:Any] { // Vars
+            for (k, v) in vars {
+                if let val = v as? String {
+                    self.sessionVars[k] = val
+                }
+            }
+        }
+        if !refreshToken.isEmpty { // Update refresh expiry time
+            if let decoded2 = refreshToken.decodedJWT(), let exp = decoded2["exp"] as? Double {
+                self.refreshExpiryTime = Date(timeIntervalSince1970: exp)
+            }
+        }
     }
 }
 
@@ -118,5 +163,18 @@ extension Session {
         var options = CallOptions()
         options.customMetadata.add(name: "authorization", value: "Bearer \(self.token)")
         return options
+    }
+}
+
+extension String {
+    func decodedJWT() -> [String:Any]? {
+        let components = self.components(separatedBy: ".")
+        guard components.count == 3 else { return nil }
+        
+        if let base64Encoded = Data(base64Encoded: components[1]), let jsonJWT = try? JSONSerialization.jsonObject(with: base64Encoded) as? [String:Any] {
+            return jsonJWT
+        }
+        
+        return nil
     }
 }
