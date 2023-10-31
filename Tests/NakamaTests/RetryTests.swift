@@ -185,14 +185,14 @@ final class RetryTests: XCTestCase {
         let config = RetryConfiguration(baseDelayMs: 10, maxRetries: 3, retryListener: retryListener)
         client.globalRetryConfiguration = config
         
-        let timeBeforeRequest = Date.now
-        var timeAfterRequest = Date.now
+        let timeBeforeRequest = Date()
+        var timeAfterRequest = Date()
         
         do {
             _ = try await client.authenticateCustom(id: "test_id")
             XCTFail()
         } catch {
-            timeAfterRequest = Date.now
+            timeAfterRequest = Date()
         }
         
         let expectedElapsedMs = retries.reduce(0) { $0 + $1.jitterBackoff }
