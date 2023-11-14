@@ -4,10 +4,12 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.0.0] - 2023-11-14
 #### Changed
-- Complete client update to support Nakama 2.0 and Nakama 3.0
-- Update for Swift 5.
+- Complete client rewrite that has API and realtime feature parity with Nakama 3.0.
+- Support for the Swift async/await concurrency model.
+- Configurable automatic retry support on 500 level server errors.
+- Automated session refresh for expired tokens.
 
 ## [0.3.0] - 2017-11-08
 #### Changed
