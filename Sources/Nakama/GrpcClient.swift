@@ -30,7 +30,7 @@ public final class GrpcClient : Client {
     public let port: Int
     public let ssl: Bool
     public let transientErrorAdapter: TransientErrorAdapter?
-    public let defaultExpiredTimeSpan: TimeInterval = 5 * 60
+    public var defaultExpiredTimeSpan: TimeInterval = 5 * 60
     
     private let retryInvoker: RetryInvoker
     
@@ -52,7 +52,7 @@ public final class GrpcClient : Client {
      small value might be increased. Defaults to 20 seconds.
      - Parameter trace: Trace all actions performed by the client. Defaults to false.
      */
-    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil, autoRefreshSession: Bool = true) {
+    public init(serverKey: String, host: String = "127.0.0.1", port: Int = 7349, ssl: Bool = false, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false, transientErrorAdapter: TransientErrorAdapter? = nil, autoRefreshSession: Bool = true, expiredTimeSpan: Double? = nil) {
         let base64Auth = "\(serverKey):".data(using: String.Encoding.utf8)!.base64EncodedString()
         let basicAuth = "Basic \(base64Auth)"
         var callOptions = CallOptions(cacheable: false)
@@ -83,6 +83,7 @@ public final class GrpcClient : Client {
         self.ssl = ssl
         self.transientErrorAdapter = transientErrorAdapter ?? TransientErrorAdapter()
         self.autoRefreshSession = autoRefreshSession
+        self.defaultExpiredTimeSpan = expiredTimeSpan ?? defaultExpiredTimeSpan
         
         retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
         globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)

@@ -266,7 +266,7 @@ public protocol SocketProtocol {
      - Parameter numericProperties: A set of k/v numeric properties to provide in searches.
      - Parameter countMultiple: An optional integer to force the matchmaker to match in multiples of.
      */
-    func addMatchmaker(query: String?, minCount: Int32?, maxCount: Int32?, stringProperties: [String:String]?, numericProperties: [String:Double]?, countMultiple: Int?) async throws -> Nakama_Realtime_MatchmakerTicket
+    func addMatchmaker(query: String?, minCount: Int?, maxCount: Int?, stringProperties: [String:String]?, numericProperties: [String:Double]?, countMultiple: Int?) async throws -> Nakama_Realtime_MatchmakerTicket
     
     /**
      Leave the matchmaker pool by ticket.
@@ -283,7 +283,7 @@ public protocol SocketProtocol {
      - Parameter data: The new state to send to the match.
      - Parameter presences: The presences in the match to send the state.
      */
-    func sendMatchData(matchId: String, opCode: Int64, data: String, presences: [Nakama_Realtime_UserPresence]?) async throws -> Void
+    func sendMatchData(matchId: String, opCode: Int, data: String, presences: [Nakama_Realtime_UserPresence]?) async throws -> Void
     
     /**
      Send a state change to a match on the server.
@@ -294,7 +294,7 @@ public protocol SocketProtocol {
      - Parameter data: The new state to send to the match.
      - Parameter presences: The presences in the match to send the state.
      */
-    func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]?) async throws -> Void
+    func sendMatchData(matchId: String, opCode: Int, data: Data, presences: [Nakama_Realtime_UserPresence]?) async throws -> Void
     
     /**
      Send an RPC message to the server.
