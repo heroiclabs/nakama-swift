@@ -5,10 +5,8 @@ All notable changes to this project are documented below.
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
 ## [1.1.0] - 2023-11-29
-#### Changed
-- Expose expiredTimeSpan in client initializer.
-- Change Int32 and Int64 parameters to Int.
-- Add: listFriends, deleteFriends, updateAccount, listChannelMessages, and listMatches.
+#### Added
+- listFriends, deleteFriends, updateAccount, listChannelMessages, and listMatches.
 
 ## [1.0.0] - 2023-11-14
 #### Changed
