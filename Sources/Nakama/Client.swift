@@ -52,6 +52,25 @@ public protocol Client {
     func addFriends(session: Session, ids: [String], usernames: [String]?, retryConfig: RetryConfiguration?) async throws -> Void
     
     /**
+     List of friends of the current user.
+    - Parameter session: The session of the user.
+    - Parameter state: Filter by friendship state.
+    - Parameter limit: The number of friends to list.
+    - Parameter cursor: A cursor for the current position in the friends list.
+    - Parameter retryConfig: The retry configuration.
+    */
+    func listFriends(session: Session, state: Int?, limit: Int, cursor: String?, retryConfig: RetryConfiguration?) async throws -> Nakama_Api_FriendList
+    
+    /**
+     Delete one or more users by id or username from friends.
+     - Parameter session: The session of the user.
+     - Parameter ids: The user ids to remove as friends.
+     - Parameter usernames: The usernames to remove as friends.
+     - Parameter retryConfiguration: The retry configuration.
+     */
+    func deleteFriends(session: Session, ids: [String], usernames: [String]?, retryConfig: RetryConfiguration?) async throws -> Void
+    
+    /**
      Authenticate a user with a custom id.
      - Parameter id: A custom identifier usually obtained from an external authentication service.
      - Parameter create: If the user should be created when authenticated.
@@ -154,6 +173,29 @@ public protocol Client {
      - Parameter retryConfig: The retry configuration.
      */
     func getAccount(session: Session, retryConfig: RetryConfiguration?) async throws -> ApiAccount
+    
+    /**
+     Update the current user's account on the server.
+     - Parameter session: The session for the user.
+     - Parameter username: The new username for the user.
+     - Parameter displayName: A new display name for the user.
+     - Parameter avatarUrl: A new avatar url for the user.
+     - Parameter langTag: A new language tag in BCP-47 format for the user.
+     - Parameter location: A new location for the user.
+     - Parameter timezone: New timezone information for the user.
+     - Parameter retryConfiguration: The retry configuration.
+     */
+    func updateAccount(session: Session, username: String, displayName: String?, avatarURL: String?, langTag: String?, location: String?, timezone: String?, retryConfig: RetryConfiguration?) async throws -> Void
+    
+    /**
+     Fetch one or more users by id, usernames, or Facebook ids.
+     - Parameter session: The session of the user.
+     - Parameter ids: The IDs of the users to retrieve.
+     - Parameter usernames: The usernames of the users to retrieve.
+     - Parameter facebookIds: The facebook IDs of the users to retrieve.
+     - Parameter retryConfiguration: The retry configuration.
+     */
+    func getUsers(session: Session, ids: [String], usernames: [String]?, facebookIds: [String]?, retryConfig: RetryConfiguration?) async throws -> Nakama_Api_Users
     
     /**
      Refresh a user session and return the new session.
@@ -683,4 +725,28 @@ public protocol Client {
      - Parameter retryConfig: The retry configuration.
      */
     func importSteamFriends(session: Session, token: String, reset: Bool?, retryConfig: RetryConfiguration?) async throws -> Void
+    
+    /**
+     List messages from a chat channel.
+     - Parameter session: The session of the user.
+     - Parameter channelId: The chat channel id.
+     - Parameter limit: The number of chat messages to list.
+     - Parameter forward: Fetch messages forward from the current cursor or the start.
+     - Parameter cursor: A cursor for the current position in the messages history to list.
+     - Parameter retryConfig: The retry configuration.
+     */
+    func listChannelMessages(session: Session, channelId: String, limit: Int, forward: Bool, cursor: String?, retryConfig: RetryConfiguration?) async throws -> Nakama_Api_ChannelMessageList
+    
+    /**
+     Fetch a list of matches active on the server.
+     - Parameter session: The session of the user.
+     - Parameter min: The minimum number of match participants.
+     - Parameter max: The maximum number of match participants.
+     - Parameter limit: The number of matches to list.
+     - Parameter authoritative: If authoritative matches should be included.
+     - Parameter label: The label to filter the match list on.
+     - Parameter query: A query for the matches to filter.
+     - Parameter retryConfig: The retry configuration.
+     */
+    func listMatches(session: Session, minCount: Int, maxCount: Int, limit: Int, authoritative: Bool, label: String, query: String, retryConfig: RetryConfiguration?) async throws -> Nakama_Api_MatchList
 }

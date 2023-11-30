@@ -4,6 +4,10 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [1.1.0] - 2023-11-29
+#### Added
+- listFriends, deleteFriends, updateAccount, listChannelMessages, and listMatches.
+
 ## [1.0.0] - 2023-11-14
 #### Changed
 - Complete client rewrite that has API and realtime feature parity with Nakama 3.0.

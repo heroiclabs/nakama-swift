@@ -334,11 +334,11 @@ public final class Socket : SocketProtocol {
         let _: Google_Protobuf_Empty = try await self.send(env: &env)
     }
     
-    public func addMatchmaker(query: String? = "*", minCount: Int32? = 2, maxCount: Int32? = 8, stringProperties: [String : String]? = nil, numericProperties: [String : Double]? = nil, countMultiple: Int? = nil) async throws -> Nakama_Realtime_MatchmakerTicket {
+    public func addMatchmaker(query: String? = "*", minCount: Int? = 2, maxCount: Int? = 8, stringProperties: [String : String]? = nil, numericProperties: [String : Double]? = nil, countMultiple: Int? = nil) async throws -> Nakama_Realtime_MatchmakerTicket {
         var req = Nakama_Realtime_MatchmakerAdd()
         req.query = query ?? "*"
-        req.minCount = minCount ?? 2
-        req.maxCount = maxCount ?? 8
+        req.minCount = Int32(minCount ?? 2)
+        req.maxCount = Int32(maxCount ?? 8)
         if let stringProperties {
             req.stringProperties = stringProperties
         }
@@ -365,14 +365,14 @@ public final class Socket : SocketProtocol {
         let _: Google_Protobuf_Empty = try await self.send(env: &env)
     }
     
-    public func sendMatchData(matchId: String, opCode: Int64, data: String, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
+    public func sendMatchData(matchId: String, opCode: Int, data: String, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
         guard let data = data.data(using: .utf8) else {
             throw NakamaRealtimeError(text: "Unable to convert string to Data")
         }
         
         var req = Nakama_Realtime_MatchDataSend()
         req.matchID = matchId
-        req.opCode = opCode
+        req.opCode = Int64(opCode)
         req.data = data
         if let presences {
             req.presences = presences
@@ -385,10 +385,10 @@ public final class Socket : SocketProtocol {
         self.socketAdapter.send(data: binaryData)
     }
     
-    public func sendMatchData(matchId: String, opCode: Int64, data: Data, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
+    public func sendMatchData(matchId: String, opCode: Int, data: Data, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
         var req = Nakama_Realtime_MatchDataSend()
         req.matchID = matchId
-        req.opCode = opCode
+        req.opCode = Int64(opCode)
         req.data = data
         if let presences {
             req.presences = presences
