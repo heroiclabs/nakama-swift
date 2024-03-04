@@ -70,7 +70,7 @@ public class Client: ClientProtocol {
         self.apiKey = apiKey
         self.transientErrorAdapter = transientErrorAdapter ?? TransientErrorAdapter()
         self.autoRefreshSession = autoRefreshSession
-        self.retryInvoker = RetryInvoker(transientErrorAdapter: transientErrorAdapter!)
+        self.retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
         self.globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
         self.grpcConnection = ClientConnection(configuration: configuration)
         self.satoriGrpcClient = Satori_Api_SatoriNIOClient(channel: grpcConnection, defaultCallOptions: callOptions)
@@ -81,7 +81,7 @@ public class Client: ClientProtocol {
         return try await self.grpcConnection.close().get()
     }
 
-    public func authenticateAsync(id: String, defaultProperties: [String : String]?, customProperties: [String : String]?, retryConfig: RetryConfiguration? = nil) async throws -> Session {
+    public func authenticateAsync(id: String, defaultProperties: [String : String]? = [:], customProperties: [String : String]? = [:], retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Satori_Api_AuthenticateRequest()
         req.id = id
         if let defaultProperties {
