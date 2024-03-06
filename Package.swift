@@ -23,7 +23,8 @@ let package = Package(
       .macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)
   ],
   products: [
-    .library(name: "Nakama", targets: ["Nakama"])
+    .library(name: "Nakama", targets: ["Nakama"]),
+    .library(name: "Satori", targets: ["Satori"])
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-nio.git", from: "2.51.0"),
@@ -34,7 +35,6 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-atomics.git", from: "1.1.0")
   ],
   targets: [
-    // The main GRPC module.
     .target(
       name: "Nakama",
       dependencies: [
@@ -46,10 +46,26 @@ let package = Package(
         .product(name: "Atomics", package: "swift-atomics"),
         .product(name: "SwiftProtobuf", package: "swift-protobuf"),
       ]
-    ), // and its tests.
+    ),
     .testTarget(
-      name: "NakamaTests",
-      dependencies: ["Nakama"]
-    )
+        name: "NakamaTests",
+        dependencies: ["Nakama"]
+    ),
+    .target(
+        name: "Satori",
+        dependencies: [
+            .product(name: "NIO", package: "swift-nio"),
+            .product(name: "NIOFoundationCompat", package: "swift-nio"),
+            .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),
+            .product(name: "NIOSSL", package: "swift-nio-ssl"),
+            .product(name: "GRPC", package: "grpc-swift"),
+            .product(name: "Atomics", package: "swift-atomics"),
+            .product(name: "SwiftProtobuf", package: "swift-protobuf"),
+        ]
+    ),
+    .testTarget(
+        name: "SatoriTests",
+        dependencies: ["Satori"]
+    ),
   ]
 )
