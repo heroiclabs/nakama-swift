@@ -81,7 +81,7 @@ public class Client: ClientProtocol {
         return try await self.grpcConnection.close().get()
     }
 
-    public func authenticateAsync(id: String, defaultProperties: [String : String]? = [:], customProperties: [String : String]? = [:], retryConfig: RetryConfiguration? = nil) async throws -> Session {
+    public func authenticate(id: String, defaultProperties: [String : String]? = [:], customProperties: [String : String]? = [:], retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Satori_Api_AuthenticateRequest()
         req.id = id
         if let defaultProperties {
@@ -95,7 +95,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: id, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func authenticateLogoutAsync(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Void {
+    public func authenticateLogout(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Satori_Api_AuthenticateLogoutRequest()
         req.token = session.authToken
         req.refreshToken = session.refreshToken
@@ -104,7 +104,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func sessionRefreshAsync(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Session {
+    public func sessionRefresh(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Satori_Api_AuthenticateRefreshRequest()
         req.refreshToken = session.refreshToken
         
@@ -120,7 +120,7 @@ public class Client: ClientProtocol {
         return SatoriSession(authToken: newSession.authToken, refreshToken: newSession.refreshToken)
     }
 
-    public func eventAsync(session: Session, event: Event, retryConfig: RetryConfiguration? = nil) async throws -> Void {
+    public func event(session: Session, event: Event, retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Satori_Api_EventRequest()
         req.events = [event.toApiEvent()]
         return try await retryInvoker.invokeWithRetry(request: {
@@ -128,7 +128,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func eventsAsync(session: Session, events: [Event], retryConfig: RetryConfiguration? = nil) async throws -> Void {
+    public func events(session: Session, events: [Event], retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Satori_Api_EventRequest()
         req.events = events.map { $0.toApiEvent() }
         return try await retryInvoker.invokeWithRetry(request: {
@@ -136,14 +136,14 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func getAllExperimentsAsync(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_ExperimentList {
+    public func getAllExperiments(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_ExperimentList {
         let req = Satori_Api_GetExperimentsRequest()
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.satoriGrpcClient.getExperiments(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func getExperimentsAsync(session: Session, names: [String], retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_ExperimentList {
+    public func getExperiments(session: Session, names: [String], retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_ExperimentList {
         var req = Satori_Api_GetExperimentsRequest()
         req.names = names
         return try await retryInvoker.invokeWithRetry(request: {
@@ -151,7 +151,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func getFlagAsync(session: Session, name: String, defaultValue: String? = "", retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_Flag {
+    public func getFlag(session: Session, name: String, defaultValue: String? = "", retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_Flag {
         var req = Satori_Api_GetFlagsRequest()
         req.names = [name]
         return try await retryInvoker.invokeWithRetry(request: {
@@ -163,7 +163,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func getFlagsAsync(session: Session, names: [String], retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_FlagList {
+    public func getFlags(session: Session, names: [String], retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_FlagList {
         var req = Satori_Api_GetFlagsRequest()
         req.names = names
         return try await retryInvoker.invokeWithRetry(request: {
@@ -171,7 +171,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func getLiveEventsAsync(session: Session, names: [String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_LiveEventList {
+    public func getLiveEvents(session: Session, names: [String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_LiveEventList {
         var req = Satori_Api_GetLiveEventsRequest()
         req.names = names ?? []
         return try await retryInvoker.invokeWithRetry(request: {
@@ -179,7 +179,7 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func identifyAsync(session: Session, id: String, defaultProperties: [String : String], customProperties: [String : String], retryConfig: RetryConfiguration? = nil) async throws -> Session {
+    public func identify(session: Session, id: String, defaultProperties: [String : String], customProperties: [String : String], retryConfig: RetryConfiguration? = nil) async throws -> Session {
         var req = Satori_Api_IdentifyRequest()
         req.id = id
         req.default = defaultProperties
@@ -189,14 +189,14 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func listPropertiesAsync(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_Properties {
+    public func listProperties(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Satori_Api_Properties {
         let req = Google_Protobuf_Empty()
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.satoriGrpcClient.listProperties(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func updatePropertiesAsync(session: Session, defaultProperties: [String : String], customProperties: [String : String], recompute: Bool? = false, retryConfig: RetryConfiguration? = nil) async throws -> Void {
+    public func updateProperties(session: Session, defaultProperties: [String : String], customProperties: [String : String], recompute: Bool? = false, retryConfig: RetryConfiguration? = nil) async throws -> Void {
         var req = Satori_Api_UpdatePropertiesRequest()
         req.default = defaultProperties
         req.custom = customProperties
@@ -206,8 +206,8 @@ public class Client: ClientProtocol {
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
     }
 
-    public func deleteIdentityAsync(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Void {
-        var req = Google_Protobuf_Empty()
+    public func deleteIdentity(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Void {
+        let req = Google_Protobuf_Empty()
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.satoriGrpcClient.deleteIdentity(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))

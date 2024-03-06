@@ -33,46 +33,46 @@ public protocol ClientProtocol {
 	/// 	- id: An optional user id.
 	/// 	- defaultProperties: Optional default properties to update with this call. If not set, properties are left as they are on the server.
 	/// 	- customProperties: Optional custom properties to update with this call. If not set, properties are left as they are on the server.
-	func authenticateAsync(id: String, defaultProperties: [String: String]?, customProperties: [String: String]?, retryConfig: RetryConfiguration?) async throws -> Session
+	func authenticate(id: String, defaultProperties: [String: String]?, customProperties: [String: String]?, retryConfig: RetryConfiguration?) async throws -> Session
 
 	/// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
-	func authenticateLogoutAsync(session: Session, retryConfig: RetryConfiguration?) async throws -> Void
+	func authenticateLogout(session: Session, retryConfig: RetryConfiguration?) async throws -> Void
 
 	/// Refresh a user's session using a refresh token retrieved from a previous authentication request.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
-	func sessionRefreshAsync(session: Session, retryConfig: RetryConfiguration?) async throws -> Session
+	func sessionRefresh(session: Session, retryConfig: RetryConfiguration?) async throws -> Session
 
 	/// Send an event for this session.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
 	/// 	- Parameter event: The event to send.
-	func eventAsync(session: Session, event: Event, retryConfig: RetryConfiguration?) async throws -> Void
+	func event(session: Session, event: Event, retryConfig: RetryConfiguration?) async throws -> Void
 
 	/// Send a batch of events for this session.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
 	/// 	- events: The batch of events which will be sent.
-	func eventsAsync(session: Session, events: [Event], retryConfig: RetryConfiguration?) async throws -> Void
+	func events(session: Session, events: [Event], retryConfig: RetryConfiguration?) async throws -> Void
 
 	/// Get all experiments data.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
-	func getAllExperimentsAsync(session: Session, retryConfig: RetryConfiguration?) async throws -> Satori_Api_ExperimentList
+	func getAllExperiments(session: Session, retryConfig: RetryConfiguration?) async throws -> Satori_Api_ExperimentList
 
 	/// Get specific experiments data.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
 	/// 	- names: Experiment names.
-	func getExperimentsAsync(session: Session, names: [String], retryConfig: RetryConfiguration?) async throws -> Satori_Api_ExperimentList
+	func getExperiments(session: Session, names: [String], retryConfig: RetryConfiguration?) async throws -> Satori_Api_ExperimentList
 
 	/// Get a single flag for this identity.
 	///
@@ -80,21 +80,21 @@ public protocol ClientProtocol {
 	/// 	- session: The session of the user.
 	/// 	- name: The name of the flag.
 	/// 	- defaultValue: The default value if the server is unreachable.
-	func getFlagAsync(session: Session, name: String, defaultValue: String?, retryConfig: RetryConfiguration?) async throws -> Satori_Api_Flag
+	func getFlag(session: Session, name: String, defaultValue: String?, retryConfig: RetryConfiguration?) async throws -> Satori_Api_Flag
 
 	/// List all available flags for this identity.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
 	/// 	- names: Flag names, if empty string all flags are returned.
-	func getFlagsAsync(session: Session, names: [String], retryConfig: RetryConfiguration?) async throws -> Satori_Api_FlagList
+	func getFlags(session: Session, names: [String], retryConfig: RetryConfiguration?) async throws -> Satori_Api_FlagList
 
 	/// List available live events.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
 	/// 	- names: Live event names, if null or empty, all live events are returned.
-	func getLiveEventsAsync(session: Session, names: [String]?, retryConfig: RetryConfiguration?) async throws -> Satori_Api_LiveEventList
+	func getLiveEvents(session: Session, names: [String]?, retryConfig: RetryConfiguration?) async throws -> Satori_Api_LiveEventList
 
 	/// Identify a session with a new ID.
 	///
@@ -103,13 +103,13 @@ public protocol ClientProtocol {
 	/// 	- id: Identity ID to enrich the current session and return a new session. The old session will no longer be usable. Must be between eight and 128 characters (inclusive). Must be an alphanumeric string with only underscores and hyphens allowed.
 	/// 	- defaultProperties: The default properties.
 	/// 	- customProperties: The custom event properties.
-	func identifyAsync(session: Session, id: String, defaultProperties: [String: String], customProperties: [String: String], retryConfig: RetryConfiguration?) async throws -> Session
+	func identify(session: Session, id: String, defaultProperties: [String: String], customProperties: [String: String], retryConfig: RetryConfiguration?) async throws -> Session
 
 	/// List properties associated with this identity.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
-	func listPropertiesAsync(session: Session, retryConfig: RetryConfiguration?) async throws -> Satori_Api_Properties
+	func listProperties(session: Session, retryConfig: RetryConfiguration?) async throws -> Satori_Api_Properties
 
 	/// Update properties associated with this identity.
 	///
@@ -118,11 +118,11 @@ public protocol ClientProtocol {
 	/// 	- defaultProperties: The default properties to update.
 	/// 	- customProperties: The custom properties to update.
 	/// 	- recompute: Whether or not to recompute the user's audience membership immediately after property update.
-	func updatePropertiesAsync(session: Session, defaultProperties: [String: String], customProperties: [String: String], recompute: Bool?, retryConfig: RetryConfiguration?) async throws -> Void
+	func updateProperties(session: Session, defaultProperties: [String: String], customProperties: [String: String], recompute: Bool?, retryConfig: RetryConfiguration?) async throws -> Void
 
 	/// Delete the caller's identity and associated data.
 	///
 	/// - Parameters:
 	/// 	- session: The session of the user.
-	func deleteIdentityAsync(session: Session, retryConfig: RetryConfiguration?) async throws -> Void
+	func deleteIdentity(session: Session, retryConfig: RetryConfiguration?) async throws -> Void
 }
