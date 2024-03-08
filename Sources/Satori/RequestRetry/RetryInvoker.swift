@@ -34,9 +34,9 @@ enum RetryInvokerError: Error {
 
 /// Invokes requests with retry and exponential backoff.
 public final class RetryInvoker {
-    private let transientErrorAdapter: TransientErrorAdapter
+    private let transientErrorAdapter: TransientErrorProtocol
     
-    public init(transientErrorAdapter: TransientErrorAdapter) {
+    init(transientErrorAdapter: TransientErrorProtocol) {
         self.transientErrorAdapter = transientErrorAdapter
     }
     

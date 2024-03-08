@@ -35,6 +35,11 @@ protocol TransientErrorProtocol {
     
     func sendAsync<T>(request: @escaping () async throws -> T) async throws -> T
 }
+extension TransientErrorProtocol {
+    func sendAsync<T>(request: @escaping () async throws -> T) async throws -> T {
+        return try await request()
+    }
+}
 
 /// An adapter used to intercept errors and determine if they are transient or not.
 public class TransientErrorAdapter: TransientErrorProtocol {
@@ -46,9 +51,16 @@ public class TransientErrorAdapter: TransientErrorProtocol {
             return false
         }
     }
-    
-    func sendAsync<T>(request: @escaping () async throws -> T) async throws -> T {
-        return try await request()
-    }
 }
 
+/// An http adapter to intercept errors and determine if they are transient or not.
+public class TransientErrorHttpAdapter: TransientErrorProtocol {
+    var handler: TransientErrorHandler {
+        return { error in
+            if let e = error as? ApiResponseError {
+                return e.statusCode == 500 || e.statusCode == 503
+            }
+            return false
+        }
+    }
+}
