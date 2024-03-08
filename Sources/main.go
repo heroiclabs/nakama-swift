@@ -57,6 +57,10 @@ public final class ApiResponseError: Error, Decodable {
 	}
 }
 
+struct EmptyResponse: Codable {
+    init() {}
+}
+
 {{- range $defname, $definition := .Definitions }}
 {{- $classname := $defname | title }}
 

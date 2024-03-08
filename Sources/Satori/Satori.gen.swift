@@ -28,6 +28,10 @@ public final class ApiResponseError: Error, Decodable {
 	}
 }
 
+struct EmptyResponse: Codable {
+    init() {}
+}
+
 /// The request to update the status of a message.
 public protocol ApiUpdateMessageRequestProtocol: Codable {
 
