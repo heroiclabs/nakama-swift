@@ -22,11 +22,27 @@ extension Date {
     func toProtobufTimestamp() -> SwiftProtobuf.Google_Protobuf_Timestamp {
 		return Google_Protobuf_Timestamp.with { $0.seconds = Int64(self.timeIntervalSince1970); $0.nanos = Int32(self.timeIntervalSince1970.truncatingRemainder(dividingBy: 1) * 1_000_000_000) }
 	}
+
+	/// Convert a swift Date to a RFC3339 formatted string.
+	func toRFC3339FormatString() -> String {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+		formatter.timeZone = TimeZone(identifier: "UTC")
+		return formatter.string(from: self)
+	}
 }
 
 extension Bool {
 	/// Convert a swift Bool to a protobuf BoolValue.
 	func toProtobufBool() -> SwiftProtobuf.Google_Protobuf_BoolValue {
 		return Google_Protobuf_BoolValue.with { $0.value = self }
+	}
+}
+
+extension SwiftProtobuf.Google_Protobuf_Timestamp {
+	/// Convert a protobuf timestamp to a swift Date.
+	func toDate() -> Date {
+		return Date(timeIntervalSince1970: TimeInterval(self.seconds) + TimeInterval(self.nanos) / 1_000_000_000)
 	}
 }
