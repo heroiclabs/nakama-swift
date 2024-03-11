@@ -58,7 +58,7 @@ public class TransientErrorHttpAdapter: TransientErrorProtocol {
     var handler: TransientErrorHandler {
         return { error in
             if let e = error as? ApiResponseError {
-                return e.statusCode == 500 || e.statusCode == 503
+                return e.statusCode == 500 || e.statusCode == 502 || e.statusCode == 503 || e.statusCode == 504
             }
             return false
         }
