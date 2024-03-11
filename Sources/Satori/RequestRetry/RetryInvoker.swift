@@ -34,17 +34,21 @@ enum RetryInvokerError: Error {
 
 /// Invokes requests with retry and exponential backoff.
 public final class RetryInvoker {
-    private let transientErrorAdapter: TransientErrorProtocol
+    /// A closure that takes an error as input and returns a boolean.
+    ///
+    /// Used to determine whether or not a network exception is due to a temporary bad state on the server.
+    /// - note: For example, timeouts can be transient in cases where the server is experiencing temporarily high load.
+    private let transientErrorHandler: TransientErrorHandler
     
-    init(transientErrorAdapter: TransientErrorProtocol) {
-        self.transientErrorAdapter = transientErrorAdapter
+    init(handler: @escaping TransientErrorHandler) {
+        self.transientErrorHandler = handler
     }
     
     public func invokeWithRetry<T>(request: @escaping () async throws -> T, history: RetryHistory) async throws -> T {
         do {
-            return try await transientErrorAdapter.sendAsync(request: request)
+            return try await request()
         } catch {
-            guard history.configuration != nil, transientErrorAdapter.handler(error) else {
+            guard history.configuration != nil, self.transientErrorHandler(error) else {
                 throw error
             }
             

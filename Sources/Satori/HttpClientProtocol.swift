@@ -18,7 +18,6 @@ public protocol HttpClientProtocol {
 	var scheme: String { get }
 	var host: String { get }
 	var port: Int { get }
-	var transientErrorAdapter: TransientErrorHttpAdapter { get }
 	var globalRetryConfiguration: RetryConfiguration { get set }
 
 	/// True if the session should be refreshed with an active refresh token.

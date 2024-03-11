@@ -21,7 +21,6 @@ public protocol ClientProtocol {
 	var host: String { get }
 	var port: Int { get }
 	var ssl: Bool { get }
-	var transientErrorAdapter: TransientErrorAdapter? { get }
 	var globalRetryConfiguration: RetryConfiguration { get set }
 
 	/// True if the session should be refreshed with an active refresh token.

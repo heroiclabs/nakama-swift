@@ -73,7 +73,6 @@ class HttpRequestAdapter: HttpAdapterProtocol {
                 }
                 
                 do {
-                    let string = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
                     let decodedResponse = try JSONDecoder().decode(T.self, from: data)
                     continuation.resume(returning: decodedResponse)
                 } catch {

@@ -33,7 +33,6 @@ public class Client: ClientProtocol {
     public let port: Int
     public let ssl: Bool
     public let apiKey: String
-    public let transientErrorAdapter: TransientErrorAdapter?
 
     private let grpcConnection: ClientConnection
     private let satoriGrpcClient: Satori_Api_SatoriClientProtocol
@@ -41,7 +40,7 @@ public class Client: ClientProtocol {
     private var logger: Logger?
 
     /// Initialize a new client.
-    public init(host: String = "127.0.0.1", port: Int = 7450, ssl: Bool = false, apiKey: String, autoRefreshSession: Bool = true, transientErrorAdapter: TransientErrorAdapter? = nil, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false) {
+    public init(host: String = "127.0.0.1", port: Int = 7449, ssl: Bool = false, apiKey: String, autoRefreshSession: Bool = true, deadlineAfter: TimeInterval = 20.0, keepAliveTimeout: TimeAmount = .seconds(20), trace: Bool = false) {
         let base64Auth = "\(apiKey):".data(using: String.Encoding.utf8)!.base64EncodedString()
         let basicAuth = "Basic \(base64Auth)"
         var callOptions = CallOptions(cacheable: false)
@@ -68,9 +67,13 @@ public class Client: ClientProtocol {
         self.port = port
         self.ssl = ssl
         self.apiKey = apiKey
-        self.transientErrorAdapter = transientErrorAdapter ?? TransientErrorAdapter()
         self.autoRefreshSession = autoRefreshSession
-        self.retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter!)
+        self.retryInvoker = RetryInvoker(handler: { error in
+            if let e = error as? GRPCStatus {
+                return e.code == .internalError || e.code == .unavailable
+            }
+            return false
+        })
         self.globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
         self.grpcConnection = ClientConnection(configuration: configuration)
         self.satoriGrpcClient = Satori_Api_SatoriNIOClient(channel: grpcConnection, defaultCallOptions: callOptions)
