@@ -37,7 +37,6 @@ class HttpRequestAdapter: HttpAdapterProtocol {
         }
         
         return try await withCheckedThrowingContinuation { continuation in
-            debugPrint(request)
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 if let error = error {
                     self.logger?.error("Request failed: \(error.localizedDescription)")
@@ -75,7 +74,6 @@ class HttpRequestAdapter: HttpAdapterProtocol {
                 
                 do {
                     let string = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
-                    debugPrint(string)
                     let decodedResponse = try JSONDecoder().decode(T.self, from: data)
                     continuation.resume(returning: decodedResponse)
                 } catch {
