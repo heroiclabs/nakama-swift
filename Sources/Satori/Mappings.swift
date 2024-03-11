@@ -48,14 +48,13 @@ extension Event {
 
 extension Event {
     func toApiEvent() -> ApiEvent {
-        debugPrint(self.timestamp.toProtobufTimestamp())
         let protobufTimestamp = self.timestamp.toProtobufTimestamp()
-        let unixEpoch = protobufTimestamp.toDate()
-//        let nanosecondsString = String(format: "%09d", unixEpoch.nanos) // Pad with zeros
-//        let finalFormattedDate = formattedDate + nanosecondsString + "Z"
-        let unixEpochString = unixEpoch.toRFC3339FormatString()
-        debugPrint(unixEpochString)
-        let event = ApiEvent(id: self.id ?? "", metadata: self.metadata ?? [:], name: self.name, timestamp: unixEpochString, value: self.value ?? "")
-        return event
+        let unixEpochString = protobufTimestamp.toDate().toRFC3339FormatString()
+        return ApiEvent(
+            id: self.id ?? "",
+            metadata: self.metadata ?? [:],
+            name: self.name, timestamp: unixEpochString,
+            value: self.value ?? ""
+        )
     }
 }

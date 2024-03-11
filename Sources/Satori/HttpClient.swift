@@ -18,20 +18,20 @@ import Foundation
 import Logging
 
 public class HttpClient: HttpClientProtocol {
-	public let scheme: String
+    public let scheme: String
     public let host: String
     public let port: Int
-	public let apiKey: String
+    public let apiKey: String
     public let autoRefreshSession: Bool
     public let transientErrorAdapter: TransientErrorHttpAdapter
     public var globalRetryConfiguration: RetryConfiguration
-
-	private let apiClient: ApiClient
-	private let retryInvoker: RetryInvoker
-	private var logger: Logger?
+    
+    private let apiClient: ApiClient
+    private let retryInvoker: RetryInvoker
+    private var logger: Logger?
     
     init(scheme: String = "http", host: String = "127.0.0.1", port: Int = 7450, apiKey: String, autoRefreshSession: Bool = true, transientErrorAdapter: TransientErrorHttpAdapter? = nil) {
-		self.scheme = scheme
+        self.scheme = scheme
         self.host = host
         self.port = port
         self.apiKey = apiKey
@@ -40,7 +40,7 @@ public class HttpClient: HttpClientProtocol {
         self.retryInvoker = RetryInvoker(transientErrorAdapter: self.transientErrorAdapter)
         self.globalRetryConfiguration = RetryConfiguration(baseDelayMs: 500, maxRetries: 4)
         self.logger = Logger(label: "com.heroiclabs.nakama-swift.satori")
-
+        
         guard let url = URL(string: "\(scheme)://\(host):\(port)") else {
             fatalError("Invalid url is used")
         }
