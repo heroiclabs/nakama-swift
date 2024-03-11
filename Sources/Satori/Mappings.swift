@@ -22,6 +22,12 @@ extension Satori_Api_Session {
     }
 }
 
+extension ApiSession {
+    func toSession() async -> SatoriSession {
+        return SatoriSession(authToken: self.token, refreshToken: self.refreshToken)
+    }
+}
+
 extension Event {
     func toApiEvent() -> Satori_Api_Event {
         var event = Satori_Api_Event()
@@ -37,5 +43,18 @@ extension Event {
             event.value = value
         }
         return event
+    }
+}
+
+extension Event {
+    func toApiEvent() -> ApiEvent {
+        let protobufTimestamp = self.timestamp.toProtobufTimestamp()
+        let unixEpochString = protobufTimestamp.toDate().toRFC3339FormatString()
+        return ApiEvent(
+            id: self.id ?? "",
+            metadata: self.metadata ?? [:],
+            name: self.name, timestamp: unixEpochString,
+            value: self.value ?? ""
+        )
     }
 }

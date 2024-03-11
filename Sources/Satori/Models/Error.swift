@@ -18,4 +18,5 @@
 enum SatoriError: Error {
 	/// No matching flag found.
 	case noMatchingFlag
+    case invalidURL
 }
