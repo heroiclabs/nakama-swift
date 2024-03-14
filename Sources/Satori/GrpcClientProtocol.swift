@@ -16,8 +16,8 @@
 
 import Foundation
 
-/// A protocol for the Satori client.
-public protocol ClientProtocol {
+/// A protocol for the Satori `gRPC` client.
+public protocol GrpcClientProtocol {
 	var host: String { get }
 	var port: Int { get }
 	var ssl: Bool { get }

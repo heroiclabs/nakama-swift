@@ -21,7 +21,7 @@ import Logging
 import SwiftProtobuf
 
 /// A client to interact with the API in Satori server.
-public class Client: ClientProtocol {
+public class GrpcClient: GrpcClientProtocol {
     public let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     public let defaultExpiredTimeSpan: TimeInterval = 5 * 60
     public var retriesLimit = 5
