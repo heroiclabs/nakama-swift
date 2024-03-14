@@ -662,7 +662,7 @@ public class ApiProperties: ApiPropertiesProtocol
 public protocol ApiSessionProtocol: Codable {
 
     /// Properties associated with this identity.
-    var properties: ApiProperties { get }
+    var properties: ApiProperties? { get }
 
     /// Refresh token.
     var refreshToken: String { get }
@@ -673,7 +673,7 @@ public protocol ApiSessionProtocol: Codable {
 
 public class ApiSession: ApiSessionProtocol
 {
-    public var properties: ApiProperties
+    public var properties: ApiProperties?
     public var refreshToken: String
     public var token: String
 
