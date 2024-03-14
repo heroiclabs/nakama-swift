@@ -38,6 +38,7 @@ extension SatoriSession {
 }
 
 extension Event {
+    /// Map Satori `Event` object to `Satori_Api_Event`.
     func toApiEvent() -> Satori_Api_Event {
         var event = Satori_Api_Event()
         event.name = self.name
@@ -56,6 +57,7 @@ extension Event {
 }
 
 extension Event {
+    /// Map Satori `Event` object to `ApiEvent`.
     func toApiEvent() -> ApiEvent {
         let protobufTimestamp = self.timestamp.toProtobufTimestamp()
         let unixEpochString = protobufTimestamp.toDate().toRFC3339FormatString()
