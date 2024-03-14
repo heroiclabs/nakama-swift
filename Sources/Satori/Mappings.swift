@@ -17,14 +17,23 @@
 import Foundation
 
 extension Satori_Api_Session {
-    func toSession() async -> SatoriSession {
+    /// Map `Satori_Api_Session` object to `SatoriSession`.
+    func toSession() -> SatoriSession {
         return SatoriSession(authToken: self.token, refreshToken: self.refreshToken)
     }
 }
 
 extension ApiSession {
-    func toSession() async -> SatoriSession {
+    /// Map `ApiSession` object to `SatoriSession`.
+    func toSession() -> SatoriSession {
         return SatoriSession(authToken: self.token, refreshToken: self.refreshToken)
+    }
+}
+
+extension SatoriSession {
+    /// Map `SatoriSession` object to `ApiSession`.
+    func toApiSession() -> ApiSession {
+        return ApiSession(properties: ApiProperties(), refreshToken: self.refreshToken, token: self.authToken)
     }
 }
 
