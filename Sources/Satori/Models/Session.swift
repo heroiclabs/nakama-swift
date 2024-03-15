@@ -52,7 +52,7 @@ public protocol Session {
     func hasRefreshExpired(offset: Date) -> Bool
 }
 
-public final class SatoriSession: Session {
+public final class DefaultSession: Session {
     public var authToken: String
     public var refreshToken: String
     public var expireTime: Date
@@ -107,7 +107,7 @@ public final class SatoriSession: Session {
         guard !authToken.isEmpty else {
             return nil
         }
-        return SatoriSession(authToken: authToken, refreshToken: refreshToken ?? "")
+        return DefaultSession(authToken: authToken, refreshToken: refreshToken ?? "")
     }
     
     public func update(authToken: String, refreshToken: String) {

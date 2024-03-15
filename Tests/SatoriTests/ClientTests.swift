@@ -44,24 +44,24 @@ final class ClientTests: XCTestCase {
         let session = try await client.authenticate(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
         let experiments = try await client.getAllExperiments(session: session)
         
-        XCTAssertTrue(experiments.experiments?.count == 1)
+        XCTAssertTrue(experiments.experiments.count == 1)
     }
     
     func test_GetFlags() async throws {
         let session = try await client.authenticate(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
         let flags = try await client.getFlags(session: session, names: [])
-        XCTAssertTrue(flags.flags?.count == 4)
+        XCTAssertTrue(flags.flags.count == 4)
         
         let namedFlags = try await client.getFlags(session: session, names: ["Min-Build-Number"])
-        XCTAssertTrue(namedFlags.flags?.count == 1)
+        XCTAssertTrue(namedFlags.flags.count == 1)
     }
     
     func test_SendEvents() async throws {
         let session = try await client.authenticate(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
-        try await client.event(session: session, event: Event(name: "gameFinished", timestamp: Date(), metadata: ["score":"1000"]))
+        try await client.event(session: session, event: Event(name: "appLaunched", timestamp: Date(), metadata: ["score":"1000"]))
         try await client.events(session: session, events: [
-            Event(name: "adStarted", timestamp: Date()),
-            Event(name: "appLaunched", timestamp: Date())
+            Event(name: "gameFinished", timestamp: Date()),
+            Event(name: "adStarted", timestamp: Date())
         ])
     }
     
@@ -69,6 +69,6 @@ final class ClientTests: XCTestCase {
         let session = try await client.authenticate(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
         let liveEvents = try await client.getLiveEvents(session: session)
         
-        XCTAssertTrue(liveEvents.liveEvents == nil)
+        XCTAssertTrue(liveEvents.liveEvents.isEmpty)
     }
 }

@@ -115,12 +115,12 @@ public class GrpcClient: GrpcClientProtocol {
             try await self.satoriGrpcClient.authenticateRefresh(req, callOptions: session.callOptions).response.get().toSession()
         }, history: RetryHistory(token: session.authToken, configuration: retryConfig ?? globalRetryConfiguration))
         
-        if let updatedSession = session as? SatoriSession {
+        if let updatedSession = session as? DefaultSession {
             updatedSession.update(authToken: newSession.authToken, refreshToken: newSession.refreshToken)
             return updatedSession
         }
         
-        return SatoriSession(authToken: newSession.authToken, refreshToken: newSession.refreshToken)
+        return DefaultSession(authToken: newSession.authToken, refreshToken: newSession.refreshToken)
     }
 
     public func event(session: Session, event: Event, retryConfig: RetryConfiguration? = nil) async throws -> Void {

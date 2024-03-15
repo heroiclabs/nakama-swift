@@ -18,19 +18,19 @@ import Foundation
 
 extension Satori_Api_Session {
     /// Map `Satori_Api_Session` object to `SatoriSession`.
-    func toSession() -> SatoriSession {
-        return SatoriSession(authToken: self.token, refreshToken: self.refreshToken)
+    func toSession() -> DefaultSession {
+        return DefaultSession(authToken: self.token, refreshToken: self.refreshToken)
     }
 }
 
 extension ApiSession {
     /// Map `ApiSession` object to `SatoriSession`.
-    func toSession() -> SatoriSession {
-        return SatoriSession(authToken: self.token, refreshToken: self.refreshToken)
+    func toSession() -> DefaultSession {
+        return DefaultSession(authToken: self.token, refreshToken: self.refreshToken)
     }
 }
 
-extension SatoriSession {
+extension Session {
     /// Map `SatoriSession` object to `ApiSession`.
     func toApiSession() -> ApiSession {
         return ApiSession(properties: ApiProperties(), refreshToken: self.refreshToken, token: self.authToken)
@@ -66,6 +66,66 @@ extension Event {
             metadata: self.metadata ?? [:],
             name: self.name, timestamp: unixEpochString,
             value: self.value ?? ""
+        )
+    }
+}
+
+extension ApiFlagList {
+    /// Map `ApiFlagList` object to `FlagList`.
+    func toFlagList() -> FlagList {
+        return FlagList(flags: self.flags ?? [])
+    }
+}
+
+extension ApiFlag {
+    /// Map `ApiFlag` object to `Flag`.
+    func toFlag() -> Flag {
+        return Flag(name: self.name, value: self.value, conditionChanged: self.conditionChanged ?? false)
+    }
+}
+
+extension ApiExperimentList {
+    /// Map `ApiExperimentList` object to `ExperimentList`.
+    func toExperimentList() -> ExperimentList {
+        return ExperimentList(experiments: self.experiments ?? [])
+    }
+}
+
+extension ApiExperiment {
+    /// Map `ApiExperiment` object to `Experiment`.
+    func toExperiment() -> Experiment {
+        return Experiment(name: self.name, value: self.value)
+    }
+}
+
+extension ApiProperties {
+    /// Map `ApiProperties` object to `Properties`.
+    func toProperties() -> Properties {
+        return Properties(
+            computed: self.computed ?? [:],
+            custom: self.custom ?? [:],
+            default_: self.default_
+        )
+    }
+}
+
+extension ApiLiveEventList {
+    /// Map `ApiLiveEventList` object to `LiveEventList`.
+    func toLiveEventList() -> LiveEventList {
+        return LiveEventList(liveEvents: self.liveEvents?.map { $0.toLiveEvent() } ?? [])
+    }
+}
+
+extension ApiLiveEvent {
+    /// Map `ApiLiveEvent` object to `LiveEvent`.
+    func toLiveEvent() -> LiveEvent {
+        return LiveEvent(
+            activeEndTimeSec: self.activeEndTimeSec,
+            activeStartTimeSec: activeStartTimeSec,
+            description: description,
+            id: id,
+            name: name,
+            value: value
         )
     }
 }
