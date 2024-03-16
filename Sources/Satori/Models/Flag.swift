@@ -17,7 +17,7 @@
 /// All flags available to the identity
 public struct FlagList {
     /// All flags
-    let flags: [ApiFlag]
+    let flags: [Flag]
 }
 
 /// Feature flag available to the identity.

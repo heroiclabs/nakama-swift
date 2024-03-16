@@ -73,7 +73,7 @@ extension Event {
 extension ApiFlagList {
     /// Map `ApiFlagList` object to `FlagList`.
     func toFlagList() -> FlagList {
-        return FlagList(flags: self.flags ?? [])
+        return FlagList(flags: self.flags?.map { $0.toFlag() } ?? [])
     }
 }
 
@@ -87,7 +87,7 @@ extension ApiFlag {
 extension ApiExperimentList {
     /// Map `ApiExperimentList` object to `ExperimentList`.
     func toExperimentList() -> ExperimentList {
-        return ExperimentList(experiments: self.experiments ?? [])
+        return ExperimentList(experiments: self.experiments?.map { $0.toExperiment() } ?? [])
     }
 }
 

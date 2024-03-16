@@ -17,7 +17,7 @@
 /// All experiments that this identity is involved with.
 public struct ExperimentList {
     /// All experiments for this identity.
-    let experiments: [ApiExperiment]
+    let experiments: [Experiment]
 }
 
 /// An experiment that this user is partaking.
