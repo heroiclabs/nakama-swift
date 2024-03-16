@@ -69,8 +69,7 @@ public class HttpClient: HttpClientProtocol {
         }, history: RetryHistory(token: id, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
-    public func authenticateLogout(session: Session
-, retryConfig: RetryConfiguration? = nil) async throws {
+    public func authenticateLogout(session: Session, retryConfig: RetryConfiguration? = nil) async throws {
         let req = ApiAuthenticateLogoutRequest(refreshToken: session.refreshToken, token: session.authToken)
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.apiClient.SatoriAuthenticateLogout(bearerToken: session.authToken, body: req)
@@ -132,13 +131,13 @@ public class HttpClient: HttpClientProtocol {
             }
             
             throw SatoriError.noMatchingFlag
-        }, history: RetryHistory(session: session.toApiSession().toSession(), configuration: retryConfig ?? globalRetryConfiguration))
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
     public func getFlags(session: Session, names: [String], retryConfig: RetryConfiguration? = nil) async throws -> FlagList {
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.apiClient.SatoriGetFlags(bearerToken: session.authToken, basicAuthUsername: self.apiKey, basicAuthPassword: "", names: names).toFlagList()
-        }, history: RetryHistory(session: session.toApiSession().toSession(), configuration: retryConfig ?? globalRetryConfiguration))
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
     public func getLiveEvents(session: Session, names: [String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> LiveEventList {
@@ -153,7 +152,7 @@ public class HttpClient: HttpClientProtocol {
         req.custom = customProperties
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.apiClient.SatoriIdentify(bearerToken: session.authToken, body: req).toSession()
-        }, history: RetryHistory(session: session.toApiSession().toSession(), configuration: retryConfig ?? globalRetryConfiguration))
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     
     public func listProperties(session: Session, retryConfig: RetryConfiguration? = nil) async throws -> Properties {

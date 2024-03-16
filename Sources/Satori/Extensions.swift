@@ -19,7 +19,7 @@ import SwiftProtobuf
 
 extension Date {
 	/// Convert a swift Date to a protobuf timestamp.
-    func toProtobufTimestamp() -> SwiftProtobuf.Google_Protobuf_Timestamp {
+    func toProtobufTimestamp() -> Google_Protobuf_Timestamp {
 		return Google_Protobuf_Timestamp.with { $0.seconds = Int64(self.timeIntervalSince1970); $0.nanos = Int32(self.timeIntervalSince1970.truncatingRemainder(dividingBy: 1) * 1_000_000_000) }
 	}
 
@@ -35,12 +35,12 @@ extension Date {
 
 extension Bool {
 	/// Convert a swift Bool to a protobuf BoolValue.
-	func toProtobufBool() -> SwiftProtobuf.Google_Protobuf_BoolValue {
+	func toProtobufBool() -> Google_Protobuf_BoolValue {
 		return Google_Protobuf_BoolValue.with { $0.value = self }
 	}
 }
 
-extension SwiftProtobuf.Google_Protobuf_Timestamp {
+extension Google_Protobuf_Timestamp {
 	/// Convert a protobuf timestamp to a swift Date.
 	func toDate() -> Date {
 		return Date(timeIntervalSince1970: TimeInterval(self.seconds) + TimeInterval(self.nanos) / 1_000_000_000)
