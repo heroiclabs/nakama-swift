@@ -133,6 +133,53 @@ After we finish from the socket we need to disconnect it
 socket.disconnect()
 ```
 
+# Satori
+
+Satori is a liveops server for games that powers actionable analytics, A/B testing and remote configuration. Use the Satori Swift Client to communicate with Satori from within your Swift game.
+
+Full documentation is online - https://heroiclabs.com/docs/satori/client-libraries/swift/index.html
+
+## Getting Started
+
+Create a client object that accepts the API you were given as a Satori customer.
+
+```swift
+import Satori
+
+let scheme = "http"
+let host = "127.0.0.1"
+let port: Int = 7450
+let apiKey = "apiKey"
+
+let client = HttpClient(scheme: scheme, host: host, port: port, apiKey: apiKey)
+```
+
+Then authenticate with the server to obtain your session:
+
+```swift
+do {
+    session = try await client.authenticate(id: "your-id")
+    debugPrint("Authenticated successfully.")
+} catch {
+    debugPrint("Error authenticating: \(error.localizedDescription)")
+}
+```
+
+Using the client you can get any experiments or feature flags the user belongs to:
+
+```swift
+let experiments = try await client.getExperiments(session: session, names: ["experiment1", "Experiment2"])
+let flag = try await client.getFlag(session: session, name: "FlagName")
+```
+
+You can also send arbitrary event(s) to the server:
+
+```swift
+let event = Event(name: "gameLaunched", timestamp: Date())
+try await client.event(session: session, event: event)
+```
+
+
 ## License
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-swift/blob/master/LICENSE).
