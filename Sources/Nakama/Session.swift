@@ -51,12 +51,6 @@ public protocol Session {
     /// Any custom properties associated with this session.
     var sessionVars: [String:String] { get }
     
-    /// Update the current session token with a new authorization token and refresh token.
-    ///
-    /// - Parameter authToken: The authorization token to update into the session.
-    /// - Parameter refreshToken: The refresh token to update into the session.
-    func update(authToken: String, refreshToken: String)
-    
     /// Check if the session has expired against the offset time.
     ///
     /// - Parameter offset: The time to compare against this session.
@@ -127,7 +121,8 @@ public final class DefaultSession: Session {
         return offset > epoch.addingTimeInterval(refreshExpiryTime.timeIntervalSince1970)
     }
     
-    public func update(authToken: String, refreshToken: String) {
+    /// Update the current session token with a new authorization token and refresh token.
+    func update(authToken: String, refreshToken: String) {
         self.token = authToken
         self.refreshToken = refreshToken
         

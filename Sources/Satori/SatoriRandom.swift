@@ -38,7 +38,7 @@ public final class SatoriRandomGenerator: Random {
      Initialize the instance with the given `seed`.
      - Parameter seed: A string used to seed the random number generator.
      */
-    public init(seed: String) {
+    init(seed: String) {
         var hasher = Hasher()
         seed.hash(into: &hasher)
         let truncated = UInt32(truncatingIfNeeded: hasher.finalize())
@@ -47,11 +47,11 @@ public final class SatoriRandomGenerator: Random {
         self.seed = UInt64(truncated)
     }
     
-    public func next() -> Double {
+    func next() -> Double {
         return drand48()
     }
     
-    public func next(in range: Range<Double>) -> Double {
+    func next(in range: Range<Double>) -> Double {
         return range.lowerBound + ((range.upperBound - range.lowerBound) * drand48())
     }
     

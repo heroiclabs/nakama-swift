@@ -25,11 +25,9 @@ import Foundation
 public typealias Jitter = (_ history: [Retry], _ delay: Int, _ random: SatoriRandomGenerator) -> Int
 
 /// A collection of Jitter algorithms.
-public struct RetryJitter
-{
+struct RetryJitter {
      /// A jitter algorithm that selects a random point between now and the next retry time.
-    public static func fullJitter(retries: [Retry], retryDelay: Int, random: SatoriRandomGenerator) -> Int
-    {
+    static func fullJitter(retries: [Retry], retryDelay: Int, random: SatoriRandomGenerator) -> Int {
         return Int(Double(retryDelay) * random.next())
     }
 }

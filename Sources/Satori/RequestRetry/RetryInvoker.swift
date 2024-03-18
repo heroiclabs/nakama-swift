@@ -33,7 +33,7 @@ enum RetryInvokerError: Error {
 }
 
 /// Invokes requests with retry and exponential backoff.
-public final class RetryInvoker {
+final class RetryInvoker {
     /// A closure that takes an error as input and returns a boolean.
     ///
     /// Used to determine whether or not a network exception is due to a temporary bad state on the server.
@@ -44,7 +44,7 @@ public final class RetryInvoker {
         self.transientErrorHandler = handler
     }
     
-    public func invokeWithRetry<T>(request: @escaping () async throws -> T, history: RetryHistory) async throws -> T {
+    func invokeWithRetry<T>(request: @escaping () async throws -> T, history: RetryHistory) async throws -> T {
         do {
             return try await request()
         } catch {

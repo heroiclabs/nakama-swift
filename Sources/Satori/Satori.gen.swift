@@ -33,7 +33,7 @@ struct EmptyResponse: Codable {
 }
 
 /// The request to update the status of a message.
-public protocol ApiUpdateMessageRequestProtocol: Codable {
+protocol ApiUpdateMessageRequestProtocol: Codable {
 
     /// The time the message was consumed by the identity.
     var consumeTime: String { get }
@@ -42,8 +42,7 @@ public protocol ApiUpdateMessageRequestProtocol: Codable {
     var readTime: String { get }
 }
 
-public class ApiUpdateMessageRequest: ApiUpdateMessageRequestProtocol
-{
+struct ApiUpdateMessageRequest: ApiUpdateMessageRequestProtocol {
     public var consumeTime: String
     public var readTime: String
 
@@ -66,7 +65,7 @@ public class ApiUpdateMessageRequest: ApiUpdateMessageRequestProtocol
 }
 
 /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
-public protocol ApiAuthenticateLogoutRequestProtocol: Codable {
+protocol ApiAuthenticateLogoutRequestProtocol: Codable {
 
     /// Refresh token to invalidate.
     var refreshToken: String { get }
@@ -75,8 +74,7 @@ public protocol ApiAuthenticateLogoutRequestProtocol: Codable {
     var token: String { get }
 }
 
-public class ApiAuthenticateLogoutRequest: ApiAuthenticateLogoutRequestProtocol
-{
+struct ApiAuthenticateLogoutRequest: ApiAuthenticateLogoutRequestProtocol {
     public var refreshToken: String
     public var token: String
 
@@ -99,14 +97,13 @@ public class ApiAuthenticateLogoutRequest: ApiAuthenticateLogoutRequestProtocol
 }
 
 /// Authenticate against the server with a refresh token.
-public protocol ApiAuthenticateRefreshRequestProtocol: Codable {
+protocol ApiAuthenticateRefreshRequestProtocol: Codable {
 
     /// Refresh token.
     var refreshToken: String { get }
 }
 
-public class ApiAuthenticateRefreshRequest: ApiAuthenticateRefreshRequestProtocol
-{
+struct ApiAuthenticateRefreshRequest: ApiAuthenticateRefreshRequestProtocol {
     public var refreshToken: String
 
     private enum CodingKeys: String, CodingKey {
@@ -125,7 +122,7 @@ public class ApiAuthenticateRefreshRequest: ApiAuthenticateRefreshRequestProtoco
 }
 
 /// Authentication request
-public protocol ApiAuthenticateRequestProtocol: Codable {
+protocol ApiAuthenticateRequestProtocol: Codable {
 
     /// Optional custom properties to update with this call. If not set, properties are left as they are on the server.
     var custom: [String: String]? { get }
@@ -137,8 +134,7 @@ public protocol ApiAuthenticateRequestProtocol: Codable {
     var id: String { get }
 }
 
-public class ApiAuthenticateRequest: ApiAuthenticateRequestProtocol
-{
+struct ApiAuthenticateRequest: ApiAuthenticateRequestProtocol {
     public var custom: [String: String]? = [:]
     public var default_: [String: String]? = [:]
     public var id: String
@@ -165,7 +161,7 @@ public class ApiAuthenticateRequest: ApiAuthenticateRequestProtocol
 }
 
 /// A single event. Usually, but not necessarily, part of a batch.
-public protocol ApiEventProtocol: Codable {
+protocol ApiEventProtocol: Codable {
 
     /// Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.
     var id: String { get }
@@ -183,8 +179,7 @@ public protocol ApiEventProtocol: Codable {
     var value: String { get }
 }
 
-public class ApiEvent: ApiEventProtocol
-{
+struct ApiEvent: ApiEventProtocol {
     public var id: String
     public var metadata: [String: String]? = [:]
     public var name: String
@@ -219,14 +214,13 @@ public class ApiEvent: ApiEventProtocol
 }
 
 /// Publish an event to the server
-public protocol ApiEventRequestProtocol: Codable {
+protocol ApiEventRequestProtocol: Codable {
 
     /// Some number of events produced by a client.
     var events: [ApiEvent]? { get }
 }
 
-public class ApiEventRequest: ApiEventRequestProtocol
-{
+struct ApiEventRequest: ApiEventRequestProtocol {
     public var events: [ApiEvent]? = []
 
     private enum CodingKeys: String, CodingKey {
@@ -245,7 +239,7 @@ public class ApiEventRequest: ApiEventRequestProtocol
 }
 
 /// An experiment that this user is partaking.
-public protocol ApiExperimentProtocol: Codable {
+protocol ApiExperimentProtocol: Codable {
 
     /// Experiment name
     var name: String { get }
@@ -254,8 +248,7 @@ public protocol ApiExperimentProtocol: Codable {
     var value: String { get }
 }
 
-public class ApiExperiment: ApiExperimentProtocol
-{
+struct ApiExperiment: ApiExperimentProtocol {
     public var name: String
     public var value: String
 
@@ -278,14 +271,13 @@ public class ApiExperiment: ApiExperimentProtocol
 }
 
 /// All experiments that this identity is involved with.
-public protocol ApiExperimentListProtocol: Codable {
+protocol ApiExperimentListProtocol: Codable {
 
     /// All experiments for this identity.
     var experiments: [ApiExperiment]? { get }
 }
 
-public class ApiExperimentList: ApiExperimentListProtocol
-{
+struct ApiExperimentList: ApiExperimentListProtocol {
     public var experiments: [ApiExperiment]? = []
 
     private enum CodingKeys: String, CodingKey {
@@ -304,7 +296,7 @@ public class ApiExperimentList: ApiExperimentListProtocol
 }
 
 /// Feature flag available to the identity.
-public protocol ApiFlagProtocol: Codable {
+protocol ApiFlagProtocol: Codable {
 
     /// Whether the value for this flag has conditionally changed from the default state.
     var conditionChanged: Bool? { get }
@@ -316,8 +308,7 @@ public protocol ApiFlagProtocol: Codable {
     var value: String { get }
 }
 
-public class ApiFlag: ApiFlagProtocol
-{
+struct ApiFlag: ApiFlagProtocol {
     public var conditionChanged: Bool?
     public var name: String
     public var value: String
@@ -344,14 +335,13 @@ public class ApiFlag: ApiFlagProtocol
 }
 
 /// All flags available to the identity
-public protocol ApiFlagListProtocol: Codable {
+protocol ApiFlagListProtocol: Codable {
 
     /// All flags
     var flags: [ApiFlag]? { get }
 }
 
-public class ApiFlagList: ApiFlagListProtocol
-{
+struct ApiFlagList: ApiFlagListProtocol {
     public var flags: [ApiFlag]? = []
 
     private enum CodingKeys: String, CodingKey {
@@ -370,7 +360,7 @@ public class ApiFlagList: ApiFlagListProtocol
 }
 
 /// A response containing all the messages for an identity.
-public protocol ApiGetMessageListResponseProtocol: Codable {
+protocol ApiGetMessageListResponseProtocol: Codable {
 
     /// Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
     var cacheableCursor: String { get }
@@ -385,8 +375,7 @@ public protocol ApiGetMessageListResponseProtocol: Codable {
     var prevCursor: String { get }
 }
 
-public class ApiGetMessageListResponse: ApiGetMessageListResponseProtocol
-{
+struct ApiGetMessageListResponse: ApiGetMessageListResponseProtocol {
     public var cacheableCursor: String
     public var messages: [ApiMessage]? = []
     public var nextCursor: String
@@ -417,7 +406,7 @@ public class ApiGetMessageListResponse: ApiGetMessageListResponseProtocol
 }
 
 /// Enrich/replace the current session with a new ID.
-public protocol ApiIdentifyRequestProtocol: Codable {
+protocol ApiIdentifyRequestProtocol: Codable {
 
     /// Optional custom properties to update with this call. If not set, properties are left as they are on the server.
     var custom: [String: String]? { get }
@@ -429,8 +418,7 @@ public protocol ApiIdentifyRequestProtocol: Codable {
     var id: String { get }
 }
 
-public class ApiIdentifyRequest: ApiIdentifyRequestProtocol
-{
+struct ApiIdentifyRequest: ApiIdentifyRequestProtocol {
     public var custom: [String: String]? = [:]
     public var default_: [String: String]? = [:]
     public var id: String
@@ -457,7 +445,7 @@ public class ApiIdentifyRequest: ApiIdentifyRequestProtocol
 }
 
 /// A single live event.
-public protocol ApiLiveEventProtocol: Codable {
+protocol ApiLiveEventProtocol: Codable {
 
     /// End time of current event run.
     var activeEndTimeSec: String { get }
@@ -478,8 +466,7 @@ public protocol ApiLiveEventProtocol: Codable {
     var value: String { get }
 }
 
-public class ApiLiveEvent: ApiLiveEventProtocol
-{
+struct ApiLiveEvent: ApiLiveEventProtocol {
     public var activeEndTimeSec: String
     public var activeStartTimeSec: String
     public var description: String
@@ -518,14 +505,13 @@ public class ApiLiveEvent: ApiLiveEventProtocol
 }
 
 /// List of Live events.
-public protocol ApiLiveEventListProtocol: Codable {
+protocol ApiLiveEventListProtocol: Codable {
 
     /// Live events.
     var liveEvents: [ApiLiveEvent]? { get }
 }
 
-public class ApiLiveEventList: ApiLiveEventListProtocol
-{
+struct ApiLiveEventList: ApiLiveEventListProtocol {
     public var liveEvents: [ApiLiveEvent]? = []
 
     private enum CodingKeys: String, CodingKey {
@@ -544,7 +530,7 @@ public class ApiLiveEventList: ApiLiveEventListProtocol
 }
 
 /// A scheduled message.
-public protocol ApiMessageProtocol: Codable {
+protocol ApiMessageProtocol: Codable {
 
     /// The time the message was consumed by the identity.
     var consumeTime: String { get }
@@ -571,8 +557,7 @@ public protocol ApiMessageProtocol: Codable {
     var updateTime: String { get }
 }
 
-public class ApiMessage: ApiMessageProtocol
-{
+struct ApiMessage: ApiMessageProtocol {
     public var consumeTime: String
     public var createTime: String
     public var metadata: [String: String]? = [:]
@@ -619,7 +604,7 @@ public class ApiMessage: ApiMessageProtocol
 }
 
 /// Properties associated with an identity.
-public protocol ApiPropertiesProtocol: Codable {
+protocol ApiPropertiesProtocol: Codable {
 
     /// Event computed properties.
     var computed: [String: String]? { get }
@@ -631,8 +616,7 @@ public protocol ApiPropertiesProtocol: Codable {
     var default_: [String: String]? { get }
 }
 
-public class ApiProperties: ApiPropertiesProtocol
-{
+struct ApiProperties: ApiPropertiesProtocol {
     public var computed: [String: String]? = [:]
     public var custom: [String: String]? = [:]
     public var default_: [String: String]? = [:]
@@ -659,7 +643,7 @@ public class ApiProperties: ApiPropertiesProtocol
 }
 
 /// A session.
-public protocol ApiSessionProtocol: Codable {
+protocol ApiSessionProtocol: Codable {
 
     /// Properties associated with this identity.
     var properties: ApiProperties? { get }
@@ -671,8 +655,7 @@ public protocol ApiSessionProtocol: Codable {
     var token: String { get }
 }
 
-public class ApiSession: ApiSessionProtocol
-{
+struct ApiSession: ApiSessionProtocol {
     public var properties: ApiProperties?
     public var refreshToken: String
     public var token: String
@@ -699,7 +682,7 @@ public class ApiSession: ApiSessionProtocol
 }
 
 /// Update Properties associated with this identity.
-public protocol ApiUpdatePropertiesRequestProtocol: Codable {
+protocol ApiUpdatePropertiesRequestProtocol: Codable {
 
     /// Event custom properties.
     var custom: [String: String]? { get }
@@ -711,8 +694,7 @@ public protocol ApiUpdatePropertiesRequestProtocol: Codable {
     var recompute: Bool? { get }
 }
 
-public class ApiUpdatePropertiesRequest: ApiUpdatePropertiesRequestProtocol
-{
+struct ApiUpdatePropertiesRequest: ApiUpdatePropertiesRequestProtocol {
     public var custom: [String: String]? = [:]
     public var default_: [String: String]? = [:]
     public var recompute: Bool?
@@ -739,14 +721,13 @@ public class ApiUpdatePropertiesRequest: ApiUpdatePropertiesRequestProtocol
 }
 
 /// 
-public protocol ProtobufAnyProtocol: Codable {
+protocol ProtobufAnyProtocol: Codable {
 
     /// 
     var type: String { get }
 }
 
-public class ProtobufAny: ProtobufAnyProtocol
-{
+struct ProtobufAny: ProtobufAnyProtocol {
     public var type: String
 
     private enum CodingKeys: String, CodingKey {
@@ -765,7 +746,7 @@ public class ProtobufAny: ProtobufAnyProtocol
 }
 
 /// 
-public protocol RpcStatusProtocol: Codable {
+protocol RpcStatusProtocol: Codable {
 
     /// 
     var code: Int { get }
@@ -777,8 +758,7 @@ public protocol RpcStatusProtocol: Codable {
     var message: String { get }
 }
 
-public class RpcStatus: RpcStatusProtocol
-{
+struct RpcStatus: RpcStatusProtocol {
     public var code: Int
     public var details: [ProtobufAny]? = []
     public var message: String

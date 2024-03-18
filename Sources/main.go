@@ -79,7 +79,7 @@ public enum {{ $classname }}
 {{- else }}
 
 /// {{ (descriptionOrTitle $definition.Description $definition.Title) | stripNewlines }}
-public protocol {{ $classname }}Protocol: Codable {
+protocol {{ $classname }}Protocol: Codable {
     {{- range $propname, $property := $definition.Properties }}
     {{- $fieldname := $propname }}
     {{- if eq $fieldname "default" }}{{ $fieldname = "default_" }}{{ end }}
@@ -127,8 +127,7 @@ public protocol {{ $classname }}Protocol: Codable {
     {{- end }}
 }
 
-public class {{ $classname }}: {{ $classname }}Protocol
-{
+struct {{ $classname }}: {{ $classname }}Protocol {
     {{- range $propname, $property := $definition.Properties }}
     {{- $fieldname := $propname }}
     {{- $attrDataName := $propname | camelToSnake }}

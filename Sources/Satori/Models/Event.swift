@@ -35,7 +35,7 @@ public struct Event {
     let id: String?
     
     /// The event constructor.
-    init(name: String, timestamp: Date, value: String? = nil, metadata: [String: String]? = nil, id: String? = nil) {
+    public init(name: String, timestamp: Date, value: String? = nil, metadata: [String: String]? = nil, id: String? = nil) {
         self.name = name
         self.timestamp = timestamp
         self.value = value

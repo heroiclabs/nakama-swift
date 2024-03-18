@@ -17,7 +17,7 @@
 import Logging
 import Foundation
 
-public protocol HttpAdapterProtocol {
+protocol HttpAdapterProtocol {
 	/// The logger to use with the adapter.
     var logger: Logger? { get set }
 

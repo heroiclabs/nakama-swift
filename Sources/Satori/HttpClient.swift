@@ -56,7 +56,7 @@ public class HttpClient: HttpClientProtocol {
     }
     
     public func authenticate(id: String, defaultProperties: [String : String]? = nil, customProperties: [String : String]? = nil, retryConfig: RetryConfiguration? = nil) async throws -> Session {
-        let req = ApiAuthenticateRequest(id: id)
+        var req = ApiAuthenticateRequest(id: id)
         if let defaultProperties {
             req.default_ = defaultProperties
         }
@@ -84,7 +84,7 @@ public class HttpClient: HttpClientProtocol {
     }
     
     public func event(session: Session, event: Event, retryConfig: RetryConfiguration? = nil) async throws {
-        let req = ApiEventRequest()
+        var req = ApiEventRequest()
         req.events = [event.toApiEvent()]
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.apiClient.SatoriEvent(bearerToken: session.authToken, body: req)
@@ -92,7 +92,7 @@ public class HttpClient: HttpClientProtocol {
     }
     
     public func events(session: Session, events: [Event], retryConfig: RetryConfiguration? = nil) async throws {
-        let request = ApiEventRequest()
+        var request = ApiEventRequest()
         request.events = events.map { $0.toApiEvent() }
         return try await retryInvoker.invokeWithRetry(request: {
             try await self.apiClient.SatoriEvent(bearerToken: session.authToken, body: request)
@@ -147,7 +147,7 @@ public class HttpClient: HttpClientProtocol {
     }
     
     public func identify(session: Session, id: String, defaultProperties: [String : String], customProperties: [String : String], retryConfig: RetryConfiguration? = nil) async throws -> Session {
-        let req = ApiIdentifyRequest(id: id)
+        var req = ApiIdentifyRequest(id: id)
         req.default_ = defaultProperties
         req.custom = customProperties
         return try await retryInvoker.invokeWithRetry(request: {
@@ -162,7 +162,7 @@ public class HttpClient: HttpClientProtocol {
     }
     
     public func updateProperties(session: Session, defaultProperties: [String : String], customProperties: [String : String], recompute: Bool? = false, retryConfig: RetryConfiguration? = nil) async throws {
-        let req = ApiUpdatePropertiesRequest(recompute: recompute ?? false)
+        var req = ApiUpdatePropertiesRequest(recompute: recompute ?? false)
         req.default_ = defaultProperties
         req.custom = customProperties
         return try await retryInvoker.invokeWithRetry(request: {

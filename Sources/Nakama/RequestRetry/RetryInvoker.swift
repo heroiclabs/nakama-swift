@@ -33,14 +33,14 @@ enum RetryInvokerError: Error {
 }
 
 /// Invokes requests with retry and exponential backoff.
-public final class RetryInvoker {
+final class RetryInvoker {
     private let transientErrorAdapter: TransientErrorAdapter
     
     public init(transientErrorAdapter: TransientErrorAdapter) {
         self.transientErrorAdapter = transientErrorAdapter
     }
     
-    public func invokeWithRetry<T>(request: @escaping () async throws -> T, history: RetryHistory) async throws -> T {
+    func invokeWithRetry<T>(request: @escaping () async throws -> T, history: RetryHistory) async throws -> T {
         do {
             return try await transientErrorAdapter.sendAsync(request: request)
         } catch {
