@@ -141,7 +141,7 @@ Full documentation is online - https://heroiclabs.com/docs/satori/client-librari
 
 ## Getting Started
 
-Create a client object that accepts the API you were given as a Satori customer.
+Create a client object that accepts the API key you were given as a Satori customer.
 
 ```swift
 import Satori
