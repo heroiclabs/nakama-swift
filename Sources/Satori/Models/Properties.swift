@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-/// Custom error type for Satori.
-enum SatoriError: Error {
-    /// No matching flag found.
-    case noMatchingFlag
-    case invalidURL
+/// Properties associated with an identity.
+public struct Properties {
+    /// Event computed properties.
+    let computed: [String: String]?
+    
+    /// Event custom properties.
+    let custom: [String: String]?
+    
+    /// Event default properties.
+    let default_: [String: String]?
 }

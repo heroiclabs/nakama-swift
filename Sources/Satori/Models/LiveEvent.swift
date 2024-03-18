@@ -14,9 +14,29 @@
  * limitations under the License.
  */
 
-/// Custom error type for Satori.
-enum SatoriError: Error {
-    /// No matching flag found.
-    case noMatchingFlag
-    case invalidURL
+/// List of Live events.
+public struct LiveEventList {
+    /// Live events.
+    let liveEvents: [LiveEvent]
+}
+
+/// A single live event.
+public struct LiveEvent {
+    /// End time of current event run.
+    let activeEndTimeSec: String
+    
+    /// Start time of current event run.
+    let activeStartTimeSec: String
+    
+    /// Description.
+    let description: String
+    
+    /// The live event identifier.
+    let id: String
+    
+    /// Name.
+    let name: String
+    
+    /// Event value.
+    let value: String
 }

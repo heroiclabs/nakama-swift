@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-/// Custom error type for Satori.
-enum SatoriError: Error {
-    /// No matching flag found.
-    case noMatchingFlag
-    case invalidURL
+/// All experiments that this identity is involved with.
+public struct ExperimentList {
+    /// All experiments for this identity.
+    let experiments: [Experiment]
+}
+
+/// An experiment that this user is partaking.
+public struct Experiment {
+    /// Experiment name
+    let name: String
+    
+    /// Value associated with this Experiment.
+    let value: String
 }

@@ -121,10 +121,8 @@ public protocol {{ $classname }}Protocol: Codable {
         {{- else }}
     var {{ $fieldname }}: [String: {{$property.AdditionalProperties.Ref | cleanRef}}]? { get }
         {{- end}}
-    {{- else if isRefToEnum (cleanRef $property.Ref) }}
-    var {{ $fieldname }}: {{ $property.Ref | cleanRef }} { get }
     {{- else }}
-    var {{ $fieldname }}: {{ $property.Ref | cleanRef }} { get }
+    var {{ $fieldname }}: {{ $property.Ref | cleanRef }}? { get }
     {{- end }}
     {{- end }}
 }
@@ -175,7 +173,7 @@ public class {{ $classname }}: {{ $classname }}Protocol
     {{- else if isRefToEnum (cleanRef $property.Ref) }}
     public var {{ $property.Ref | cleanRef }} {{ $fieldname }}
     {{- else }}
-    public var {{ $fieldname }}: {{ $property.Ref | cleanRef }}
+    public var {{ $fieldname }}: {{ $property.Ref | cleanRef }}?
     {{- end }}
     {{- end }}
 

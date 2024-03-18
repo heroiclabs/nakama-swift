@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-/// Custom error type for Satori.
-enum SatoriError: Error {
-    /// No matching flag found.
-    case noMatchingFlag
-    case invalidURL
+/// All flags available to the identity
+public struct FlagList {
+    /// All flags
+    let flags: [Flag]
+}
+
+/// Feature flag available to the identity.
+public struct Flag {
+    /// Flag name
+    let name: String
+    
+    /// Value associated with this flag.
+    let value: String
+    
+    /// Whether the value for this flag has conditionally changed from the default state.
+    let conditionChanged: Bool?
 }
