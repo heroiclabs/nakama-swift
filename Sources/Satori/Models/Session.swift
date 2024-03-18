@@ -110,7 +110,8 @@ public final class DefaultSession: Session {
         return DefaultSession(authToken: authToken, refreshToken: refreshToken ?? "")
     }
     
-    public func update(authToken: String, refreshToken: String) {
+    /// Update the current session token with a new authorization token and refresh token.
+    func update(authToken: String, refreshToken: String) {
         self.authToken = authToken
         self.refreshToken = refreshToken
         
