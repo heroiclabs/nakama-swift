@@ -4,11 +4,15 @@ All notable changes to this project are documented below.
 
 The format is based on [keep a changelog](http://keepachangelog.com/) and this project uses [semantic versioning](http://semver.org/).
 
+## [1.2.0] - 2024-03-19
+#### Added
+- Satori: Adds the Satori Swift SDK. Satori is our liveops server for game studios. Read more about it in the [documentation](https://heroiclabs.com/docs/satori/concepts/introduction/).
+
 ## [1.1.0] - 2023-11-30
 #### Changed
 - Expose expiredTimeSpan in client initializer.
 - Change Int32 and Int64 parameters to Int.
-  
+
 #### Added
 - listFriends, deleteFriends, updateAccount, listChannelMessages, and listMatches.
 
