@@ -19,23 +19,23 @@ import Foundation
 /// A user with additional account details. Always the current user.
 public struct ApiAccount {
     /// The user object.
-    let user: ApiUser
+    public let user: ApiUser
     
     /// The custom id in the user's account.
-    let customId: String
+    public let customId: String
     
     /// The devices which belong to the user's account.
-    let devices: [Nakama_Api_AccountDevice]
+    public let devices: [Nakama_Api_AccountDevice]
     
     /// The UNIX time when the user's account was disabled/banned.
-    let disableTime: Date
+    public let disableTime: Date
     
     /// The email address of the user.
-    let email: String
+    public let email: String
     
     /// The UNIX time when the user's email was verified.
-    let VerifyTime: Date
+    public let VerifyTime: Date
     
     /// The user's wallet data.
-    let wallet: String
+    public let wallet: String
 }
