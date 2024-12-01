@@ -27,12 +27,12 @@ let package = Package(
     .library(name: "Satori", targets: ["Satori"])
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-nio.git", from: "2.51.0"),
-    .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "2.10.1"),
-    .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.9.1"),
-    .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.9.0"),
-    .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.16.0"),
-    .package(url: "https://github.com/apple/swift-atomics.git", from: "1.1.0")
+    .package(url: "https://github.com/apple/swift-nio.git", from: "2.77.0"),
+    .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "2.29.0"),
+    .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.23.0"),
+    .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.28.2"),
+    .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.24.2"),
+    .package(url: "https://github.com/apple/swift-atomics.git", from: "1.2.0")
   ],
   targets: [
     .target(

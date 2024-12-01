@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		CD8BD6E42599E593006D1AEC /* libswiftCore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8BD6E32599E593006D1AEC /* libswiftCore.tbd */; };
+		CDD10BB62CFC9FCF00379D74 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_1123 /* AtomicInteger.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* AtomicInteger.swift */; };
 		OBJ_1124 /* AtomicMemoryOrderings.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* AtomicMemoryOrderings.swift */; };
 		OBJ_1125 /* AtomicOptional.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* AtomicOptional.swift */; };
@@ -985,7 +986,6 @@
 		OBJ_2324 /* CNIOWindows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "swift-nio::CNIOWindows::Product" /* CNIOWindows.framework */; };
 		OBJ_2325 /* CNIODarwin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "swift-nio::CNIODarwin::Product" /* CNIODarwin.framework */; };
 		OBJ_2326 /* CNIOLinux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "swift-nio::CNIOLinux::Product" /* CNIOLinux.framework */; };
-		OBJ_2356 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_2367 /* NakamaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* NakamaTests.swift */; };
 		OBJ_2369 /* Nakama.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Nakama::Nakama::Product" /* Nakama.framework */; };
 		OBJ_2370 /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "swift-atomics::Atomics::Product" /* Atomics.framework */; };
@@ -2245,7 +2245,6 @@
 		OBJ_1112 /* proto */ = {isa = PBXFileReference; lastKnownFileType = folder; path = proto; sourceTree = SOURCE_ROOT; };
 		OBJ_1113 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		OBJ_1114 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
-		OBJ_1115 /* Nakama.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Nakama.podspec; sourceTree = "<group>"; };
 		OBJ_1116 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		OBJ_1117 /* IDETemplateMacros.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = IDETemplateMacros.plist; sourceTree = "<group>"; };
 		OBJ_112 /* ServerInterceptorPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInterceptorPipeline.swift; sourceTree = "<group>"; };
@@ -4571,7 +4570,7 @@
 			path = CallHandlers;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -4582,12 +4581,10 @@
 				OBJ_1112 /* proto */,
 				OBJ_1113 /* LICENSE */,
 				OBJ_1114 /* CHANGELOG.md */,
-				OBJ_1115 /* Nakama.podspec */,
 				OBJ_1116 /* README.md */,
 				OBJ_1117 /* IDETemplateMacros.plist */,
 				CD8BD6E22599E593006D1AEC /* Frameworks */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_501 /* fipsmodule */ = {
@@ -6500,7 +6497,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_1085 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -7466,7 +7463,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_2356 /* Package.swift in Sources */,
+				CDD10BB62CFC9FCF00379D74 /* Package.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
