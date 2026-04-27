@@ -186,13 +186,32 @@ public final class Socket : SocketProtocol {
                     self.logger?.error("Unrecognised incoming uncollated message from server: \(try! response.jsonString())")
                 }
             } else {
-                if let collatedPromise = self.collatedPromises[response.cid] {
+                if let collatedPromise = self.collatedPromises.removeValue(forKey: response.cid) {
                     switch response.message {
                     case .error(let error):
+                        let realtimeError = NakamaRealtimeError(error: error)
                         if let promise = collatedPromise as? EventLoopPromise<Any> {
-                            promise.fail(NakamaRealtimeError(error: error))
+                            promise.fail(realtimeError)
                         } else if let promise = collatedPromise as? EventLoopPromise<Google_Protobuf_Empty> {
-                            promise.fail(NakamaRealtimeError(error: error))
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Api_Rpc> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Channel> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_ChannelMessageAck> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Match> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_MatchmakerTicket> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Status> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_Party> {
+                            promise.fail(realtimeError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Nakama_Realtime_PartyMatchmakerTicket> {
+                            promise.fail(realtimeError)
+                        } else {
+                            self.logger?.error("Unable to fail promise for cid \(response.cid): unknown promise type. Server error: \(error)")
                         }
                     case .rpc(let rpc):
                         let promise = collatedPromise as! EventLoopPromise<Nakama_Api_Rpc>
