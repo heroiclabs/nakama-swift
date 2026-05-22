@@ -78,6 +78,12 @@ public final class Socket : SocketProtocol {
     
     var socketAdapter: SocketAdapter
     var collatedPromises = [String:Any]()
+    // Parallel side-table holding a type-erased failer per pending promise.
+    // The promises themselves are generic (EventLoopPromise<Nakama_Api_Rpc>,
+    // <Nakama_Realtime_Party>, …) so a server-side error envelope can't fail
+    // them via a casting branch — it would need to know every concrete T.
+    // A closure capturing the original promise sidesteps that.
+    var collatedFailers = [String:(Error) -> Void]()
     
     init(host: String, port: Int, ssl: Bool, eventLoopGroup: EventLoopGroup, socketAdapter: SocketAdapter?, logger: Logger?) {
         self.host = host
@@ -136,7 +142,8 @@ public final class Socket : SocketProtocol {
         let promise = self.eventLoopGroup.next().makePromise(of: T.self)
         env.cid = String(counter)
         self.collatedPromises[counter] = promise
-        
+        self.collatedFailers[counter] = { promise.fail($0) }
+
         let binaryData = try env.serializedData()
         self.socketAdapter.send(data: binaryData)
         return try await promise.futureResult.get()
@@ -189,11 +196,19 @@ public final class Socket : SocketProtocol {
                 if let collatedPromise = self.collatedPromises[response.cid] {
                     switch response.message {
                     case .error(let error):
-                        if let promise = collatedPromise as? EventLoopPromise<Any> {
-                            promise.fail(NakamaRealtimeError(error: error))
+                        // Use the type-erased failer so any concrete promise
+                        // (Rpc, Party, MatchmakerTicket, …) gets propagated as
+                        // a throw on the awaiting caller instead of hanging.
+                        let nkError = NakamaRealtimeError(error: error)
+                        if let fail = self.collatedFailers[response.cid] {
+                            fail(nkError)
+                        } else if let promise = collatedPromise as? EventLoopPromise<Any> {
+                            promise.fail(nkError)
                         } else if let promise = collatedPromise as? EventLoopPromise<Google_Protobuf_Empty> {
-                            promise.fail(NakamaRealtimeError(error: error))
+                            promise.fail(nkError)
                         }
+                        self.collatedPromises.removeValue(forKey: response.cid)
+                        self.collatedFailers.removeValue(forKey: response.cid)
                     case .rpc(let rpc):
                         let promise = collatedPromise as! EventLoopPromise<Nakama_Api_Rpc>
                         promise.succeed(rpc)

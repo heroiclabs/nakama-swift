@@ -43,449 +43,464 @@ public struct Nakama_Realtime_Envelope {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var cid: String = String()
+  public var cid: String {
+    get {return _storage._cid}
+    set {_uniqueStorage()._cid = newValue}
+  }
 
-  public var message: Nakama_Realtime_Envelope.OneOf_Message? = nil
+  public var message: OneOf_Message? {
+    get {return _storage._message}
+    set {_uniqueStorage()._message = newValue}
+  }
 
   /// A response from a channel join operation.
   public var channel: Nakama_Realtime_Channel {
     get {
-      if case .channel(let v)? = message {return v}
+      if case .channel(let v)? = _storage._message {return v}
       return Nakama_Realtime_Channel()
     }
-    set {message = .channel(newValue)}
+    set {_uniqueStorage()._message = .channel(newValue)}
   }
 
   /// Join a realtime chat channel.
   public var channelJoin: Nakama_Realtime_ChannelJoin {
     get {
-      if case .channelJoin(let v)? = message {return v}
+      if case .channelJoin(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelJoin()
     }
-    set {message = .channelJoin(newValue)}
+    set {_uniqueStorage()._message = .channelJoin(newValue)}
   }
 
   /// Leave a realtime chat channel.
   public var channelLeave: Nakama_Realtime_ChannelLeave {
     get {
-      if case .channelLeave(let v)? = message {return v}
+      if case .channelLeave(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelLeave()
     }
-    set {message = .channelLeave(newValue)}
+    set {_uniqueStorage()._message = .channelLeave(newValue)}
   }
 
   /// An incoming message on a realtime chat channel.
   public var channelMessage: Nakama_Api_ChannelMessage {
     get {
-      if case .channelMessage(let v)? = message {return v}
+      if case .channelMessage(let v)? = _storage._message {return v}
       return Nakama_Api_ChannelMessage()
     }
-    set {message = .channelMessage(newValue)}
+    set {_uniqueStorage()._message = .channelMessage(newValue)}
   }
 
   /// An acknowledgement received in response to sending a message on a chat channel.
   public var channelMessageAck: Nakama_Realtime_ChannelMessageAck {
     get {
-      if case .channelMessageAck(let v)? = message {return v}
+      if case .channelMessageAck(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelMessageAck()
     }
-    set {message = .channelMessageAck(newValue)}
+    set {_uniqueStorage()._message = .channelMessageAck(newValue)}
   }
 
   /// Send a message to a realtime chat channel.
   public var channelMessageSend: Nakama_Realtime_ChannelMessageSend {
     get {
-      if case .channelMessageSend(let v)? = message {return v}
+      if case .channelMessageSend(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelMessageSend()
     }
-    set {message = .channelMessageSend(newValue)}
+    set {_uniqueStorage()._message = .channelMessageSend(newValue)}
   }
 
   /// Update a message previously sent to a realtime chat channel.
   public var channelMessageUpdate: Nakama_Realtime_ChannelMessageUpdate {
     get {
-      if case .channelMessageUpdate(let v)? = message {return v}
+      if case .channelMessageUpdate(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelMessageUpdate()
     }
-    set {message = .channelMessageUpdate(newValue)}
+    set {_uniqueStorage()._message = .channelMessageUpdate(newValue)}
   }
 
   /// Remove a message previously sent to a realtime chat channel.
   public var channelMessageRemove: Nakama_Realtime_ChannelMessageRemove {
     get {
-      if case .channelMessageRemove(let v)? = message {return v}
+      if case .channelMessageRemove(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelMessageRemove()
     }
-    set {message = .channelMessageRemove(newValue)}
+    set {_uniqueStorage()._message = .channelMessageRemove(newValue)}
   }
 
   /// Presence update for a particular realtime chat channel.
   public var channelPresenceEvent: Nakama_Realtime_ChannelPresenceEvent {
     get {
-      if case .channelPresenceEvent(let v)? = message {return v}
+      if case .channelPresenceEvent(let v)? = _storage._message {return v}
       return Nakama_Realtime_ChannelPresenceEvent()
     }
-    set {message = .channelPresenceEvent(newValue)}
+    set {_uniqueStorage()._message = .channelPresenceEvent(newValue)}
   }
 
   /// Describes an error which occurred on the server.
   public var error: Nakama_Realtime_Error {
     get {
-      if case .error(let v)? = message {return v}
+      if case .error(let v)? = _storage._message {return v}
       return Nakama_Realtime_Error()
     }
-    set {message = .error(newValue)}
+    set {_uniqueStorage()._message = .error(newValue)}
   }
 
   /// Incoming information about a realtime match.
   public var match: Nakama_Realtime_Match {
     get {
-      if case .match(let v)? = message {return v}
+      if case .match(let v)? = _storage._message {return v}
       return Nakama_Realtime_Match()
     }
-    set {message = .match(newValue)}
+    set {_uniqueStorage()._message = .match(newValue)}
   }
 
   /// A client to server request to create a realtime match.
   public var matchCreate: Nakama_Realtime_MatchCreate {
     get {
-      if case .matchCreate(let v)? = message {return v}
+      if case .matchCreate(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchCreate()
     }
-    set {message = .matchCreate(newValue)}
+    set {_uniqueStorage()._message = .matchCreate(newValue)}
   }
 
   /// Incoming realtime match data delivered from the server.
   public var matchData: Nakama_Realtime_MatchData {
     get {
-      if case .matchData(let v)? = message {return v}
+      if case .matchData(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchData()
     }
-    set {message = .matchData(newValue)}
+    set {_uniqueStorage()._message = .matchData(newValue)}
   }
 
   /// A client to server request to send data to a realtime match.
   public var matchDataSend: Nakama_Realtime_MatchDataSend {
     get {
-      if case .matchDataSend(let v)? = message {return v}
+      if case .matchDataSend(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchDataSend()
     }
-    set {message = .matchDataSend(newValue)}
+    set {_uniqueStorage()._message = .matchDataSend(newValue)}
   }
 
   /// A client to server request to join a realtime match.
   public var matchJoin: Nakama_Realtime_MatchJoin {
     get {
-      if case .matchJoin(let v)? = message {return v}
+      if case .matchJoin(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchJoin()
     }
-    set {message = .matchJoin(newValue)}
+    set {_uniqueStorage()._message = .matchJoin(newValue)}
   }
 
   /// A client to server request to leave a realtime match.
   public var matchLeave: Nakama_Realtime_MatchLeave {
     get {
-      if case .matchLeave(let v)? = message {return v}
+      if case .matchLeave(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchLeave()
     }
-    set {message = .matchLeave(newValue)}
+    set {_uniqueStorage()._message = .matchLeave(newValue)}
   }
 
   /// Presence update for a particular realtime match.
   public var matchPresenceEvent: Nakama_Realtime_MatchPresenceEvent {
     get {
-      if case .matchPresenceEvent(let v)? = message {return v}
+      if case .matchPresenceEvent(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchPresenceEvent()
     }
-    set {message = .matchPresenceEvent(newValue)}
+    set {_uniqueStorage()._message = .matchPresenceEvent(newValue)}
   }
 
   /// Submit a new matchmaking process request.
   public var matchmakerAdd: Nakama_Realtime_MatchmakerAdd {
     get {
-      if case .matchmakerAdd(let v)? = message {return v}
+      if case .matchmakerAdd(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchmakerAdd()
     }
-    set {message = .matchmakerAdd(newValue)}
+    set {_uniqueStorage()._message = .matchmakerAdd(newValue)}
   }
 
   /// A successful matchmaking result.
   public var matchmakerMatched: Nakama_Realtime_MatchmakerMatched {
     get {
-      if case .matchmakerMatched(let v)? = message {return v}
+      if case .matchmakerMatched(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchmakerMatched()
     }
-    set {message = .matchmakerMatched(newValue)}
+    set {_uniqueStorage()._message = .matchmakerMatched(newValue)}
   }
 
   /// Cancel a matchmaking process using a ticket.
   public var matchmakerRemove: Nakama_Realtime_MatchmakerRemove {
     get {
-      if case .matchmakerRemove(let v)? = message {return v}
+      if case .matchmakerRemove(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchmakerRemove()
     }
-    set {message = .matchmakerRemove(newValue)}
+    set {_uniqueStorage()._message = .matchmakerRemove(newValue)}
   }
 
   /// A response from starting a new matchmaking process.
   public var matchmakerTicket: Nakama_Realtime_MatchmakerTicket {
     get {
-      if case .matchmakerTicket(let v)? = message {return v}
+      if case .matchmakerTicket(let v)? = _storage._message {return v}
       return Nakama_Realtime_MatchmakerTicket()
     }
-    set {message = .matchmakerTicket(newValue)}
+    set {_uniqueStorage()._message = .matchmakerTicket(newValue)}
   }
 
   /// Notifications send by the server.
   public var notifications: Nakama_Realtime_Notifications {
     get {
-      if case .notifications(let v)? = message {return v}
+      if case .notifications(let v)? = _storage._message {return v}
       return Nakama_Realtime_Notifications()
     }
-    set {message = .notifications(newValue)}
+    set {_uniqueStorage()._message = .notifications(newValue)}
   }
 
   /// RPC call or response.
   public var rpc: Nakama_Api_Rpc {
     get {
-      if case .rpc(let v)? = message {return v}
+      if case .rpc(let v)? = _storage._message {return v}
       return Nakama_Api_Rpc()
     }
-    set {message = .rpc(newValue)}
+    set {_uniqueStorage()._message = .rpc(newValue)}
   }
 
   /// An incoming status snapshot for some set of users.
   public var status: Nakama_Realtime_Status {
     get {
-      if case .status(let v)? = message {return v}
+      if case .status(let v)? = _storage._message {return v}
       return Nakama_Realtime_Status()
     }
-    set {message = .status(newValue)}
+    set {_uniqueStorage()._message = .status(newValue)}
   }
 
   /// Start following some set of users to receive their status updates.
   public var statusFollow: Nakama_Realtime_StatusFollow {
     get {
-      if case .statusFollow(let v)? = message {return v}
+      if case .statusFollow(let v)? = _storage._message {return v}
       return Nakama_Realtime_StatusFollow()
     }
-    set {message = .statusFollow(newValue)}
+    set {_uniqueStorage()._message = .statusFollow(newValue)}
   }
 
   /// An incoming status update.
   public var statusPresenceEvent: Nakama_Realtime_StatusPresenceEvent {
     get {
-      if case .statusPresenceEvent(let v)? = message {return v}
+      if case .statusPresenceEvent(let v)? = _storage._message {return v}
       return Nakama_Realtime_StatusPresenceEvent()
     }
-    set {message = .statusPresenceEvent(newValue)}
+    set {_uniqueStorage()._message = .statusPresenceEvent(newValue)}
   }
 
   /// Stop following some set of users to no longer receive their status updates.
   public var statusUnfollow: Nakama_Realtime_StatusUnfollow {
     get {
-      if case .statusUnfollow(let v)? = message {return v}
+      if case .statusUnfollow(let v)? = _storage._message {return v}
       return Nakama_Realtime_StatusUnfollow()
     }
-    set {message = .statusUnfollow(newValue)}
+    set {_uniqueStorage()._message = .statusUnfollow(newValue)}
   }
 
   /// Set the user's own status.
   public var statusUpdate: Nakama_Realtime_StatusUpdate {
     get {
-      if case .statusUpdate(let v)? = message {return v}
+      if case .statusUpdate(let v)? = _storage._message {return v}
       return Nakama_Realtime_StatusUpdate()
     }
-    set {message = .statusUpdate(newValue)}
+    set {_uniqueStorage()._message = .statusUpdate(newValue)}
   }
 
   /// A data message delivered over a stream.
   public var streamData: Nakama_Realtime_StreamData {
     get {
-      if case .streamData(let v)? = message {return v}
+      if case .streamData(let v)? = _storage._message {return v}
       return Nakama_Realtime_StreamData()
     }
-    set {message = .streamData(newValue)}
+    set {_uniqueStorage()._message = .streamData(newValue)}
   }
 
   /// Presence update for a particular stream.
   public var streamPresenceEvent: Nakama_Realtime_StreamPresenceEvent {
     get {
-      if case .streamPresenceEvent(let v)? = message {return v}
+      if case .streamPresenceEvent(let v)? = _storage._message {return v}
       return Nakama_Realtime_StreamPresenceEvent()
     }
-    set {message = .streamPresenceEvent(newValue)}
+    set {_uniqueStorage()._message = .streamPresenceEvent(newValue)}
   }
 
   /// Application-level heartbeat and connection check.
   public var ping: Nakama_Realtime_Ping {
     get {
-      if case .ping(let v)? = message {return v}
+      if case .ping(let v)? = _storage._message {return v}
       return Nakama_Realtime_Ping()
     }
-    set {message = .ping(newValue)}
+    set {_uniqueStorage()._message = .ping(newValue)}
   }
 
   /// Application-level heartbeat and connection check response.
   public var pong: Nakama_Realtime_Pong {
     get {
-      if case .pong(let v)? = message {return v}
+      if case .pong(let v)? = _storage._message {return v}
       return Nakama_Realtime_Pong()
     }
-    set {message = .pong(newValue)}
+    set {_uniqueStorage()._message = .pong(newValue)}
   }
 
   /// Incoming information about a party.
   public var party: Nakama_Realtime_Party {
     get {
-      if case .party(let v)? = message {return v}
+      if case .party(let v)? = _storage._message {return v}
       return Nakama_Realtime_Party()
     }
-    set {message = .party(newValue)}
+    set {_uniqueStorage()._message = .party(newValue)}
   }
 
   /// Create a party.
   public var partyCreate: Nakama_Realtime_PartyCreate {
     get {
-      if case .partyCreate(let v)? = message {return v}
+      if case .partyCreate(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyCreate()
     }
-    set {message = .partyCreate(newValue)}
+    set {_uniqueStorage()._message = .partyCreate(newValue)}
   }
 
   /// Join a party, or request to join if the party is not open.
   public var partyJoin: Nakama_Realtime_PartyJoin {
     get {
-      if case .partyJoin(let v)? = message {return v}
+      if case .partyJoin(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyJoin()
     }
-    set {message = .partyJoin(newValue)}
+    set {_uniqueStorage()._message = .partyJoin(newValue)}
   }
 
   /// Leave a party.
   public var partyLeave: Nakama_Realtime_PartyLeave {
     get {
-      if case .partyLeave(let v)? = message {return v}
+      if case .partyLeave(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyLeave()
     }
-    set {message = .partyLeave(newValue)}
+    set {_uniqueStorage()._message = .partyLeave(newValue)}
   }
 
   /// Promote a new party leader.
   public var partyPromote: Nakama_Realtime_PartyPromote {
     get {
-      if case .partyPromote(let v)? = message {return v}
+      if case .partyPromote(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyPromote()
     }
-    set {message = .partyPromote(newValue)}
+    set {_uniqueStorage()._message = .partyPromote(newValue)}
   }
 
   /// Announcement of a new party leader.
   public var partyLeader: Nakama_Realtime_PartyLeader {
     get {
-      if case .partyLeader(let v)? = message {return v}
+      if case .partyLeader(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyLeader()
     }
-    set {message = .partyLeader(newValue)}
+    set {_uniqueStorage()._message = .partyLeader(newValue)}
   }
 
   /// Accept a request to join.
   public var partyAccept: Nakama_Realtime_PartyAccept {
     get {
-      if case .partyAccept(let v)? = message {return v}
+      if case .partyAccept(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyAccept()
     }
-    set {message = .partyAccept(newValue)}
+    set {_uniqueStorage()._message = .partyAccept(newValue)}
   }
 
   /// Kick a party member, or decline a request to join.
   public var partyRemove: Nakama_Realtime_PartyRemove {
     get {
-      if case .partyRemove(let v)? = message {return v}
+      if case .partyRemove(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyRemove()
     }
-    set {message = .partyRemove(newValue)}
+    set {_uniqueStorage()._message = .partyRemove(newValue)}
   }
 
   /// End a party, kicking all party members and closing it.
   public var partyClose: Nakama_Realtime_PartyClose {
     get {
-      if case .partyClose(let v)? = message {return v}
+      if case .partyClose(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyClose()
     }
-    set {message = .partyClose(newValue)}
+    set {_uniqueStorage()._message = .partyClose(newValue)}
   }
 
   /// Request a list of pending join requests for a party.
   public var partyJoinRequestList: Nakama_Realtime_PartyJoinRequestList {
     get {
-      if case .partyJoinRequestList(let v)? = message {return v}
+      if case .partyJoinRequestList(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyJoinRequestList()
     }
-    set {message = .partyJoinRequestList(newValue)}
+    set {_uniqueStorage()._message = .partyJoinRequestList(newValue)}
   }
 
   /// Incoming notification for one or more new presences attempting to join the party.
   public var partyJoinRequest: Nakama_Realtime_PartyJoinRequest {
     get {
-      if case .partyJoinRequest(let v)? = message {return v}
+      if case .partyJoinRequest(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyJoinRequest()
     }
-    set {message = .partyJoinRequest(newValue)}
+    set {_uniqueStorage()._message = .partyJoinRequest(newValue)}
   }
 
   /// Begin matchmaking as a party.
   public var partyMatchmakerAdd: Nakama_Realtime_PartyMatchmakerAdd {
     get {
-      if case .partyMatchmakerAdd(let v)? = message {return v}
+      if case .partyMatchmakerAdd(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyMatchmakerAdd()
     }
-    set {message = .partyMatchmakerAdd(newValue)}
+    set {_uniqueStorage()._message = .partyMatchmakerAdd(newValue)}
   }
 
   /// Cancel a party matchmaking process using a ticket.
   public var partyMatchmakerRemove: Nakama_Realtime_PartyMatchmakerRemove {
     get {
-      if case .partyMatchmakerRemove(let v)? = message {return v}
+      if case .partyMatchmakerRemove(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyMatchmakerRemove()
     }
-    set {message = .partyMatchmakerRemove(newValue)}
+    set {_uniqueStorage()._message = .partyMatchmakerRemove(newValue)}
   }
 
   /// A response from starting a new party matchmaking process.
   public var partyMatchmakerTicket: Nakama_Realtime_PartyMatchmakerTicket {
     get {
-      if case .partyMatchmakerTicket(let v)? = message {return v}
+      if case .partyMatchmakerTicket(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyMatchmakerTicket()
     }
-    set {message = .partyMatchmakerTicket(newValue)}
+    set {_uniqueStorage()._message = .partyMatchmakerTicket(newValue)}
   }
 
   /// Incoming party data delivered from the server.
   public var partyData: Nakama_Realtime_PartyData {
     get {
-      if case .partyData(let v)? = message {return v}
+      if case .partyData(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyData()
     }
-    set {message = .partyData(newValue)}
+    set {_uniqueStorage()._message = .partyData(newValue)}
   }
 
   /// A client to server request to send data to a party.
   public var partyDataSend: Nakama_Realtime_PartyDataSend {
     get {
-      if case .partyDataSend(let v)? = message {return v}
+      if case .partyDataSend(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyDataSend()
     }
-    set {message = .partyDataSend(newValue)}
+    set {_uniqueStorage()._message = .partyDataSend(newValue)}
   }
 
   /// Presence update for a particular party.
   public var partyPresenceEvent: Nakama_Realtime_PartyPresenceEvent {
     get {
-      if case .partyPresenceEvent(let v)? = message {return v}
+      if case .partyPresenceEvent(let v)? = _storage._message {return v}
       return Nakama_Realtime_PartyPresenceEvent()
     }
-    set {message = .partyPresenceEvent(newValue)}
+    set {_uniqueStorage()._message = .partyPresenceEvent(newValue)}
+  }
+
+  /// Update Party label and whether it's open or closed.
+  public var partyUpdate: Nakama_Realtime_PartyUpdate {
+    get {
+      if case .partyUpdate(let v)? = _storage._message {return v}
+      return Nakama_Realtime_PartyUpdate()
+    }
+    set {_uniqueStorage()._message = .partyUpdate(newValue)}
   }
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -589,6 +604,8 @@ public struct Nakama_Realtime_Envelope {
     case partyDataSend(Nakama_Realtime_PartyDataSend)
     /// Presence update for a particular party.
     case partyPresenceEvent(Nakama_Realtime_PartyPresenceEvent)
+    /// Update Party label and whether it's open or closed.
+    case partyUpdate(Nakama_Realtime_PartyUpdate)
 
   #if !swift(>=4.1)
     public static func ==(lhs: Nakama_Realtime_Envelope.OneOf_Message, rhs: Nakama_Realtime_Envelope.OneOf_Message) -> Bool {
@@ -792,6 +809,10 @@ public struct Nakama_Realtime_Envelope {
         guard case .partyPresenceEvent(let l) = lhs, case .partyPresenceEvent(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
+      case (.partyUpdate, .partyUpdate): return {
+        guard case .partyUpdate(let l) = lhs, case .partyUpdate(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
@@ -799,6 +820,8 @@ public struct Nakama_Realtime_Envelope {
   }
 
   public init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 /// A realtime chat channel.
@@ -1632,6 +1655,9 @@ public struct Nakama_Realtime_Party {
   /// Open flag.
   public var `open`: Bool = false
 
+  /// Hidden flag.
+  public var hidden: Bool = false
+
   /// Maximum number of party members.
   public var maxSize: Int32 = 0
 
@@ -1658,6 +1684,9 @@ public struct Nakama_Realtime_Party {
   /// All current party members.
   public var presences: [Nakama_Realtime_UserPresence] = []
 
+  /// Label for party listing.
+  public var label: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1677,6 +1706,35 @@ public struct Nakama_Realtime_PartyCreate {
 
   /// Maximum number of party members.
   public var maxSize: Int32 = 0
+
+  /// Label
+  public var label: String = String()
+
+  /// Whether the party is visible in party listings.
+  public var hidden: Bool = false
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Update a party label.
+public struct Nakama_Realtime_PartyUpdate {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Party ID.
+  public var partyID: String = String()
+
+  /// Label to set.
+  public var label: String = String()
+
+  /// Change the party to open or closed.
+  public var `open`: Bool = false
+
+  /// Whether the party is visible in party listings.
+  public var hidden: Bool = false
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2272,6 +2330,7 @@ extension Nakama_Realtime_MatchmakerTicket: @unchecked Sendable {}
 extension Nakama_Realtime_Notifications: @unchecked Sendable {}
 extension Nakama_Realtime_Party: @unchecked Sendable {}
 extension Nakama_Realtime_PartyCreate: @unchecked Sendable {}
+extension Nakama_Realtime_PartyUpdate: @unchecked Sendable {}
 extension Nakama_Realtime_PartyJoin: @unchecked Sendable {}
 extension Nakama_Realtime_PartyLeave: @unchecked Sendable {}
 extension Nakama_Realtime_PartyPromote: @unchecked Sendable {}
@@ -2357,870 +2416,922 @@ extension Nakama_Realtime_Envelope: SwiftProtobuf.Message, SwiftProtobuf._Messag
     48: .standard(proto: "party_data"),
     49: .standard(proto: "party_data_send"),
     50: .standard(proto: "party_presence_event"),
+    51: .standard(proto: "party_update"),
   ]
 
+  fileprivate class _StorageClass {
+    var _cid: String = String()
+    var _message: Nakama_Realtime_Envelope.OneOf_Message?
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _cid = source._cid
+      _message = source._message
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.cid) }()
-      case 2: try {
-        var v: Nakama_Realtime_Channel?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channel(let m) = current {v = m}
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeSingularStringField(value: &_storage._cid) }()
+        case 2: try {
+          var v: Nakama_Realtime_Channel?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channel(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channel(v)
+          }
+        }()
+        case 3: try {
+          var v: Nakama_Realtime_ChannelJoin?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelJoin(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelJoin(v)
+          }
+        }()
+        case 4: try {
+          var v: Nakama_Realtime_ChannelLeave?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelLeave(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelLeave(v)
+          }
+        }()
+        case 5: try {
+          var v: Nakama_Api_ChannelMessage?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelMessage(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelMessage(v)
+          }
+        }()
+        case 6: try {
+          var v: Nakama_Realtime_ChannelMessageAck?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelMessageAck(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelMessageAck(v)
+          }
+        }()
+        case 7: try {
+          var v: Nakama_Realtime_ChannelMessageSend?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelMessageSend(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelMessageSend(v)
+          }
+        }()
+        case 8: try {
+          var v: Nakama_Realtime_ChannelMessageUpdate?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelMessageUpdate(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelMessageUpdate(v)
+          }
+        }()
+        case 9: try {
+          var v: Nakama_Realtime_ChannelMessageRemove?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelMessageRemove(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelMessageRemove(v)
+          }
+        }()
+        case 10: try {
+          var v: Nakama_Realtime_ChannelPresenceEvent?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .channelPresenceEvent(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .channelPresenceEvent(v)
+          }
+        }()
+        case 11: try {
+          var v: Nakama_Realtime_Error?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .error(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .error(v)
+          }
+        }()
+        case 12: try {
+          var v: Nakama_Realtime_Match?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .match(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .match(v)
+          }
+        }()
+        case 13: try {
+          var v: Nakama_Realtime_MatchCreate?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchCreate(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchCreate(v)
+          }
+        }()
+        case 14: try {
+          var v: Nakama_Realtime_MatchData?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchData(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchData(v)
+          }
+        }()
+        case 15: try {
+          var v: Nakama_Realtime_MatchDataSend?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchDataSend(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchDataSend(v)
+          }
+        }()
+        case 16: try {
+          var v: Nakama_Realtime_MatchJoin?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchJoin(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchJoin(v)
+          }
+        }()
+        case 17: try {
+          var v: Nakama_Realtime_MatchLeave?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchLeave(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchLeave(v)
+          }
+        }()
+        case 18: try {
+          var v: Nakama_Realtime_MatchPresenceEvent?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchPresenceEvent(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchPresenceEvent(v)
+          }
+        }()
+        case 19: try {
+          var v: Nakama_Realtime_MatchmakerAdd?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchmakerAdd(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchmakerAdd(v)
+          }
+        }()
+        case 20: try {
+          var v: Nakama_Realtime_MatchmakerMatched?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchmakerMatched(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchmakerMatched(v)
+          }
+        }()
+        case 21: try {
+          var v: Nakama_Realtime_MatchmakerRemove?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchmakerRemove(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchmakerRemove(v)
+          }
+        }()
+        case 22: try {
+          var v: Nakama_Realtime_MatchmakerTicket?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .matchmakerTicket(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .matchmakerTicket(v)
+          }
+        }()
+        case 23: try {
+          var v: Nakama_Realtime_Notifications?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .notifications(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .notifications(v)
+          }
+        }()
+        case 24: try {
+          var v: Nakama_Api_Rpc?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .rpc(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .rpc(v)
+          }
+        }()
+        case 25: try {
+          var v: Nakama_Realtime_Status?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .status(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .status(v)
+          }
+        }()
+        case 26: try {
+          var v: Nakama_Realtime_StatusFollow?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .statusFollow(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .statusFollow(v)
+          }
+        }()
+        case 27: try {
+          var v: Nakama_Realtime_StatusPresenceEvent?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .statusPresenceEvent(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .statusPresenceEvent(v)
+          }
+        }()
+        case 28: try {
+          var v: Nakama_Realtime_StatusUnfollow?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .statusUnfollow(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .statusUnfollow(v)
+          }
+        }()
+        case 29: try {
+          var v: Nakama_Realtime_StatusUpdate?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .statusUpdate(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .statusUpdate(v)
+          }
+        }()
+        case 30: try {
+          var v: Nakama_Realtime_StreamData?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .streamData(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .streamData(v)
+          }
+        }()
+        case 31: try {
+          var v: Nakama_Realtime_StreamPresenceEvent?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .streamPresenceEvent(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .streamPresenceEvent(v)
+          }
+        }()
+        case 32: try {
+          var v: Nakama_Realtime_Ping?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .ping(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .ping(v)
+          }
+        }()
+        case 33: try {
+          var v: Nakama_Realtime_Pong?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .pong(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .pong(v)
+          }
+        }()
+        case 34: try {
+          var v: Nakama_Realtime_Party?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .party(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .party(v)
+          }
+        }()
+        case 35: try {
+          var v: Nakama_Realtime_PartyCreate?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyCreate(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyCreate(v)
+          }
+        }()
+        case 36: try {
+          var v: Nakama_Realtime_PartyJoin?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyJoin(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyJoin(v)
+          }
+        }()
+        case 37: try {
+          var v: Nakama_Realtime_PartyLeave?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyLeave(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyLeave(v)
+          }
+        }()
+        case 38: try {
+          var v: Nakama_Realtime_PartyPromote?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyPromote(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyPromote(v)
+          }
+        }()
+        case 39: try {
+          var v: Nakama_Realtime_PartyLeader?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyLeader(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyLeader(v)
+          }
+        }()
+        case 40: try {
+          var v: Nakama_Realtime_PartyAccept?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyAccept(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyAccept(v)
+          }
+        }()
+        case 41: try {
+          var v: Nakama_Realtime_PartyRemove?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyRemove(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyRemove(v)
+          }
+        }()
+        case 42: try {
+          var v: Nakama_Realtime_PartyClose?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyClose(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyClose(v)
+          }
+        }()
+        case 43: try {
+          var v: Nakama_Realtime_PartyJoinRequestList?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyJoinRequestList(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyJoinRequestList(v)
+          }
+        }()
+        case 44: try {
+          var v: Nakama_Realtime_PartyJoinRequest?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyJoinRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyJoinRequest(v)
+          }
+        }()
+        case 45: try {
+          var v: Nakama_Realtime_PartyMatchmakerAdd?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyMatchmakerAdd(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyMatchmakerAdd(v)
+          }
+        }()
+        case 46: try {
+          var v: Nakama_Realtime_PartyMatchmakerRemove?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyMatchmakerRemove(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyMatchmakerRemove(v)
+          }
+        }()
+        case 47: try {
+          var v: Nakama_Realtime_PartyMatchmakerTicket?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyMatchmakerTicket(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyMatchmakerTicket(v)
+          }
+        }()
+        case 48: try {
+          var v: Nakama_Realtime_PartyData?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyData(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyData(v)
+          }
+        }()
+        case 49: try {
+          var v: Nakama_Realtime_PartyDataSend?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyDataSend(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyDataSend(v)
+          }
+        }()
+        case 50: try {
+          var v: Nakama_Realtime_PartyPresenceEvent?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyPresenceEvent(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyPresenceEvent(v)
+          }
+        }()
+        case 51: try {
+          var v: Nakama_Realtime_PartyUpdate?
+          var hadOneofValue = false
+          if let current = _storage._message {
+            hadOneofValue = true
+            if case .partyUpdate(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._message = .partyUpdate(v)
+          }
+        }()
+        default: break
         }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channel(v)
-        }
-      }()
-      case 3: try {
-        var v: Nakama_Realtime_ChannelJoin?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelJoin(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelJoin(v)
-        }
-      }()
-      case 4: try {
-        var v: Nakama_Realtime_ChannelLeave?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelLeave(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelLeave(v)
-        }
-      }()
-      case 5: try {
-        var v: Nakama_Api_ChannelMessage?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelMessage(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelMessage(v)
-        }
-      }()
-      case 6: try {
-        var v: Nakama_Realtime_ChannelMessageAck?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelMessageAck(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelMessageAck(v)
-        }
-      }()
-      case 7: try {
-        var v: Nakama_Realtime_ChannelMessageSend?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelMessageSend(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelMessageSend(v)
-        }
-      }()
-      case 8: try {
-        var v: Nakama_Realtime_ChannelMessageUpdate?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelMessageUpdate(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelMessageUpdate(v)
-        }
-      }()
-      case 9: try {
-        var v: Nakama_Realtime_ChannelMessageRemove?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelMessageRemove(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelMessageRemove(v)
-        }
-      }()
-      case 10: try {
-        var v: Nakama_Realtime_ChannelPresenceEvent?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .channelPresenceEvent(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .channelPresenceEvent(v)
-        }
-      }()
-      case 11: try {
-        var v: Nakama_Realtime_Error?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .error(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .error(v)
-        }
-      }()
-      case 12: try {
-        var v: Nakama_Realtime_Match?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .match(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .match(v)
-        }
-      }()
-      case 13: try {
-        var v: Nakama_Realtime_MatchCreate?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchCreate(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchCreate(v)
-        }
-      }()
-      case 14: try {
-        var v: Nakama_Realtime_MatchData?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchData(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchData(v)
-        }
-      }()
-      case 15: try {
-        var v: Nakama_Realtime_MatchDataSend?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchDataSend(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchDataSend(v)
-        }
-      }()
-      case 16: try {
-        var v: Nakama_Realtime_MatchJoin?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchJoin(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchJoin(v)
-        }
-      }()
-      case 17: try {
-        var v: Nakama_Realtime_MatchLeave?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchLeave(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchLeave(v)
-        }
-      }()
-      case 18: try {
-        var v: Nakama_Realtime_MatchPresenceEvent?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchPresenceEvent(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchPresenceEvent(v)
-        }
-      }()
-      case 19: try {
-        var v: Nakama_Realtime_MatchmakerAdd?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchmakerAdd(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchmakerAdd(v)
-        }
-      }()
-      case 20: try {
-        var v: Nakama_Realtime_MatchmakerMatched?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchmakerMatched(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchmakerMatched(v)
-        }
-      }()
-      case 21: try {
-        var v: Nakama_Realtime_MatchmakerRemove?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchmakerRemove(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchmakerRemove(v)
-        }
-      }()
-      case 22: try {
-        var v: Nakama_Realtime_MatchmakerTicket?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .matchmakerTicket(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .matchmakerTicket(v)
-        }
-      }()
-      case 23: try {
-        var v: Nakama_Realtime_Notifications?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .notifications(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .notifications(v)
-        }
-      }()
-      case 24: try {
-        var v: Nakama_Api_Rpc?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .rpc(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .rpc(v)
-        }
-      }()
-      case 25: try {
-        var v: Nakama_Realtime_Status?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .status(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .status(v)
-        }
-      }()
-      case 26: try {
-        var v: Nakama_Realtime_StatusFollow?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .statusFollow(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .statusFollow(v)
-        }
-      }()
-      case 27: try {
-        var v: Nakama_Realtime_StatusPresenceEvent?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .statusPresenceEvent(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .statusPresenceEvent(v)
-        }
-      }()
-      case 28: try {
-        var v: Nakama_Realtime_StatusUnfollow?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .statusUnfollow(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .statusUnfollow(v)
-        }
-      }()
-      case 29: try {
-        var v: Nakama_Realtime_StatusUpdate?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .statusUpdate(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .statusUpdate(v)
-        }
-      }()
-      case 30: try {
-        var v: Nakama_Realtime_StreamData?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .streamData(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .streamData(v)
-        }
-      }()
-      case 31: try {
-        var v: Nakama_Realtime_StreamPresenceEvent?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .streamPresenceEvent(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .streamPresenceEvent(v)
-        }
-      }()
-      case 32: try {
-        var v: Nakama_Realtime_Ping?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .ping(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .ping(v)
-        }
-      }()
-      case 33: try {
-        var v: Nakama_Realtime_Pong?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .pong(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .pong(v)
-        }
-      }()
-      case 34: try {
-        var v: Nakama_Realtime_Party?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .party(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .party(v)
-        }
-      }()
-      case 35: try {
-        var v: Nakama_Realtime_PartyCreate?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyCreate(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyCreate(v)
-        }
-      }()
-      case 36: try {
-        var v: Nakama_Realtime_PartyJoin?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyJoin(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyJoin(v)
-        }
-      }()
-      case 37: try {
-        var v: Nakama_Realtime_PartyLeave?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyLeave(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyLeave(v)
-        }
-      }()
-      case 38: try {
-        var v: Nakama_Realtime_PartyPromote?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyPromote(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyPromote(v)
-        }
-      }()
-      case 39: try {
-        var v: Nakama_Realtime_PartyLeader?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyLeader(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyLeader(v)
-        }
-      }()
-      case 40: try {
-        var v: Nakama_Realtime_PartyAccept?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyAccept(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyAccept(v)
-        }
-      }()
-      case 41: try {
-        var v: Nakama_Realtime_PartyRemove?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyRemove(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyRemove(v)
-        }
-      }()
-      case 42: try {
-        var v: Nakama_Realtime_PartyClose?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyClose(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyClose(v)
-        }
-      }()
-      case 43: try {
-        var v: Nakama_Realtime_PartyJoinRequestList?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyJoinRequestList(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyJoinRequestList(v)
-        }
-      }()
-      case 44: try {
-        var v: Nakama_Realtime_PartyJoinRequest?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyJoinRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyJoinRequest(v)
-        }
-      }()
-      case 45: try {
-        var v: Nakama_Realtime_PartyMatchmakerAdd?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyMatchmakerAdd(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyMatchmakerAdd(v)
-        }
-      }()
-      case 46: try {
-        var v: Nakama_Realtime_PartyMatchmakerRemove?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyMatchmakerRemove(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyMatchmakerRemove(v)
-        }
-      }()
-      case 47: try {
-        var v: Nakama_Realtime_PartyMatchmakerTicket?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyMatchmakerTicket(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyMatchmakerTicket(v)
-        }
-      }()
-      case 48: try {
-        var v: Nakama_Realtime_PartyData?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyData(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyData(v)
-        }
-      }()
-      case 49: try {
-        var v: Nakama_Realtime_PartyDataSend?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyDataSend(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyDataSend(v)
-        }
-      }()
-      case 50: try {
-        var v: Nakama_Realtime_PartyPresenceEvent?
-        var hadOneofValue = false
-        if let current = self.message {
-          hadOneofValue = true
-          if case .partyPresenceEvent(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.message = .partyPresenceEvent(v)
-        }
-      }()
-      default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    if !self.cid.isEmpty {
-      try visitor.visitSingularStringField(value: self.cid, fieldNumber: 1)
-    }
-    switch self.message {
-    case .channel?: try {
-      guard case .channel(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }()
-    case .channelJoin?: try {
-      guard case .channelJoin(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }()
-    case .channelLeave?: try {
-      guard case .channelLeave(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }()
-    case .channelMessage?: try {
-      guard case .channelMessage(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }()
-    case .channelMessageAck?: try {
-      guard case .channelMessageAck(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-    }()
-    case .channelMessageSend?: try {
-      guard case .channelMessageSend(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }()
-    case .channelMessageUpdate?: try {
-      guard case .channelMessageUpdate(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-    }()
-    case .channelMessageRemove?: try {
-      guard case .channelMessageRemove(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-    }()
-    case .channelPresenceEvent?: try {
-      guard case .channelPresenceEvent(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }()
-    case .error?: try {
-      guard case .error(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
-    }()
-    case .match?: try {
-      guard case .match(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
-    }()
-    case .matchCreate?: try {
-      guard case .matchCreate(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
-    }()
-    case .matchData?: try {
-      guard case .matchData(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
-    }()
-    case .matchDataSend?: try {
-      guard case .matchDataSend(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
-    }()
-    case .matchJoin?: try {
-      guard case .matchJoin(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
-    }()
-    case .matchLeave?: try {
-      guard case .matchLeave(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
-    }()
-    case .matchPresenceEvent?: try {
-      guard case .matchPresenceEvent(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
-    }()
-    case .matchmakerAdd?: try {
-      guard case .matchmakerAdd(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 19)
-    }()
-    case .matchmakerMatched?: try {
-      guard case .matchmakerMatched(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
-    }()
-    case .matchmakerRemove?: try {
-      guard case .matchmakerRemove(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 21)
-    }()
-    case .matchmakerTicket?: try {
-      guard case .matchmakerTicket(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 22)
-    }()
-    case .notifications?: try {
-      guard case .notifications(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 23)
-    }()
-    case .rpc?: try {
-      guard case .rpc(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 24)
-    }()
-    case .status?: try {
-      guard case .status(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 25)
-    }()
-    case .statusFollow?: try {
-      guard case .statusFollow(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 26)
-    }()
-    case .statusPresenceEvent?: try {
-      guard case .statusPresenceEvent(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 27)
-    }()
-    case .statusUnfollow?: try {
-      guard case .statusUnfollow(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 28)
-    }()
-    case .statusUpdate?: try {
-      guard case .statusUpdate(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 29)
-    }()
-    case .streamData?: try {
-      guard case .streamData(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
-    }()
-    case .streamPresenceEvent?: try {
-      guard case .streamPresenceEvent(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 31)
-    }()
-    case .ping?: try {
-      guard case .ping(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 32)
-    }()
-    case .pong?: try {
-      guard case .pong(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 33)
-    }()
-    case .party?: try {
-      guard case .party(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 34)
-    }()
-    case .partyCreate?: try {
-      guard case .partyCreate(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 35)
-    }()
-    case .partyJoin?: try {
-      guard case .partyJoin(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 36)
-    }()
-    case .partyLeave?: try {
-      guard case .partyLeave(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 37)
-    }()
-    case .partyPromote?: try {
-      guard case .partyPromote(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 38)
-    }()
-    case .partyLeader?: try {
-      guard case .partyLeader(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 39)
-    }()
-    case .partyAccept?: try {
-      guard case .partyAccept(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 40)
-    }()
-    case .partyRemove?: try {
-      guard case .partyRemove(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 41)
-    }()
-    case .partyClose?: try {
-      guard case .partyClose(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 42)
-    }()
-    case .partyJoinRequestList?: try {
-      guard case .partyJoinRequestList(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 43)
-    }()
-    case .partyJoinRequest?: try {
-      guard case .partyJoinRequest(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 44)
-    }()
-    case .partyMatchmakerAdd?: try {
-      guard case .partyMatchmakerAdd(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 45)
-    }()
-    case .partyMatchmakerRemove?: try {
-      guard case .partyMatchmakerRemove(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 46)
-    }()
-    case .partyMatchmakerTicket?: try {
-      guard case .partyMatchmakerTicket(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 47)
-    }()
-    case .partyData?: try {
-      guard case .partyData(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 48)
-    }()
-    case .partyDataSend?: try {
-      guard case .partyDataSend(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 49)
-    }()
-    case .partyPresenceEvent?: try {
-      guard case .partyPresenceEvent(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 50)
-    }()
-    case nil: break
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      if !_storage._cid.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._cid, fieldNumber: 1)
+      }
+      switch _storage._message {
+      case .channel?: try {
+        guard case .channel(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      }()
+      case .channelJoin?: try {
+        guard case .channelJoin(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+      }()
+      case .channelLeave?: try {
+        guard case .channelLeave(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      }()
+      case .channelMessage?: try {
+        guard case .channelMessage(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+      }()
+      case .channelMessageAck?: try {
+        guard case .channelMessageAck(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      }()
+      case .channelMessageSend?: try {
+        guard case .channelMessageSend(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+      }()
+      case .channelMessageUpdate?: try {
+        guard case .channelMessageUpdate(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+      }()
+      case .channelMessageRemove?: try {
+        guard case .channelMessageRemove(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
+      }()
+      case .channelPresenceEvent?: try {
+        guard case .channelPresenceEvent(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+      }()
+      case .error?: try {
+        guard case .error(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+      }()
+      case .match?: try {
+        guard case .match(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+      }()
+      case .matchCreate?: try {
+        guard case .matchCreate(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+      }()
+      case .matchData?: try {
+        guard case .matchData(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
+      }()
+      case .matchDataSend?: try {
+        guard case .matchDataSend(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
+      }()
+      case .matchJoin?: try {
+        guard case .matchJoin(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
+      }()
+      case .matchLeave?: try {
+        guard case .matchLeave(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
+      }()
+      case .matchPresenceEvent?: try {
+        guard case .matchPresenceEvent(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
+      }()
+      case .matchmakerAdd?: try {
+        guard case .matchmakerAdd(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 19)
+      }()
+      case .matchmakerMatched?: try {
+        guard case .matchmakerMatched(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
+      }()
+      case .matchmakerRemove?: try {
+        guard case .matchmakerRemove(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 21)
+      }()
+      case .matchmakerTicket?: try {
+        guard case .matchmakerTicket(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 22)
+      }()
+      case .notifications?: try {
+        guard case .notifications(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 23)
+      }()
+      case .rpc?: try {
+        guard case .rpc(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 24)
+      }()
+      case .status?: try {
+        guard case .status(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 25)
+      }()
+      case .statusFollow?: try {
+        guard case .statusFollow(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 26)
+      }()
+      case .statusPresenceEvent?: try {
+        guard case .statusPresenceEvent(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 27)
+      }()
+      case .statusUnfollow?: try {
+        guard case .statusUnfollow(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 28)
+      }()
+      case .statusUpdate?: try {
+        guard case .statusUpdate(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 29)
+      }()
+      case .streamData?: try {
+        guard case .streamData(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
+      }()
+      case .streamPresenceEvent?: try {
+        guard case .streamPresenceEvent(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 31)
+      }()
+      case .ping?: try {
+        guard case .ping(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 32)
+      }()
+      case .pong?: try {
+        guard case .pong(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 33)
+      }()
+      case .party?: try {
+        guard case .party(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 34)
+      }()
+      case .partyCreate?: try {
+        guard case .partyCreate(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 35)
+      }()
+      case .partyJoin?: try {
+        guard case .partyJoin(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 36)
+      }()
+      case .partyLeave?: try {
+        guard case .partyLeave(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 37)
+      }()
+      case .partyPromote?: try {
+        guard case .partyPromote(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 38)
+      }()
+      case .partyLeader?: try {
+        guard case .partyLeader(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 39)
+      }()
+      case .partyAccept?: try {
+        guard case .partyAccept(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 40)
+      }()
+      case .partyRemove?: try {
+        guard case .partyRemove(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 41)
+      }()
+      case .partyClose?: try {
+        guard case .partyClose(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 42)
+      }()
+      case .partyJoinRequestList?: try {
+        guard case .partyJoinRequestList(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 43)
+      }()
+      case .partyJoinRequest?: try {
+        guard case .partyJoinRequest(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 44)
+      }()
+      case .partyMatchmakerAdd?: try {
+        guard case .partyMatchmakerAdd(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 45)
+      }()
+      case .partyMatchmakerRemove?: try {
+        guard case .partyMatchmakerRemove(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 46)
+      }()
+      case .partyMatchmakerTicket?: try {
+        guard case .partyMatchmakerTicket(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 47)
+      }()
+      case .partyData?: try {
+        guard case .partyData(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 48)
+      }()
+      case .partyDataSend?: try {
+        guard case .partyDataSend(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 49)
+      }()
+      case .partyPresenceEvent?: try {
+        guard case .partyPresenceEvent(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 50)
+      }()
+      case .partyUpdate?: try {
+        guard case .partyUpdate(let v)? = _storage._message else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 51)
+      }()
+      case nil: break
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Nakama_Realtime_Envelope, rhs: Nakama_Realtime_Envelope) -> Bool {
-    if lhs.cid != rhs.cid {return false}
-    if lhs.message != rhs.message {return false}
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._cid != rhs_storage._cid {return false}
+        if _storage._message != rhs_storage._message {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4389,10 +4500,12 @@ extension Nakama_Realtime_Party: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "party_id"),
     2: .same(proto: "open"),
-    3: .standard(proto: "max_size"),
-    4: .same(proto: "self"),
-    5: .same(proto: "leader"),
-    6: .same(proto: "presences"),
+    3: .same(proto: "hidden"),
+    4: .standard(proto: "max_size"),
+    5: .same(proto: "self"),
+    6: .same(proto: "leader"),
+    7: .same(proto: "presences"),
+    8: .same(proto: "label"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -4403,10 +4516,12 @@ extension Nakama_Realtime_Party: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
       case 2: try { try decoder.decodeSingularBoolField(value: &self.`open`) }()
-      case 3: try { try decoder.decodeSingularInt32Field(value: &self.maxSize) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._self_p) }()
-      case 5: try { try decoder.decodeSingularMessageField(value: &self._leader) }()
-      case 6: try { try decoder.decodeRepeatedMessageField(value: &self.presences) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.hidden) }()
+      case 4: try { try decoder.decodeSingularInt32Field(value: &self.maxSize) }()
+      case 5: try { try decoder.decodeSingularMessageField(value: &self._self_p) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._leader) }()
+      case 7: try { try decoder.decodeRepeatedMessageField(value: &self.presences) }()
+      case 8: try { try decoder.decodeSingularStringField(value: &self.label) }()
       default: break
       }
     }
@@ -4423,17 +4538,23 @@ extension Nakama_Realtime_Party: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if self.`open` != false {
       try visitor.visitSingularBoolField(value: self.`open`, fieldNumber: 2)
     }
+    if self.hidden != false {
+      try visitor.visitSingularBoolField(value: self.hidden, fieldNumber: 3)
+    }
     if self.maxSize != 0 {
-      try visitor.visitSingularInt32Field(value: self.maxSize, fieldNumber: 3)
+      try visitor.visitSingularInt32Field(value: self.maxSize, fieldNumber: 4)
     }
     try { if let v = self._self_p {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    } }()
-    try { if let v = self._leader {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
     } }()
+    try { if let v = self._leader {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
     if !self.presences.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 6)
+      try visitor.visitRepeatedMessageField(value: self.presences, fieldNumber: 7)
+    }
+    if !self.label.isEmpty {
+      try visitor.visitSingularStringField(value: self.label, fieldNumber: 8)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -4441,10 +4562,12 @@ extension Nakama_Realtime_Party: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
   public static func ==(lhs: Nakama_Realtime_Party, rhs: Nakama_Realtime_Party) -> Bool {
     if lhs.partyID != rhs.partyID {return false}
     if lhs.`open` != rhs.`open` {return false}
+    if lhs.hidden != rhs.hidden {return false}
     if lhs.maxSize != rhs.maxSize {return false}
     if lhs._self_p != rhs._self_p {return false}
     if lhs._leader != rhs._leader {return false}
     if lhs.presences != rhs.presences {return false}
+    if lhs.label != rhs.label {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4455,6 +4578,8 @@ extension Nakama_Realtime_PartyCreate: SwiftProtobuf.Message, SwiftProtobuf._Mes
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "open"),
     2: .standard(proto: "max_size"),
+    3: .same(proto: "label"),
+    4: .same(proto: "hidden"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -4465,6 +4590,8 @@ extension Nakama_Realtime_PartyCreate: SwiftProtobuf.Message, SwiftProtobuf._Mes
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBoolField(value: &self.`open`) }()
       case 2: try { try decoder.decodeSingularInt32Field(value: &self.maxSize) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.label) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.hidden) }()
       default: break
       }
     }
@@ -4477,12 +4604,70 @@ extension Nakama_Realtime_PartyCreate: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if self.maxSize != 0 {
       try visitor.visitSingularInt32Field(value: self.maxSize, fieldNumber: 2)
     }
+    if !self.label.isEmpty {
+      try visitor.visitSingularStringField(value: self.label, fieldNumber: 3)
+    }
+    if self.hidden != false {
+      try visitor.visitSingularBoolField(value: self.hidden, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Nakama_Realtime_PartyCreate, rhs: Nakama_Realtime_PartyCreate) -> Bool {
     if lhs.`open` != rhs.`open` {return false}
     if lhs.maxSize != rhs.maxSize {return false}
+    if lhs.label != rhs.label {return false}
+    if lhs.hidden != rhs.hidden {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Nakama_Realtime_PartyUpdate: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PartyUpdate"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "party_id"),
+    2: .same(proto: "label"),
+    3: .same(proto: "open"),
+    4: .same(proto: "hidden"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.partyID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.label) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.`open`) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.hidden) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.partyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.partyID, fieldNumber: 1)
+    }
+    if !self.label.isEmpty {
+      try visitor.visitSingularStringField(value: self.label, fieldNumber: 2)
+    }
+    if self.`open` != false {
+      try visitor.visitSingularBoolField(value: self.`open`, fieldNumber: 3)
+    }
+    if self.hidden != false {
+      try visitor.visitSingularBoolField(value: self.hidden, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Nakama_Realtime_PartyUpdate, rhs: Nakama_Realtime_PartyUpdate) -> Bool {
+    if lhs.partyID != rhs.partyID {return false}
+    if lhs.label != rhs.label {return false}
+    if lhs.`open` != rhs.`open` {return false}
+    if lhs.hidden != rhs.hidden {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

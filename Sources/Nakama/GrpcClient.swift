@@ -136,11 +136,25 @@ public final class GrpcClient : Client {
         if let usernames {
             req.usernames = usernames
         }
-        
+
         try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
-        
+
         return try await retryInvoker.invokeWithRetry(request: {
             _ = try await self.nakamaGrpcClient.deleteFriends(req, callOptions: session.callOptions).response.get()
+        }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
+    }
+
+    public func blockFriends(session: Session, ids: [String], usernames: [String]? = nil, retryConfig: RetryConfiguration? = nil) async throws {
+        var req = Nakama_Api_BlockFriendsRequest()
+        req.ids = ids
+        if let usernames {
+            req.usernames = usernames
+        }
+
+        try await refreshIfExpired(session: session, retryConfig: retryConfig ?? globalRetryConfiguration)
+
+        return try await retryInvoker.invokeWithRetry(request: {
+            _ = try await self.nakamaGrpcClient.blockFriends(req, callOptions: session.callOptions).response.get()
         }, history: RetryHistory(session: session, configuration: retryConfig ?? globalRetryConfiguration))
     }
     

@@ -69,6 +69,16 @@ public protocol Client {
      - Parameter retryConfiguration: The retry configuration.
      */
     func deleteFriends(session: Session, ids: [String], usernames: [String]?, retryConfig: RetryConfiguration?) async throws -> Void
+
+    /**
+     Block one or more users by id or username so they can no longer send friend
+     requests, party invites, or interact with the current user.
+     - Parameter session: The session of the user.
+     - Parameter ids: The user ids to block.
+     - Parameter usernames: The usernames to block.
+     - Parameter retryConfig: The retry configuration.
+     */
+    func blockFriends(session: Session, ids: [String], usernames: [String]?, retryConfig: RetryConfiguration?) async throws -> Void
     
     /**
      Authenticate a user with a custom id.

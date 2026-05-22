@@ -19,22 +19,22 @@ import Foundation
 /// Incoming information about a party.
 public struct Party {
     /// The unique party identifier.
-    let id: String
+    public let id: String
     
     /// If the party is open to join.
-    let open: Bool
+    public let open: Bool
     
     /// The maximum number of party members.
-    let maxSize: Int
+    public let maxSize: Int
     
     /// The current user in this party. i.e. Yourself.
-    let self_p: UserPresence
+    public let self_p: UserPresence
     
     /// The current party leader.
-    let leader: UserPresence
+    public let leader: UserPresence
     
     /// All members currently in the party.
-    var presences: [UserPresence]
+    public var presences: [UserPresence]
     
     /// Apply the joins and leaves from a presence event to the presences tracked by the party.
     mutating func updatePresences(event: PartyPresenceEvent) {

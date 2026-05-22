@@ -17,13 +17,13 @@
 import Foundation
 
 public final class UserPresence: Hashable {
-    let userId: String
-    let sessionId: String
-    let username: String
-    let persistence: Bool
-    let status: String?
+    public let userId: String
+    public let sessionId: String
+    public let username: String
+    public let persistence: Bool
+    public let status: String?
     
-    init(userId: String, sessionId: String, username: String, persistence: Bool, status: String? = nil) {
+    public init(userId: String, sessionId: String, username: String, persistence: Bool, status: String? = nil) {
         self.userId = userId
         self.sessionId = sessionId
         self.username = username
@@ -31,7 +31,7 @@ public final class UserPresence: Hashable {
         self.status = status
     }
     
-    convenience init(from rtUserPresence: Nakama_Realtime_UserPresence) {
+    public convenience init(from rtUserPresence: Nakama_Realtime_UserPresence) {
         self.init(
             userId: rtUserPresence.userID,
             sessionId: rtUserPresence.sessionID,
