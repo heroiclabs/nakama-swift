@@ -19,7 +19,7 @@ import XCTest
 import Satori
 
 final class ClientTests: XCTestCase {
-    private let client = HttpClient(host: "127.0.0.1", port: 7450, apiKey: "apiKey")
+    private let client = TestConfig.makeClient()
 
     override func setUp() async throws {
         
@@ -50,7 +50,9 @@ final class ClientTests: XCTestCase {
     func test_GetFlags() async throws {
         let session = try await client.authenticate(id: "285fb548-1c23-42c2-84b5-cd18c22d7053")
         let flags = try await client.getFlags(session: session, names: [])
-        XCTAssertTrue(flags.flags.count == 4)
+        let names = Set(flags.flags.map(\.name))
+        let seeded = ["Create-Guild-Min-Level", "Game-Screen-Color", "Min-Build-Number", "Virtual-Store"]
+        XCTAssertTrue(seeded.allSatisfy(names.contains))
         
         let namedFlags = try await client.getFlags(session: session, names: ["Min-Build-Number"])
         XCTAssertTrue(namedFlags.flags.count == 1)

@@ -18,7 +18,7 @@ import XCTest
 @testable import Nakama
 
 final class NotificationTest: XCTestCase {
-    let client = GrpcClient(serverKey: "defaultkey")
+    let client = TestConfig.makeClient()
     var session: Session!
     
     override func setUp() async throws {

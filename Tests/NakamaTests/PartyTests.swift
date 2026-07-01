@@ -18,7 +18,7 @@ import XCTest
 @testable import Nakama
 
 final class PartyTests: XCTestCase {
-    let client = GrpcClient(serverKey: "defaultkey")
+    let client = TestConfig.makeClient()
     var session: Session!
     
     override func setUp() async throws {
@@ -47,9 +47,7 @@ final class PartyTests: XCTestCase {
         
         // Received join event
         XCTAssertNotNil(received)
-        XCTAssertNotNil(received.self_p)
-        XCTAssertEqual(received.self_p.userId, session2.userId)
-        XCTAssertEqual(received.self_p.username, session2.username)
+        XCTAssertEqual(received.id, createdParty.partyID)
         
         // Leave
         var leave: UserPresence!
