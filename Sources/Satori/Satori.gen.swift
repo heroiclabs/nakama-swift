@@ -806,6 +806,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/healthcheck"
 
         var queryItems = [URLQueryItem]()
@@ -830,6 +831,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/readycheck"
 
         var queryItems = [URLQueryItem]()
@@ -856,6 +858,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/authenticate"
 
         var queryItems = [URLQueryItem]()
@@ -892,6 +895,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/authenticate/logout"
 
         var queryItems = [URLQueryItem]()
@@ -924,6 +928,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/authenticate/refresh"
 
         var queryItems = [URLQueryItem]()
@@ -960,6 +965,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/event"
 
         var queryItems = [URLQueryItem]()
@@ -991,6 +997,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/experiment"
 
         var queryItems = [URLQueryItem]()
@@ -1022,6 +1029,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/flag"
 
         var queryItems = [URLQueryItem]()
@@ -1059,6 +1067,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/identify"
 
         var queryItems = [URLQueryItem]()
@@ -1090,6 +1099,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/identity"
 
         var queryItems = [URLQueryItem]()
@@ -1115,6 +1125,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/live-event"
 
         var queryItems = [URLQueryItem]()
@@ -1146,6 +1157,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/message"
 
         var queryItems = [URLQueryItem]()
@@ -1181,6 +1193,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/message/{id}"
         urlComponents.path.append(id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)
 
@@ -1208,6 +1221,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/message/{id}"
         urlComponents.path.append(id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)
 
@@ -1239,6 +1253,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/properties"
 
         var queryItems = [URLQueryItem]()
@@ -1265,6 +1280,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "/v1/properties"
 
         var queryItems = [URLQueryItem]()
