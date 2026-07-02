@@ -74,8 +74,7 @@ public final class GrpcClient : Client {
         }
         
         logger?.debug("Dialing grpc server \(host):\(port) with basic auth \(basicAuth)")
-        print("Dialing grpc server \(host):\(port) with basic auth \(basicAuth)")
-        
+
         self.grpcConnection = ClientConnection(configuration: configuration)
         self.serverKey = serverKey
         self.host = host
