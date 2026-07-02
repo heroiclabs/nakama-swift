@@ -62,7 +62,9 @@ services:
       - "/bin/sh"
       - "-ecx"
       - >
-        /satori/satori migrate up --database.address postgres:localdb@db:5432/satori &&
+        until /satori/satori migrate up --database.address postgres:localdb@db:5432/satori; do
+          echo "migrate up failed (transient timescaledb deadlock), retrying in 2s..."; sleep 2;
+        done &&
         exec /satori/satori --database.address postgres:localdb@db:5432/satori --cache_watcher.debounce_refresh_millisec=0
     ports:
       - "7448:7448"
