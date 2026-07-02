@@ -23,7 +23,6 @@ final class SocketNotificationTests: XCTestCase {
     var session: Session!
     
     override func setUp() async throws {
-        print("Start setup")
         session = try await client.authenticateCustom(id: UUID().uuidString)
         socket = client.createSocket() as? Socket
     }
@@ -34,8 +33,6 @@ final class SocketNotificationTests: XCTestCase {
     }
     
     func test_receiveNotification() async throws {
-        fputs("Start test", stderr)
-
         socket.connect(session: session)
 
         try await Task.sleep(for: .seconds(1))
