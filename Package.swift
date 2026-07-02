@@ -27,7 +27,7 @@ let package = Package(
     .library(name: "Satori", targets: ["Satori"])
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-nio.git", from: "2.77.0"),
+    .package(url: "https://github.com/apple/swift-nio.git", from: "2.100.0"),
     .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "2.29.0"),
     .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.23.0"),
     .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.28.2"),
