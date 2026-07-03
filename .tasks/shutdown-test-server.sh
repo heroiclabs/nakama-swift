@@ -1,5 +1,5 @@
 #!/bin/sh
 
 cd Tests/server
-docker-compose down
+docker compose down
 
