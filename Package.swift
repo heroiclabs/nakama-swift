@@ -39,6 +39,7 @@ let package = Package(
       name: "Nakama",
       dependencies: [
         .product(name: "NIO", package: "swift-nio"),
+        .product(name: "NIOConcurrencyHelpers", package: "swift-nio"),
         .product(name: "NIOFoundationCompat", package: "swift-nio"),
         .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),
         .product(name: "NIOSSL", package: "swift-nio-ssl"),
