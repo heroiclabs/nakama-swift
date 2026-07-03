@@ -8,6 +8,6 @@ tasks:
     cmds:
       - .tasks/setup-test-server.sh
       - echo "[+] Running tests..."
-      - swift test -q 2>&1 | grep --line-buffered -E "^Test Case .* failed|Executed [0-9]+ tests, with"
+      - bash -lc 'set -o pipefail; swift test -q 2>&1 | grep --line-buffered -E "^Test Case .* failed|Executed [0-9]+ tests, with"'
       - .tasks/shutdown-test-server.sh
 
