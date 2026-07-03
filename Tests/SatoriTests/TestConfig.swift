@@ -44,6 +44,7 @@ enum TestConfig {
         req.httpMethod = method
         req.setValue(auth, forHTTPHeaderField: "Authorization")
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.timeoutInterval = 10
 
         let sem = DispatchSemaphore(value: 0)
         var body: Data?
@@ -51,7 +52,10 @@ enum TestConfig {
             body = data
             sem.signal()
         }.resume()
-        sem.wait()
+
+        if sem.wait(timeout: .now() + 10) == .timedOut {
+            return nil
+        }
         return body
     }
 
