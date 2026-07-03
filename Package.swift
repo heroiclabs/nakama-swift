@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.10
 /*
  * Copyright 2023 Heroic Labs
  *

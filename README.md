@@ -7,7 +7,7 @@ This client is written in swift and supports Nakama v3 API and socket features. 
 
 The client is implemented using swift concurrency with async/await for asynchronously calling client and socket methods.
 
-**Minimum supported swift version is 5.6**
+**Minimum supported swift version is 5.10**
 
 ## Getting Started
 
