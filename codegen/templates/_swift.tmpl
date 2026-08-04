@@ -1,0 +1,103 @@
+{{- define "swiftType" -}}
+{{- $p := .Prefix -}}
+{{- $t := .Type -}}
+{{- if eq $t "string"}}String
+{{- else if eq $t "bool"}}Bool
+{{- else if eq $t "int32" "sint32" "sfixed32" "uint32" "fixed32"}}Int
+{{- else if eq $t "int64" "sint64" "sfixed64" "uint64" "fixed64"}}Int
+{{- else if eq $t "float"}}Float
+{{- else if eq $t "double"}}Double
+{{- else if eq $t "bytes"}}Data
+{{- else if eq $t "Timestamp"}}Date
+{{- else if eq $t "StringValue"}}String
+{{- else if eq $t "BytesValue"}}Data
+{{- else if eq $t "BoolValue"}}Bool
+{{- else if eq $t "Int32Value" "UInt32Value" "Int64Value" "UInt64Value"}}Int
+{{- else if eq $t "FloatValue"}}Float
+{{- else if eq $t "DoubleValue"}}Double
+{{- else if isEnumType $t}}{{$p}}{{join (getEnum $t).QualifiedPath ""}}
+{{- else if containsMessage $t}}{{$p}}{{$t}}
+{{- else if containsString $t "."}}
+  {{- $base := $t | stripTilDot -}}
+  {{- if containsMessage $base}}{{$p}}{{$base}}
+  {{- else if isEnumType $base}}{{$p}}{{join (getEnum $base).QualifiedPath ""}}
+  {{- else}}UNRESOLVED_PROTO_TYPE_{{$t}}
+  {{- end -}}
+{{- else}}UNRESOLVED_PROTO_TYPE_{{$t}}
+{{- end -}}
+{{- end}}
+
+{{- define "swiftOptional" -}}
+{{- $t := .Type -}}
+{{- if or .Repeated .IsMap}}
+{{- else if eq $t "StringValue" "BytesValue" "BoolValue" "Int32Value" "UInt32Value" "Int64Value" "UInt64Value" "FloatValue" "DoubleValue"}}?
+{{- else if eq $t "Timestamp"}}
+{{- else if containsMessage $t}}?
+{{- else if containsMessage (stripTilDot $t)}}?
+{{- end -}}
+{{- end}}
+
+{{- define "swiftFieldType" -}}
+{{- if .IsMap}}[String: {{template "swiftType" .}}]
+{{- else if .Repeated}}[{{template "swiftType" .}}]
+{{- else}}{{template "swiftType" .}}{{template "swiftOptional" .}}
+{{- end -}}
+{{- end}}
+
+{{- define "swiftZero" -}}
+{{- $p := .Prefix -}}
+{{- $t := .Type -}}
+{{- if .IsMap}}[:]
+{{- else if .Repeated}}[]
+{{- else if eq $t "string"}}""
+{{- else if eq $t "bool"}}false
+{{- else if eq $t "bytes"}}Data()
+{{- else if eq $t "Timestamp"}}Date(timeIntervalSince1970: 0)
+{{- else if eq $t "int32" "sint32" "sfixed32" "uint32" "fixed32" "int64" "sint64" "sfixed64" "uint64" "fixed64"}}0
+{{- else if eq $t "float" "double"}}0
+{{- else if isEnumType $t}}
+  {{- $enum := getEnum $t -}}
+  {{- $name := join $enum.QualifiedPath "" -}}
+  {{- range $f := $enum.Fields}}{{if eq $f.Integer 0}}{{$p}}{{$name}}.{{$f.Name | camelCase | normalizeIdentifier}}{{end}}{{end}}
+{{- else}}nil
+{{- end -}}
+{{- end}}
+
+{{- define "swiftDecode" -}}
+{{- $t := .Type -}}
+{{- $key := .Name | camelCase | normalizeIdentifier -}}
+{{- if .IsMap}}try container.protoValue(.{{$key}}, [:])
+{{- else if and .Repeated (eq $t "int64" "sint64" "sfixed64" "uint64" "fixed64")}}try container.protoInt64Array(.{{$key}})
+{{- else if .Repeated}}try container.protoValue(.{{$key}}, [])
+{{- else if eq $t "int64" "sint64" "sfixed64" "uint64" "fixed64"}}try container.protoInt64(.{{$key}}) ?? 0
+{{- else if eq $t "Int64Value" "UInt64Value"}}try container.protoInt64(.{{$key}})
+{{- else if eq $t "Timestamp"}}try container.protoDate(.{{$key}}) ?? Date(timeIntervalSince1970: 0)
+{{- else if eq $t "StringValue"}}try container.decodeIfPresent(String.self, forKey: .{{$key}})
+{{- else if eq $t "BytesValue"}}try container.decodeIfPresent(Data.self, forKey: .{{$key}})
+{{- else if eq $t "BoolValue"}}try container.decodeIfPresent(Bool.self, forKey: .{{$key}})
+{{- else if eq $t "Int32Value" "UInt32Value"}}try container.decodeIfPresent(Int.self, forKey: .{{$key}})
+{{- else if eq $t "FloatValue"}}try container.decodeIfPresent(Float.self, forKey: .{{$key}})
+{{- else if eq $t "DoubleValue"}}try container.decodeIfPresent(Double.self, forKey: .{{$key}})
+{{- else if containsMessage $t}}try container.decodeIfPresent({{template "swiftType" .}}.self, forKey: .{{$key}})
+{{- else if containsMessage (stripTilDot $t)}}try container.decodeIfPresent({{template "swiftType" .}}.self, forKey: .{{$key}})
+{{- else}}try container.protoValue(.{{$key}}, {{template "swiftZero" .}})
+{{- end -}}
+{{- end}}
+
+{{- define "swiftEncode" -}}
+{{- $t := .Type -}}
+{{- $key := .Name | camelCase | normalizeIdentifier -}}
+{{- if or .IsMap .Repeated}}
+  {{- if and .Repeated (eq $t "int64" "sint64" "sfixed64" "uint64" "fixed64")}}try container.protoEncodeInt64Array({{$key}}, forKey: .{{$key}})
+  {{- else}}try container.protoEncodeCollection({{$key}}, forKey: .{{$key}})
+  {{- end}}
+{{- else if eq $t "string" "bytes"}}try container.protoEncodeCollection({{$key}}, forKey: .{{$key}})
+{{- else if eq $t "int64" "sint64" "sfixed64" "uint64" "fixed64"}}try container.protoEncodeInt64({{$key}}, forKey: .{{$key}})
+{{- else if eq $t "Int64Value" "UInt64Value"}}try container.protoEncodeInt64IfPresent({{$key}}, forKey: .{{$key}})
+{{- else if eq $t "Timestamp"}}try container.protoEncodeDate({{$key}}, forKey: .{{$key}})
+{{- else if eq $t "StringValue" "BytesValue" "BoolValue" "Int32Value" "UInt32Value" "FloatValue" "DoubleValue"}}try container.encodeIfPresent({{$key}}, forKey: .{{$key}})
+{{- else if containsMessage $t}}try container.encodeIfPresent({{$key}}, forKey: .{{$key}})
+{{- else if containsMessage (stripTilDot $t)}}try container.encodeIfPresent({{$key}}, forKey: .{{$key}})
+{{- else}}try container.protoEncode({{$key}}, {{template "swiftZero" .}}, forKey: .{{$key}})
+{{- end -}}
+{{- end}}
