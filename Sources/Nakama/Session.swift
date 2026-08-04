@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Nakama Authors
+ * Copyright © 2021 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,161 +15,98 @@
  */
 
 import Foundation
-import GRPC
 
-public protocol Session {
+public final class Session {
     /// The authentication token used to construct this session.
-    var token: String { get }
-    
-    /// Refresh token that can be used for session token renewal.
-    var refreshToken: String { get }
-    
-    /// If the user account for this session was just created.
-    var created: Bool { get }
-    
-    /// The UNIX timestamp when this session was created.
-    var createTime: Date { get }
-    
-    /// If the session has expired against the current time.
-    var isExpired: Bool { get }
-        
-    /// The UNIX timestamp when this session will expire.
-    var expiryTime: Date { get }
-    
-    /// If the refresh token has expired against current time.
-    var isRefreshExpired: Bool { get }
-    
-    /// The UNIX timestamp when the refresh token will expire.
-    var refreshExpiryTime: Date { get }
-    
-    /// The username of the user who owns this session.
-    var username: String { get }
-    
-    /// The ID of the user who owns this session.
-    var userId: String { get }
-    
-    /// Any custom properties associated with this session.
-    var sessionVars: [String:String] { get }
-    
-    /// Check if the session has expired against the offset time.
-    ///
-    /// - Parameter offset: The time to compare against this session.
-    func hasExpired(offset: Date) -> Bool
-    
-    /// Check if the refresh token has expired against the offset time.
-    ///
-    /// - Parameter offset: The time to compare against this refresh token.
-    func hasRefreshExpired(offset: Date) -> Bool
-}
+    public private(set) var token: String
 
-public final class DefaultSession: Session {
-    public var token: String
-    public var refreshToken: String
-    public var created: Bool
-    public var createTime: Date
-    public var expiryTime: Date
-    public var refreshExpiryTime: Date
-    public var username: String
-    public var userId: String
-    public var sessionVars: [String : String]
-    
-    init(token: String, refreshToken: String, created: Bool) {
+    /// Refresh token that can be used for session token renewal.
+    public private(set) var refreshToken: String
+
+    /// If the user account for this session was just created.
+    public let created: Bool
+
+    /// When this session was constructed locally.
+    public let createTime: Date
+
+    /// When this session expires.
+    public private(set) var expiryTime: Date
+
+    /// When the refresh token expires. Epoch when there is no refresh token.
+    public private(set) var refreshExpiryTime: Date
+
+    /// The username of the user who owns this session.
+    public private(set) var username: String
+
+    /// The ID of the user who owns this session.
+    public private(set) var userId: String
+
+    /// Any custom properties associated with this session.
+    public private(set) var sessionVars: [String: String]
+
+    public var isExpired: Bool { hasExpired(offset: Date()) }
+
+    public var isRefreshExpired: Bool { hasRefreshExpired(offset: Date()) }
+
+    public func hasExpired(offset: Date) -> Bool { offset > expiryTime }
+
+    public func hasRefreshExpired(offset: Date) -> Bool { offset > refreshExpiryTime }
+
+    init(token: String, refreshToken: String, created: Bool) throws {
+        guard let claims = token.jwtClaims() else { throw NakamaError.invalidSessionToken }
+
         self.token = token
         self.refreshToken = refreshToken
         self.created = created
         self.createTime = Date()
-        
-        let decoded = token.components(separatedBy: ".")
-        var claims = decoded[1]
-        claims = claims.padding(toLength: ((claims.count+3)/4)*4, withPad: "=", startingAt: 0)
-        
-        let jsonData = Data(base64Encoded: claims)!
-        let jsonDict =  try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [String:AnyObject]
-        
-        self.expiryTime = Date(timeIntervalSince1970: (jsonDict["exp"] as! Double))
-        self.refreshExpiryTime = Date()
-        self.userId = jsonDict["uid"] as! String
-        self.username = jsonDict["usn"] as! String
-        self.sessionVars = jsonDict.keys.contains("vrs") ? jsonDict["vrs"] as! [String : String] : [:]
-        
-        self.update(authToken: token, refreshToken: refreshToken)
+        self.expiryTime = Date(timeIntervalSince1970: claims["exp"] as? Double ?? 0)
+        self.refreshExpiryTime = Date(timeIntervalSince1970: 0)
+        self.userId = claims["uid"] as? String ?? ""
+        self.username = claims["usn"] as? String ?? ""
+        self.sessionVars = claims["vrs"] as? [String: String] ?? [:]
+
+        applyRefreshToken(refreshToken)
     }
-    
-    public var isExpired: Bool {
-        get {
-            return hasExpired(offset: Date())
-        }
+
+    /// Rebuild a session from tokens held across app launches.
+    public static func restore(token: String, refreshToken: String) throws -> Session {
+        try Session(token: token, refreshToken: refreshToken, created: false)
     }
-    
-    public var isRefreshExpired: Bool {
-        get {
-            return hasRefreshExpired(offset: Date())
-        }
+
+    /// Replace this session's tokens with renewed ones, and re-read the claims.
+    func update(token: String, refreshToken: String) throws {
+        guard let claims = token.jwtClaims() else { throw NakamaError.invalidSessionToken }
+
+        self.token = token
+        if let expiry = claims["exp"] as? Double { self.expiryTime = Date(timeIntervalSince1970: expiry) }
+        if let userId = claims["uid"] as? String { self.userId = userId }
+        if let username = claims["usn"] as? String { self.username = username }
+        if let vars = claims["vrs"] as? [String: String] { self.sessionVars = vars }
+
+        applyRefreshToken(refreshToken)
     }
-    
-    public static func restore(token: String, refreshToken: String) -> Session {
-        return DefaultSession(token: token, refreshToken: refreshToken, created: false)
-    }
-    
-    public func hasExpired(offset: Date) -> Bool {
-        let epoch = Date(timeIntervalSince1970: 0)
-        return offset > epoch.addingTimeInterval(expiryTime.timeIntervalSince1970)
-    }
-    
-    public func hasRefreshExpired(offset: Date) -> Bool {
-        let epoch = Date(timeIntervalSince1970: 0)
-        return offset > epoch.addingTimeInterval(refreshExpiryTime.timeIntervalSince1970)
-    }
-    
-    /// Update the current session token with a new authorization token and refresh token.
-    func update(authToken: String, refreshToken: String) {
-        self.token = authToken
+
+    private func applyRefreshToken(_ refreshToken: String) {
         self.refreshToken = refreshToken
-        
-        guard let decoded = authToken.decodedJWT() else { return }
-        
-        // Update
-        if let uid = decoded["uid"] as? String { // User Id
-            self.userId = uid
-        }
-        if let username = decoded["usn"] as? String { // Username
-            self.username = username
-        }
-        if let expiry = decoded["exp"] as? Double {
-            self.expiryTime = Date(timeIntervalSince1970: expiry)
-        }
-        if let vars = decoded["vrs"] as? [String:Any] { // Vars
-            for (k, v) in vars {
-                if let val = v as? String {
-                    self.sessionVars[k] = val
-                }
-            }
-        }
-        if !refreshToken.isEmpty { // Update refresh expiry time
-            if let decoded2 = refreshToken.decodedJWT(), let exp = decoded2["exp"] as? Double {
-                self.refreshExpiryTime = Date(timeIntervalSince1970: exp)
-            }
-        }
+        guard let expiry = refreshToken.jwtClaims()?["exp"] as? Double else { return }
+        self.refreshExpiryTime = Date(timeIntervalSince1970: expiry)
     }
 }
 
-extension Session {
-    var callOptions: CallOptions {
-        var options = CallOptions()
-        options.customMetadata.add(name: "authorization", value: "Bearer \(self.token)")
-        return options
+private extension String {
+    /// Decode the claims payload of a JWT. Nil if this is not a well-formed JWT.
+    func jwtClaims() -> [String: Any]? {
+        let segments = components(separatedBy: ".")
+        guard segments.count == 3 else { return nil }
+
+        // JWTs use unpadded base64url; Data(base64Encoded:) accepts neither.
+        var encoded = segments[1]
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        encoded += String(repeating: "=", count: (4 - encoded.count % 4) % 4)
+
+        guard let data = Data(base64Encoded: encoded) else { return nil }
+        return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
     }
 }
 
-extension String {
-    func decodedJWT() -> [String:Any]? {
-        let components = self.components(separatedBy: ".")
-        guard components.count == 3 else { return nil }
-        
-        if let base64Encoded = Data(base64Encoded: components[1]), let jsonJWT = try? JSONSerialization.jsonObject(with: base64Encoded) as? [String:Any] {
-            return jsonJWT
-        }
-        
-        return nil
-    }
-}

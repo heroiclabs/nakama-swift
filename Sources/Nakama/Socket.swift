@@ -1,6 +1,5 @@
-//
 /*
- * Copyright 2021 The Nakama Authors
+ * Copyright © 2026 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,577 +15,435 @@
  */
 
 import Foundation
-import NIO
-import NIOConcurrencyHelpers
-import Logging
-import SwiftProtobuf
-import Atomics
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
-public final class Socket : SocketProtocol {
-    public var isConnected: Bool {
-        return socketAdapter.isConnected
+extension NakamaRealtimeError: Error {}
+
+public final class Socket: SocketProtocol, @unchecked Sendable {
+    public private(set) var isConnected = false
+
+    public var onDisconnect: ((Error?) -> Void)?
+    public var onError: ((NakamaRealtimeError) -> Void)?
+    public var onChannelMessage: ((NakamaChannelMessage) -> Void)?
+    public var onChannelPresence: ((NakamaRealtimeChannelPresenceEvent) -> Void)?
+    public var onMatchData: ((NakamaRealtimeMatchData) -> Void)?
+    public var onMatchPresence: ((NakamaRealtimeMatchPresenceEvent) -> Void)?
+    public var onMatchmakerMatched: ((NakamaRealtimeMatchmakerMatched) -> Void)?
+    public var onNotifications: ((NakamaRealtimeNotifications) -> Void)?
+    public var onStatusPresence: ((NakamaRealtimeStatusPresenceEvent) -> Void)?
+    public var onStreamData: ((NakamaRealtimeStreamData) -> Void)?
+    public var onStreamPresence: ((NakamaRealtimeStreamPresenceEvent) -> Void)?
+    public var onParty: ((NakamaRealtimeParty) -> Void)?
+    public var onPartyClose: ((NakamaRealtimePartyClose) -> Void)?
+    public var onPartyData: ((NakamaRealtimePartyData) -> Void)?
+    public var onPartyJoinRequest: ((NakamaRealtimePartyJoinRequest) -> Void)?
+    public var onPartyLeader: ((NakamaRealtimePartyLeader) -> Void)?
+    public var onPartyMatchmakerTicket: ((NakamaRealtimePartyMatchmakerTicket) -> Void)?
+    public var onPartyPresence: ((NakamaRealtimePartyPresenceEvent) -> Void)?
+
+    private let baseUri: URL
+    private var task: URLSessionWebSocketTask?
+    private var receiveLoop: Task<Void, Never>?
+    private let pending = Pending()
+
+    public init(scheme: String = "ws", host: String = "127.0.0.1", port: Int = 7350) throws {
+        let uri = "\(scheme)://\(host):\(port)"
+        guard let baseUri = URL(string: uri), baseUri.host != nil else {
+            throw NakamaError.invalidServerUri(uri)
+        }
+        self.baseUri = baseUri
     }
-    
-    public var isConnecting: Bool {
-        return socketAdapter.isConnecting
-    }
-    
-    public var onConnect: ConnectHandler?
-    
-    public var onDisconnect: DisconnectHandler?
-    
-    public var onError: SocketErrorHandler?
-    
-    public var onChannelMessage: ChannelMessageHandler?
-    
-    public var onChannelPresence: ChannelPresenceHandler?
-    
-    public var onMatchmakerMatched: MatchmakerMatchedHandler?
-    
-    public var onMatchData: MatchDataHandler?
-    
-    public var onMatchPresence: MatchPresenceHandler?
-    
-    public var onNotifications: NotificationsHandler?
-    
-    public var onStatusPresence: StatusPresenceHandler?
-    
-    public var onStreamPresence: StreamPresenceHandler?
-    
-    public var onStreamData: StreamDataHandler?
-    
-    public var onPartyReceived: PartyReceivedHandler?
-    
-    public var onPartyClosed: PartyCloseHandler?
-    
-    public var onPartyData: PartyDataHandler?
-    
-    public var onPartyJoin: PartyJoinRequestHandler?
-    
-    public var onPartyPresence: PartyPresenceHandler?
-    
-    public var onPartyMatchmakerTicket: PartyMatchmakerTicketHandler?
-    
-    public var onPartyLeader: PartyLeaderHandler?
-    
-    let collationCounter = ManagedAtomic<Int>(0)
-    let eventLoopGroup: EventLoopGroup
-    let logger: Logger?
-    
-    public let host: String
-    public let port: Int
-    public let ssl: Bool
-    
-    var socketAdapter: SocketAdapter
-    let collationLock = NIOLock()
-    var collatedPromises = [String:Any]()
-    var collatedFailers = [String:(Error) -> Void]()
-    
-    init(host: String, port: Int, ssl: Bool, eventLoopGroup: EventLoopGroup, socketAdapter: SocketAdapter?, logger: Logger?) {
-        self.host = host
-        self.port = port
-        self.ssl = ssl
-        self.eventLoopGroup = eventLoopGroup
-        self.logger = logger
-        
-        if let socketAdapter {
-            self.socketAdapter = socketAdapter
-        } else {
-            self.socketAdapter = SocketAdapter(logger: logger)
-        }
-        
-        self.socketAdapter.onConnect = {
-            self.onConnect?()
-        }
-        
-        self.socketAdapter.onDisconnect = {
-            let failers = self.collationLock.withLock {
-                let failers = Array(self.collatedFailers.values)
-                self.collatedPromises.removeAll()
-                self.collatedFailers.removeAll()
-                return failers
-            }
-            for fail in failers {
-                fail(NakamaRealtimeError(text: "Socket disconnected before a response was received."))
-            }
-            self.onDisconnect?()
-        }
-        
-        self.socketAdapter.onError = { error in
-            self.onError?(error)
-        }
-        
-        self.socketAdapter.onReceiveData = { data in
-            self.onReceivedData(data: data)
-        }
-    }
-    
-    public func connect(session: Session, appearOnline: Bool? = nil) {
+
+    // MARK: - Lifecycle
+
+    public func connect(session: Session, appearOnline: Bool = true, lang: String = "en") async throws {
+        guard task == nil else { return }
+
         var components = URLComponents()
-        components.scheme = self.ssl ? "wss" : "ws"
-        components.host = self.host
-        components.port = self.port
+        // http/https are accepted for convenience so callers can pass the same scheme
+        // they gave HttpClient.
+        switch baseUri.scheme {
+        case "https", "wss": components.scheme = "wss"
+        default: components.scheme = "ws"
+        }
+        components.host = baseUri.host
+        components.port = baseUri.port
         components.path = "/ws"
         components.queryItems = [
             URLQueryItem(name: "token", value: session.token),
-            URLQueryItem(name: "format", value: "protobuf"),
+            URLQueryItem(name: "status", value: appearOnline ? "true" : "false"),
+            URLQueryItem(name: "lang", value: lang),
+            URLQueryItem(name: "format", value: "json"),
         ]
-        
-        if let appearOnline {
-            components.queryItems!.append(URLQueryItem(name: "status", value: appearOnline ? "true" : "false"))
-        }
-        
-        self.socketAdapter.connect(url: components.url!)
-    }
-    
-    public func disconnect() {
-        self.socketAdapter.disconnect()
-    }
-    
-    func send<T: Message>(env: inout Nakama_Realtime_Envelope) async throws -> T {
-        let counter = String(collationCounter.wrappingIncrementThenLoad(ordering: .relaxed))
-        let promise = self.eventLoopGroup.next().makePromise(of: T.self)
-        env.cid = String(counter)
-        self.collationLock.withLock {
-            self.collatedPromises[counter] = promise
-            self.collatedFailers[counter] = { promise.fail($0) }
+        guard let url = components.url else {
+            throw NakamaError.invalidServerUri(components.description)
         }
 
+        let task = URLSession.shared.webSocketTask(with: url)
+        self.task = task
+        isConnected = true
+        task.resume()
+        startReceiveLoop(task)
+
+        // The handshake result does not surface until the first read, so prove the
+        // connection with a round trip. A rejected token fails here rather than later.
         do {
-            let binaryData = try env.serializedData()
-            self.socketAdapter.send(data: binaryData)
+            try await ping()
         } catch {
-            promise.fail(error)
+            await disconnect()
+            throw error
+        }
+    }
+
+    public func disconnect() async {
+        receiveLoop?.cancel()
+        receiveLoop = nil
+        task?.cancel(with: .goingAway, reason: nil)
+        task = nil
+        isConnected = false
+        await pending.failAll(NakamaError.socketNotConnected)
+    }
+
+    public func ping() async throws {
+        _ = try await send { $0.ping = NakamaRealtimePing() }
+    }
+
+    // MARK: - Chat
+
+    public func joinChat(
+        target: String,
+        type: ChannelType,
+        persistence: Bool? = nil,
+        hidden: Bool? = nil
+    ) async throws -> NakamaRealtimeChannel {
+        try await send(\.channel) {
+            $0.channelJoin = NakamaRealtimeChannelJoin(
+                target: target, type: type.rawValue, persistence: persistence, hidden: hidden
+            )
+        }
+    }
+
+    public func leaveChat(channelId: String) async throws {
+        _ = try await send { $0.channelLeave = NakamaRealtimeChannelLeave(channelId: channelId) }
+    }
+
+    public func writeChatMessage(channelId: String, content: String) async throws -> NakamaRealtimeChannelMessageAck {
+        try await send(\.channelMessageAck) {
+            $0.channelMessageSend = NakamaRealtimeChannelMessageSend(channelId: channelId, content: content)
+        }
+    }
+
+    public func updateChatMessage(
+        channelId: String,
+        messageId: String,
+        content: String
+    ) async throws -> NakamaRealtimeChannelMessageAck {
+        try await send(\.channelMessageAck) {
+            $0.channelMessageUpdate = NakamaRealtimeChannelMessageUpdate(
+                channelId: channelId, messageId: messageId, content: content
+            )
+        }
+    }
+
+    public func removeChatMessage(channelId: String, messageId: String) async throws -> NakamaRealtimeChannelMessageAck {
+        try await send(\.channelMessageAck) {
+            $0.channelMessageRemove = NakamaRealtimeChannelMessageRemove(
+                channelId: channelId, messageId: messageId
+            )
+        }
+    }
+
+    // MARK: - Matches
+
+    public func createMatch(name: String = "") async throws -> NakamaRealtimeMatch {
+        try await send(\.match) { $0.matchCreate = NakamaRealtimeMatchCreate(name: name) }
+    }
+
+    public func joinMatch(matchId: String, metadata: [String: String] = [:]) async throws -> NakamaRealtimeMatch {
+        try await send(\.match) {
+            $0.matchJoin = NakamaRealtimeMatchJoin(matchId: matchId, metadata: metadata)
+        }
+    }
+
+    public func joinMatchByToken(token: String, metadata: [String: String] = [:]) async throws -> NakamaRealtimeMatch {
+        try await send(\.match) {
+            $0.matchJoin = NakamaRealtimeMatchJoin(token: token, metadata: metadata)
+        }
+    }
+
+    public func leaveMatch(matchId: String) async throws {
+        _ = try await send { $0.matchLeave = NakamaRealtimeMatchLeave(matchId: matchId) }
+    }
+
+    public func sendMatchData(
+        matchId: String,
+        opCode: Int,
+        data: Data,
+        presences: [NakamaRealtimeUserPresence] = [],
+        reliable: Bool = true
+    ) async throws {
+        _ = try await send {
+            $0.matchDataSend = NakamaRealtimeMatchDataSend(
+                matchId: matchId, opCode: opCode, data: data,
+                presences: presences, reliable: reliable
+            )
+        }
+    }
+
+    // MARK: - Matchmaker
+
+    public func addMatchmaker(
+        minCount: Int,
+        maxCount: Int,
+        query: String = "*",
+        countMultiple: Int? = nil,
+        stringProperties: [String: String] = [:],
+        numericProperties: [String: Double] = [:]
+    ) async throws -> NakamaRealtimeMatchmakerTicket {
+        try await send(\.matchmakerTicket) {
+            $0.matchmakerAdd = NakamaRealtimeMatchmakerAdd(
+                minCount: minCount, maxCount: maxCount, query: query,
+                countMultiple: countMultiple, stringProperties: stringProperties,
+                numericProperties: numericProperties
+            )
+        }
+    }
+
+    public func removeMatchmaker(ticket: String) async throws {
+        _ = try await send { $0.matchmakerRemove = NakamaRealtimeMatchmakerRemove(ticket: ticket) }
+    }
+
+    // MARK: - Status
+
+    public func followUsers(userIds: [String], usernames: [String] = []) async throws -> NakamaRealtimeStatus {
+        try await send(\.status) {
+            $0.statusFollow = NakamaRealtimeStatusFollow(userIds: userIds, usernames: usernames)
+        }
+    }
+
+    public func unfollowUsers(userIds: [String]) async throws {
+        _ = try await send { $0.statusUnfollow = NakamaRealtimeStatusUnfollow(userIds: userIds) }
+    }
+
+    public func updateStatus(_ status: String?) async throws {
+        _ = try await send { $0.statusUpdate = NakamaRealtimeStatusUpdate(status: status) }
+    }
+
+    // MARK: - Parties
+
+    public func createParty(open: Bool, maxSize: Int) async throws -> NakamaRealtimeParty {
+        try await send(\.party) { $0.partyCreate = NakamaRealtimePartyCreate(open: open, maxSize: maxSize) }
+    }
+
+    public func joinParty(partyId: String) async throws {
+        _ = try await send { $0.partyJoin = NakamaRealtimePartyJoin(partyId: partyId) }
+    }
+
+    public func leaveParty(partyId: String) async throws {
+        _ = try await send { $0.partyLeave = NakamaRealtimePartyLeave(partyId: partyId) }
+    }
+
+    public func closeParty(partyId: String) async throws {
+        _ = try await send { $0.partyClose = NakamaRealtimePartyClose(partyId: partyId) }
+    }
+
+    public func promotePartyMember(partyId: String, presence: NakamaRealtimeUserPresence) async throws {
+        _ = try await send {
+            $0.partyPromote = NakamaRealtimePartyPromote(partyId: partyId, presence: presence)
+        }
+    }
+
+    public func acceptPartyMember(partyId: String, presence: NakamaRealtimeUserPresence) async throws {
+        _ = try await send {
+            $0.partyAccept = NakamaRealtimePartyAccept(partyId: partyId, presence: presence)
+        }
+    }
+
+    public func removePartyMember(partyId: String, presence: NakamaRealtimeUserPresence) async throws {
+        _ = try await send {
+            $0.partyRemove = NakamaRealtimePartyRemove(partyId: partyId, presence: presence)
+        }
+    }
+
+    public func listPartyJoinRequests(partyId: String) async throws -> NakamaRealtimePartyJoinRequest {
+        try await send(\.partyJoinRequest) {
+            $0.partyJoinRequestList = NakamaRealtimePartyJoinRequestList(partyId: partyId)
+        }
+    }
+
+    public func addPartyMatchmaker(
+        partyId: String,
+        minCount: Int,
+        maxCount: Int,
+        query: String = "*",
+        countMultiple: Int? = nil,
+        stringProperties: [String: String] = [:],
+        numericProperties: [String: Double] = [:]
+    ) async throws -> NakamaRealtimePartyMatchmakerTicket {
+        try await send(\.partyMatchmakerTicket) {
+            $0.partyMatchmakerAdd = NakamaRealtimePartyMatchmakerAdd(
+                partyId: partyId, minCount: minCount, maxCount: maxCount, query: query,
+                countMultiple: countMultiple, stringProperties: stringProperties,
+                numericProperties: numericProperties
+            )
+        }
+    }
+
+    public func removePartyMatchmaker(partyId: String, ticket: String) async throws {
+        _ = try await send {
+            $0.partyMatchmakerRemove = NakamaRealtimePartyMatchmakerRemove(partyId: partyId, ticket: ticket)
+        }
+    }
+
+    public func sendPartyData(partyId: String, opCode: Int, data: Data) async throws {
+        _ = try await send {
+            $0.partyDataSend = NakamaRealtimePartyDataSend(partyId: partyId, opCode: opCode, data: data)
+        }
+    }
+
+    // MARK: - Rpc
+
+    public func rpc(id: String, payload: String = "") async throws -> NakamaRpc {
+        try await send(\.rpc) { $0.rpc = NakamaRpc(id: id, payload: payload) }
+    }
+
+    // MARK: - Transport
+
+    /// Send an envelope and return the field of the reply the caller asked for.
+    private func send<T>(
+        _ field: KeyPath<NakamaRealtimeEnvelope, T?>,
+        _ build: (inout NakamaRealtimeEnvelope) -> Void
+    ) async throws -> T {
+        let reply = try await send(build)
+        guard let value = reply[keyPath: field] else {
+            throw NakamaError.unexpectedRealtimeReply
+        }
+        return value
+    }
+
+    @discardableResult
+    private func send(_ build: (inout NakamaRealtimeEnvelope) -> Void) async throws -> NakamaRealtimeEnvelope {
+        guard let task else { throw NakamaError.socketNotConnected }
+
+        let cid = await pending.nextCid()
+        var envelope = NakamaRealtimeEnvelope()
+        envelope.cid = cid
+        build(&envelope)
+        let payload = try JSONEncoder().encode(envelope)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            Task {
+                // Register before sending: on a fast local server the reply can arrive
+                // before this task would otherwise get to run.
+                await pending.register(cid, continuation)
+                task.send(.data(payload)) { error in
+                    guard let error else { return }
+                    Task { await self.pending.resume(cid, with: .failure(error)) }
+                }
+            }
+        }
+    }
+
+    private func startReceiveLoop(_ task: URLSessionWebSocketTask) {
+        receiveLoop = Task { [weak self] in
+            while !Task.isCancelled {
+                do {
+                    let message = try await Socket.receive(from: task)
+                    guard let self else { return }
+                    await self.dispatch(message)
+                } catch {
+                    guard let self, !Task.isCancelled else { return }
+                    await self.tearDown(error)
+                    return
+                }
+            }
+        }
+    }
+
+    // URLSessionWebSocketTask.receive() as async is iOS 15 / macOS 12; this package
+    // targets iOS 13.
+    private static func receive(
+        from task: URLSessionWebSocketTask
+    ) async throws -> URLSessionWebSocketTask.Message {
+        try await withCheckedThrowingContinuation { continuation in
+            task.receive { continuation.resume(with: $0) }
+        }
+    }
+
+    private func dispatch(_ message: URLSessionWebSocketTask.Message) async {
+        let data: Data
+        switch message {
+        case .data(let payload): data = payload
+        case .string(let text): data = Data(text.utf8)
+        @unknown default: return
         }
 
-        defer {
-            self.collationLock.withLock {
-                self.collatedPromises[counter] = nil
-                self.collatedFailers[counter] = nil
-            }
-        }
-        return try await promise.futureResult.get()
-    }
-    
-    private func onReceivedData(data: Data) {
-        let response: Nakama_Realtime_Envelope
-        do {
-            response = try Nakama_Realtime_Envelope(serializedData: data)
-            if (response.cid.isEmpty) {
-                switch response.message {
-                case .error(let error):
-                    self.onError?(NakamaRealtimeError(error: error))
-                case .channelMessage(let channelMessage):
-                    self.onChannelMessage?(channelMessage)
-                case .channelPresenceEvent(let channelPresenceEvent):
-                    self.onChannelPresence?(channelPresenceEvent)
-                case .matchData(let matchData):
-                    self.onMatchData?(matchData)
-                case .matchPresenceEvent(let matchPresenceEvent):
-                    self.onMatchPresence?(matchPresenceEvent)
-                case .matchmakerMatched(let matchermakerMatched):
-                    self.onMatchmakerMatched?(matchermakerMatched)
-                case .notifications(let notifications):
-                    self.onNotifications?(notifications)
-                case .statusPresenceEvent(let statusPresenceEvent):
-                    self.onStatusPresence?(statusPresenceEvent)
-                case .streamData(let streamData):
-                    self.onStreamData?(streamData)
-                case .streamPresenceEvent(let streamPresenceEvent):
-                    self.onStreamPresence?(streamPresenceEvent)
-                case .party(let party):
-                    self.onPartyReceived?(party.toParty())
-                case .partyJoinRequest(let joinRequest):
-                    self.onPartyJoin?(joinRequest)
-                case .partyData(let data):
-                    self.onPartyData?(data)
-                case .partyPresenceEvent(let partyPresenceEvent):
-                    self.onPartyPresence?(partyPresenceEvent)
-                case .partyMatchmakerTicket(let ticket):
-                    self.onPartyMatchmakerTicket?(ticket)
-                case .partyClose(let close):
-                    self.onPartyClosed?(close)
-                case .partyLeader(let leader):
-                    self.onPartyLeader?(leader)
-                default:
-                    self.logger?.error("Unrecognised incoming uncollated message from server: \(try! response.jsonString())")
-                }
-            } else {
-                let (collatedPromise, failer) = self.collationLock.withLock {
-                    (self.collatedPromises[response.cid], self.collatedFailers[response.cid])
-                }
-                if let collatedPromise {
-                    switch response.message {
-                    case .error(let error):
-                        failer?(NakamaRealtimeError(error: error))
-                    case .rpc(let rpc):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Api_Rpc>
-                        promise.succeed(rpc)
-                    case .channel(let channel):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_Channel>
-                        promise.succeed(channel)
-                    case .channelMessageAck(let channelMessageAck):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_ChannelMessageAck>
-                        promise.succeed(channelMessageAck)
-                    case .match(let match):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_Match>
-                        promise.succeed(match)
-                    case .matchmakerTicket(let matchmakerTicket):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_MatchmakerTicket>
-                        promise.succeed(matchmakerTicket)
-                    case .status(let status):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_Status>
-                        promise.succeed(status)
-                    case .party(let party):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_Party>
-                        promise.succeed(party)
-                    case .partyMatchmakerTicket(let ticket):
-                        let promise = collatedPromise as! EventLoopPromise<Nakama_Realtime_PartyMatchmakerTicket>
-                        promise.succeed(ticket)
-                    default:
-                        self.logger?.error("Unrecognised incoming collated message from server: \(try! response.jsonString())")
-                        // Handle empty or nil response from server
-                        if let promise = collatedPromise as? EventLoopPromise<SwiftProtobuf.Google_Protobuf_Empty> {
-                            promise.succeed(SwiftProtobuf.Google_Protobuf_Empty())
-                        }
-                    }
-                } else {
-                    self.logger?.error("No matching promise for incoming collation ID: \(response.cid)")
-                }
-            }
-        } catch {
-            self.logger?.error("Failed to deserialise message with error: \(error)")
-            self.onError?(error)
+        guard let envelope = try? JSONDecoder().decode(NakamaRealtimeEnvelope.self, from: data) else {
             return
         }
-    }
-    
-    public func joinChat(target: String, type: Nakama_Realtime_ChannelJoin.TypeEnum, persistence: Bool? = false, hidden: Bool? = false) async throws -> NakamaChannel {
-        var req = Nakama_Realtime_ChannelJoin()
-        req.target = target
-        req.type = Int32(type.rawValue)
-        req.hidden = Google_Protobuf_BoolValue(hidden ?? false)
-        req.persistence = Google_Protobuf_BoolValue(persistence ?? false)
-        
-        var env = Nakama_Realtime_Envelope()
-        env.channelJoin = req
-        
-        let resp: Nakama_Realtime_Channel = try await self.send(env: &env)
-        return NakamaChannel(from: resp)
-    }
-    
-    public func leaveChat(channelId: String) async throws -> Void {
-        var req = Nakama_Realtime_ChannelLeave()
-        req.channelID = channelId
-        
-        var env = Nakama_Realtime_Envelope()
-        env.channelLeave = req
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func removeChatMessage(channelId: String, messageId: String) async throws -> Nakama_Realtime_ChannelMessageAck {
-        var req = Nakama_Realtime_ChannelMessageRemove()
-        req.channelID = channelId
-        req.messageID = messageId
-        
-        var env = Nakama_Realtime_Envelope()
-        env.channelMessageRemove = req
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func writeChatMessage(channelId: String, content: String) async throws -> Nakama_Realtime_ChannelMessageAck {
-        var req = Nakama_Realtime_ChannelMessageSend()
-        req.channelID = channelId
-        req.content = content
-        var env = Nakama_Realtime_Envelope()
-        env.channelMessageSend = req
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func updateChatMessage(channelId: String, messageId: String, content: String) async throws -> Nakama_Realtime_ChannelMessageAck {
-        var req = Nakama_Realtime_ChannelMessageUpdate()
-        req.channelID = channelId
-        req.messageID = messageId
-        req.content = content
-        var env = Nakama_Realtime_Envelope()
-        env.channelMessageUpdate = req
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func createMatch(name: String? = nil) async throws -> Nakama_Realtime_Match {
-        var req = Nakama_Realtime_MatchCreate()
-        if let name {
-            req.name = name
+
+        guard envelope.cid.isEmpty else {
+            if let error = envelope.error {
+                await pending.resume(envelope.cid, with: .failure(error))
+            } else {
+                await pending.resume(envelope.cid, with: .success(envelope))
+            }
+            return
         }
-        var env = Nakama_Realtime_Envelope()
-        env.matchCreate = req
-        
-        return try await self.send(env: &env)
+
+        if let error = envelope.error { onError?(error) }
+        if let value = envelope.channelMessage { onChannelMessage?(value) }
+        if let value = envelope.channelPresenceEvent { onChannelPresence?(value) }
+        if let value = envelope.matchData { onMatchData?(value) }
+        if let value = envelope.matchPresenceEvent { onMatchPresence?(value) }
+        if let value = envelope.matchmakerMatched { onMatchmakerMatched?(value) }
+        if let value = envelope.notifications { onNotifications?(value) }
+        if let value = envelope.statusPresenceEvent { onStatusPresence?(value) }
+        if let value = envelope.streamData { onStreamData?(value) }
+        if let value = envelope.streamPresenceEvent { onStreamPresence?(value) }
+        if let value = envelope.party { onParty?(value) }
+        if let value = envelope.partyClose { onPartyClose?(value) }
+        if let value = envelope.partyData { onPartyData?(value) }
+        if let value = envelope.partyJoinRequest { onPartyJoinRequest?(value) }
+        if let value = envelope.partyLeader { onPartyLeader?(value) }
+        if let value = envelope.partyMatchmakerTicket { onPartyMatchmakerTicket?(value) }
+        if let value = envelope.partyPresenceEvent { onPartyPresence?(value) }
     }
-    
-    public func joinMatch(matchId: String, metadata: [String : String]? = nil) async throws -> Nakama_Realtime_Match {
-        var req = Nakama_Realtime_MatchJoin()
-        req.matchID = matchId
-        if let metadata {
-            req.metadata = metadata
+
+    private func tearDown(_ error: Error?) async {
+        task = nil
+        isConnected = false
+        receiveLoop = nil
+        await pending.failAll(error ?? NakamaError.socketNotConnected)
+        onDisconnect?(error)
+    }
+}
+
+/// Hands out correlation ids and holds the continuation waiting on each one.
+private actor Pending {
+    private var counter = 0
+    private var waiters: [String: CheckedContinuation<NakamaRealtimeEnvelope, Error>] = [:]
+
+    func nextCid() -> String {
+        counter += 1
+        return String(counter)
+    }
+
+    func register(_ cid: String, _ continuation: CheckedContinuation<NakamaRealtimeEnvelope, Error>) {
+        waiters[cid] = continuation
+    }
+
+    func resume(_ cid: String, with result: Result<NakamaRealtimeEnvelope, Error>) {
+        waiters.removeValue(forKey: cid)?.resume(with: result)
+    }
+
+    func failAll(_ error: Error) {
+        let outstanding = waiters
+        waiters.removeAll()
+        for continuation in outstanding.values {
+            continuation.resume(throwing: error)
         }
-        var env = Nakama_Realtime_Envelope()
-        env.matchJoin = req
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func joinMatchToken(token: String) async throws -> Nakama_Realtime_Match {
-        var req = Nakama_Realtime_MatchJoin()
-        req.token = token
-        var env = Nakama_Realtime_Envelope()
-        env.matchJoin = req
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func leaveMatch(matchId: String) async throws -> Void {
-        var req = Nakama_Realtime_MatchLeave()
-        req.matchID = matchId
-        
-        var env = Nakama_Realtime_Envelope()
-        env.matchLeave = req
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func addMatchmaker(query: String? = "*", minCount: Int? = 2, maxCount: Int? = 8, stringProperties: [String : String]? = nil, numericProperties: [String : Double]? = nil, countMultiple: Int? = nil) async throws -> Nakama_Realtime_MatchmakerTicket {
-        var req = Nakama_Realtime_MatchmakerAdd()
-        req.query = query ?? "*"
-        req.minCount = Int32(minCount ?? 2)
-        req.maxCount = Int32(maxCount ?? 8)
-        if let stringProperties {
-            req.stringProperties = stringProperties
-        }
-        if let numericProperties {
-            req.numericProperties = numericProperties
-        }
-        if let countMultiple {
-            req.countMultiple = countMultiple.pbInt32Value
-        }
-        
-        var env = Nakama_Realtime_Envelope()
-        env.matchmakerAdd = req
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func removeMatchmaker(ticket: String) async throws -> Void {
-        var req = Nakama_Realtime_MatchmakerRemove()
-        req.ticket = ticket
-        
-        var env = Nakama_Realtime_Envelope()
-        env.matchmakerRemove = req
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func sendMatchData(matchId: String, opCode: Int, data: String, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
-        guard let data = data.data(using: .utf8) else {
-            throw NakamaRealtimeError(text: "Unable to convert string to Data")
-        }
-        
-        var req = Nakama_Realtime_MatchDataSend()
-        req.matchID = matchId
-        req.opCode = Int64(opCode)
-        req.data = data
-        if let presences {
-            req.presences = presences
-        }
-        
-        var env = Nakama_Realtime_Envelope()
-        env.matchDataSend = req
-        
-        let binaryData = try! env.serializedData()
-        self.socketAdapter.send(data: binaryData)
-    }
-    
-    public func sendMatchData(matchId: String, opCode: Int, data: Data, presences: [Nakama_Realtime_UserPresence]? = nil) async throws {
-        var req = Nakama_Realtime_MatchDataSend()
-        req.matchID = matchId
-        req.opCode = Int64(opCode)
-        req.data = data
-        if let presences {
-            req.presences = presences
-        }
-        
-        var env = Nakama_Realtime_Envelope()
-        env.matchDataSend = req
-        
-        let binaryData = try! env.serializedData()
-        self.socketAdapter.send(data: binaryData)
-    }
-    
-    public func rpc(id: String, payload: String?) async throws -> Nakama_Api_Rpc {
-        var req = Nakama_Api_Rpc()
-        req.id = id
-        if payload != nil {
-            req.payload = payload!
-        }
-        
-        var env = Nakama_Realtime_Envelope()
-        env.rpc = req
-        
-        return try await send(env: &env)
-    }
-    
-    public func followUsers(userIds: [String]) async throws -> Nakama_Realtime_Status {
-        return try await self.followUsers(userIds: userIds, usernames: nil)
-    }
-    
-    public func followUsers(userIds: [String]?, usernames: [String]?) async throws -> Nakama_Realtime_Status {
-        var req = Nakama_Realtime_StatusFollow()
-        if let userIds {
-            req.userIds = userIds
-        }
-        if let usernames {
-            req.usernames = usernames
-        }
-        
-        var env = Nakama_Realtime_Envelope()
-        env.statusFollow = req
-        
-        return try await send(env: &env)
-    }
-    
-    public func unfollowUsers(userIds: [String]) async throws -> Void {
-        var req = Nakama_Realtime_StatusUnfollow()
-        req.userIds = userIds
-        
-        var env = Nakama_Realtime_Envelope()
-        env.statusUnfollow = req
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func updateStatus(status: String) async throws -> Void {
-        var req = Nakama_Realtime_StatusUpdate()
-        req.status = Google_Protobuf_StringValue(status)
-            
-        var env = Nakama_Realtime_Envelope()
-        env.statusUpdate = req
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func createParty(open: Bool, maxSize: Int) async throws -> Nakama_Realtime_Party {
-        var env = Nakama_Realtime_Envelope()
-        env.partyCreate.open = open
-        env.partyCreate.maxSize = Int32(maxSize)
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func joinParty(partyId: String) async throws {
-        var env = Nakama_Realtime_Envelope()
-        env.partyJoin.partyID = partyId
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func leaveParty(partyId: String) async throws {
-        var env = Nakama_Realtime_Envelope()
-        env.partyLeave.partyID = partyId
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func closeParty(partyId: String) async throws {
-        var env = Nakama_Realtime_Envelope()
-        env.partyClose.partyID = partyId
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func sendPartyData(partyId: String, opCode: Int, data: Data) async throws {
-        var env = Nakama_Realtime_Envelope()
-        env.partyDataSend.partyID = partyId
-        env.partyDataSend.opCode = Int64(opCode)
-        env.partyDataSend.data = data
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func sendPartyData(partyId: String, opCode: Int, data: String) async throws {
-        guard let data = data.data(using: .utf8) else {
-            throw NakamaRealtimeError(text: "Unable to convert string to Data")
-        }
-        
-        var env = Nakama_Realtime_Envelope()
-        env.partyDataSend.partyID = partyId
-        env.partyDataSend.opCode = Int64(opCode)
-        env.partyDataSend.data = data
-    }
-    
-    public func acceptPartyMember(partyId: String, presence: UserPresence) async throws {
-        var req = Nakama_Realtime_PartyAccept()
-        req.partyID = partyId
-        req.presence = presence.toApiUserPresence()
-        var env = Nakama_Realtime_Envelope()
-        env.partyAccept = req
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func removePartyMember(partyId: String, presence: UserPresence) async throws {
-        var env = Nakama_Realtime_Envelope()
-        env.partyRemove.partyID = partyId
-        env.partyRemove.presence = presence.toApiUserPresence()
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func addMatchmakerParty(partyId: String, query: String, minCount: Int, maxCount: Int, stringProperties: [String:String]? = nil, numericProperties: [String:Double]? = nil, countMultiple: Int? = nil) async throws -> Nakama_Realtime_PartyMatchmakerTicket {
-        var env = Nakama_Realtime_Envelope()
-        var add = Nakama_Realtime_PartyMatchmakerAdd()
-        add.partyID = partyId
-        add.query = query
-        add.minCount = Int32(minCount)
-        add.maxCount = Int32(maxCount)
-        if let stringProperties {
-            add.stringProperties = stringProperties
-        }
-        if let numericProperties {
-            add.numericProperties = numericProperties
-        }
-        if let countMultiple {
-            add.countMultiple = countMultiple.pbInt32Value
-        }
-        
-        env.partyMatchmakerAdd = add
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func removeMatchmakerParty(partyId: String, ticket: String) async throws -> Void {
-        var env = Nakama_Realtime_Envelope()
-        env.partyMatchmakerRemove.partyID = partyId
-        env.partyMatchmakerRemove.ticket = ticket
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
-    }
-    
-    public func listPartyJoinRequests(partyId: String) async throws -> Nakama_Realtime_PartyJoinRequest {
-        var env = Nakama_Realtime_Envelope()
-        env.partyJoinRequestList.partyID = partyId
-        
-        return try await self.send(env: &env)
-    }
-    
-    public func promotePartyMember(partyId: String, partyMember: UserPresence) async throws -> Void {
-        var env = Nakama_Realtime_Envelope()
-        env.partyPromote.partyID = partyId
-        env.partyPromote.presence = partyMember.toApiUserPresence()
-        
-        let _: Google_Protobuf_Empty = try await self.send(env: &env)
     }
 }

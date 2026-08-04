@@ -16,39 +16,27 @@
 
 import Foundation
 
-/**
- A configuration for controlling retriable requests.
- 
- Configurations can be assigned to the `Client` on a request-by-request basis via `RequestConfiguration`.
- 
- It can also be assigned on a global basis using `GlobalRetryConfiguration`.
- 
- Configurations passed via the `RequestConfiguration` parameter take precedence over the global configuration.
- */
+/// Controls retriable requests. Set on the client as `globalRetryConfiguration`, or passed
+/// per-request via the trailing `retryConfig:` parameter, which takes precedence.
 public final class RetryConfiguration {
-    /**
-     The base delay (milliseconds) used to calculate the time before making another request attempt.
-     This base will be raised to N, where N is the number of retry attempts.
-     */
-    var baseDelay: Int
-    
-    /// The maximum number of attempts to make before cancelling the request task.
-    var maxRetries: Int
-    
-    /// The jitter algorithm used to apply randomness to the retry delay. Defaults to `FullJitter`
-    var jitter: Jitter
-    
-    /// A closure that is invoked before a new retry attempt is made.
-    var retryListener: RetryListener
-    
+    /// Base delay in milliseconds, raised to the power of the retry attempt number.
+    public var baseDelay: Int
+
+    /// Maximum number of attempts to make before cancelling the request.
+    public var maxRetries: Int
+
+    /// Applies randomness to the retry delay. Defaults to `RetryJitter.fullJitter`.
+    public var jitter: Jitter
+
+    /// Invoked before each new retry attempt.
+    public var retryListener: RetryListener
+
     public init(baseDelayMs: Int, maxRetries: Int, jitter: Jitter? = nil, retryListener: RetryListener? = nil) {
         self.baseDelay = baseDelayMs
         self.maxRetries = maxRetries
-        self.jitter = jitter ?? { retries, delayMs, random in
-            return RetryJitter.fullJitter(retries: retries, retryDelay: delayMs, random: random)
+        self.jitter = jitter ?? { retries, delayMs in
+            RetryJitter.fullJitter(retries: retries, retryDelay: delayMs)
         }
-        self.retryListener = retryListener ?? { retriesCount, retry in
-            
-        }
+        self.retryListener = retryListener ?? { _, _ in }
     }
 }

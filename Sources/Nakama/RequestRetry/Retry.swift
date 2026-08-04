@@ -17,14 +17,13 @@
 import Foundation
 
 /// Represents a single retry attempt.
-public final class Retry
-{
+public struct Retry: Sendable {
     /// The delay (milliseconds) in the request retry attributable to the exponential backoff algorithm.
-    let exponentialBackoff: Int
-    
+    public let exponentialBackoff: Int
+
     /// The delay (milliseconds) in the request retry attributable to the jitter algorithm.
-    let jitterBackoff: Int
-    
+    public let jitterBackoff: Int
+
     public init(exponentialBackoff: Int, jitterBackoff: Int) {
         self.exponentialBackoff = exponentialBackoff
         self.jitterBackoff = jitterBackoff

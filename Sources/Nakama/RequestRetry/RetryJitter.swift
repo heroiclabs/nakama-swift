@@ -19,15 +19,14 @@ import Foundation
 /**
  The Jitter algorithm is responsible for introducing randomness to a delay before a retry.
  - Parameter history: Information about previous retry attempts.
- - Parameter delay: A delay (milliseconds) between the last failed attempt in the retry history  and the next upcoming attempt.
- - Parameter random: A seeded random number generator.
+ - Parameter delay: A delay (milliseconds) between the last failed attempt in the retry history and the next upcoming attempt.
  */
-public typealias Jitter = (_ history: [Retry], _ delay: Int, _ random: NakamaRandomGenerator) -> Int
+public typealias Jitter = @Sendable (_ history: [Retry], _ delay: Int) -> Int
 
 /// A collection of Jitter algorithms.
-struct RetryJitter {
-     /// A jitter algorithm that selects a random point between now and the next retry time.
-    static func fullJitter(retries: [Retry], retryDelay: Int, random: NakamaRandomGenerator) -> Int {
-        return Int(Double(retryDelay) * random.next())
+public struct RetryJitter {
+    /// A jitter algorithm that selects a random point between now and the next retry time.
+    public static func fullJitter(retries: [Retry], retryDelay: Int) -> Int {
+        Int(Double(retryDelay) * Double.random(in: 0..<1))
     }
 }

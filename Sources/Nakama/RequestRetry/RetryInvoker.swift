@@ -16,66 +16,50 @@
 
 import Foundation
 
-/**
- Listens to retry events for a particular request.
- - Parameter retries: The number of retries made so far, including this retry.
- - Parameter retry: A `Retry` object holding information about the retry attempt.
- */
-public typealias RetryListener = (_ retries: Int, _ retry: Retry) -> Void
+/// - Parameter retries: The number of retries made so far, including this one.
+/// - Parameter retry: Information about the retry attempt.
+public typealias RetryListener = @Sendable (_ retries: Int, _ retry: Retry) -> Void
 
-enum RetryInvokerError: Error {
-    case invalidArgument(String)
+/// Decides whether an error is due to a temporary bad state on the server, and so worth
+/// retrying. Timeouts and 503s are transient; a 400 is not.
+public typealias TransientErrorHandler = @Sendable (Error) -> Bool
+
+public enum RetryInvokerError: Error, Equatable {
     case exceededRetries(String)
-    
-    init(_ message: String) {
-        self = .invalidArgument(message)
-    }
 }
 
 /// Invokes requests with retry and exponential backoff.
-final class RetryInvoker {
-    private let transientErrorAdapter: TransientErrorAdapter
-    
-    public init(transientErrorAdapter: TransientErrorAdapter) {
-        self.transientErrorAdapter = transientErrorAdapter
+struct RetryInvoker {
+    private let isTransient: TransientErrorHandler
+
+    init(handler: @escaping TransientErrorHandler) {
+        self.isTransient = handler
     }
-    
-    func invokeWithRetry<T>(request: @escaping () async throws -> T, history: RetryHistory) async throws -> T {
-        do {
-            return try await transientErrorAdapter.sendAsync(request: request)
-        } catch {
-            guard history.configuration != nil, transientErrorAdapter.handler(error) else {
-                throw error
-            }
-            
-            try await backoffDelay(history: history, error: error)
-            return try await invokeWithRetry(request: request, history: history)
-        }
-    }
-    
-    private func backoffDelay(history: RetryHistory, error: Error) async throws {
-        guard history.retries.count < history.configuration!.maxRetries else {
-            throw RetryInvokerError.exceededRetries("Exceeded max retry attempts")
-        }
-        
-        let retry = createRetry(from: history)
-        history.retries.append(retry)
-        history.configuration?.retryListener(history.retries.count, retry)
-        
-        try await backoff(retry.jitterBackoff)
-    }
-    
-    private func createRetry(from history: RetryHistory) -> Retry {
-        let baseDelay = history.configuration!.baseDelay
-        let retryInterval = baseDelay * Int(pow(2, Double(history.retries.count)))
-        let jitterBackoff = history.configuration!.jitter(history.retries, retryInterval, history.random)
-        return Retry(exponentialBackoff: retryInterval, jitterBackoff: jitterBackoff)
-    }
-    
-    private func backoff(_ jitterBackoff: Int) async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.global().asyncAfter(deadline: .now() + DispatchTimeInterval.milliseconds(jitterBackoff)) {
-                continuation.resume()
+
+    func invokeWithRetry<T>(
+        request: () async throws -> T,
+        configuration: RetryConfiguration
+    ) async throws -> T {
+        var retries = [Retry]()
+
+        while true {
+            do {
+                return try await request()
+            } catch {
+                guard isTransient(error) else { throw error }
+                guard retries.count < configuration.maxRetries else {
+                    throw RetryInvokerError.exceededRetries("Exceeded max retry attempts")
+                }
+
+                let interval = configuration.baseDelay * Int(pow(2, Double(retries.count)))
+                let retry = Retry(
+                    exponentialBackoff: interval,
+                    jitterBackoff: configuration.jitter(retries, interval)
+                )
+                retries.append(retry)
+                configuration.retryListener(retries.count, retry)
+
+                try await Task.sleep(nanoseconds: UInt64(retry.jitterBackoff) * 1_000_000)
             }
         }
     }
