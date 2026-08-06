@@ -19,7 +19,7 @@ import XCTest
 import Satori
 
 final class SessionTests: XCTestCase {
-    private let client = HttpClient(host: "127.0.0.1", port: 7450, apiKey: "apikey")
+    private let client = TestConfig.makeClient()
     
     override func setUp() {
     }

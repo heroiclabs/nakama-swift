@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.10
 /*
  * Copyright 2023 Heroic Labs
  *
@@ -27,7 +27,7 @@ let package = Package(
     .library(name: "Satori", targets: ["Satori"])
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-nio.git", from: "2.77.0"),
+    .package(url: "https://github.com/apple/swift-nio.git", from: "2.100.0"),
     .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "2.29.0"),
     .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.23.0"),
     .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.28.2"),
@@ -39,6 +39,7 @@ let package = Package(
       name: "Nakama",
       dependencies: [
         .product(name: "NIO", package: "swift-nio"),
+        .product(name: "NIOConcurrencyHelpers", package: "swift-nio"),
         .product(name: "NIOFoundationCompat", package: "swift-nio"),
         .product(name: "NIOTransportServices", package: "swift-nio-transport-services"),
         .product(name: "NIOSSL", package: "swift-nio-ssl"),

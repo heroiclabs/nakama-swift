@@ -18,7 +18,7 @@ import XCTest
 @testable import Nakama
 
 final class SocketNotificationTests: XCTestCase {
-    let client = GrpcClient(serverKey: "defaultkey")
+    let client = TestConfig.makeClient()
     var socket: Socket!
     var session: Session!
     
@@ -34,16 +34,35 @@ final class SocketNotificationTests: XCTestCase {
     
     func test_receiveNotification() async throws {
         socket.connect(session: session)
+
+        try await Task.sleep(for: .seconds(1))
+
+        let expectation = XCTestExpectation(description: "Wait for notification")
         
         var notifications: Nakama_Realtime_Notifications!
         socket.onNotifications = { notifs in
             notifications = notifs
+            expectation.fulfill()
         }
         
-        _ = try await socket.rpc(id: "clientrpc.send_notification", payload: "{\"user_id\":\"\(session.userId)\"}")
-        sleep(3)
-        
-        XCTAssertNotNil(notifications)
+        do {
+            _ = try await socket.rpc(
+                id: "clientrpc.send_notification",
+                payload: "{\"user_id\":\"\(session.userId)\"}"
+            )
+        }
+        catch {
+            XCTFail("RPC call failed: \(error).")
+            return
+        }
+
+        let result = await XCTWaiter().fulfillment(of: [expectation], timeout: 4.0)
+
+        XCTAssertEqual(result, .completed, "Notification callback timed out.")
+        guard let notifications else {
+            XCTFail("No notification was received.")
+            return
+        }
         XCTAssertEqual(notifications.notifications.first?.senderID, session.userId)
     }
 }

@@ -333,6 +333,7 @@ class ApiClient
         var urlComponents = URLComponents()
         urlComponents.scheme = baseUri.scheme
         urlComponents.host = baseUri.host
+        urlComponents.port = baseUri.port
         urlComponents.path = "{{- $url }}"
 
         {{- range $parameter := $operation.Parameters }}

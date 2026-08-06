@@ -263,6 +263,9 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+Tests/satori
+Tests/dashboards
+
 # Windows Installer files
 *.cab
 *.msi

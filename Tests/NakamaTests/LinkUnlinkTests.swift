@@ -19,7 +19,7 @@ import XCTest
 @testable import Nakama
 
 class LinkUnlinkTests: XCTestCase {
-    let client = GrpcClient(serverKey: "defaultkey")
+    let client = TestConfig.makeClient()
     
     override func tearDown() async throws {
         try await client.disconnect()

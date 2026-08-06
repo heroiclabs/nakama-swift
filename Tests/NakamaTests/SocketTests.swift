@@ -18,7 +18,7 @@ import XCTest
 @testable import Nakama
 
 final class SocketTests: XCTestCase {
-    let client = GrpcClient(serverKey: "defaultkey")
+    let client = TestConfig.makeClient()
     var socket: Socket!
     var session: Session!
     

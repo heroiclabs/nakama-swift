@@ -17,6 +17,7 @@
 
 import Foundation
 import NIO
+import NIOConcurrencyHelpers
 import Logging
 import SwiftProtobuf
 import Atomics
@@ -77,7 +78,9 @@ public final class Socket : SocketProtocol {
     public let ssl: Bool
     
     var socketAdapter: SocketAdapter
+    let collationLock = NIOLock()
     var collatedPromises = [String:Any]()
+    var collatedFailers = [String:(Error) -> Void]()
     
     init(host: String, port: Int, ssl: Bool, eventLoopGroup: EventLoopGroup, socketAdapter: SocketAdapter?, logger: Logger?) {
         self.host = host
@@ -97,6 +100,15 @@ public final class Socket : SocketProtocol {
         }
         
         self.socketAdapter.onDisconnect = {
+            let failers = self.collationLock.withLock {
+                let failers = Array(self.collatedFailers.values)
+                self.collatedPromises.removeAll()
+                self.collatedFailers.removeAll()
+                return failers
+            }
+            for fail in failers {
+                fail(NakamaRealtimeError(text: "Socket disconnected before a response was received."))
+            }
             self.onDisconnect?()
         }
         
@@ -135,10 +147,24 @@ public final class Socket : SocketProtocol {
         let counter = String(collationCounter.wrappingIncrementThenLoad(ordering: .relaxed))
         let promise = self.eventLoopGroup.next().makePromise(of: T.self)
         env.cid = String(counter)
-        self.collatedPromises[counter] = promise
-        
-        let binaryData = try env.serializedData()
-        self.socketAdapter.send(data: binaryData)
+        self.collationLock.withLock {
+            self.collatedPromises[counter] = promise
+            self.collatedFailers[counter] = { promise.fail($0) }
+        }
+
+        do {
+            let binaryData = try env.serializedData()
+            self.socketAdapter.send(data: binaryData)
+        } catch {
+            promise.fail(error)
+        }
+
+        defer {
+            self.collationLock.withLock {
+                self.collatedPromises[counter] = nil
+                self.collatedFailers[counter] = nil
+            }
+        }
         return try await promise.futureResult.get()
     }
     
@@ -186,14 +212,13 @@ public final class Socket : SocketProtocol {
                     self.logger?.error("Unrecognised incoming uncollated message from server: \(try! response.jsonString())")
                 }
             } else {
-                if let collatedPromise = self.collatedPromises[response.cid] {
+                let (collatedPromise, failer) = self.collationLock.withLock {
+                    (self.collatedPromises[response.cid], self.collatedFailers[response.cid])
+                }
+                if let collatedPromise {
                     switch response.message {
                     case .error(let error):
-                        if let promise = collatedPromise as? EventLoopPromise<Any> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        } else if let promise = collatedPromise as? EventLoopPromise<Google_Protobuf_Empty> {
-                            promise.fail(NakamaRealtimeError(error: error))
-                        }
+                        failer?(NakamaRealtimeError(error: error))
                     case .rpc(let rpc):
                         let promise = collatedPromise as! EventLoopPromise<Nakama_Api_Rpc>
                         promise.succeed(rpc)

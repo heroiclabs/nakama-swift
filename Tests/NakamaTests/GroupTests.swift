@@ -18,7 +18,7 @@ import XCTest
 @testable import Nakama
 
 final class GroupTests: XCTestCase {
-    let client = GrpcClient(serverKey: "defaultkey", trace: true)
+    let client = TestConfig.makeClient(trace: true)
     
     var session: Session!
     
@@ -27,6 +27,12 @@ final class GroupTests: XCTestCase {
     }
     
     override func tearDown() async throws {
+        if let session {
+            let mine = try? await client.listUserGroups(session: session, limit: 100)
+            for ug in mine?.userGroups ?? [] {
+                try? await client.deleteGroup(session: session, groupId: ug.group.id)
+            }
+        }
         session = nil
         try await client.disconnect()
     }
@@ -65,7 +71,11 @@ final class GroupTests: XCTestCase {
             XCTAssertTrue(true)
         }
         
-        // Leave as superadmin
+        // Add a second member so leaving is rejected instead of deleting the group
+        let otherUser = try await client.authenticateDevice(id: UUID().uuidString)
+        try await client.addGroupUsers(session: session, groupId: group.id, ids: [otherUser.userId])
+
+        // Leave as last superadmin
         do {
             try await client.leaveGroup(session: session, groupId: group.id)
             XCTFail("Cannot leave group as user is last superadmin")
@@ -129,7 +139,7 @@ final class GroupTests: XCTestCase {
     func test07_listGroupsWithMembersFilter() async throws {
         let groupName = UUID().uuidString
         let firstGroup = try await client.createGroup(session: session, name: groupName, open: true) // Public group
-        let secondGroup = try await client.createGroup(session: session, name: UUID().uuidString) // Private one
+        let secondGroup = try await client.createGroup(session: session, name: UUID().uuidString, open: false) // Private one
         XCTAssertNotNil(firstGroup)
         XCTAssertNotNil(secondGroup)
         
