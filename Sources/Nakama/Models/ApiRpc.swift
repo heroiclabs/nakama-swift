@@ -17,11 +17,11 @@
 import Foundation
 
 public struct ApiRpc {
-    var id: String
-    var payload: String
-    var httpKey: String
-    
-    init(id: String, payload: String, httpKey: String) {
+    public var id: String
+    public var payload: String
+    public var httpKey: String
+
+    public init(id: String, payload: String, httpKey: String) {
         self.id = id
         self.payload = payload
         self.httpKey = httpKey
